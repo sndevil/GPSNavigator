@@ -64,7 +64,7 @@ namespace GPSNavigator
             //}
 
 
-            WriteText(DateTime.Now.ToString("HH:MM:SS") + "  :  " + input);
+            WriteText(DateTime.Now + "  :  " + input);
         }
 
         delegate void SetTextCallback(string text);
@@ -81,8 +81,19 @@ namespace GPSNavigator
             }
             else
             {
-                this.logger.Text += text + "\n";
+                this.logger.Text = text + "\r\n" + this.logger.Text;
             }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            serialPort1.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            serialPort1.Close();         
+            Application.Exit();
         }
 
 
