@@ -79,29 +79,30 @@ namespace GPSNavigator.Classes
 
         public class BinaryRawDataBuffer
         {
-            public int[] Temperature;
-            public double[] TOW;
-            public double[][] PseudoRanges;
-            public int[][] Prn;
-            public double[][] dopplers;
-            public double[][] reliability;
-            public double[][][] pAngle;
-            public double[][][] snr;
-            public CartesianCoordinate[][] satPos;
-            public double[][] satPos_X;
+            public List<int> Temperature;
+
+            public List<double> TOW;
+            public List<double[]> PseudoRanges;
+            public List<int[]> Prn;
+            public List<double[]> dopplers;
+            public List<double[]> reliability;
+            public List<double[][]> pAngle;
+            public List<double[][]> snr;
+            public List<CartesianCoordinate[]> satPos;
+            public List<double[]> satPos_X;
             public int counter = 0;
             public int overLoad = 0;
         }
 
         public class AttitudeInformation
         {
-            public double[] Azimuth;
-            public double[] Elevation;
-            public double[] X;
-            public double[] Y;
-            public double[] Z;
-            public double[] Distance;
-            public DateTime[] datetime;
+            public List<double> Azimuth;
+            public List<double> Elevation;
+            public List<double> X;
+            public List<double> Y;
+            public List<double> Z;
+            public List<double> Distance;
+            public List<DateTime> datetime;
             public int counter = 0;
         }
 

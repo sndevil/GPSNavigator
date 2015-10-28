@@ -10,6 +10,9 @@ namespace GPSNavigator.Source
 
     public static class Functions
     {
+
+
+        #region Constants
         public const int nTRACKING_MODULES = 12;
         public const double C = 299792458.0;
 
@@ -69,6 +72,12 @@ namespace GPSNavigator.Source
         public const int BIN_SETTING = READ_SETTING_CMD;
         public const int BIN_ATTITUDE_INFO = 6;
         public const int BIN_DUAL_CHANNEL = 7;
+
+        private const double Elevation_OutOfRange = 91;
+        private const double Azimuth_OutOfRange = 361;
+
+
+        #endregion
 
         public static double[][] MatrixMult(double[][] matrixA, int aRows, int aCols, double[][] matrixB, int bCols)
         {
@@ -383,6 +392,38 @@ namespace GPSNavigator.Source
             field.Add(Data.Substring(Data.Length - 3, 2));              //Checksum
         }
 
+        public static int checkMsgSize(int msgType)
+        {
+            int msgSize;
+
+            if (msgType == BIN_FULL)
+                msgSize = BIN_FULL_MSG_SIZE;
+            else if (msgType == BIN_FULL_PLUS)
+                msgSize = BIN_FULL_PLUS_MSG_SIZE;
+            else if (msgType == BIN_COMPACT)
+                msgSize = BIN_COMPACT_MSG_SIZE;
+            else if (msgType == BIN_GPS_SUPPLEMENT)
+                msgSize = BIN_GPS_SUPPLEMENT_MSG_SIZE;
+            else if (msgType == BIN_DEBUG)
+                msgSize = BIN_DEBUG_MSG_SIZE;
+            else if (msgType == BIN_GLONASS_SUPPLEMENT)
+                msgSize = BIN_GLONASS_SUPPLEMENT_MSG_SIZE;
+            else if (msgType == BIN_RAW_DATA)
+                msgSize = BIN_RAW_DATA_MSG_SIZE;
+            else if (msgType == BIN_LICENCE)
+                msgSize = BIN_LICENCE_MSG_SIZE;
+            else if (msgType == BIN_SETTING)
+                msgSize = BIN_SETTING_MSG_SIZE;
+            else if (msgType == BIN_ATTITUDE_INFO)
+                msgSize = BIN_ATTITUDE_INFO_MSG_SIZE;
+            else if (msgType == BIN_DUAL_CHANNEL)
+                msgSize = BIN_DUAL_CHANNEL_MSG_SIZE;
+            else
+                msgSize = -1;           //packet not valid
+
+            return msgSize;
+        }
+
         public static void Process_Binary_Message_Full(byte[] data, int SerialNum, DataBuffer buffer, List<Satellite> GPS, List<Satellite> GLONASS)
         {
             DataBuffer dbuf;
@@ -628,9 +669,9 @@ namespace GPSNavigator.Source
             //V, V_Processed, A
             if (state == 1)
             {
-                dbuf.V[buffercounter] = Math.Sqrt(Math.Pow(dbuf.Vx[dbuf.counter], 2) + Math.Pow(dbuf.Vy[dbuf.counter], 2) + Math.Pow(dbuf.Vz[dbuf.counter], 2));
-                dbuf.V_Processed[buffercounter] = Math.Sqrt(Math.Pow(dbuf.Vx_Processed[dbuf.counter], 2) + Math.Pow(dbuf.Vy_Processed[dbuf.counter], 2) + Math.Pow(dbuf.Vz_Processed[dbuf.counter], 2));
-                dbuf.A[buffercounter] = Math.Sqrt(Math.Pow(dbuf.Ax[dbuf.counter], 2) + Math.Pow(dbuf.Ay[dbuf.counter], 2) + Math.Pow(dbuf.Az[dbuf.counter], 2));
+                dbuf.V.Add(Math.Sqrt(Math.Pow(dbuf.Vx[dbuf.counter], 2) + Math.Pow(dbuf.Vy[dbuf.counter], 2) + Math.Pow(dbuf.Vz[dbuf.counter], 2)));
+                dbuf.V_Processed.Add(Math.Sqrt(Math.Pow(dbuf.Vx_Processed[dbuf.counter], 2) + Math.Pow(dbuf.Vy_Processed[dbuf.counter], 2) + Math.Pow(dbuf.Vz_Processed[dbuf.counter], 2)));
+                dbuf.A.Add(Math.Sqrt(Math.Pow(dbuf.Ax[dbuf.counter], 2) + Math.Pow(dbuf.Ay[dbuf.counter], 2) + Math.Pow(dbuf.Az[dbuf.counter], 2)));
             }
 
             //SNR GPS
@@ -934,5 +975,503 @@ namespace GPSNavigator.Source
 
         }
 
+
+        public static void Process_Binary_Message_SupplementGPS(byte[] data, int SerialNum, List<Satellite> GPS)
+        {
+            List<Satellite> GPS_satellite;
+            GPS_satellite = GPS;
+
+            int checksum = calcrc(data, BIN_GPS_SUPPLEMENT_MSG_SIZE - 4);
+            byte checksum0 = (byte)(checksum & 0xFF);
+            byte checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+          /*  if (checksum0 != data[BIN_GPS_SUPPLEMENT_MSG_SIZE - 3] || checksum1 != data[BIN_GPS_SUPPLEMENT_MSG_SIZE - 2])
+            {
+                Show_Error("CheckSum Error", "Recieved checksum is incorrect");
+                return;
+            }*/
+
+           /* if (SerialNum == 0)
+                DataReceiveTimeOut = 0;
+            else
+                DataReceiveTimeOutS2 = 0;
+            */
+
+            int index = 1;  //header
+            index++;        //messageType
+            index++;        //state
+            index++;        // Reserved
+
+            // PRNs
+            byte[] PRNs = new byte[12];
+            for (int i = 0; i < 12; i++)
+                PRNs[i] = data[i + index];
+            index += 12;
+
+            for (int i = 0; i < 32; i++)
+            {
+                GPS_satellite[i].Azimuth = Azimuth_OutOfRange;
+                GPS_satellite[i].Elevation = Elevation_OutOfRange;
+            }
+
+            for (int i = 0; i < 12; i++)
+                if (PRNs[i] != 255)
+                {
+                    GPS_satellite[PRNs[i]].Elevation = data[i + index];
+                    if (GPS_satellite[PRNs[i]].Elevation > 127)
+                        GPS_satellite[PRNs[i]].Elevation -= 256;
+                    GPS_satellite[PRNs[i]].Azimuth = data[i * 2 + (index + 12)] + data[i * 2 + 1 + (index + 12)] * 256;
+                    if (GPS_satellite[PRNs[i]].Azimuth > 32767)
+                        GPS_satellite[PRNs[i]].Azimuth -= 32768;
+                }
+
+            index += 24;
+        }
+
+        public static string Process_Binary_Message_Debug(byte[] data)
+        {
+            string Debug_text = null;
+
+            for (int i = 2; i <= BIN_DEBUG_MSG_SIZE; i++)
+            {
+                if (data[i] == 0)
+                    break;
+
+                Debug_text += (char)data[i];
+            }
+
+            return Debug_text;
+        }
+
+        public static void Process_Binary_Message_RawData(byte[] data, int SerialNum, BinaryRawDataBuffer rbuffer)
+        {
+            BinaryRawDataBuffer rdBuf;
+            rdBuf = rbuffer;
+
+            int index = 0, buffercounter = 0;
+            Int64 a;
+            byte checksum0 = 0, checksum1 = 0;
+
+            int checksum = calcrc(data, BIN_RAW_DATA_MSG_SIZE - 4);
+            checksum0 = (byte)(checksum & 0xFF);
+            checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+            index++;    //header
+            index++;    //messageType
+            index++;    // State
+
+            // Temperature
+            //rdBuf.Temperature[rdBuf.counter] = data[index];
+            //index++;
+
+            int nReceiver = data[index];
+            index++;
+
+            //TOW
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            rdBuf.TOW.Add(a);
+            buffercounter = rdBuf.TOW.Count - 1;
+            index += 4;
+
+            //satellite Positions
+            rdBuf.satPos.Add(new CartesianCoordinate[12]);
+            for (int j = 0; j < 12; j++)
+            {
+                rdBuf.satPos[buffercounter][j] = new CartesianCoordinate();
+
+                a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
+                rdBuf.satPos[buffercounter][j].x = formatDouble(a);
+                index += 8;
+
+                a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
+                rdBuf.satPos[buffercounter][j].y = formatDouble(a);
+                index += 8;
+
+                a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
+                rdBuf.satPos[buffercounter][j].z = formatDouble(a);
+                index += 8;
+            }
+
+            //PseudoRanges
+            rdBuf.PseudoRanges.Add(new double[12]);
+            for (int j = 0; j < 12; j++)
+            {
+                a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
+                rdBuf.PseudoRanges[buffercounter][j] = formatDouble(a);
+                index += 8;
+            }
+
+            //Prn
+            rdBuf.Prn.Add(new int[12]);
+            for (int i = 0; i < 12; i++)
+            {
+                rdBuf.Prn[buffercounter][i] = data[index];
+                index++;
+            }
+
+            //dopplers
+            rdBuf.dopplers.Add(new double[12]);
+            for (int j = 0; j < 12; j++)
+            {
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+                rdBuf.dopplers[buffercounter][j] = formatFloat(a);
+                index += 4;
+            }
+
+            //reliability
+            rdBuf.reliability.Add(new double[12]);
+            for (int j = 0; j < 12; j++)
+            {
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+                rdBuf.reliability[buffercounter][j] = formatFloat(a);
+                index += 4;
+            }
+
+            //pAngle
+            rdBuf.pAngle.Add(new double[12][]);
+            for (int j = 0; j < 12; j++)
+            {
+                rdBuf.pAngle[buffercounter][j] = new double[2];
+                for (int k = 0; k < 2; k++)
+                {
+                    a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+                    rdBuf.pAngle[buffercounter][j][k] = formatFloat(a);
+                    index += 4;
+                }
+            }
+
+            //snr
+            rdBuf.snr.Add(new double[12][]);
+            for (int j = 0; j < 12; j++)
+            {
+                rdBuf.snr[buffercounter][j] = new double[2];
+                for (int k = 0; k < 2; k++)
+                {
+                    a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+                    rdBuf.snr[buffercounter][j][k] = formatFloat(a);
+                    index += 4;
+                }
+            }
+
+            /*rdBuf.counter++;
+            if (rdBuf.counter >= Max_buf)
+            {
+                rdBuf.overLoad++;
+                rdBuf.counter = 0;
+            }*/
+        }
+
+        public static void Process_Binary_Message_Licence(byte[] data, int serialNum, List<byte[]> licenses)
+        {
+            byte checksum0 = 0, checksum1 = 0;
+
+            int checksum = calcrc(data, BIN_LICENCE_MSG_SIZE - 4);
+            checksum0 = (byte)(checksum & 0xFF);
+            checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+
+            int index = 1;      //header
+            index++;        //messageType
+
+            int licenseNum = data[index];
+            index++;
+
+            for (int i = 0; i < 16; i++)
+            {
+                licenses[licenseNum][i] = data[index];
+                index++;
+            }
+
+            checksum = 0;
+            for (int i = 0; i < 14; i++)
+                checksum += licenses[licenseNum][i];
+
+            checksum0 = (byte)((checksum >> 8) & 0xFF);
+            checksum1 = (byte)(checksum & 0xFF);
+
+            int licenseType = (licenses[licenseNum][0] << 8) | licenses[licenseNum][1];
+            int licenseValue = (licenses[licenseNum][2] << 32) | (licenses[licenseNum][3] << 16)
+                                | (licenses[licenseNum][4] << 8) | licenses[licenseNum][5];
+
+
+           /* if (licenseType == 1)
+            {
+                listBoxLicence.Items.Add("License " + licenseNum.ToString() + " - Speed");
+                listBoxLicenceProperties.Items[0] = "Max Speed: " + licenseValue.ToString() + " m/s";
+            }
+            else if (licenseType == 2)
+            {
+                listBoxLicence.Items.Add("License " + licenseNum.ToString() + " - Acceleration");
+                listBoxLicenceProperties.Items[1] = "Max Acceleration: " + licenseValue.ToString() + " m/s2";
+            }
+            else if (licenseType == 3)
+            {
+                listBoxLicence.Items.Add("License " + licenseNum.ToString() + " - Height");
+                listBoxLicenceProperties.Items[2] = "Max Height: " + licenseValue.ToString() + " km";
+            }
+            else if (licenseType == 4)
+            {
+                listBoxLicence.Items.Add("License " + licenseNum.ToString() + " - Refresh Rate");
+                listBoxLicenceProperties.Items[3] = "Max Refresh Rate: " + licenseValue.ToString();
+            }*/
+        }
+
+        public static void Process_Binary_Message_Setting(byte[] data, int serialNum)
+        {
+            byte checksum0 = 0, checksum1 = 0;
+
+            int checksum = calcrc(data, BIN_SETTING_MSG_SIZE - 4);
+            checksum0 = (byte)(checksum & 0xFF);
+            checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+            int index = 1;      //header
+            index++;        //messageType
+
+            //Sat Type
+            int SatType = data[index];
+            index++;
+
+            //Number of satellites
+            //radDDLTypAll.Text = data[index].ToString();
+            index++;
+            //radDDLTypGPS.Text = data[index].ToString();
+            index++;
+            //radDDLTypGLONASS.Text = data[index].ToString();
+            index++;
+            //radDDLTypGalileo.Text = data[index].ToString();
+            index++;
+            //radDDLTypCompass.Text = data[index].ToString();
+            index++;
+
+            //Pos Type
+            //radDDLPosTyp.SelectedIndex = data[index] - 1;
+            index++;
+
+           // if (radDDLSelectSerial.FindStringExact(radDDLSelectSerial.Text) == 1)
+            //    index += 5;
+
+            int baudRate = data[index];
+            index++;
+            baudRate = (baudRate << 8) + data[index];
+            index++;
+            baudRate = (baudRate << 8) + data[index];
+            index++;
+            //radDDLSetBaudRate.Text = baudRate.ToString();
+
+            int PacketType = data[index];
+            index++;
+            PacketType = (PacketType << 8) + data[index];
+            index++;
+
+
+            //if (radDDLSelectSerial.FindStringExact(radDDLSelectSerial.Text) == 0)
+            //    index += 5;
+
+            //radDDLRefreshRate.Text = data[index].ToString();
+            index++;
+
+            int PDOP_Threshold = data[index];
+            index++;
+            PDOP_Threshold = (PDOP_Threshold << 8) + data[index];
+            index++;
+            //textEditPdopTHD.Text = PDOP_Threshold.ToString();
+
+            //GPS Use Threshold
+            //textEditGpsUseTHD.Text = (data[index] / 4).ToString();
+            index++;
+
+            //GLONASS Use Threshold
+            //textEditGlonassTHD.Text = (data[index] / 4).ToString();
+            index++;
+
+            //GPS Deassign Threshold
+            //textEditGpsDeassTHD.Text = (data[index] / 4).ToString();
+            index++;
+
+            //GLONASS Deassign Threshold
+            //textEditGlonassDeassTHD.Text = (data[index] / 4).ToString();
+            index++;
+
+            //Reliability Deassign Threshold
+            //textEditReliabilityTHD.Text = (data[index] / 100).ToString();
+            index++;
+
+            //Satellite Distance Error Threshold
+            int SatDistErrTHD = data[index];
+            index++;
+            SatDistErrTHD = ((SatDistErrTHD << 8) + data[index]) / 10;
+            index++;
+            //textEditSatDistErrTHD.Text = SatDistErrTHD.ToString();
+
+            int MAX_Speed = data[index];
+            index++;
+            MAX_Speed = (MAX_Speed << 8) + data[index];
+            index++;
+            //textEditMaxSpeed.Text = MAX_Speed.ToString();
+
+            int MAX_Acceleration = data[index];
+            index++;
+            MAX_Acceleration = ((MAX_Acceleration << 8) + data[index]) / 10;
+            index++;
+            //textEditMaxAcc.Text = MAX_Acceleration.ToString();
+
+            //Mask Angle
+            //textEditMaskAngle.Text = data[index].ToString();
+            index++;
+
+            //Green Satellite Type
+           // radDDLGreenType.SelectedIndex = data[index];
+            index++;
+
+            //Tropospheric Correction
+            //radDDLTropo.SelectedIndex = data[index];
+            index++;
+
+            //Automatic Max Angle Attitude
+            //radDDLAutoMaxAngle.SelectedIndex = data[index];
+            index++;
+
+            //Ionospheric Correction
+            //radDDLIonospheric.SelectedIndex = data[index];
+            index++;
+        }
+
+        public static void Process_Binary_Message_Attitude_Info(byte[] data, int serialNum,DataBuffer databuffer, AttitudeInformation attitudeInfoDataBuf)
+        {
+            byte checksum0 = 0, checksum1 = 0;
+
+            int checksum = calcrc(data, BIN_ATTITUDE_INFO_MSG_SIZE - 4);
+            checksum0 = (byte)(checksum & 0xFF);
+            checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+
+            int index = 1;      //header
+            index++;        //messageType
+
+            int state = data[index];
+            index++;
+
+            var attitudeState = data[index];
+            index++;        //Attitude Determination State;
+            /*if (attitudeStateControlUpdate)
+            {
+                switch (attitudeState)
+                {
+                    case 0:
+                        radLabelState.Text = "Wait for Minimum Required Satellites";
+                        radLabelState.ForeColor = Color.Yellow;
+                        break;
+                    case 1:
+                        radLabelState.Text = "Wait for More Satellites";
+                        radLabelState.ForeColor = Color.Yellow;
+                        break;
+                    case 2:
+                        radLabelState.Text = "Ambiguity Resolution";
+                        radLabelState.ForeColor = Color.Yellow;
+                        break;
+                    case 3:
+                        radLabelState.Text = "Real Time Process";
+                        radLabelState.ForeColor = Color.GreenYellow;
+                        break;
+                }
+
+                attitudeStateControlUpdate = false;
+            }
+            */
+            // Azimuth (yaw)
+            Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            attitudeInfoDataBuf.Azimuth.Add(formatFloat(a));
+            var buffercounter = attitudeInfoDataBuf.Azimuth.Count - 1;
+            index += 4;
+
+            index += 4;     //roll
+
+            // Elevation (pitch)
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            attitudeInfoDataBuf.Elevation.Add(formatFloat(a));
+            index += 4;
+
+            double x = 0, y = 0, z = 0;
+            GEOpoint point;
+
+            //x
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            if (state == 1)
+            {
+                attitudeInfoDataBuf.X.Add(formatFloat(a));
+                x = formatFloat(a);
+            }
+            index += 4;
+
+            //y
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            if (state == 1)
+            {
+                attitudeInfoDataBuf.Y.Add(formatFloat(a));
+                y = formatFloat(a);
+            }
+            index += 4;
+
+            //z
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            if (state == 1)
+            {
+                attitudeInfoDataBuf.Z.Add(formatFloat(a));
+                z = formatFloat(a);
+            }
+            index += 4;
+
+            //TOW
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            double TOW = a;     //millisecond
+            index += 4;
+
+            a = data[index] + data[index + 1] * 256;
+            int WeekNumber = (int)a;
+            index += 2;
+
+            a = data[index] + data[index + 1] * 256;
+            int ambiguity = (int)a;
+            index += 2;
+
+            DateTime DatetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
+            DatetimeUTC = DatetimeUTC.AddDays(WeekNumber * 7);
+            DatetimeUTC = DatetimeUTC.AddMilliseconds(TOW);
+
+            attitudeInfoDataBuf.datetime.Add(DatetimeUTC);
+
+            if (state == 1)
+            {
+                DataBuffer dbuf;
+                dbuf = databuffer;
+
+
+                //Distance
+                double distance = Math.Sqrt(Math.Pow(attitudeInfoDataBuf.X[attitudeInfoDataBuf.counter], 2) + Math.Pow(attitudeInfoDataBuf.Y[attitudeInfoDataBuf.counter], 2) + Math.Pow(attitudeInfoDataBuf.Z[attitudeInfoDataBuf.counter], 2));
+                attitudeInfoDataBuf.Distance[attitudeInfoDataBuf.counter] = distance;
+            }
+            else
+            {
+                /*if (AmbiguityControlUpdate)
+                {
+                    radLabelAmbiguity.Text = "Remaining Ambiguity: ?";
+                    AmbiguityControlUpdate = false;
+                }*/
+
+                if (attitudeInfoDataBuf.counter == 0)
+                    return;
+
+                attitudeInfoDataBuf.datetime[buffercounter] = attitudeInfoDataBuf.datetime[buffercounter - 1].AddMilliseconds(1);
+
+                attitudeInfoDataBuf.Azimuth[buffercounter] = double.NaN;
+                attitudeInfoDataBuf.Distance[buffercounter] = double.NaN;
+                attitudeInfoDataBuf.Elevation[buffercounter] = double.NaN;
+                attitudeInfoDataBuf.X[buffercounter] = double.NaN;
+                attitudeInfoDataBuf.Y[buffercounter] = double.NaN;
+                attitudeInfoDataBuf.Z[buffercounter] = double.NaN;
+            }
+
+            attitudeInfoDataBuf.counter++;
+        }
     }
 }
