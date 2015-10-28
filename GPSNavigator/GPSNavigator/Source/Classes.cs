@@ -40,6 +40,7 @@ namespace GPSNavigator.Classes
             public List<double> NumOfVisibleSats = new List<double>();
             public List<double> state = new List<double>();
             public List<DateTime> datetime = new List<DateTime>();
+            public List<int> statcounter = new List<int>();
             public int counter = 0;
             public int counterDraw = 0;
             public int overLoad = 0;
@@ -75,6 +76,7 @@ namespace GPSNavigator.Classes
             public string NumOfUsedSats_FilePath;
             public string NumOfVisibleSats_FilePath;
             public string datetime_FilePath;
+
         }
 
         public class BinaryRawDataBuffer

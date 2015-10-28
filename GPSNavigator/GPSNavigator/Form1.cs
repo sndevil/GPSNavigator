@@ -142,7 +142,7 @@ namespace GPSNavigator
         private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             opendialog.FileName = "";
-            opendialog.Filter = "GLF File|*.glf|All Files|*.*";
+            opendialog.Filter = "GLF Files|*.glf|All Files|*.*";
             opendialog.ShowDialog();
         }
 
@@ -150,7 +150,7 @@ namespace GPSNavigator
         {
             FileStream temp = new FileStream(path, FileMode.OpenOrCreate);
 
-            while (temp.Position < temp.Length)
+            while (temp.Position < temp.Length && temp.Position < 10000000 )   //// 10MB is the maximum load
             {
                 if (temp.ReadByte() == '~')
                 {
@@ -171,6 +171,9 @@ namespace GPSNavigator
                     //Process_Received_BinaryBytes(byt, radioGroupDevice.SelectedIndex);
                 }
             }
+            Grapher graphform = new Grapher(buffer);
+            graphform.Show();
+            graphform.BringToFront();
         }
 
         private void opendialog_FileOk(object sender, CancelEventArgs e)

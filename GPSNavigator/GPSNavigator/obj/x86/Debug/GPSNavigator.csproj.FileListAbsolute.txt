@@ -7,3 +7,7 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\Ge
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.exe
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.pdb
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.Form1.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.Grapher.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.exe.licenses
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\C1.Win.C1Chart.4.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\C1.Win.C1Chart.4.xml
