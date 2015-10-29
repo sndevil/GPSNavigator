@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System;
+using System.IO;
+using System.Diagnostics;
+using GPSNavigator.Source;
+
 
 namespace GPSNavigator.Classes
 {
@@ -81,30 +84,30 @@ namespace GPSNavigator.Classes
 
         public class BinaryRawDataBuffer
         {
-            public List<int> Temperature;
+            public List<int> Temperature = new List<int>();
 
-            public List<double> TOW;
-            public List<double[]> PseudoRanges;
-            public List<int[]> Prn;
-            public List<double[]> dopplers;
-            public List<double[]> reliability;
-            public List<double[][]> pAngle;
-            public List<double[][]> snr;
-            public List<CartesianCoordinate[]> satPos;
-            public List<double[]> satPos_X;
+            public List<double> TOW = new List<double>();
+            public List<double[]> PseudoRanges = new List<double[]>();
+            public List<int[]> Prn = new List<int[]>();
+            public List<double[]> dopplers = new List<double[]>();
+            public List<double[]> reliability = new List<double[]>();
+            public List<double[][]> pAngle = new List<double[][]>();
+            public List<double[][]> snr = new List<double[][]>();
+            public List<CartesianCoordinate[]> satPos = new List<CartesianCoordinate[]>();
+            public List<double[]> satPos_X = new List<double[]>();
             public int counter = 0;
             public int overLoad = 0;
         }
 
         public class AttitudeInformation
         {
-            public List<double> Azimuth;
-            public List<double> Elevation;
-            public List<double> X;
-            public List<double> Y;
-            public List<double> Z;
-            public List<double> Distance;
-            public List<DateTime> datetime;
+            public List<double> Azimuth = new List<double>();
+            public List<double> Elevation = new List<double>();
+            public List<double> X= new List<double>();
+            public List<double> Y = new List<double>();
+            public List<double> Z = new List<double>();
+            public List<double> Distance = new List<double>();
+            public List<DateTime> datetime = new List<DateTime>();
             public int counter = 0;
         }
 
@@ -146,6 +149,69 @@ namespace GPSNavigator.Classes
             public SatType satType;
             //0 = Satellite signal not available    1 = Satellite signal available, not available for use in navigation    2 = Satellite used in navigation
             public int Signal_Status;
+        }
+
+
+        public class LogFileManager
+        {
+            private int Databuffercount = 1000; // 10k packet would be loaded to RAM
+            public long start = 0;
+            public long end;
+            public int position = 0;
+            public float zoom = 1f,delta;
+
+            public string filepath;
+
+            private FileStream stream;
+            private Globals vars;
+
+            public LogFileManager(string path,ref Globals variables)
+            {
+                stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                vars = variables;
+                end = stream.Length;
+                delta = (float)((end - start) / Databuffercount);
+            }
+
+            public DataBuffer Readbuffer()
+            {
+                vars.Clear_buffer();
+                stream.Position = start;
+                var counter = 0;
+                while (true)
+                {
+                    if (stream.ReadByte() == '~')
+                    {
+                        int msgType = stream.ReadByte();
+
+                        int msgSize = Functions.checkMsgSize(msgType);
+                        if (msgSize == -1)          //packet not valid
+                            continue;
+
+                        if (stream.Position + msgSize - 2 > stream.Length || counter++ >= Databuffercount)
+                            break;
+
+                        byte[] byt = new byte[msgSize];
+                        byt[0] = (byte)'~';
+                        byt[1] = (byte)msgType;
+                        stream.Read(byt, 2, msgSize - 2);
+                        Functions.handle_packet(byt,ref vars);
+                        stream.Position += (int)delta - msgSize;
+                        //Process_Received_BinaryBytes(byt, radioGroupDevice.SelectedIndex);
+                    }
+                    if (stream.Position >= stream.Length - 10)
+                        break;
+                }
+                return vars.buffer;
+            }
+
+            public void ClearBuffer()
+            {
+                vars.buffer = new DataBuffer();
+            }
+
+
+
         }
 
 

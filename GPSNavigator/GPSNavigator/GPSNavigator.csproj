@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Globals.cs" />
     <Compile Include="Grapher.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -32,6 +32,9 @@
             this.Chart1 = new C1.Win.C1Chart.C1Chart();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.hScrollBar2 = new System.Windows.Forms.HScrollBar();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,11 +79,40 @@
             this.hScrollBar1.Value = 1;
             this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(460, 475);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(66, 13);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Zoom: 100%";
+            // 
+            // hScrollBar2
+            // 
+            this.hScrollBar2.Location = new System.Drawing.Point(23, 454);
+            this.hScrollBar2.Name = "hScrollBar2";
+            this.hScrollBar2.Size = new System.Drawing.Size(360, 21);
+            this.hScrollBar2.TabIndex = 5;
+            this.hScrollBar2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar2_Scroll);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(147, 475);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(47, 13);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Position:";
+            // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 496);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.hScrollBar2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.Chart1);
@@ -90,6 +122,7 @@
             this.Load += new System.EventHandler(this.Grapher_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -98,5 +131,8 @@
         private C1.Win.C1Chart.C1Chart Chart1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.HScrollBar hScrollBar1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.HScrollBar hScrollBar2;
+        private System.Windows.Forms.Label label2;
     }
 }

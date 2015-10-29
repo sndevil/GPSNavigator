@@ -424,7 +424,7 @@ namespace GPSNavigator.Source
             return msgSize;
         }
 
-        public static void Process_Binary_Message_Full(byte[] data, int SerialNum, DataBuffer buffer, List<Satellite> GPS, List<Satellite> GLONASS)
+        public static void Process_Binary_Message_Full(byte[] data, int SerialNum,ref DataBuffer buffer,List<Satellite> GPS,List<Satellite> GLONASS)
         {
            // DataBuffer dbuf;
            // List<Satellite> GPS_satellite;
@@ -477,7 +477,6 @@ namespace GPSNavigator.Source
             // Temperature
             buffer.Temperature.Add(data[index]);
             buffercounter = buffer.Temperature.Count - 1;
-            buffer.Temperature[buffercounter] = data[index];
             index++;
 
             Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
@@ -738,7 +737,7 @@ namespace GPSNavigator.Source
             {
                 GDOP = Decompress_DOP(data[index]);
                 index++;
-                buffer.PDOP[buffercounter] = Decompress_DOP(data[index]);
+                buffer.PDOP[buffer.PDOP.Count-1] = Decompress_DOP(data[index]);
                 index++;
                 HDOP = Decompress_DOP(data[index]);
                 index++;
@@ -766,7 +765,7 @@ namespace GPSNavigator.Source
              * */
         }
 
-        public static void Process_Binary_Message_Compact(byte[] data, int SerialNum, DataBuffer buffer, List<Satellite> GPS)
+        public static void Process_Binary_Message_Compact(byte[] data, int SerialNum,ref DataBuffer buffer,List<Satellite> GPS)
         {
            // DataBuffer dbuf;
            // List<Satellite> GPS_satellite;
@@ -923,7 +922,6 @@ namespace GPSNavigator.Source
             }
             // DOP
             double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
-            buffer.PDOP[buffer.counter] = 0;
 
             a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
             if (state == 1)
@@ -992,7 +990,7 @@ namespace GPSNavigator.Source
 
         }
 
-        public static void Process_Binary_Message_SupplementGPS(byte[] data, int SerialNum, List<Satellite> GPS)
+        public static void Process_Binary_Message_SupplementGPS(byte[] data, int SerialNum,List<Satellite> GPS)
         {
 
             int checksum = calcrc(data, BIN_GPS_SUPPLEMENT_MSG_SIZE - 4);
@@ -1057,7 +1055,7 @@ namespace GPSNavigator.Source
             return Debug_text;
         }
 
-        public static void Process_Binary_Message_RawData(byte[] data, int SerialNum, BinaryRawDataBuffer rbuffer)
+        public static void Process_Binary_Message_RawData(byte[] data, int SerialNum,ref BinaryRawDataBuffer rbuffer)
         {          
             int index = 0, buffercounter = 0;
             Int64 a;
@@ -1172,7 +1170,7 @@ namespace GPSNavigator.Source
             }*/
         }
 
-        public static void Process_Binary_Message_Licence(byte[] data, int serialNum, List<byte[]> licenses)
+        public static void Process_Binary_Message_Licence(byte[] data, int serialNum,List<byte[]> licenses)
         {
             byte checksum0 = 0, checksum1 = 0;
 
@@ -1347,7 +1345,7 @@ namespace GPSNavigator.Source
             index++;
         }
 
-        public static void Process_Binary_Message_Attitude_Info(byte[] data, int serialNum,DataBuffer databuffer, AttitudeInformation attitudeInfoDataBuf)
+        public static void Process_Binary_Message_Attitude_Info(byte[] data, int serialNum,ref DataBuffer databuffer,ref AttitudeInformation attitudeInfoDataBuf)
         {
             byte checksum0 = 0, checksum1 = 0;
 
@@ -1491,5 +1489,45 @@ namespace GPSNavigator.Source
 
             attitudeInfoDataBuf.counter++;
         }
+
+        public static void handle_packet(byte[] packet, ref Globals vars)
+        {
+            //vars.buffer = new DataBuffer();
+            var key = packet[1];
+            if (key == Functions.BIN_FULL)
+                Functions.Process_Binary_Message_Full(packet, 1,ref vars.buffer,vars.GPSSat,vars.GLONASSsat);
+            else if (key == Functions.BIN_FULL_PLUS)
+                Functions.Process_Binary_Message_Full(packet, 1,ref vars.buffer,vars.GPSSat,vars.GLONASSsat);
+            else if (key == Functions.BIN_COMPACT)
+                Functions.Process_Binary_Message_Compact(packet, 1,ref vars.buffer,vars.GPSSat);
+            else if (key == Functions.BIN_GPS_SUPPLEMENT)
+            {}//  Functions.Process_Binary_Message_SupplementGPS(packet, 1,vars.GPSSat);
+            else if (key == Functions.BIN_DEBUG) { }
+            //MessageBox.Show(Functions.Process_Binary_Message_Debug(packet));
+            else if (key == Functions.BIN_RAW_DATA)
+                Functions.Process_Binary_Message_RawData(packet, 1, ref vars.rbuffer);
+            else if (key == Functions.BIN_LICENCE)
+            {}//Functions.Process_Binary_Message_Licence(packet, 1, vars.licenses);
+            else if (key == Functions.BIN_SETTING)
+                Functions.Process_Binary_Message_Setting(packet, 1);
+            else if (key == Functions.BIN_ATTITUDE_INFO)
+                Functions.Process_Binary_Message_Attitude_Info(packet, 1, ref vars.buffer, ref vars.abuffer);
+            else { }
+                //WriteText("Couldnt Find the matching processor");
+
+            //WriteText(DateTime.Now + "  :  " + Encoding.UTF8.GetString(packet));
+        }
+        public static void handle_packet(string packet, Globals vars)
+        {
+            if (packet.StartsWith("$GP"))
+                Functions.Process_Packet(packet, vars.Field);
+            else
+            {
+                byte[] d = Encoding.UTF8.GetBytes(packet);
+                handle_packet(d,ref vars);
+            }
+
+        }
+
     }
 }

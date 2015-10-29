@@ -19,18 +19,13 @@ namespace GPSNavigator
         #region definitions
         bool isRecording = true;
         bool isPlaying = true;
-        List<string> Field = new List<string>();
-        DataBuffer buffer = new DataBuffer();
-        BinaryRawDataBuffer rbuffer = new BinaryRawDataBuffer();
-        AttitudeInformation abuffer = new AttitudeInformation();
-        List<Satellite> GPSSat = new List<Satellite>();
-        List<Satellite> GLONASSsat = new List<Satellite>();
-        List<byte[]> licenses = new List<byte[]>();
-
+        Globals vars = new Globals();
         #endregion
+
         public Form1()
         {
             InitializeComponent();
+
             try
             {
                 serialPort1.Open();
@@ -38,13 +33,6 @@ namespace GPSNavigator
             catch
             {
                 MessageBox.Show("Serial Port Not Found!");
-            }
-            for (int i = 0; i < 32; i++)
-            {
-                GPSSat.Add(new Satellite());
-                GLONASSsat.Add(new Satellite());
-                if (i < 16)
-                    licenses.Add(new byte[16]);
             }
         }
 
@@ -148,6 +136,26 @@ namespace GPSNavigator
 
         public void OpenLogFile(string path)
         {
+            LogFileManager file = new LogFileManager(path,ref vars);
+           // file.ClearBuffer();
+            //var temp = file.Readbuffer();
+            Grapher graphform = new Grapher(vars.buffer,file.end,file);
+            graphform.ShowDialog(this);
+            graphform.BringToFront();
+           /* using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (BufferedStream bs = new BufferedStream(fs))
+            using (StreamReader sr = new StreamReader(bs))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    if (line.StartsWith("~"))
+                    {
+                       // sr.read
+                    }
+                }
+            }
+
             FileStream temp = new FileStream(path, FileMode.OpenOrCreate);
 
             while (temp.Position < temp.Length && temp.Position < 10000000 )   //// 10MB is the maximum load
@@ -172,8 +180,8 @@ namespace GPSNavigator
                 }
             }
             Grapher graphform = new Grapher(buffer);
-            graphform.Show();
-            graphform.BringToFront();
+            graphform.ShowDialog(this);
+            graphform.BringToFront();*/
         }
 
         private void opendialog_FileOk(object sender, CancelEventArgs e)
@@ -181,44 +189,7 @@ namespace GPSNavigator
             OpenLogFile(opendialog.FileName);
         }
 
-        public void handle_packet(byte[] packet)
-        {
-                var key = packet[1];
-                if (key == Functions.BIN_FULL)
-                    Functions.Process_Binary_Message_Full(packet, 1, buffer, GPSSat, GLONASSsat);
-                else if (key == Functions.BIN_FULL_PLUS)
-                    Functions.Process_Binary_Message_Full(packet, 1, buffer, GPSSat, GLONASSsat);
-                else if (key == Functions.BIN_COMPACT)
-                    Functions.Process_Binary_Message_Compact(packet, 1, buffer, GPSSat);
-                else if (key == Functions.BIN_GPS_SUPPLEMENT)
-                    Functions.Process_Binary_Message_SupplementGPS(packet, 1, GPSSat);
-                else if (key == Functions.BIN_DEBUG)
-                    MessageBox.Show(Functions.Process_Binary_Message_Debug(packet));
-                else if (key == Functions.BIN_RAW_DATA)
-                    Functions.Process_Binary_Message_RawData(packet, 1, rbuffer);
-                else if (key == Functions.BIN_LICENCE)
-                    Functions.Process_Binary_Message_Licence(packet, 1, licenses);
-                else if (key == Functions.BIN_SETTING)
-                    Functions.Process_Binary_Message_Setting(packet, 1);
-                else if (key == Functions.BIN_ATTITUDE_INFO)
-                    Functions.Process_Binary_Message_Attitude_Info(packet, 1, buffer, abuffer);
-                else
-                    WriteText("Couldnt Find the matching processor");
 
-                WriteText(DateTime.Now + "  :  " + Encoding.UTF8.GetString(packet));
-                var t = logger.Text;
-        }
-        public void handle_packet(string packet)
-        {
-            if (packet.StartsWith("$GP"))
-                Functions.Process_Packet(packet, Field);
-            else
-            {
-                byte[] d = Encoding.UTF8.GetBytes(packet);
-                handle_packet(d);
-            }
-
-        }
 
 
         
