@@ -17,15 +17,18 @@ namespace GPSNavigator
     {
 
         #region definitions
-        bool isRecording = true;
+        bool isRecording = false;
         bool isPlaying = true;
         Globals vars = new Globals();
+        FileStream Savefile,temp;
+        Logger log;
+        int serialcounter = 0,losscounter = 0;
         #endregion
 
         public Form1()
         {
             InitializeComponent();
-
+            Savefile = new FileStream("tmp.xf",FileMode.Create);
             try
             {
                 serialPort1.Open();
@@ -38,38 +41,45 @@ namespace GPSNavigator
 
         void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
+            SingleDataBuffer dbuf;
+            byte[] packet;
             if (isPlaying)
             {
-                string input;
-                try
+                //int input = serialPort1.ReadByte();
+                if (isRecording)
                 {
-                    input = serialPort1.ReadLine();
+                    var header = serialPort1.ReadByte();
+                    if (header == '~')
+                    {
+                        int msgType = serialPort1.ReadByte();
+
+                        int msgSize = Functions.checkMsgSize(msgType);
+                        if (msgSize != -1)          //packet not valid
+                        {
+
+                            byte[] byt = new byte[msgSize];
+                            byt[0] = (byte)'~';
+                            byt[1] = (byte)msgType;
+                            serialPort1.Read(byt, 2, msgSize - 2);
+                            
+                            dbuf = Functions.handle_packet(byt, vars);
+                            log.Writebuffer(dbuf);
+                        }
+                        //WriteText(DateTime.Now. + "  :  " + header);
+                        if (DateTime.Now.Second != serialcounter)
+                        {
+                            serialcounter = DateTime.Now.Second;
+                            WriteText(losscounter.ToString());
+                            losscounter = 0;
+                        }
+                        else
+                            losscounter++;
+
+                    }
+                    else
+                        WriteText("Hey");
+                    //vars.buffer.
                 }
-                catch
-                {
-                    input = "  ";
-                }
-
-               // handle_packet(input);
-
-
-                //  If Logging was enabled, received message should be written to file
-
-
-                //  if the data packet was a valid packet, it should be proccessed
-                // 
-                // try
-                //{
-                
-
-                //}
-                //catch (Exception ex)
-                //{
-                //     MessageBox.Show(ex.Message,"Error in processing NMEA data");
-                //}
-
-
-                WriteText(DateTime.Now + "  :  " + input);
             }
         }
 
@@ -84,7 +94,7 @@ namespace GPSNavigator
             }
             else
             {
-                this.logger.Text = text + "\r\n \r\n" + this.logger.Text;
+                this.logger.Text = text +"\r\n" + this.logger.Text;
             }
         }
 
@@ -189,9 +199,29 @@ namespace GPSNavigator
             OpenLogFile(opendialog.FileName);
         }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                savedialog.FileName = "";
+                savedialog.Filter = "GLF Log File|*.GLF";
+                savedialog.ShowDialog();
+            }
+            else
+            {
+                Savefile.Close();
+                log.CloseFiles();
+                isRecording = false;
+                MessageBox.Show("Read: " + serialcounter.ToString() + "   Loss: " + losscounter.ToString());
+            }
+        }
 
+        private void savedialog_FileOk(object sender, CancelEventArgs e)
+        {
+            Savefile = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.Write);
+            log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "Logs\\");
+            isRecording = true;
+        }
 
-
-        
     }
 }

@@ -82,6 +82,41 @@ namespace GPSNavigator.Classes
 
         }
 
+        public class SingleDataBuffer
+        {
+            public double Altitude;
+            public double Latitude;
+            public double Longitude;
+            public double X;
+            public double Y;
+            public double Z;
+            public double Vx;
+            public double Vy;
+            public double Vz;
+            public double V;
+            public double Ax;
+            public double Ay;
+            public double Az;
+            public double A;
+            public double PDOP;
+            public double Altitude_Processed;
+            public double Latitude_Processed;
+            public double Longitude_Processed;
+            public double X_Processed;
+            public double Y_Processed;
+            public double Z_Processed;
+            public double Vx_Processed;
+            public double Vy_Processed;
+            public double Vz_Processed;
+            public double V_Processed;
+            public double Temperature;
+            public double NumOfUsedSats;
+            public double NumOfVisibleSats;
+            public double state;
+            public DateTime datetime;
+            public int statcounter;
+        }
+
         public class BinaryRawDataBuffer
         {
             public List<int> Temperature = new List<int>();
@@ -208,6 +243,101 @@ namespace GPSNavigator.Classes
             public void ClearBuffer()
             {
                 vars.buffer = new DataBuffer();
+            }
+
+
+
+        }
+
+        public class Logger
+        {
+            private FileStream Vx,Vy,Vz,Ax,Ay,Az,X,Y,Z,Altitude,Latitude,Longitude,PDOP,state,Temperature,UsedStats,VisibleStats;
+            
+            public Logger(string DirPath)
+            {
+                System.IO.Directory.CreateDirectory(DirPath);
+                Vx = new FileStream(DirPath + "Vx.glf", FileMode.Create, FileAccess.Write); //DirPath + ""
+                Vy = new FileStream(DirPath + "Vy.glf", FileMode.Create, FileAccess.Write);
+                Vz = new FileStream(DirPath + "Vz.glf", FileMode.Create, FileAccess.Write);
+                Ax = new FileStream(DirPath + "Ax.glf", FileMode.Create, FileAccess.Write);
+                Ay = new FileStream(DirPath + "Ay.glf", FileMode.Create, FileAccess.Write);
+                Az = new FileStream(DirPath + "Az.glf", FileMode.Create, FileAccess.Write);
+                X = new FileStream(DirPath + "X.glf", FileMode.Create, FileAccess.Write);
+                Y = new FileStream(DirPath + "Y.glf", FileMode.Create, FileAccess.Write);
+                Z = new FileStream(DirPath + "Z.glf", FileMode.Create, FileAccess.Write);
+                Altitude = new FileStream(DirPath + "Altitude.glf", FileMode.Create, FileAccess.Write);
+                Latitude = new FileStream(DirPath + "Latitude.glf", FileMode.Create, FileAccess.Write);
+                Longitude = new FileStream(DirPath + "Longitude.glf", FileMode.Create, FileAccess.Write);
+                PDOP = new FileStream(DirPath + "PDOP.glf", FileMode.Create, FileAccess.Write);
+                state = new FileStream(DirPath + "state.glf", FileMode.Create, FileAccess.Write);
+                Temperature = new FileStream(DirPath + "Temperature.glf", FileMode.Create, FileAccess.Write);
+                UsedStats = new FileStream(DirPath + "UsedStats.glf", FileMode.Create, FileAccess.Write);
+                VisibleStats = new FileStream(DirPath + "VisibleStats.glf", FileMode.Create, FileAccess.Write);
+            }
+
+            public void Writebuffer(SingleDataBuffer buffer)
+            {
+                if (buffer.state == 1.0)
+                {
+                    Vx.Write(Encoding.UTF8.GetBytes(buffer.Vx.ToString()+"\r\n"), 0, buffer.Vx.ToString().Length+2);
+                    Vy.Write(Encoding.UTF8.GetBytes(buffer.Vy.ToString()+"\r\n"), 0, buffer.Vy.ToString().Length+2);
+                    Vz.Write(Encoding.UTF8.GetBytes(buffer.Vz.ToString()+"\r\n"), 0, buffer.Vz.ToString().Length+2);
+                    Ax.Write(Encoding.UTF8.GetBytes(buffer.Ax.ToString()+"\r\n"), 0, buffer.Ax.ToString().Length+2);
+                    Ay.Write(Encoding.UTF8.GetBytes(buffer.Ay.ToString()+"\r\n"), 0, buffer.Ay.ToString().Length+2);
+                    Az.Write(Encoding.UTF8.GetBytes(buffer.Az.ToString()+"\r\n"), 0, buffer.Az.ToString().Length+2);
+                    X.Write(Encoding.UTF8.GetBytes(buffer.X.ToString() + "\r\n"), 0, buffer.X.ToString().Length + 2);
+                    Y.Write(Encoding.UTF8.GetBytes(buffer.Y.ToString() + "\r\n"), 0, buffer.Y.ToString().Length + 2);
+                    Z.Write(Encoding.UTF8.GetBytes(buffer.Z.ToString() + "\r\n"), 0, buffer.Z.ToString().Length + 2);
+                    Altitude.Write(Encoding.UTF8.GetBytes(buffer.Altitude.ToString() + "\r\n"), 0, buffer.Altitude.ToString().Length + 2);
+                    Latitude.Write(Encoding.UTF8.GetBytes(buffer.Latitude.ToString() + "\r\n"), 0, buffer.Latitude.ToString().Length + 2);
+                    Longitude.Write(Encoding.UTF8.GetBytes(buffer.Longitude.ToString() + "\r\n"), 0, buffer.Longitude.ToString().Length + 2);
+                    PDOP.Write(Encoding.UTF8.GetBytes(buffer.PDOP.ToString() + "\r\n"), 0, buffer.PDOP.ToString().Length + 2);
+                    state.Write(Encoding.UTF8.GetBytes(buffer.state.ToString() + "\r\n"), 0, buffer.state.ToString().Length + 2);
+                    Temperature.Write(Encoding.UTF8.GetBytes(buffer.Temperature.ToString() + "\r\n"), 0, buffer.Temperature.ToString().Length + 2);
+                    UsedStats.Write(Encoding.UTF8.GetBytes(buffer.NumOfUsedSats.ToString() + "\r\n"), 0, buffer.NumOfUsedSats.ToString().Length + 2);
+                    VisibleStats.Write(Encoding.UTF8.GetBytes(buffer.NumOfVisibleSats.ToString() + "\r\n"), 0, buffer.NumOfVisibleSats.ToString().Length + 2);
+                }
+                else
+                {
+                    Vx.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Vy.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Vz.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Ax.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Ay.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Az.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    X.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Y.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Z.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Altitude.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Latitude.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Longitude.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    PDOP.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    state.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    Temperature.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    UsedStats.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                    VisibleStats.Write(Encoding.UTF8.GetBytes("\r\n"), 0, 1);
+                }
+            }
+
+            public void CloseFiles()
+            {
+                Vx.Close();
+                Vy.Close();
+                Vz.Close();
+                Ax.Close();
+                Ay.Close();
+                Az.Close();
+                X.Close();
+                Y.Close();
+                Z.Close();
+                Altitude.Close();
+                Latitude.Close();
+                Longitude.Close();
+                PDOP.Close();
+                state.Close();
+                Temperature.Close();
+                UsedStats.Close();
+                VisibleStats.Close();
             }
 
 
