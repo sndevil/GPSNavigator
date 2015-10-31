@@ -37,7 +37,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -131,21 +130,11 @@
             this.label4.TabIndex = 8;
             this.label4.Text = "label4";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(690, 383);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 19);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 496);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -158,6 +147,8 @@
             this.Name = "Grapher";
             this.Text = "Grapher";
             this.Load += new System.EventHandler(this.Grapher_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Grapher_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Grapher_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -174,6 +165,5 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
     }
 }

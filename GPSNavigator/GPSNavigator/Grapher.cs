@@ -44,21 +44,30 @@ namespace GPSNavigator
             offset = 0;
         }
 
+
         void Chart1_MouseClick(object sender, MouseEventArgs e)
         {
-            
-            var xpos = xlist[ps.PointIndex] * 7000;
-            if (xpos < 0)
-                xpos = 0;
-            offset = (long)(xpos - delta/2);
-            fmin = min + offset;
-            hScrollBar2.Value = (int)fmin;
-            hScrollBar1.Value = 100;
-            fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                var xpos = xlist[ps.PointIndex] * 7000;
+                if (xpos < 0)
+                    xpos = 0;
+                offset = (long)(xpos - delta / 2);
+                fmin = min + offset;
+                hScrollBar2.Value = (int)fmin;
+                hScrollBar1.Value = 100;
+                fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
+            }
+            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                fmin = 0;
+                offset = 0;
+                hScrollBar2.Value = 0;
+                hScrollBar1.Value = 0;
+                fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
+            }
             LoadData();
-            label1.Text = "Zoom: " + (100 - hScrollBar1.Value).ToString() + "%";
-            int percent = (int)(((float)hScrollBar2.Value / (float)hScrollBar2.Maximum) * 100);
-            label2.Text = "Position: " + percent.ToString() + "%";
+            UpdateLabels();
         }
 
         void Chart1_MouseMove(object sender, MouseEventArgs e)
@@ -130,6 +139,13 @@ namespace GPSNavigator
             ps.PointIndex = -1;
             ps.SeriesIndex = -1;
             ps.Label = "trackingBall";
+        }
+
+        public void UpdateLabels()
+        {
+            label1.Text = "Zoom: " + (100 - hScrollBar1.Value).ToString() + "%";
+            int percent = (int)(((float)hScrollBar2.Value / (float)hScrollBar2.Maximum) * 100);
+            label2.Text = "Position: " + percent.ToString() + "%";
         }
 
         public void PlotGraph()
@@ -230,7 +246,7 @@ namespace GPSNavigator
                 fmin = min + offset;
                 fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
                 delta = ((max - min) / 100000f) * (101 - hScrollBar1.Value);
-                label1.Text = "Zoom: " + (100 - hScrollBar1.Value).ToString() + "%";
+                UpdateLabels();
                 LoadData();
             }
         }
@@ -331,10 +347,17 @@ namespace GPSNavigator
                 offset = hScrollBar2.Value;
                 fmin = min + offset;
                 fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
-                int percent = (int)(((float)hScrollBar2.Value / (float)hScrollBar2.Maximum) * 100);
-                label2.Text = "Position: " + percent.ToString() + "%";
+                UpdateLabels();
                 LoadData();
             }
+        }
+
+        private void Grapher_KeyDown(object sender, KeyEventArgs e)
+        {
+        }
+
+        private void Grapher_KeyUp(object sender, KeyEventArgs e)
+        {
         }
     }
 }
