@@ -140,7 +140,7 @@ namespace GPSNavigator
            // file.ClearBuffer();
             //var temp = file.Readbuffer();
             Grapher graphform = new Grapher(vars.buffer,file.end,file);
-            graphform.ShowDialog(this);
+            graphform.Show(this);
             graphform.BringToFront();
            /* using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (BufferedStream bs = new BufferedStream(fs))

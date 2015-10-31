@@ -35,6 +35,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.hScrollBar2 = new System.Windows.Forms.HScrollBar();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,7 +64,12 @@
             "Vz",
             "Ax",
             "Ay",
-            "Az"});
+            "Az",
+            "PDOP",
+            "State",
+            "Temperature",
+            "UsedStats",
+            "VisibleStats"});
             this.comboBox1.Location = new System.Drawing.Point(596, 454);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(162, 21);
@@ -101,15 +109,45 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(147, 475);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 13);
+            this.label2.Size = new System.Drawing.Size(64, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Position:";
+            this.label2.Text = "Position: 0%";
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(354, 390);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(110, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "label3";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(33, 28);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "label4";
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(690, 383);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(26, 19);
+            this.button1.TabIndex = 9;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(779, 496);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.hScrollBar2);
             this.Controls.Add(this.label1);
@@ -134,5 +172,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.HScrollBar hScrollBar2;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button button1;
     }
 }

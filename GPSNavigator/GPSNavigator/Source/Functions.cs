@@ -465,6 +465,7 @@ namespace GPSNavigator.Source
 
             // State
             int state = data[index];
+            buffer.state.Add(state);
             if (state == 1)
             {
                 buffer.statcounter.Add(buffer.X.Count);
@@ -1494,25 +1495,32 @@ namespace GPSNavigator.Source
         {
             //vars.buffer = new DataBuffer();
             var key = packet[1];
-            if (key == Functions.BIN_FULL)
-                Functions.Process_Binary_Message_Full(packet, 1,ref vars.buffer,vars.GPSSat,vars.GLONASSsat);
-            else if (key == Functions.BIN_FULL_PLUS)
-                Functions.Process_Binary_Message_Full(packet, 1,ref vars.buffer,vars.GPSSat,vars.GLONASSsat);
-            else if (key == Functions.BIN_COMPACT)
-                Functions.Process_Binary_Message_Compact(packet, 1,ref vars.buffer,vars.GPSSat);
-            else if (key == Functions.BIN_GPS_SUPPLEMENT)
-            {}//  Functions.Process_Binary_Message_SupplementGPS(packet, 1,vars.GPSSat);
-            else if (key == Functions.BIN_DEBUG) { }
-            //MessageBox.Show(Functions.Process_Binary_Message_Debug(packet));
-            else if (key == Functions.BIN_RAW_DATA)
-                Functions.Process_Binary_Message_RawData(packet, 1, ref vars.rbuffer);
-            else if (key == Functions.BIN_LICENCE)
-            {}//Functions.Process_Binary_Message_Licence(packet, 1, vars.licenses);
-            else if (key == Functions.BIN_SETTING)
-                Functions.Process_Binary_Message_Setting(packet, 1);
-            else if (key == Functions.BIN_ATTITUDE_INFO)
-                Functions.Process_Binary_Message_Attitude_Info(packet, 1, ref vars.buffer, ref vars.abuffer);
-            else { }
+            try
+            {
+                if (key == Functions.BIN_FULL)
+                    Functions.Process_Binary_Message_Full(packet, 1, ref vars.buffer, vars.GPSSat, vars.GLONASSsat);
+                else if (key == Functions.BIN_FULL_PLUS)
+                    Functions.Process_Binary_Message_Full(packet, 1, ref vars.buffer, vars.GPSSat, vars.GLONASSsat);
+                else if (key == Functions.BIN_COMPACT)
+                    Functions.Process_Binary_Message_Compact(packet, 1, ref vars.buffer, vars.GPSSat);
+                else if (key == Functions.BIN_GPS_SUPPLEMENT)
+                    Functions.Process_Binary_Message_SupplementGPS(packet, 1,vars.GPSSat);
+                else if (key == Functions.BIN_DEBUG) { }
+                //MessageBox.Show(Functions.Process_Binary_Message_Debug(packet));
+                else if (key == Functions.BIN_RAW_DATA)
+                    Functions.Process_Binary_Message_RawData(packet, 1, ref vars.rbuffer);
+                else if (key == Functions.BIN_LICENCE)
+                    Functions.Process_Binary_Message_Licence(packet, 1, vars.licenses);
+                else if (key == Functions.BIN_SETTING)
+                    Functions.Process_Binary_Message_Setting(packet, 1);
+                else if (key == Functions.BIN_ATTITUDE_INFO)
+                    Functions.Process_Binary_Message_Attitude_Info(packet, 1, ref vars.buffer, ref vars.abuffer);
+                else { }
+            }
+            catch
+            {
+
+            }
                 //WriteText("Couldnt Find the matching processor");
 
             //WriteText(DateTime.Now + "  :  " + Encoding.UTF8.GetString(packet));

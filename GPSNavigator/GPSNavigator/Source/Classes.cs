@@ -154,7 +154,7 @@ namespace GPSNavigator.Classes
 
         public class LogFileManager
         {
-            private int Databuffercount = 1000; // 10k packet would be loaded to RAM
+            private int Databuffercount = 1000; // 500 packets would be loaded to RAM
             public long start = 0;
             public long end;
             public int position = 0;
