@@ -126,7 +126,6 @@ namespace GPSNavigator.Source
             return result;
         }
 
-
         public static double distance(CartesianCoordinate p1, CartesianCoordinate p2)
         {
             return Math.Sqrt(Math.Pow(p1.x - p2.x, 2) + Math.Pow(p1.y - p2.y, 2) + Math.Pow(p1.z - p2.z, 2));
@@ -256,7 +255,7 @@ namespace GPSNavigator.Source
             return (crc);
         }
 
-        private static double formatFloat(Int64 a)
+        public static double formatFloat(Int64 a)
         {
             double m, e, s;
 
@@ -270,7 +269,7 @@ namespace GPSNavigator.Source
             return s * m * Math.Pow(2, e - 127);
         }
 
-        private static double formatDouble(Int64 a)
+        public static double formatDouble(Int64 a)
         {
             double m, e, s;
 
@@ -818,7 +817,8 @@ namespace GPSNavigator.Source
             index += 4;
 
             buffer.NumOfVisibleSats = 0;
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BNumOfVisibleStats[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BNumOfVisibleStats[i] = data[index + i]; };
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -832,7 +832,8 @@ namespace GPSNavigator.Source
             }
             index += 4;
             buffer.NumOfUsedSats = 0;
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BNumOfUsedStats[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BNumOfUsedStats[i] = data[index + i]; };
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -871,7 +872,8 @@ namespace GPSNavigator.Source
             index += 4;
 
             // X
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BX[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX[i] = data[index + i]; };
             if (state == 1)
                 buffer.X = formatFloat(a);
             
@@ -879,43 +881,50 @@ namespace GPSNavigator.Source
             index += 4;
 
             // X Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BX_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX_Processed[i] = data[index + i]; };
             if (state == 1)
                 buffer.X_Processed = formatFloat(a);
             index += 4;
 
             // Y
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BY[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY[i] = data[index + i]; };
             if (state == 1)
                 buffer.Y = formatFloat(a);
             index += 4;
 
             // Y Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BY_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY_Processed[i] = data[index + i]; };
             if (state == 1)
                 buffer.Y_Processed = formatFloat(a);
             index += 4;
 
             // Z
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BZ[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ[i] = data[index + i]; };
             if (state == 1)
                 buffer.Z = formatFloat(a);
             index += 4;
 
             // Z Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BZ_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ_Processed[i] = data[index + i]; };
             if (state == 1)
                 buffer.Z_Processed = formatFloat(a);
             index += 4;
 
             //Latitude
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BLatitude[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude[i] = data[index + i]; };
             if (state == 1)
                 buffer.Latitude = formatFloat(a);
             index += 4;
 
             //Latitude Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BLatitude_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude_Processed[i] = data[index + i]; };
             if (state == 1)
             {
                 var Latitude = formatFloat(a);
@@ -924,13 +933,15 @@ namespace GPSNavigator.Source
             index += 4;
 
             //Longitude
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BLongitude[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude[i] = data[index + i]; };
             if (state == 1)
                 buffer.Longitude = formatFloat(a);
             index += 4;
 
             //Longitude Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BLongitude_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude_Processed[i] = data[index + i]; };
             if (state == 1)
             {
                 var Longitude = formatFloat(a);
@@ -939,13 +950,15 @@ namespace GPSNavigator.Source
             index += 4;
 
             //Altitude
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BAltitude[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude[i] = data[index + i]; };
             if (state == 1)
                 buffer.Altitude = formatFloat(a);
             index += 4;
 
             //Altitude Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BAltitude_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude_Processed[i] = data[index + i]; };
             if (state == 1)
             {
                 var Altitude = formatFloat(a);
@@ -954,55 +967,64 @@ namespace GPSNavigator.Source
             index += 4;
 
             // Vx
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVx[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx[i] = data[index + i]; };
             if (state == 1)
                 buffer.Vx = formatFloat(a);
             index += 4;
 
             // Vx Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVx_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx_Processed[i] = data[index + i]; };
             if (state == 1)
                 buffer.Vx_Processed = formatFloat(a);
             index += 4;
 
             // Vy
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVy[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy[i] = data[index + i]; };
             if (state == 1)
                 buffer.Vy = formatFloat(a);
             index += 4;
 
             // Vy Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVy_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy_Processed[i] = data[index + i]; };
             if (state == 1)
                 buffer.Vy_Processed = formatFloat(a);
             index += 4;
 
             // Vz
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVz[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz[i] = data[index + i]; };
             if (state == 1)
                 buffer.Vz = formatFloat(a);
             index += 4;
 
             // Vz Processed
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVz_Processed[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz_Processed[i] = data[index + i]; };
             if (state == 1)
                 buffer.Vz_Processed = formatFloat(a);
             index += 4;
 
             //Ax acceleration
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BAx[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAx[i] = data[index + i]; };
             if (state == 1)
                 buffer.Ax = formatFloat(a);
             index += 4;
 
             //Ay acceleration
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BAy[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAy[i] = data[index + i]; };
             if (state == 1)
                 buffer.Ay = formatFloat(a);
             index += 4;
 
             //Az acceleration
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BAz[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAz[i] = data[index + i]; };
             if (state == 1)
                 buffer.Az = formatFloat(a);
             index += 4;
@@ -1011,8 +1033,11 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 buffer.V = (Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2)));
+                buffer.BV = BitConverter.GetBytes(buffer.V);
                 buffer.V_Processed=(Math.Sqrt(Math.Pow(buffer.Vx_Processed, 2) + Math.Pow(buffer.Vy_Processed, 2) + Math.Pow(buffer.Vz_Processed, 2)));
+                buffer.BV_Processed = BitConverter.GetBytes(buffer.V_Processed);
                 buffer.A=(Math.Sqrt(Math.Pow(buffer.Ax, 2) + Math.Pow(buffer.Ay, 2) + Math.Pow(buffer.Az, 2)));
+                buffer.BA = BitConverter.GetBytes(buffer.A);
             }
 
             //SNR GPS
@@ -1073,6 +1098,7 @@ namespace GPSNavigator.Source
                 GDOP = Decompress_DOP(data[index]);
                 index++;
                 buffer.PDOP = Decompress_DOP(data[index]);
+                buffer.BPDOP = BitConverter.GetBytes(buffer.PDOP);
                 index++;
                 HDOP = Decompress_DOP(data[index]);
                 index++;
@@ -1357,7 +1383,8 @@ namespace GPSNavigator.Source
             index += 4;
 
             buffer.NumOfVisibleSats=0;
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BNumOfVisibleStats[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BNumOfVisibleStats[i] = data[index + i]; };
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -1385,84 +1412,102 @@ namespace GPSNavigator.Source
             index += 4;
 
             // X
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BX[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.X = formatFloat(a);
-                buffer.X_Processed = formatFloat(a);
+                buffer.X_Processed = buffer.X;
             }
+            buffer.BX_Processed = buffer.BX;
             index += 4;
 
             // Y
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BY[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Y = formatFloat(a);
-                buffer.Y_Processed = formatFloat(a);
+                buffer.Y_Processed = buffer.Y;
             }
+            buffer.BY_Processed = buffer.BY;
             index += 4;
 
             // Z
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BZ[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Z = formatFloat(a);
-                buffer.Z_Processed = formatFloat(a);
+                buffer.Z_Processed = buffer.Z;
             }
+            buffer.BZ_Processed = buffer.BZ;
             index += 4;
 
             //Latitude
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BLatitude[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Latitude = formatFloat(a);
-                buffer.Latitude_Processed = formatFloat(a);
+                buffer.Latitude_Processed = buffer.Latitude;
             }
+            buffer.BLatitude_Processed = buffer.BLatitude;
             index += 4;
 
             //Longitude
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BLongitude[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Longitude = formatFloat(a);
-                buffer.Longitude_Processed = formatFloat(a);
+                buffer.Longitude_Processed = buffer.Longitude;
             }
+            buffer.BLongitude_Processed = buffer.BLongitude;
             index += 4;
 
             //Altitude
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BAltitude[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Altitude = formatFloat(a);
-                buffer.Altitude_Processed = formatFloat(a);
+                buffer.Altitude_Processed = buffer.Altitude;
             }
+            buffer.BAltitude_Processed = buffer.BAltitude;
             index += 4;
 
             // Vx
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVx[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Vx = formatFloat(a);
-                buffer.Vx_Processed= formatFloat(a);
+                buffer.Vx_Processed = buffer.Vx;
             }
+            buffer.BVx_Processed = buffer.BVx;
             index += 4;
 
             // Vy
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVy[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Vy = formatFloat(a);
-                buffer.Vy_Processed = formatFloat(a);
+                buffer.Vy_Processed = buffer.Vy;
             }
+            buffer.BVy_Processed = buffer.BVy;
             index += 4;
 
             // Vz
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BVz[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz[i] = data[index + i]; };
             if (state == 1)
             {
                 buffer.Vz = formatFloat(a);
-                buffer.Vz_Processed = formatFloat(a);
+                buffer.Vz_Processed = buffer.Vz;
             }
+            buffer.BVz_Processed = buffer.BVz;
             index += 4;
 
             //V
@@ -1471,11 +1516,13 @@ namespace GPSNavigator.Source
                 var temp = Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2));
                 buffer.V = (temp);
                 buffer.V_Processed = (temp);
+                buffer.BV = BitConverter.GetBytes(temp);
+                buffer.BV_Processed = BitConverter.GetBytes(temp);
             }
             // DOP
             double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
-
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BPDOP[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BPDOP[i] = data[index + i]; }
             if (state == 1)
                 buffer.PDOP = (formatFloat(a));
             index += 4;

@@ -238,6 +238,30 @@ namespace GPSNavigator
             Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(ylist);
         }
 
+        public void PlotSingleDataGraph(List<double> buffer)
+        {
+            int counter = 0;
+            float i = 0;
+            double temp = 0;
+            var dt = buffer.Count / Databuffercount;
+            for (counter = 0; counter < Databuffercount; counter++)
+            {
+
+                temp = buffer[(int)i];
+
+                ylist[counter] = temp;
+                xlist[counter] = (double)i;
+                i += dt;
+            }
+            // if (counter < 1000)
+            //{
+            //    ylist[counter] = 0;
+            //   xlist[counter] = max;
+            // }
+            Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(xlist);
+            Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(ylist);
+        }
+
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
             if (hScrollBar1.Value != scroll1)
@@ -324,7 +348,7 @@ namespace GPSNavigator
                     Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
                     break;
             }
-            PlotGraph();
+            //PlotGraph();
         }
 
         public void LoadData()
@@ -335,9 +359,11 @@ namespace GPSNavigator
             filemanager.delta = (fmax-fmin) / (float)Databuffercount;
             delta = (fmax - fmin) / (float)Databuffercount;
             //Stopwatch s = Stopwatch.StartNew();
-            dbuffer = filemanager.Readbuffer();
+            //dbuffer = filemanager.Readbuffer();
+            var t = filemanager.ReadSingleBuffer();
+            PlotSingleDataGraph(t);
             //MessageBox.Show(s.ElapsedMilliseconds.ToString());
-            PlotGraph();
+            //PlotGraph();
         }
 
         private void hScrollBar2_Scroll(object sender, ScrollEventArgs e)
