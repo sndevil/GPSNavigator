@@ -23,7 +23,6 @@ namespace GPSNavigator
         public DataBuffer dbuffer;
         public LogFileManager filemanager;
         public PointStyle ps;
-        public enum graphtype { X, Y, Z, Vx, Vy, Vz, Ax, Ay, Az, Latitude, Longitude, Altitude,PDOP,State,Temperature,UsedStats,VisibleStats};
         private graphtype selectedtype = graphtype.X;
 
         private const int Databuffercount = 500;
@@ -238,6 +237,25 @@ namespace GPSNavigator
             Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(ylist);
         }
 
+        public void PlotGraph(GraphData data)
+        {
+            xlist = data.x;
+            ylist = data.y;
+            double[] max = Functions.FindMaxes(data.max);
+            double[] min = Functions.FindMins(data.min);
+            double[] x = new double[500];
+            for (int i = 0; i < 500; i++)
+            {
+                x[i] = (double)i / 500;
+            }
+            Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.x);
+            Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
+            Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(x);
+            Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
+            Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(x);
+            Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
+        }
+
         public void PlotSingleDataGraph(List<double> buffer)
         {
             int counter = 0;
@@ -349,6 +367,7 @@ namespace GPSNavigator
                     break;
             }
             //PlotGraph();
+            LoadData();
         }
 
         public void LoadData()
@@ -360,8 +379,8 @@ namespace GPSNavigator
             delta = (fmax - fmin) / (float)Databuffercount;
             //Stopwatch s = Stopwatch.StartNew();
             //dbuffer = filemanager.Readbuffer();
-            var t = filemanager.ReadSingleBuffer();
-            PlotSingleDataGraph(t);
+            var t = filemanager.Readbuffer(selectedtype, 0.0f, 1f, Databuffercount);
+            PlotGraph(t);
             //MessageBox.Show(s.ElapsedMilliseconds.ToString());
             //PlotGraph();
         }
@@ -376,14 +395,6 @@ namespace GPSNavigator
                 UpdateLabels();
                 LoadData();
             }
-        }
-
-        private void Grapher_KeyDown(object sender, KeyEventArgs e)
-        {
-        }
-
-        private void Grapher_KeyUp(object sender, KeyEventArgs e)
-        {
         }
     }
 }

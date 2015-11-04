@@ -24,6 +24,7 @@ namespace GPSNavigator
         Logger log;
         int serialcounter = 0,losscounter = 0;
         ExtremumHandler exthandler = new ExtremumHandler();
+        string message = "";
         #endregion
 
         public Form1()
@@ -43,7 +44,6 @@ namespace GPSNavigator
         void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             SingleDataBuffer dbuf;
-            byte[] packet;
             if (isPlaying)
             {
                 //int input = serialPort1.ReadByte();
@@ -55,7 +55,7 @@ namespace GPSNavigator
                         int msgType = serialPort1.ReadByte();
 
                         int msgSize = Functions.checkMsgSize(msgType);
-                        if (msgSize != -1)          //packet not valid
+                        if (msgSize != -1)
                         {
 
                             byte[] byt = new byte[msgSize];
@@ -64,9 +64,12 @@ namespace GPSNavigator
                             serialPort1.Read(byt, 2, msgSize - 2);
                             
                             dbuf = Functions.handle_packet(byt, vars);
-                            if (exthandler.ExtremumStarted)
+
+                            #region Extremum_Ifs
+                           // message += dbuf.X + "  |  ";
+                            if (exthandler.ExtremumStarted && dbuf.state == 1)
                             {
-                                if (exthandler.ExtremeCounter >= 100)
+                                if (exthandler.ExtremeCounter++ >= 100)
                                 {
                                     exthandler.ExtremeCounter = 0;
                                     dbuf.WriteExtreme = true;
@@ -100,6 +103,7 @@ namespace GPSNavigator
                                     dbuf.BLatitudeMin = exthandler.BLatitudeMin;
                                     dbuf.BLongitudeMax = exthandler.BLongitudeMax;
                                     dbuf.BLongitudeMin = exthandler.BLongitudeMin;
+                                    exthandler.ExtremumStarted = false;
                                 }
                                 if (dbuf.A > exthandler.AMax){ exthandler.AMax = dbuf.A; exthandler.BAMax = dbuf.BA;}
                                 if (dbuf.A < exthandler.Amin){ exthandler.Amin = dbuf.A; exthandler.BAmin = dbuf.BA;}
@@ -132,26 +136,42 @@ namespace GPSNavigator
                                 if (dbuf.PDOP > exthandler.PDOPMax) { exthandler.PDOPMax = dbuf.PDOP; exthandler.BPDOPMax = dbuf.BPDOP; }
                                 if (dbuf.PDOP < exthandler.PDOPMin) { exthandler.PDOPMin = dbuf.PDOP; exthandler.BPDOPMin = dbuf.BPDOP; }
                             }
-                            else
+                            else if (dbuf.state == 1)
                             {
                                 exthandler.ExtremumStarted = true;
                                 exthandler.AltitudeMax = exthandler.AltitudeMin = dbuf.Altitude;
+                                exthandler.BAltitudeMax = exthandler.BAltitudeMin = dbuf.BAltitude;
                                 exthandler.AMax = exthandler.Amin = dbuf.A;
+                                exthandler.BAMax = exthandler.BAmin = dbuf.BA;
                                 exthandler.AxMax = exthandler.AxMin = dbuf.Ax;
+                                exthandler.BAxMax = exthandler.BAxMin = dbuf.BAx;
                                 exthandler.AyMax = exthandler.AyMin = dbuf.Ay;
+                                exthandler.BAyMax = exthandler.BAyMin = dbuf.BAy;
                                 exthandler.AzMax = exthandler.AzMin = dbuf.Az;
+                                exthandler.BAzMax = exthandler.BAzMin = dbuf.BAz;
                                 exthandler.LatitudeMax = exthandler.LatitudeMin = dbuf.Latitude;
+                                exthandler.BLatitudeMax = exthandler.BLatitudeMin = dbuf.BLatitude;
                                 exthandler.LongitudeMax = exthandler.LongitudeMin = dbuf.Longitude;
+                                exthandler.BLongitudeMax = exthandler.BLongitudeMin = dbuf.BLongitude;
                                 exthandler.PDOPMax = exthandler.PDOPMin = dbuf.PDOP;
+                                exthandler.BPDOPMax = exthandler.BPDOPMin = dbuf.BPDOP;
                                 exthandler.VMax = exthandler.VMin = dbuf.V;
+                                exthandler.BVMax = exthandler.BVMin = dbuf.BV;
                                 exthandler.VxMax = exthandler.VxMin = dbuf.Vx;
+                                exthandler.BVxMax = exthandler.BVxMin = dbuf.BVx;
                                 exthandler.VyMax = exthandler.VyMin = dbuf.Vy;
+                                exthandler.BVyMax = exthandler.BVyMin = dbuf.BVy;
                                 exthandler.VzMax = exthandler.VzMin = dbuf.Vz;
+                                exthandler.BVzMax = exthandler.BVzMin = dbuf.BVz;
                                 exthandler.XMax = exthandler.XMin = dbuf.X;
+                                exthandler.BXMax = exthandler.BXMin = dbuf.BX;
                                 exthandler.YMax = exthandler.YMin = dbuf.Y;
+                                exthandler.BYMax = exthandler.BYMin = dbuf.BY;
                                 exthandler.ZMax = exthandler.ZMin = dbuf.Z;
+                                exthandler.BZMax = exthandler.BZMin = dbuf.BZ;
                                 exthandler.ExtremeCounter++;
                             }
+                            #endregion
 
                             log.Writebuffer(dbuf);
                         }
@@ -229,9 +249,12 @@ namespace GPSNavigator
 
         private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            opendialog.FileName = "";
-            opendialog.Filter = "GLF Files|*.glf|All Files|*.*";
-            opendialog.ShowDialog();
+            folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
+            folderdialog.ShowDialog();
+            if (folderdialog.SelectedPath != "")
+            {
+                OpenLogFile(folderdialog.SelectedPath);
+            }
         }
 
         public void OpenLogFile(string path)
@@ -302,7 +325,6 @@ namespace GPSNavigator
                 Savefile.Close();
                 log.CloseFiles();
                 isRecording = false;
-                MessageBox.Show("Read: " + serialcounter.ToString() + "   Loss: " + losscounter.ToString());
             }
         }
 

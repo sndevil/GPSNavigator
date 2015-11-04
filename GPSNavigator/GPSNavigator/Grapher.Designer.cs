@@ -45,7 +45,7 @@
             this.Chart1.Location = new System.Drawing.Point(0, 0);
             this.Chart1.Name = "Chart1";
             this.Chart1.PropBag = resources.GetString("Chart1.PropBag");
-            this.Chart1.Size = new System.Drawing.Size(781, 433);
+            this.Chart1.Size = new System.Drawing.Size(996, 433);
             this.Chart1.TabIndex = 1;
             // 
             // comboBox1
@@ -69,7 +69,7 @@
             "Temperature",
             "UsedStats",
             "VisibleStats"});
-            this.comboBox1.Location = new System.Drawing.Point(596, 454);
+            this.comboBox1.Location = new System.Drawing.Point(820, 454);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(162, 21);
             this.comboBox1.TabIndex = 2;
@@ -78,7 +78,7 @@
             // hScrollBar1
             // 
             this.hScrollBar1.LargeChange = 1;
-            this.hScrollBar1.Location = new System.Drawing.Point(406, 454);
+            this.hScrollBar1.Location = new System.Drawing.Point(563, 454);
             this.hScrollBar1.Minimum = 1;
             this.hScrollBar1.Name = "hScrollBar1";
             this.hScrollBar1.Size = new System.Drawing.Size(178, 21);
@@ -89,7 +89,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(460, 475);
+            this.label1.Location = new System.Drawing.Point(616, 475);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(66, 13);
             this.label1.TabIndex = 4;
@@ -114,7 +114,7 @@
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(354, 390);
+            this.label3.Location = new System.Drawing.Point(459, 391);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(110, 13);
             this.label3.TabIndex = 7;
@@ -134,7 +134,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 496);
+            this.ClientSize = new System.Drawing.Size(994, 496);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -147,8 +147,6 @@
             this.Name = "Grapher";
             this.Text = "Grapher";
             this.Load += new System.EventHandler(this.Grapher_Load);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Grapher_KeyDown);
-            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Grapher_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

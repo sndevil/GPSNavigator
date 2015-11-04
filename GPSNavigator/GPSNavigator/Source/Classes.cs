@@ -217,6 +217,7 @@ namespace GPSNavigator.Classes
             waitForMessageType,
             readMessage
         };
+        public enum graphtype { X, Y, Z, Vx, Vy, Vz, Ax, Ay, Az, Latitude, Longitude, Altitude, PDOP, State, Temperature, UsedStats, VisibleStats };
 
         public class GEOpoint
         {
@@ -251,6 +252,21 @@ namespace GPSNavigator.Classes
             public int Signal_Status;
         }
 
+        public class GraphData
+        {
+            public double[] x;
+            public double[] y;
+            public List<double> max;
+            public List<double> min;
+            public GraphData(int Points)
+            {
+                x = new double[Points];
+                y = new double[Points];
+                max = new List<double>();
+                min = new List<double>();
+            }
+        }
+
 
         public class LogFileManager
         {
@@ -262,17 +278,80 @@ namespace GPSNavigator.Classes
 
             public string filepath;
 
-            private FileStream stream;
+            private FileStream stream,maxstream,minstream;
+            private FileStream Vx, Vy, Vz, Ax, Ay, Az, X, Y, Z, Altitude, Latitude, Longitude, PDOP, state, Temperature, UsedStats, VisibleStats, V, A;
+            private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin, VMax, VMin, AMax, AMin;
+            private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
+
             private Globals vars;
 
             public LogFileManager(string path,ref Globals variables)
             {
-                stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-                vars = variables;
-                end = stream.Length;
-                delta = (float)((end - start) / Databuffercount);
+                try
+                {
+                    #region initializing_streams
+                    V = new FileStream(path + "\\V.glf", FileMode.Open, FileAccess.Read);
+                    VMax = new FileStream(path + "\\VMax.glf", FileMode.Open, FileAccess.Read);
+                    VMin = new FileStream(path + "\\VMin.glf", FileMode.Open, FileAccess.Read);
+                    A = new FileStream(path + "\\A.glf", FileMode.Open, FileAccess.Read);
+                    AMax = new FileStream(path + "\\AMax.glf", FileMode.Open, FileAccess.Read);
+                    AMin = new FileStream(path + "\\AMin.glf", FileMode.Open, FileAccess.Read);
+                    Vx = new FileStream(path + "\\Vx.glf", FileMode.Open, FileAccess.Read);
+                    VxMax = new FileStream(path + "\\VxMax.glf", FileMode.Open, FileAccess.Read);
+                    VxMin = new FileStream(path + "\\VxMin.glf", FileMode.Open, FileAccess.Read);
+                    Vy = new FileStream(path + "\\Vy.glf", FileMode.Open, FileAccess.Read);
+                    VyMax = new FileStream(path + "\\VyMax.glf", FileMode.Open, FileAccess.Read);
+                    VyMin = new FileStream(path + "\\VyMin.glf", FileMode.Open, FileAccess.Read);
+                    Vz = new FileStream(path + "\\Vz.glf", FileMode.Open, FileAccess.Read);
+                    VzMax = new FileStream(path + "\\VzMax.glf", FileMode.Open, FileAccess.Read);
+                    VzMin = new FileStream(path + "\\VzMin.glf", FileMode.Open, FileAccess.Read);
+                    Ax = new FileStream(path + "\\Ax.glf", FileMode.Open, FileAccess.Read);
+                    AxMax = new FileStream(path + "\\AxMax.glf", FileMode.Open, FileAccess.Read);
+                    AxMin = new FileStream(path + "\\AxMin.glf", FileMode.Open, FileAccess.Read);
+                    Ay = new FileStream(path + "\\Ay.glf", FileMode.Open, FileAccess.Read);
+                    AyMax = new FileStream(path + "\\AyMax.glf", FileMode.Open, FileAccess.Read);
+                    AyMin = new FileStream(path + "\\AyMin.glf", FileMode.Open, FileAccess.Read);
+                    Az = new FileStream(path + "\\Az.glf", FileMode.Open, FileAccess.Read);
+                    AzMax = new FileStream(path + "\\AzMax.glf", FileMode.Open, FileAccess.Read);
+                    AzMin = new FileStream(path + "\\AzMin.glf", FileMode.Open, FileAccess.Read);
+                    X = new FileStream(path + "\\X.glf", FileMode.Open, FileAccess.Read);
+                    XMax = new FileStream(path + "\\XMax.glf", FileMode.Open, FileAccess.Read);
+                    XMin = new FileStream(path + "\\XMin.glf", FileMode.Open, FileAccess.Read);
+                    Y = new FileStream(path + "\\Y.glf", FileMode.Open, FileAccess.Read);
+                    YMax = new FileStream(path + "\\YMax.glf", FileMode.Open, FileAccess.Read);
+                    YMin = new FileStream(path + "\\YMin.glf", FileMode.Open, FileAccess.Read);
+                    Z = new FileStream(path + "\\Z.glf", FileMode.Open, FileAccess.Read);
+                    ZMax = new FileStream(path + "\\ZMax.glf", FileMode.Open, FileAccess.Read);
+                    ZMin = new FileStream(path + "\\ZMin.glf", FileMode.Open, FileAccess.Read);
+                    Altitude = new FileStream(path + "\\Altitude.glf", FileMode.Open, FileAccess.Read);
+                    AltitudeMax = new FileStream(path + "\\AltitudeMax.glf", FileMode.Open, FileAccess.Read);
+                    AltitudeMin = new FileStream(path + "\\AltitudeMin.glf", FileMode.Open, FileAccess.Read);
+                    Latitude = new FileStream(path + "\\Latitude.glf", FileMode.Open, FileAccess.Read);
+                    LatitudeMax = new FileStream(path + "\\LatitudeMax.glf", FileMode.Open, FileAccess.Read);
+                    LatitudeMin = new FileStream(path + "\\LatitudeMin.glf", FileMode.Open, FileAccess.Read);
+                    Longitude = new FileStream(path + "\\Longitude.glf", FileMode.Open, FileAccess.Read);
+                    LongitudeMax = new FileStream(path + "\\LongitudeMax.glf", FileMode.Open, FileAccess.Read);
+                    LongitudeMin = new FileStream(path + "\\LongitudeMin.glf", FileMode.Open, FileAccess.Read);
+                    PDOP = new FileStream(path + "\\PDOP.glf", FileMode.Open, FileAccess.Read);
+                    PDOPMax = new FileStream(path + "\\PDOPMax.glf", FileMode.Open, FileAccess.Read);
+                    PDOPMin = new FileStream(path + "\\PDOPMin.glf", FileMode.Open, FileAccess.Read);
+                    state = new FileStream(path + "\\state.glf", FileMode.Open, FileAccess.Read);
+                    Temperature = new FileStream(path + "\\Temperature.glf", FileMode.Open, FileAccess.Read);
+                    UsedStats = new FileStream(path + "\\UsedStats.glf", FileMode.Open, FileAccess.Read);
+                    VisibleStats = new FileStream(path + "\\VisibleStats.glf", FileMode.Open, FileAccess.Read);
+
+                    #endregion
+                }
+                catch
+                {
+                    throw new Exception("Log Files Opening Error");
+                }
+               // vars = variables;
+               // end = stream.Length;
+               // delta = (float)((end - start) / Databuffercount);
             }
 
+            //Legacy
             public DataBuffer Readbuffer()
             {
                 vars.Clear_buffer();
@@ -303,6 +382,131 @@ namespace GPSNavigator.Classes
                         break;
                 }
                 return vars.buffer;
+            }
+
+            public GraphData Readbuffer(graphtype type,float fstart, float fend,int gpoints)
+            {
+                #region stream_switch
+                switch (type)
+                {
+                    case graphtype.Altitude:
+                        stream = Altitude;
+                        maxstream = AltitudeMax;
+                        minstream = AltitudeMin;
+                        break;
+                    case graphtype.Ax:
+                        stream = Ax;
+                        maxstream = AxMax;
+                        minstream = AxMin;
+                        break;
+                    case graphtype.Ay:
+                        stream = Ay;
+                        maxstream = AyMax;
+                        minstream = AyMin;
+                        break;
+                    case graphtype.Az:
+                        stream = Az;
+                        maxstream = AzMax;
+                        minstream = AzMin;
+                        break;
+                    case graphtype.Latitude:
+                        stream = Latitude;
+                        maxstream = LatitudeMax;
+                        minstream = LatitudeMin;
+                        break;
+                    case graphtype.Longitude:
+                        stream = Longitude;
+                        maxstream = LongitudeMax;
+                        minstream = LongitudeMin;
+                        break;
+                    case graphtype.PDOP:
+                        stream = PDOP;
+                        maxstream = PDOPMax;
+                        minstream = PDOPMin;
+                        break;
+                    case graphtype.State:
+                        stream = state;
+                        maxstream = minstream = state;
+                        break;
+                    case graphtype.Temperature:
+                        stream = Temperature;
+                        maxstream = minstream = Temperature;
+                        break;
+                    case graphtype.UsedStats:
+                        stream = UsedStats;
+                        maxstream = minstream = UsedStats;
+                        break;
+                    case graphtype.VisibleStats:
+                        stream = VisibleStats;
+                        maxstream = minstream = VisibleStats;
+                        break;
+                    case graphtype.Vx:
+                        stream = Vx;
+                        maxstream = VxMax;
+                        minstream = VxMin;
+                        break;
+                    case graphtype.Vy:
+                        stream = Vy;
+                        maxstream = VyMax;
+                        minstream = VyMin;
+                        break;
+                    case graphtype.Vz:
+                        stream = Vz;
+                        maxstream = VzMax;
+                        minstream = VzMin;
+                        break;
+                    case graphtype.X:
+                        stream = X;
+                        maxstream = XMax;
+                        minstream = XMin;
+                        break;
+                    case graphtype.Y:
+                        stream = Y;
+                        maxstream = YMax;
+                        minstream = YMin;
+                        break;
+                    case graphtype.Z:
+                        stream = Z;
+                        maxstream = ZMax;
+                        minstream = ZMin;
+                        break;
+                }
+                #endregion
+
+                GraphData tempgraphdata = new GraphData(gpoints);
+
+                stream.Position = (long)(fstart * stream.Length);
+                maxstream.Position = minstream.Position = (long)(fstart * minstream.Length);
+
+                var db = (float)((fend - fstart) * stream.Length / gpoints);
+                var mdb = (float)((fend - fstart) * maxstream.Length);
+                var counter = 0;
+                int extcounter = 0,extflag=1;
+                byte[] byt = new byte[4];
+                while (true)
+                {
+                    if (extflag >= 0)
+                    {
+                        maxstream.Read(byt, 0, 4);
+                        var tempmax = Functions.BytetoFloat(byt);
+                        tempgraphdata.max.Add(tempmax);
+                        minstream.Read(byt, 0, 4);
+                        var tempmin = Functions.BytetoFloat(byt);
+                        tempgraphdata.min.Add(tempmin);
+                        if (maxstream.Position / maxstream.Length > fend)
+                            extflag = -1;
+                    }
+                    stream.Read(byt, 0, 4);
+                    var t = Functions.BytetoFloat(byt);
+                    tempgraphdata.x[counter] = (double)stream.Position / stream.Length;
+                    tempgraphdata.y[counter] = t;
+
+                    stream.Position += (int)db - 4;
+                    stream.Position -= stream.Position % 4;
+                    if (stream.Position >= stream.Length - 3 || counter++ >= gpoints-1)
+                        break;
+                }
+                return tempgraphdata;
             }
 
             public void ClearBuffer()
@@ -339,6 +543,8 @@ namespace GPSNavigator.Classes
             private FileStream Vx,Vy,Vz,Ax,Ay,Az,X,Y,Z,Altitude,Latitude,Longitude,PDOP,state,Temperature,UsedStats,VisibleStats,V,A;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin,VMax,VMin,AMax,AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
+
+            private int counter = 0;
 
             public Logger(string DirPath)
             {
@@ -444,6 +650,17 @@ namespace GPSNavigator.Classes
                     VMin.Write(buffer.BVMin, 0, 4);
                     AMax.Write(buffer.BAMax, 0, 4);
                     AMin.Write(buffer.BAMin, 0, 4);
+                    AltitudeMax.Write(buffer.BAltitudeMax, 0, 4);
+                    AltitudeMin.Write(buffer.BAltitudeMin, 0, 4);
+                    LatitudeMax.Write(buffer.BLatitudeMax, 0, 4);
+                    LatitudeMin.Write(buffer.BLatitudeMin, 0, 4);
+                    LongitudeMax.Write(buffer.BLongitudeMax, 0, 4);
+                    LongitudeMin.Write(buffer.BLongitudeMin, 0, 4);
+                    PDOPMax.Write(buffer.BPDOPMax, 0, 4);
+                    PDOPMin.Write(buffer.BPDOPMin, 0, 4);
+                    //counter++;
+                    //if (counter == 20)
+                    //{ }
                 }
             }
 
@@ -458,6 +675,8 @@ namespace GPSNavigator.Classes
                 X.Close();
                 Y.Close();
                 Z.Close();
+                V.Close();
+                A.Close();
                 Altitude.Close();
                 Latitude.Close();
                 Longitude.Close();
@@ -466,10 +685,35 @@ namespace GPSNavigator.Classes
                 Temperature.Close();
                 UsedStats.Close();
                 VisibleStats.Close();
+                VxMax.Close();
+                VxMin.Close();
+                VyMax.Close();
+                VyMin.Close();
+                VzMax.Close();
+                VzMin.Close();
+                AxMax.Close();
+                AxMin.Close();
+                AyMax.Close();
+                AyMin.Close();
+                AzMax.Close();
+                AzMin.Close();
+                XMax.Close();
+                XMin.Close();
+                YMax.Close();
+                YMin.Close();
+                ZMax.Close();
+                ZMin.Close();
+                VMax.Close();
+                VMin.Close();
+                AMax.Close();
+                AMin.Close();
+                AltitudeMax.Close();
+                AltitudeMin.Close();
+                LongitudeMin.Close();
+                LongitudeMax.Close();
+                LatitudeMin.Close();
+                LatitudeMax.Close();
             }
-
-
-
         }
 
 

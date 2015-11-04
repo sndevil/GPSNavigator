@@ -269,6 +269,15 @@ namespace GPSNavigator.Source
             return s * m * Math.Pow(2, e - 127);
         }
 
+        public static double BytetoFloat(byte[] array)
+        {
+            int t = array[3];
+            for (int i = 2; i >= 0; --i)
+                t = t * 256 + array[i];
+            var t2 = Functions.formatFloat(t);
+            return t2;
+        }
+
         public static double formatDouble(Int64 a)
         {
             double m, e, s;
@@ -1033,11 +1042,11 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 buffer.V = (Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2)));
-                buffer.BV = BitConverter.GetBytes(buffer.V);
+                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(buffer.V),4);
                 buffer.V_Processed=(Math.Sqrt(Math.Pow(buffer.Vx_Processed, 2) + Math.Pow(buffer.Vy_Processed, 2) + Math.Pow(buffer.Vz_Processed, 2)));
-                buffer.BV_Processed = BitConverter.GetBytes(buffer.V_Processed);
+                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(buffer.V_Processed),4);
                 buffer.A=(Math.Sqrt(Math.Pow(buffer.Ax, 2) + Math.Pow(buffer.Ay, 2) + Math.Pow(buffer.Az, 2)));
-                buffer.BA = BitConverter.GetBytes(buffer.A);
+                buffer.BA = CopyByteWithOffset(BitConverter.GetBytes(buffer.A),4);
             }
 
             //SNR GPS
@@ -1098,7 +1107,7 @@ namespace GPSNavigator.Source
                 GDOP = Decompress_DOP(data[index]);
                 index++;
                 buffer.PDOP = Decompress_DOP(data[index]);
-                buffer.BPDOP = BitConverter.GetBytes(buffer.PDOP);
+                buffer.BPDOP = CopyByteWithOffset(BitConverter.GetBytes(buffer.PDOP),4);
                 index++;
                 HDOP = Decompress_DOP(data[index]);
                 index++;
@@ -1516,8 +1525,8 @@ namespace GPSNavigator.Source
                 var temp = Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2));
                 buffer.V = (temp);
                 buffer.V_Processed = (temp);
-                buffer.BV = BitConverter.GetBytes(temp);
-                buffer.BV_Processed = BitConverter.GetBytes(temp);
+                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(temp),4);
+                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp),4);
             }
             // DOP
             double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
@@ -2153,6 +2162,47 @@ namespace GPSNavigator.Source
 
             }
             return dbuffer;
+        }
+
+        public static byte[] CopyByteWithOffset(byte[] input, int offset)
+        {
+            byte[] output = new byte[input.Length - offset];
+            for (int i = offset; i < input.Length; i++)
+                output[i - offset] = input[i];
+            return output;
+        }
+
+        public static double[] FindMaxes(List<double> input)
+        {
+            double[] output = new double[500];
+            float dt = (float)input.Count / 100;
+            for (int i = 1; i < 100; i++)
+            {
+                var rmax = input[(int)(i*dt)];
+                for (int j = 0; j < (int)dt; j++)
+                   if (input[(int)(i * dt) + j] > rmax)
+                       rmax = input[(int)(i * dt) + j];
+                output[5 * (i-1)] = output[5 * (i-1) + 1] = output[5 * (i-1) + 2] = output[5 * (i-1) + 3] = output[5 * (i-1) + 4] = rmax;
+            }
+            output[499] = output[498] = output[497] = output[496] = output[495] = output[494];
+            return output;
+        }
+
+        public static double[] FindMins(List<double> input)
+        {
+            double[] output = new double[500];
+            float dt = (float)input.Count / 100;
+            for (int i = 1; i < 100; i++)
+            {
+                var rmin = input[(int)(i*dt)];
+
+                    for (int j = 0; j < (int)dt; j++)
+                        if (input[(int)(i * dt) + j] < rmin)
+                            rmin = input[(int)(i * dt) + j];
+                    output[5 * (i - 1)] = output[5 * (i - 1) + 1] = output[5 * (i - 1) + 2] = output[5 * (i - 1) + 3] = output[5 * (i - 1) + 4] = rmin;
+            }
+            output[499] = output[498] = output[497] = output[496] = output[495] = output[494];
+            return output;
         }
 
     }
