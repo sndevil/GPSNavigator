@@ -2205,5 +2205,12 @@ namespace GPSNavigator.Source
             return output;
         }
 
+        public static long QuantizePosition(float Adress)
+        {
+            var mod = (int)(Adress % 4);
+            mod = (mod < 3) ? -mod : 4 - mod;
+            return (long)(Adress + mod);
+        }
+
     }
 }

@@ -475,36 +475,38 @@ namespace GPSNavigator.Classes
 
                 GraphData tempgraphdata = new GraphData(gpoints);
 
-                stream.Position = (long)(fstart * stream.Length);
-                maxstream.Position = minstream.Position = (long)(fstart * minstream.Length);
+                stream.Position = Functions.QuantizePosition(fstart * stream.Length);
+                maxstream.Position = minstream.Position = Functions.QuantizePosition(fstart * minstream.Length);
 
                 var db = (float)((fend - fstart) * stream.Length / gpoints);
                 var mdb = (float)((fend - fstart) * maxstream.Length);
                 var counter = 0;
-                int extcounter = 0,extflag=1;
+                int extflag=1,mod=0;
+                float pos = stream.Position;
                 byte[] byt = new byte[4];
                 while (true)
                 {
-                    if (extflag >= 0)
-                    {
-                        maxstream.Read(byt, 0, 4);
-                        var tempmax = Functions.BytetoFloat(byt);
-                        tempgraphdata.max.Add(tempmax);
-                        minstream.Read(byt, 0, 4);
-                        var tempmin = Functions.BytetoFloat(byt);
-                        tempgraphdata.min.Add(tempmin);
-                        if (maxstream.Position / maxstream.Length > fend)
-                            extflag = -1;
-                    }
                     stream.Read(byt, 0, 4);
                     var t = Functions.BytetoFloat(byt);
                     tempgraphdata.x[counter] = (double)stream.Position / stream.Length;
                     tempgraphdata.y[counter] = t;
 
-                    stream.Position += (int)db - 4;
-                    stream.Position -= stream.Position % 4;
+                    pos += db;
+                    stream.Position = Functions.QuantizePosition(pos);
                     if (stream.Position >= stream.Length - 3 || counter++ >= gpoints-1)
                         break;
+                }
+                while (extflag >= 0)
+                {
+                    maxstream.Read(byt, 0, 4);
+                    var tempmax = Functions.BytetoFloat(byt);
+                    tempgraphdata.max.Add(tempmax);
+                    minstream.Read(byt, 0, 4);
+                    var tempmin = Functions.BytetoFloat(byt);
+                    tempgraphdata.min.Add(tempmin);
+                    float Percent = (float)maxstream.Position / (float)maxstream.Length;
+                    if (Percent >= fend || Percent >= 1f)
+                        extflag = -1;
                 }
                 return tempgraphdata;
             }
@@ -534,7 +536,6 @@ namespace GPSNavigator.Classes
 
                 return sbuffer;
             }
-
 
         }
 

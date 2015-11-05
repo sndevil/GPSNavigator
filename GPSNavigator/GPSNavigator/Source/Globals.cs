@@ -16,6 +16,10 @@ namespace GPSNavigator
         public List<Satellite> GLONASSsat = new List<Satellite>();
         public List<byte[]> licenses = new List<byte[]>();
 
+
+        public const int Databuffercount = 500;
+
+
         public Globals()
         {
             for (int i = 0; i < 32; i++)

@@ -179,7 +179,7 @@ namespace GPSNavigator
                         if (DateTime.Now.Second != serialcounter)
                         {
                             serialcounter = DateTime.Now.Second;
-                            WriteText(losscounter.ToString());
+                            WriteText(losscounter.ToString() + " Packet Per Second");
                             losscounter = 0;
                         }
                         else
@@ -187,7 +187,7 @@ namespace GPSNavigator
 
                     }
                     else
-                        WriteText("Hey");
+                        WriteText("Receiving Data");
                     //vars.buffer.
                 }
             }
@@ -204,7 +204,7 @@ namespace GPSNavigator
             }
             else
             {
-                this.logger.Text = text +"\r\n" + this.logger.Text;
+                this.logger.Text = text;
             }
         }
 
@@ -262,7 +262,7 @@ namespace GPSNavigator
             LogFileManager file = new LogFileManager(path,ref vars);
            // file.ClearBuffer();
             //var temp = file.Readbuffer();
-            Grapher graphform = new Grapher(vars.buffer,file.end,file);
+            Grapher graphform = new Grapher(file);
             graphform.Show(this);
             graphform.BringToFront();
            /* using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

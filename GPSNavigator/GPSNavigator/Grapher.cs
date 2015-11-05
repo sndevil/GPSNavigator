@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using GPSNavigator.Classes;
 using GPSNavigator.Source;
+using GPSNavigator;
 using C1.Win.C1Chart;
 
 namespace GPSNavigator
@@ -16,31 +17,37 @@ namespace GPSNavigator
     public partial class Grapher : Form
     {
         public int min = 0, max = 1000;
-        public long fmin = 0, fmax, offset, bufferlength;
-        public float zoom = 0.01f;
+        public long offset, bufferlength;
+        public float zoom = 0.01f,fmin = 0.0f, fmax = 1f;
         public long length;
         public float delta;
-        public DataBuffer dbuffer;
+       // public DataBuffer dbuffer;
         public LogFileManager filemanager;
         public PointStyle ps;
         private graphtype selectedtype = graphtype.X;
 
-        private const int Databuffercount = 500;
-        private int scroll1=-1;
-        private double[] ylist = new double[Databuffercount];
-        private double[] xlist = new double[Databuffercount];
 
-        public Grapher(DataBuffer buffer, long Length,LogFileManager Filemanager)
+        private int scroll1=-1;
+        private double[] ylist = new double[Globals.Databuffercount];
+        private double[] xlist = new double[Globals.Databuffercount];
+
+        public Grapher(LogFileManager Filemanager)
         {
+            filemanager = Filemanager;
             InitializeComponent();
             Chart1.MouseMove += new MouseEventHandler(Chart1_MouseMove);
             Chart1.MouseClick += new MouseEventHandler(Chart1_MouseClick);
-            filemanager = Filemanager;
-            dbuffer = buffer;
-            length = Length;
-            bufferlength = length / 100;
-            fmax = length;
-            offset = 0;
+            rangecontrol.ValueChanged += new EventHandler(rangecontrol_ValueChanged);
+            rangecontrol.Properties.Maximum = 1000;
+            rangecontrol.Properties.Minimum = 0;
+            rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
+        }
+
+        void rangecontrol_ValueChanged(object sender, EventArgs e)
+        {
+            fmin = rangecontrol.Value.Minimum / 1000f;
+            fmax = rangecontrol.Value.Maximum / 1000f;
+            LoadData();
         }
 
 
@@ -48,22 +55,23 @@ namespace GPSNavigator
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                var xpos = xlist[ps.PointIndex] * 7000;
-                if (xpos < 0)
-                    xpos = 0;
-                offset = (long)(xpos - delta / 2);
-                fmin = min + offset;
-                hScrollBar2.Value = (int)fmin;
-                hScrollBar1.Value = 100;
-                fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
+                var xpos = xlist[ps.PointIndex];
+                fmin = (float)xpos - 0.005f;
+                if (fmin < 0f)
+                    fmin = 0f;
+               // hScrollBar2.Value = (int)fmin;
+                //hScrollBar1.Value = 100;
+                fmax = fmin + 0.01f;
+                rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange((int)(fmin*1000), (int)(fmax*1000));
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
-                fmin = 0;
+                fmin = 0f;
                 offset = 0;
-                hScrollBar2.Value = 0;
-                hScrollBar1.Value = 0;
-                fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
+                //hScrollBar2.Value = 0;
+                //hScrollBar1.Value = 0;
+                fmax = 1f;
+                rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
             }
             LoadData();
             UpdateLabels();
@@ -109,15 +117,6 @@ namespace GPSNavigator
             LoadData();
 
             initgrap();
-
-            max = dbuffer.Ax.Count;
-            delta = (fmax - fmin) / (float)(Databuffercount) ;
-            zoom = (1000f / length) >= 0.1f ? (1000f / length) : 0.1f;
-            hScrollBar2.Maximum = (int)(length - delta);
-            hScrollBar2.SmallChange = (int)delta;
-            hScrollBar2.LargeChange = (int)delta * 10;
-            hScrollBar1.Minimum = (int)zoom * 100;
-            hScrollBar1.Value = hScrollBar1.Minimum;
             comboBox1.SelectedIndex = 0;
         }
 
@@ -142,22 +141,23 @@ namespace GPSNavigator
 
         public void UpdateLabels()
         {
-            label1.Text = "Zoom: " + (100 - hScrollBar1.Value).ToString() + "%";
-            int percent = (int)(((float)hScrollBar2.Value / (float)hScrollBar2.Maximum) * 100);
-            label2.Text = "Position: " + percent.ToString() + "%";
+
         }
 
+
+        //Legacy
+        /*
         public void PlotGraph()
         {
             int counter=0;
             float i = fmin/7000f;
             double temp = 0;
             var dt = delta / 7000f;
-            for (counter = 0; counter < Databuffercount; counter++)
+            for (counter = 0; counter < Globals.Databuffercount; counter++)
             {
                 if (counter >= dbuffer.X.Count)
                 {
-                    for (int j = counter; j < Databuffercount; j++)
+                    for (int j = counter; j < Globals.Databuffercount; j++)
                     {
                         ylist[j] = temp;
                         xlist[j] = (double)i;
@@ -236,6 +236,7 @@ namespace GPSNavigator
             Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(xlist);
             Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(ylist);
         }
+        */
 
         public void PlotGraph(GraphData data)
         {
@@ -243,17 +244,17 @@ namespace GPSNavigator
             ylist = data.y;
             double[] max = Functions.FindMaxes(data.max);
             double[] min = Functions.FindMins(data.min);
-            double[] x = new double[500];
-            for (int i = 0; i < 500; i++)
+            double[] x = new double[Globals.Databuffercount];
+            for (int i = 0; i < Globals.Databuffercount; i++)
             {
-                x[i] = (double)i / 500;
+                x[i] = (i % 2 == 0) ? max[i] : min[i];
             }
             Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.x);
             Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
-            Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(x);
-            Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
-            Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(x);
-            Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
+            Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.x);
+            Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(x);
+            //Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.x);
+            //Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
         }
 
         public void PlotSingleDataGraph(List<double> buffer)
@@ -261,8 +262,8 @@ namespace GPSNavigator
             int counter = 0;
             float i = 0;
             double temp = 0;
-            var dt = buffer.Count / Databuffercount;
-            for (counter = 0; counter < Databuffercount; counter++)
+            var dt = buffer.Count / Globals.Databuffercount;
+            for (counter = 0; counter < Globals.Databuffercount; counter++)
             {
 
                 temp = buffer[(int)i];
@@ -278,19 +279,6 @@ namespace GPSNavigator
             // }
             Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(xlist);
             Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(ylist);
-        }
-
-        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (hScrollBar1.Value != scroll1)
-            {
-                scroll1 = hScrollBar1.Value;
-                fmin = min + offset;
-                fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
-                delta = ((max - min) / 100000f) * (101 - hScrollBar1.Value);
-                UpdateLabels();
-                LoadData();
-            }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -366,35 +354,13 @@ namespace GPSNavigator
                     Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
                     break;
             }
-            //PlotGraph();
             LoadData();
         }
 
         public void LoadData()
         {
-            xlist = new double[Databuffercount];
-            ylist = new double[Databuffercount];
-            filemanager.start = fmin;
-            filemanager.delta = (fmax-fmin) / (float)Databuffercount;
-            delta = (fmax - fmin) / (float)Databuffercount;
-            //Stopwatch s = Stopwatch.StartNew();
-            //dbuffer = filemanager.Readbuffer();
-            var t = filemanager.Readbuffer(selectedtype, 0.0f, 1f, Databuffercount);
+            var t = filemanager.Readbuffer(selectedtype, fmin, fmax, Globals.Databuffercount);
             PlotGraph(t);
-            //MessageBox.Show(s.ElapsedMilliseconds.ToString());
-            //PlotGraph();
-        }
-
-        private void hScrollBar2_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (hScrollBar2.Value != offset)
-            {
-                offset = hScrollBar2.Value;
-                fmin = min + offset;
-                fmax = fmin + bufferlength * (101 - hScrollBar1.Value);
-                UpdateLabels();
-                LoadData();
-            }
         }
     }
 }

@@ -31,13 +31,12 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Grapher));
             this.Chart1 = new C1.Win.C1Chart.C1Chart();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.hScrollBar1 = new System.Windows.Forms.HScrollBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.hScrollBar2 = new System.Windows.Forms.HScrollBar();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.rangecontrol = new DevExpress.XtraEditors.RangeTrackBarControl();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rangecontrol)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rangecontrol.Properties)).BeginInit();
             this.SuspendLayout();
             // 
             // Chart1
@@ -75,43 +74,6 @@
             this.comboBox1.TabIndex = 2;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // hScrollBar1
-            // 
-            this.hScrollBar1.LargeChange = 1;
-            this.hScrollBar1.Location = new System.Drawing.Point(563, 454);
-            this.hScrollBar1.Minimum = 1;
-            this.hScrollBar1.Name = "hScrollBar1";
-            this.hScrollBar1.Size = new System.Drawing.Size(178, 21);
-            this.hScrollBar1.TabIndex = 3;
-            this.hScrollBar1.Value = 1;
-            this.hScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(616, 475);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(66, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Zoom: 100%";
-            // 
-            // hScrollBar2
-            // 
-            this.hScrollBar2.Location = new System.Drawing.Point(23, 454);
-            this.hScrollBar2.Name = "hScrollBar2";
-            this.hScrollBar2.Size = new System.Drawing.Size(360, 21);
-            this.hScrollBar2.TabIndex = 5;
-            this.hScrollBar2.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar2_Scroll);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(147, 475);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Position: 0%";
-            // 
             // label3
             // 
             this.label3.Location = new System.Drawing.Point(459, 391);
@@ -130,17 +92,23 @@
             this.label4.TabIndex = 8;
             this.label4.Text = "label4";
             // 
+            // rangecontrol
+            // 
+            this.rangecontrol.EditValue = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 10);
+            this.rangecontrol.Location = new System.Drawing.Point(36, 439);
+            this.rangecontrol.Name = "rangecontrol";
+            this.rangecontrol.Size = new System.Drawing.Size(697, 45);
+            this.rangecontrol.TabIndex = 9;
+            this.rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 10);
+            // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(994, 496);
+            this.Controls.Add(this.rangecontrol);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.hScrollBar2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.hScrollBar1);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.Chart1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -148,6 +116,8 @@
             this.Text = "Grapher";
             this.Load += new System.EventHandler(this.Grapher_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rangecontrol.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rangecontrol)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,11 +127,8 @@
 
         private C1.Win.C1Chart.C1Chart Chart1;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.HScrollBar hScrollBar1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.HScrollBar hScrollBar2;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private DevExpress.XtraEditors.RangeTrackBarControl rangecontrol;
     }
 }
