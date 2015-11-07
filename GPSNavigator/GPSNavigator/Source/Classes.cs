@@ -273,7 +273,6 @@ namespace GPSNavigator.Classes
 
         public class LogFileManager
         {
-            private int Databuffercount = 1000; // number of packets that would be loaded to RAM
             public long start = 0;
             public long end;
             public int position = 0;
@@ -350,9 +349,6 @@ namespace GPSNavigator.Classes
                 {
                     throw new Exception("Log Files Opening Error");
                 }
-               // vars = variables;
-               // end = stream.Length;
-               // delta = (float)((end - start) / Databuffercount);
             }
 
             //Legacy
@@ -371,7 +367,7 @@ namespace GPSNavigator.Classes
                         if (msgSize == -1)          //packet not valid
                             continue;
 
-                        if (stream.Position + msgSize - 2 > stream.Length || counter++ >= Databuffercount)
+                        if (stream.Position + msgSize - 2 > stream.Length || counter++ >= Globals.Databuffercount)
                             break;
 
                         byte[] byt = new byte[msgSize];
@@ -767,6 +763,8 @@ namespace GPSNavigator.Classes
                 LongitudeMax.Close();
                 LatitudeMin.Close();
                 LatitudeMax.Close();
+                PDOPMax.Close();
+                PDOPMin.Close();
             }
         }
 

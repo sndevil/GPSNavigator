@@ -22,7 +22,7 @@ namespace GPSNavigator
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
-        int serialcounter = 0,losscounter = 0;
+        int serialcounter = 0,packetcounter = 0;
         ExtremumHandler exthandler = new ExtremumHandler();
         string message = "";
         #endregion
@@ -31,7 +31,6 @@ namespace GPSNavigator
         {
             InitializeComponent();
             timer1.Stop();
-            //Savefile = new FileStream("tmp.xf",FileMode.Create);
             try
             {
                 serialPort1.Open();
@@ -48,7 +47,6 @@ namespace GPSNavigator
             SingleDataBuffer dbuf;
             if (isPlaying)
             {
-                //int input = serialPort1.ReadByte();
                 if (isRecording)
                 {
                     var header = serialPort1.ReadByte();
@@ -181,11 +179,11 @@ namespace GPSNavigator
                         if (DateTime.Now.Second != serialcounter)
                         {
                             serialcounter = DateTime.Now.Second;
-                            WriteText(losscounter.ToString() + " Packet Per Second");
-                            losscounter = 0;
+                            WriteText(packetcounter.ToString() + " Packet Per Second");
+                            packetcounter = 0;
                         }
                         else
-                            losscounter++;
+                            packetcounter++;
 
                     }
                     else
