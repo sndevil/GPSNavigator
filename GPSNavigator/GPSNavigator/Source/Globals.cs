@@ -17,7 +17,7 @@ namespace GPSNavigator
         public List<byte[]> licenses = new List<byte[]>();
 
 
-        public const int Databuffercount = 500;
+        public const int Databuffercount = 3000;
 
 
         public Globals()

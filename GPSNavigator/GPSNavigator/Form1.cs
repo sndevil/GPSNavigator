@@ -30,6 +30,7 @@ namespace GPSNavigator
         public Form1()
         {
             InitializeComponent();
+            timer1.Stop();
             //Savefile = new FileStream("tmp.xf",FileMode.Create);
             try
             {
@@ -43,6 +44,7 @@ namespace GPSNavigator
 
         void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
+            timer1.Stop();
             SingleDataBuffer dbuf;
             if (isPlaying)
             {
@@ -191,6 +193,7 @@ namespace GPSNavigator
                     //vars.buffer.
                 }
             }
+            timer1.Start();
         }
 
         delegate void SetTextCallback(string text);
@@ -276,21 +279,16 @@ namespace GPSNavigator
         {
             if (checkBox1.Checked)
             {
-                //savedialog.FileName = "";
-                //savedialog.Filter = "GLF Log File|*.GLF";
-                //savedialog.ShowDialog();
                 folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
                 folderdialog.ShowDialog();
                 if (folderdialog.SelectedPath != "")
                 {
-                    //Savefile = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.Write);
                     log = new Logger(folderdialog.SelectedPath+"\\");
                     isRecording = true;
                 }
             }
             else
             {
-                //Savefile.Close();
                 log.CloseFiles();
                 isRecording = false;
             }
@@ -298,9 +296,13 @@ namespace GPSNavigator
 
         private void savedialog_FileOk(object sender, CancelEventArgs e)
         {
-            //Savefile = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.Write);
             log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "Logs\\");
             isRecording = true;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            checkBox1.Checked = false;
         }
 
     }

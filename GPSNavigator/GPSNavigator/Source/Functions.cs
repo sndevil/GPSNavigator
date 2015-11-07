@@ -278,6 +278,14 @@ namespace GPSNavigator.Source
             return t2;
         }
 
+        public static double BytetoFloatOther(byte[] array)
+        {
+            double t = (double)array[3];
+            for (int i = 2; i >= 0; --i)
+                t = t * 256 + array[i];
+            return t;
+        }
+
         public static double formatDouble(Int64 a)
         {
             double m, e, s;
@@ -777,20 +785,6 @@ namespace GPSNavigator.Source
         public static SingleDataBuffer Process_Binary_Message_Full(byte[] data, int SerialNum, List<Satellite> GPS, List<Satellite> GLONASS)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
-            // List<Satellite> GPS_satellite;
-            //List<Satellite> GLONASS_satellite;
-            // if (SerialNum == 0)
-            //{
-            // dbuf = buffer;
-            // GPS_satellite = GPS;
-            // GLONASS_satellite = GLONASS;
-            //}
-            /*  else
-              {
-                  dbuf = dataBuf2;
-                  GPS_satellite = GPSsatS2;
-                  GLONASS_satellite = GLONASSsatS2;
-              }*/
 
             int msgSize = 0;
 
@@ -815,10 +809,12 @@ namespace GPSNavigator.Source
             // State
             int state = data[index];
             buffer.state = state;
+            buffer.Bstate = data[index];
             index++;
 
             // Temperature
             buffer.Temperature = data[index];
+            buffer.BTemperature = data[index];
             index++;
 
             Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
@@ -826,8 +822,7 @@ namespace GPSNavigator.Source
             index += 4;
 
             buffer.NumOfVisibleSats = 0;
-            buffer.BNumOfVisibleStats[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BNumOfVisibleStats[i] = data[index + i]; };
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i];};
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -839,10 +834,15 @@ namespace GPSNavigator.Source
                     GPS[i].Signal_Status = 0;       //not visible
                 a >>= 1;
             }
+            var temp = buffer.NumOfVisibleSats;
+            for (int i = 0; i<=3; i++)
+            {
+                buffer.BNumOfVisibleStats[i] = (byte)(temp % 256);
+                temp /= 256;
+            }
             index += 4;
             buffer.NumOfUsedSats = 0;
-            buffer.BNumOfUsedStats[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BNumOfUsedStats[i] = data[index + i]; };
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i];};
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -851,6 +851,12 @@ namespace GPSNavigator.Source
                     buffer.NumOfUsedSats++;
                 }
                 a >>= 1;
+            }
+            var temp2 = buffer.NumOfUsedSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                buffer.BNumOfUsedStats[i] = (byte)(temp2 % 256);
+                temp2 /= 256;
             }
             index += 4;
 
@@ -1084,15 +1090,24 @@ namespace GPSNavigator.Source
             index += 12 - readSNR;
 
             a = data[index] + data[index + 1] * 256;
-            //weekNumber = (int)a;
+            buffer.Bdatetime[0] = data[index];
+            buffer.Bdatetime[1] = data[index + 1];
+            var weekNumber = (int)a;
             index += 2;
 
             //UTC Offset
             index += 2;
 
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.Bdatetime[5] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
             int localTOW = (int)a;
             index += 4;
+
+            var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
+            datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
+            datetimeUTC = datetimeUTC.AddMilliseconds(localTOW);
+
+            buffer.datetime = datetimeUTC;
 
             a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
             int packetDelay = (int)a;
@@ -1381,10 +1396,12 @@ namespace GPSNavigator.Source
             // State
             int state = data[index];
             buffer.state = state;
+            buffer.Bstate = data[index];
             index++;
 
             // Temperature
             buffer.Temperature = data[index];
+            buffer.BTemperature = data[index];
             index++;
 
             a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
@@ -1392,8 +1409,7 @@ namespace GPSNavigator.Source
             index += 4;
 
             buffer.NumOfVisibleSats=0;
-            buffer.BNumOfVisibleStats[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BNumOfVisibleStats[i] = data[index + i]; };
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i];}
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -1404,6 +1420,12 @@ namespace GPSNavigator.Source
                 else
                     GPS[i].Signal_Status = 0;       //not visible
                 a >>= 1;
+            }
+            var temp = buffer.NumOfVisibleSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                buffer.BNumOfVisibleStats[i] = (byte)(temp % 256);
+                temp /= 256;
             }
             index += 4;
 
@@ -1417,6 +1439,12 @@ namespace GPSNavigator.Source
                     buffer.NumOfUsedSats++;
                 }
                 a >>= 1;
+            }
+            var temp2 = buffer.NumOfUsedSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                buffer.BNumOfVisibleStats[i] = (byte)(temp2 % 256);
+                temp2 /= 256;
             }
             index += 4;
 
@@ -1522,11 +1550,11 @@ namespace GPSNavigator.Source
             //V
             if (state == 1)
             {
-                var temp = Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2));
-                buffer.V = (temp);
-                buffer.V_Processed = (temp);
-                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(temp),4);
-                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp),4);
+                var temp3 = Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2));
+                buffer.V = (temp3);
+                buffer.V_Processed = (temp3);
+                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(temp3),4);
+                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp3),4);
             }
             // DOP
             double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
@@ -1562,13 +1590,23 @@ namespace GPSNavigator.Source
             }
             index += 8 - readSNR;
 
+            buffer.Bdatetime[0] = data[index];
+            buffer.Bdatetime[1] = data[index + 1];
+
             a = data[index] + data[index + 1] * 256;
             var weekNumber = (int)a + 1024;
             index += 2;
 
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.Bdatetime[5] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
             int localTOW = (int)a;
             index += 4;
+
+            var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
+            datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
+            datetimeUTC = datetimeUTC.AddMilliseconds(localTOW);
+
+            dbuffer.datetime = datetimeUTC;
 
             // Reserved
             GDOP = data[index];
@@ -2174,34 +2212,37 @@ namespace GPSNavigator.Source
 
         public static double[] FindMaxes(List<double> input)
         {
-            double[] output = new double[500];
+            double[] output = new double[Globals.Databuffercount];
             float dt = (float)input.Count / 100;
-            for (int i = 1; i < 100; i++)
+            float dto = (float)output.Length / 100;
+            for (int i = 1; i <= 100; i++)
             {
-                var rmax = input[(int)(i*dt)];
-                for (int j = 0; j < (int)dt; j++)
-                   if (input[(int)(i * dt) + j] > rmax)
-                       rmax = input[(int)(i * dt) + j];
-                output[5 * (i-1)] = output[5 * (i-1) + 1] = output[5 * (i-1) + 2] = output[5 * (i-1) + 3] = output[5 * (i-1) + 4] = rmax;
+                var firstdata = ((int)(i * dt) - 1);
+                var rmax = input[(firstdata >= 0)? firstdata : 0];
+                for (int j = 1; j <= (int)dt; j++)
+                   if (input[(int)(i * dt) - j] > rmax)
+                       rmax = input[(int)(i * dt) - j];
+                for (int j = 1; j <= (int)(dto); j++)
+                    output[(int)(i * dto) - j] = rmax;
             }
-            output[499] = output[498] = output[497] = output[496] = output[495] = output[494];
             return output;
         }
 
         public static double[] FindMins(List<double> input)
         {
-            double[] output = new double[500];
+            double[] output = new double[Globals.Databuffercount];
             float dt = (float)input.Count / 100;
-            for (int i = 1; i < 100; i++)
+            float dto = (float)output.Length / 100;
+            for (int i = 1; i <= 100; i++)
             {
-                var rmin = input[(int)(i*dt)];
-
-                    for (int j = 0; j < (int)dt; j++)
-                        if (input[(int)(i * dt) + j] < rmin)
-                            rmin = input[(int)(i * dt) + j];
-                    output[5 * (i - 1)] = output[5 * (i - 1) + 1] = output[5 * (i - 1) + 2] = output[5 * (i - 1) + 3] = output[5 * (i - 1) + 4] = rmin;
+                var firstdata = ((int)(i * dt) - 1);
+                var rmin = input[(firstdata >= 0) ? firstdata : 0];
+                for (int j = 1; j <= (int)dt; j++)
+                    if (input[(int)(i * dt) - j] < rmin)
+                        rmin = input[(int)(i * dt) - j];
+                for (int j = 1; j <= (int)(dto); j++)
+                    output[(int)(i * dto) - j] = rmin;
             }
-            output[499] = output[498] = output[497] = output[496] = output[495] = output[494];
             return output;
         }
 
@@ -2210,6 +2251,27 @@ namespace GPSNavigator.Source
             var mod = (int)(Adress % 4);
             mod = (mod < 3) ? -mod : 4 - mod;
             return (long)(Adress + mod);
+        }
+        public static long QuantizePosition6bit(float Adress)
+        {
+            var mod = (int)(Adress % 6);
+            mod = (mod < 4) ? -mod : 6 - mod;
+            return (long)(Adress + mod);
+        }
+
+        public static DateTime ReadDateTime(byte[] input)
+        {
+            var a = input[0] + input[1] * 256;
+            var weekNumber = (int)a;
+
+            a = input[5]; for (int i = 2; i >= 0; --i) { a = a * 256 + input[2 + i]; }
+            var localTOW = (int)a;
+            var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
+            datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
+            datetimeUTC = datetimeUTC.AddMilliseconds(localTOW);
+
+            return datetimeUTC;
+
         }
 
     }

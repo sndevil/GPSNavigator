@@ -31,6 +31,7 @@ namespace GPSNavigator
         private int scroll1=-1;
         private double[] ylist = new double[Globals.Databuffercount];
         private double[] xlist = new double[Globals.Databuffercount];
+        private DateTime[] tlist = new DateTime[Globals.Databuffercount];
 
         public Grapher(LogFileManager Filemanager)
         {
@@ -113,7 +114,6 @@ namespace GPSNavigator
                 rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
             }
             LoadData();
-            UpdateLabels();
         }
 
         void Chart1_MouseMove(object sender, MouseEventArgs e)
@@ -138,7 +138,7 @@ namespace GPSNavigator
                     {
                         ps.PointIndex = pointIndex;
                         ps.SeriesIndex = seriesIndex;
-                        label3.Text = xlist[pointIndex].ToString();
+                        label3.Text = tlist[pointIndex].ToString();
                         label4.Text = ylist[pointIndex].ToString();
                     }
                 }
@@ -177,12 +177,6 @@ namespace GPSNavigator
             ps.SeriesIndex = -1;
             ps.Label = "trackingBall";
         }
-
-        public void UpdateLabels()
-        {
-
-        }
-
 
         //Legacy
         /*
@@ -281,19 +275,35 @@ namespace GPSNavigator
         {
             xlist = data.x;
             ylist = data.y;
-            double[] max = Functions.FindMaxes(data.max);
-            double[] min = Functions.FindMins(data.min);
-            double[] x = new double[Globals.Databuffercount];
+            tlist = data.date;
+
+            /*double[] x = new double[Globals.Databuffercount];
             for (int i = 0; i < Globals.Databuffercount; i++)
             {
                 x[i] = (i % 2 == 0) ? max[i] : min[i];
+            }*/
+            if (fmax - fmin > 0.02f && selectedtype != graphtype.State && selectedtype != graphtype.Temperature && selectedtype != graphtype.UsedStats && selectedtype != graphtype.VisibleStats)
+            {
+                double[] max = Functions.FindMaxes(data.max);
+                double[] min = Functions.FindMins(data.min);
+                //Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = SeriesDisplayEnum.Show;
+                //Chart1.ChartGroups[0].ChartData.SeriesList[2].Display = SeriesDisplayEnum.Show;
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
+                Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
+                Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
             }
-            Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.x);
-            Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
-            Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.x);
-            Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
-            Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.x);
-            Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
+            else
+            {
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
+                Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Clear();
+                Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Clear();
+                Chart1.ChartGroups[0].ChartData.SeriesList[2].X.Clear();
+                Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.Clear();
+            }
         }
 
         public void PlotSingleDataGraph(List<double> buffer)

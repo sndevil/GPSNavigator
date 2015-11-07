@@ -10,7 +10,6 @@ using GPSNavigator.Source;
 
 namespace GPSNavigator.Classes
 {
-     //const int Max_buf = 100000;
         public class DataBuffer
         {
             public List<double> Altitude = new List<double>();
@@ -135,13 +134,15 @@ namespace GPSNavigator.Classes
             public double V_Processed;
             public byte[] BV_Processed = new byte[4];
             public double Temperature;
-            public byte[] BTemperature = new byte[4];
+            public byte BTemperature;
             public double NumOfUsedSats;
             public byte[] BNumOfUsedStats = new byte[4];
             public double NumOfVisibleSats;
             public byte[] BNumOfVisibleStats = new byte[4];
             public double state;
+            public byte Bstate;
             public DateTime datetime;
+            public byte[] Bdatetime = new byte[6];
             public int statcounter;
             public bool WriteExtreme = false;
         }
@@ -256,12 +257,14 @@ namespace GPSNavigator.Classes
         {
             public double[] x;
             public double[] y;
+            public DateTime[] date;
             public List<double> max;
             public List<double> min;
             public GraphData(int Points)
             {
                 x = new double[Points];
                 y = new double[Points];
+                date = new DateTime[Points];
                 max = new List<double>();
                 min = new List<double>();
             }
@@ -275,10 +278,11 @@ namespace GPSNavigator.Classes
             public long end;
             public int position = 0;
             public float zoom = 1f,delta;
-
+            public DateTime StartTime, EndTime;
+            public long StartTick, EndTick, Duration;
             public string filepath;
 
-            private FileStream stream,maxstream,minstream;
+            private FileStream stream,maxstream,minstream,timestream;
             private FileStream Vx, Vy, Vz, Ax, Ay, Az, X, Y, Z, Altitude, Latitude, Longitude, PDOP, state, Temperature, UsedStats, VisibleStats, V, A;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin, VMax, VMin, AMax, AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
@@ -339,7 +343,7 @@ namespace GPSNavigator.Classes
                     Temperature = new FileStream(path + "\\Temperature.glf", FileMode.Open, FileAccess.Read);
                     UsedStats = new FileStream(path + "\\UsedStats.glf", FileMode.Open, FileAccess.Read);
                     VisibleStats = new FileStream(path + "\\VisibleStats.glf", FileMode.Open, FileAccess.Read);
-
+                    timestream = new FileStream(path + "\\Time.glf", FileMode.Open, FileAccess.Read);
                     #endregion
                 }
                 catch
@@ -475,38 +479,90 @@ namespace GPSNavigator.Classes
 
                 GraphData tempgraphdata = new GraphData(gpoints);
 
-                stream.Position = Functions.QuantizePosition(fstart * stream.Length);
-                maxstream.Position = minstream.Position = Functions.QuantizePosition(fstart * minstream.Length);
-
-                var db = (float)((fend - fstart) * stream.Length / gpoints);
-                var mdb = (float)((fend - fstart) * maxstream.Length);
-                var counter = 0;
-                int extflag=1,mod=0;
-                float pos = stream.Position;
-                byte[] byt = new byte[4];
-                while (true)
+                if (stream.Length > 0)
                 {
-                    stream.Read(byt, 0, 4);
-                    var t = Functions.BytetoFloat(byt);
-                    tempgraphdata.x[counter] = (double)stream.Position / stream.Length;
-                    tempgraphdata.y[counter] = t;
+                    stream.Position = Functions.QuantizePosition(fstart * stream.Length);
+                    maxstream.Position = minstream.Position = Functions.QuantizePosition(fstart * minstream.Length);
+                    timestream.Position = Functions.QuantizePosition6bit(fstart * timestream.Length);
 
-                    pos += db;
-                    stream.Position = Functions.QuantizePosition(pos);
-                    if (stream.Position >= stream.Length - 3 || counter++ >= gpoints-1)
-                        break;
-                }
-                while (extflag >= 0)
-                {
-                    maxstream.Read(byt, 0, 4);
-                    var tempmax = Functions.BytetoFloat(byt);
-                    tempgraphdata.max.Add(tempmax);
-                    minstream.Read(byt, 0, 4);
-                    var tempmin = Functions.BytetoFloat(byt);
-                    tempgraphdata.min.Add(tempmin);
-                    float Percent = (float)maxstream.Position / (float)maxstream.Length;
-                    if (Percent >= fend || Percent >= 1f)
-                        extflag = -1;
+                    var db = (float)((fend - fstart) * stream.Length / gpoints);
+                    var tdb = (float)((fend - fstart) * timestream.Length / gpoints);
+                    var mdb = (float)((fend - fstart) * maxstream.Length);
+                    var counter = 0;
+                    int extflag = 1;
+                    float pos = stream.Position;
+                    float tpos = timestream.Position;
+                    byte[] byt = new byte[4];
+                    byte[] tbyt = new byte[6];
+                    while (true)
+                    {
+                        double t,dt;
+                        if (type == graphtype.State || type == graphtype.Temperature)
+                        {
+                            t = stream.ReadByte();
+                            pos += db;
+                            stream.Position = (int)(pos);
+                        }
+                        else
+                        {
+                            stream.Read(byt, 0, 4);
+                            if (type != graphtype.UsedStats && type != graphtype.VisibleStats)
+                                t = Functions.BytetoFloat(byt);
+                            else
+                                t = Functions.BytetoFloatOther(byt);
+                            pos += db;
+                            stream.Position = Functions.QuantizePosition(pos);
+                        }
+
+                        timestream.Read(tbyt,0,6);
+                        tpos += tdb;
+                        timestream.Position = Functions.QuantizePosition6bit(tpos);
+
+                        tempgraphdata.x[counter] = (double)stream.Position/stream.Length;//(double)stream.Position / stream.Length;
+                        tempgraphdata.y[counter] = t;
+                        tempgraphdata.date[counter] = Functions.ReadDateTime(tbyt);
+
+                        if (counter++ >= gpoints - 1)
+                            break;
+                        if (stream.Position >= stream.Length - 3 && type != graphtype.State && type != graphtype.Temperature)
+                        {
+                            for (int i = counter; i < gpoints; i++)
+                            {
+                                tempgraphdata.x[counter] = (double)counter / gpoints;
+                                tempgraphdata.y[counter] = t;
+                                tempgraphdata.date[counter] = Functions.ReadDateTime(tbyt);
+                            }
+                            break;
+                        }
+                        else if (stream.Position >= stream.Length - 1 && type == graphtype.State && type == graphtype.Temperature)
+                        {
+                            for (int i = counter; i < gpoints; i++)
+                            {
+                                tempgraphdata.x[counter] = (double)counter / gpoints;
+                                tempgraphdata.y[counter] = t;
+                                tempgraphdata.date[counter] = Functions.ReadDateTime(tbyt);
+                            }
+                            break;
+                        }
+                    }
+                    while (extflag >= 0)
+                    {
+                        if (maxstream.Length <= 0)
+                        {
+                            tempgraphdata.max.Add(0);
+                            tempgraphdata.min.Add(0);
+                            break;
+                        }
+                        maxstream.Read(byt, 0, 4);
+                        var tempmax = Functions.BytetoFloat(byt);
+                        tempgraphdata.max.Add(tempmax);
+                        minstream.Read(byt, 0, 4);
+                        var tempmin = Functions.BytetoFloat(byt);
+                        tempgraphdata.min.Add(tempmin);
+                        float Percent = (float)maxstream.Position / (float)maxstream.Length;
+                        if (Percent >= fend || Percent >= 1f)
+                            extflag = -1;
+                    }
                 }
                 return tempgraphdata;
             }
@@ -543,9 +599,7 @@ namespace GPSNavigator.Classes
         {
             private FileStream Vx,Vy,Vz,Ax,Ay,Az,X,Y,Z,Altitude,Latitude,Longitude,PDOP,state,Temperature,UsedStats,VisibleStats,V,A;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin,VMax,VMin,AMax,AMin;
-            private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
-
-            private int counter = 0;
+            private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,Time;
 
             public Logger(string DirPath)
             {
@@ -599,6 +653,7 @@ namespace GPSNavigator.Classes
                 Temperature = new FileStream(DirPath + "Temperature.glf", FileMode.Create, FileAccess.Write);
                 UsedStats = new FileStream(DirPath + "UsedStats.glf", FileMode.Create, FileAccess.Write);
                 VisibleStats = new FileStream(DirPath + "VisibleStats.glf", FileMode.Create, FileAccess.Write);
+                Time = new FileStream(DirPath + "Time.glf", FileMode.Create, FileAccess.Write);
             }
 
             public void Writebuffer(SingleDataBuffer buffer)
@@ -620,11 +675,11 @@ namespace GPSNavigator.Classes
                     Latitude.Write(buffer.BLatitude, 0, 4);
                     Longitude.Write(buffer.BLongitude, 0, 4);
                     PDOP.Write(buffer.BPDOP, 0, 4);
-                    state.Write(Encoding.UTF8.GetBytes(buffer.state.ToString()), 0, buffer.state.ToString().Length);
-                    var t = BitConverter.GetBytes(buffer.Temperature);
-                    Temperature.Write(t, 0, t.Length);
+                    state.WriteByte(buffer.Bstate);
+                    Temperature.WriteByte(buffer.BTemperature);
                     UsedStats.Write(buffer.BNumOfUsedStats, 0, 4);
                     VisibleStats.Write(buffer.BNumOfVisibleStats, 0, 4);
+                    Time.Write(buffer.Bdatetime, 0, 6);
                 }
                 if (buffer.WriteExtreme)
                 {
@@ -659,14 +714,12 @@ namespace GPSNavigator.Classes
                     LongitudeMin.Write(buffer.BLongitudeMin, 0, 4);
                     PDOPMax.Write(buffer.BPDOPMax, 0, 4);
                     PDOPMin.Write(buffer.BPDOPMin, 0, 4);
-                    //counter++;
-                    //if (counter == 20)
-                    //{ }
                 }
             }
 
             public void CloseFiles()
             {
+                Time.Close();
                 Vx.Close();
                 Vy.Close();
                 Vz.Close();
