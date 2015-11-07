@@ -34,6 +34,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.rangecontrol = new DevExpress.XtraEditors.RangeTrackBarControl();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol.Properties)).BeginInit();
@@ -68,7 +72,7 @@
             "Temperature",
             "UsedStats",
             "VisibleStats"});
-            this.comboBox1.Location = new System.Drawing.Point(820, 454);
+            this.comboBox1.Location = new System.Drawing.Point(820, 448);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(162, 21);
             this.comboBox1.TabIndex = 2;
@@ -95,17 +99,55 @@
             // rangecontrol
             // 
             this.rangecontrol.EditValue = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 10);
-            this.rangecontrol.Location = new System.Drawing.Point(36, 439);
+            this.rangecontrol.Location = new System.Drawing.Point(12, 439);
             this.rangecontrol.Name = "rangecontrol";
-            this.rangecontrol.Size = new System.Drawing.Size(697, 45);
+            this.rangecontrol.Size = new System.Drawing.Size(802, 45);
             this.rangecontrol.TabIndex = 9;
             this.rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 10);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(688, 485);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(114, 20);
+            this.textBox1.TabIndex = 10;
+            this.textBox1.Text = "1";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(78, 485);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(114, 20);
+            this.textBox2.TabIndex = 11;
+            this.textBox2.Text = "0";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(628, 488);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Maximum:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(21, 488);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(51, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "Minimum:";
             // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(994, 496);
+            this.ClientSize = new System.Drawing.Size(994, 517);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.rangecontrol);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
@@ -130,5 +172,9 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private DevExpress.XtraEditors.RangeTrackBarControl rangecontrol;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }

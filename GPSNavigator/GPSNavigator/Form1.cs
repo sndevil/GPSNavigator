@@ -20,7 +20,7 @@ namespace GPSNavigator
         bool isRecording = false;
         bool isPlaying = true;
         Globals vars = new Globals();
-        FileStream Savefile,temp;
+        FileStream temp;
         Logger log;
         int serialcounter = 0,losscounter = 0;
         ExtremumHandler exthandler = new ExtremumHandler();
@@ -30,7 +30,7 @@ namespace GPSNavigator
         public Form1()
         {
             InitializeComponent();
-            Savefile = new FileStream("tmp.xf",FileMode.Create);
+            //Savefile = new FileStream("tmp.xf",FileMode.Create);
             try
             {
                 serialPort1.Open();
@@ -265,46 +265,6 @@ namespace GPSNavigator
             Grapher graphform = new Grapher(file);
             graphform.Show(this);
             graphform.BringToFront();
-           /* using (FileStream fs = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (BufferedStream bs = new BufferedStream(fs))
-            using (StreamReader sr = new StreamReader(bs))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    if (line.StartsWith("~"))
-                    {
-                       // sr.read
-                    }
-                }
-            }
-
-            FileStream temp = new FileStream(path, FileMode.OpenOrCreate);
-
-            while (temp.Position < temp.Length && temp.Position < 10000000 )   //// 10MB is the maximum load
-            {
-                if (temp.ReadByte() == '~')
-                {
-                    int msgType = temp.ReadByte();
-
-                    int msgSize = Functions.checkMsgSize(msgType);
-                    if (msgSize == -1)          //packet not valid
-                        continue;
-
-                    if (temp.Position + msgSize - 2 > temp.Length)
-                        break;
-
-                    byte[] byt = new byte[msgSize];
-                    byt[0] = (byte)'~';
-                    byt[1] = (byte)msgType;
-                    temp.Read(byt, 2, msgSize - 2);
-                    handle_packet(byt);
-                    //Process_Received_BinaryBytes(byt, radioGroupDevice.SelectedIndex);
-                }
-            }
-            Grapher graphform = new Grapher(buffer);
-            graphform.ShowDialog(this);
-            graphform.BringToFront();*/
         }
 
         private void opendialog_FileOk(object sender, CancelEventArgs e)
@@ -316,13 +276,21 @@ namespace GPSNavigator
         {
             if (checkBox1.Checked)
             {
-                savedialog.FileName = "";
-                savedialog.Filter = "GLF Log File|*.GLF";
-                savedialog.ShowDialog();
+                //savedialog.FileName = "";
+                //savedialog.Filter = "GLF Log File|*.GLF";
+                //savedialog.ShowDialog();
+                folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
+                folderdialog.ShowDialog();
+                if (folderdialog.SelectedPath != "")
+                {
+                    //Savefile = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.Write);
+                    log = new Logger(folderdialog.SelectedPath+"\\");
+                    isRecording = true;
+                }
             }
             else
             {
-                Savefile.Close();
+                //Savefile.Close();
                 log.CloseFiles();
                 isRecording = false;
             }
@@ -330,7 +298,7 @@ namespace GPSNavigator
 
         private void savedialog_FileOk(object sender, CancelEventArgs e)
         {
-            Savefile = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.Write);
+            //Savefile = new FileStream(savedialog.FileName, FileMode.Create, FileAccess.Write);
             log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "Logs\\");
             isRecording = true;
         }

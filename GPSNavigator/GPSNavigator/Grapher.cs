@@ -21,6 +21,7 @@ namespace GPSNavigator
         public float zoom = 0.01f,fmin = 0.0f, fmax = 1f;
         public long length;
         public float delta;
+        public bool UserchangedRanges = true;
        // public DataBuffer dbuffer;
         public LogFileManager filemanager;
         public PointStyle ps;
@@ -38,15 +39,49 @@ namespace GPSNavigator
             Chart1.MouseMove += new MouseEventHandler(Chart1_MouseMove);
             Chart1.MouseClick += new MouseEventHandler(Chart1_MouseClick);
             rangecontrol.ValueChanged += new EventHandler(rangecontrol_ValueChanged);
+            textBox1.TextChanged += new EventHandler(text_Changed);
+            textBox2.TextChanged += new EventHandler(text_Changed);
             rangecontrol.Properties.Maximum = 1000;
             rangecontrol.Properties.Minimum = 0;
             rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
+        }
+
+        void text_Changed(object sender, EventArgs e)
+        {
+            try
+            {
+                if (UserchangedRanges)
+                {
+                    var tmin = float.Parse(textBox2.Text);
+                    var tmax = float.Parse(textBox1.Text);
+                    if (tmax < tmin && tmax <= 1f && tmax >= 0f && tmin <= 1f && tmin >= 0f)
+                        MessageBox.Show("Inputs not in a right format");
+                    else
+                    {
+                        fmin = (tmin <= 1f && tmin >= 0f) ? tmin : fmin;
+                        fmax = (tmax <= 1f && tmax >= 0f) ? tmax : fmax;
+                        //rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange((int)(fmin * 1000), (int)(fmax * 1000));
+                        LoadData();
+                    }
+                }
+                else
+                {
+                    UserchangedRanges = true;
+                }
+            }
+            catch
+            {
+            }
         }
 
         void rangecontrol_ValueChanged(object sender, EventArgs e)
         {
             fmin = rangecontrol.Value.Minimum / 1000f;
             fmax = rangecontrol.Value.Maximum / 1000f;
+            UserchangedRanges = false;
+            textBox2.Text = fmin.ToString();
+            UserchangedRanges = false;
+            textBox1.Text = fmax.ToString();
             LoadData();
         }
 
@@ -59,17 +94,21 @@ namespace GPSNavigator
                 fmin = (float)xpos - 0.005f;
                 if (fmin < 0f)
                     fmin = 0f;
-               // hScrollBar2.Value = (int)fmin;
-                //hScrollBar1.Value = 100;
                 fmax = fmin + 0.01f;
+                UserchangedRanges = false;
+                textBox2.Text = fmin.ToString();
+                UserchangedRanges = false;
+                textBox1.Text = fmax.ToString();
                 rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange((int)(fmin*1000), (int)(fmax*1000));
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
                 fmin = 0f;
                 offset = 0;
-                //hScrollBar2.Value = 0;
-                //hScrollBar1.Value = 0;
+                UserchangedRanges = false;
+                textBox2.Text = "0";
+                UserchangedRanges = false;
+                textBox1.Text = "1";
                 fmax = 1f;
                 rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
             }
@@ -252,9 +291,9 @@ namespace GPSNavigator
             Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.x);
             Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
             Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.x);
-            Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(x);
-            //Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.x);
-            //Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
+            Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
+            Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.x);
+            Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
         }
 
         public void PlotSingleDataGraph(List<double> buffer)
