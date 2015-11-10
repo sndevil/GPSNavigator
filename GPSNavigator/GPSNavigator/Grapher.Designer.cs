@@ -84,7 +84,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(110, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "label3";
+            this.label3.Text = "X";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
@@ -92,9 +92,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(33, 28);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
+            this.label4.Size = new System.Drawing.Size(14, 13);
             this.label4.TabIndex = 8;
-            this.label4.Text = "label4";
+            this.label4.Text = "Y";
             // 
             // rangecontrol
             // 

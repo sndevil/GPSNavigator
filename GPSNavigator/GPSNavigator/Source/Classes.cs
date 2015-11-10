@@ -472,7 +472,6 @@ namespace GPSNavigator.Classes
                         break;
                 }
                 #endregion
-
                 GraphData tempgraphdata = new GraphData(gpoints);
 
                 if (stream.Length > 0)
