@@ -11,6 +11,7 @@ namespace GPSNavigator.Source
     public static class Functions
     {
 
+        static SingleDataBuffer dbuffer = new SingleDataBuffer();
 
         #region Constants
         public const int nTRACKING_MODULES = 12;
@@ -817,7 +818,9 @@ namespace GPSNavigator.Source
             buffer.BTemperature = data[index];
             index++;
 
-            Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            //Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.Bdatetime[5] = data[index + 3];
+            Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
             double TOW = a;     //millisecond
             index += 4;
 
@@ -1098,14 +1101,13 @@ namespace GPSNavigator.Source
             //UTC Offset
             index += 2;
 
-            buffer.Bdatetime[5] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
-            int localTOW = (int)a;
+            
+            //int localTOW = (int)a;
             index += 4;
 
             var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
             datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
-            datetimeUTC = datetimeUTC.AddMilliseconds(localTOW);
+            datetimeUTC = datetimeUTC.AddMilliseconds(TOW);
 
             buffer.datetime = datetimeUTC;
 
@@ -1404,8 +1406,9 @@ namespace GPSNavigator.Source
             buffer.BTemperature = data[index];
             index++;
 
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-            double TOW = a;     //millisecond
+            buffer.Bdatetime[5] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
+            double TOW = a;      //millisecond
             index += 4;
 
             buffer.NumOfVisibleSats=0;
@@ -1597,14 +1600,13 @@ namespace GPSNavigator.Source
             var weekNumber = (int)a + 1024;
             index += 2;
 
-            buffer.Bdatetime[5] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
-            int localTOW = (int)a;
+            
+            //int localTOW = (int)a;
             index += 4;
 
             var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
             datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
-            datetimeUTC = datetimeUTC.AddMilliseconds(localTOW);
+            datetimeUTC = datetimeUTC.AddMilliseconds(TOW);
 
             dbuffer.datetime = datetimeUTC;
 
@@ -2181,7 +2183,7 @@ namespace GPSNavigator.Source
             }
 
         }
-        static SingleDataBuffer dbuffer = new SingleDataBuffer();
+
         public static SingleDataBuffer handle_packet(byte[] packet, Globals vars)
         {
             //SingleDataBuffer dbuffer = new SingleDataBuffer();

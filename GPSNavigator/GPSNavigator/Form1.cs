@@ -19,10 +19,11 @@ namespace GPSNavigator
         #region definitions
         bool isRecording = false;
         bool isPlaying = true;
+        bool gotdata = false;
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
-        int serialcounter = 0,packetcounter = 0;
+        int serialcounter = 0,packetcounter = 0, timeoutCounter = 0,MaxTimeout = 5;
         ExtremumHandler exthandler = new ExtremumHandler();
         string message = "";
         #endregion
@@ -30,7 +31,6 @@ namespace GPSNavigator
         public Form1()
         {
             InitializeComponent();
-            timer1.Stop();
             try
             {
                 serialPort1.Open();
@@ -43,8 +43,10 @@ namespace GPSNavigator
 
         void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
-            timer1.Stop();
+            timeoutCounter = 0;
+            gotdata = true;
             SingleDataBuffer dbuf;
+            byte[] byt = new byte[10];
             if (isPlaying)
             {
                 if (isRecording)
@@ -58,7 +60,7 @@ namespace GPSNavigator
                         if (msgSize != -1)
                         {
 
-                            byte[] byt = new byte[msgSize];
+                            byt = new byte[msgSize];
                             byt[0] = (byte)'~';
                             byt[1] = (byte)msgType;
                             serialPort1.Read(byt, 2, msgSize - 2);
@@ -174,12 +176,13 @@ namespace GPSNavigator
                             #endregion
 
                             log.Writebuffer(dbuf);
+                            //log.WriteTimebuffer(dbuf);
                         }
                         //WriteText(DateTime.Now. + "  :  " + header);
                         if (DateTime.Now.Second != serialcounter)
                         {
                             serialcounter = DateTime.Now.Second;
-                            WriteText(packetcounter.ToString() + " Packet Per Second");
+                            WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
                             packetcounter = 0;
                         }
                         else
@@ -191,7 +194,7 @@ namespace GPSNavigator
                     //vars.buffer.
                 }
             }
-            timer1.Start();
+            
         }
 
         delegate void SetTextCallback(string text);
@@ -207,6 +210,9 @@ namespace GPSNavigator
             {
                 this.logger.Text = text;
             }
+        }
+        private void Enable_Timer()
+        {
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -275,6 +281,7 @@ namespace GPSNavigator
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            timer1.Start();
             if (checkBox1.Checked)
             {
                 folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
@@ -289,6 +296,7 @@ namespace GPSNavigator
             {
                 log.CloseFiles();
                 isRecording = false;
+                gotdata = false;
             }
         }
 
@@ -300,7 +308,16 @@ namespace GPSNavigator
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            checkBox1.Checked = false;
+            if (isRecording && gotdata)
+            {
+                if (timeoutCounter++ > MaxTimeout)
+                    checkBox1.Checked = false;
+            }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            MaxTimeout = (int)numericUpDown1.Value;
         }
 
     }

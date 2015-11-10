@@ -524,9 +524,9 @@ namespace GPSNavigator.Classes
                         {
                             for (int i = counter; i < gpoints; i++)
                             {
-                                tempgraphdata.x[counter] = (double)counter / gpoints;
-                                tempgraphdata.y[counter] = t;
-                                tempgraphdata.date[counter] = Functions.ReadDateTime(tbyt);
+                                tempgraphdata.x[i] = (double)counter / gpoints;
+                                tempgraphdata.y[i] = t;
+                                tempgraphdata.date[i] = Functions.ReadDateTime(tbyt);
                             }
                             break;
                         }
@@ -534,9 +534,9 @@ namespace GPSNavigator.Classes
                         {
                             for (int i = counter; i < gpoints; i++)
                             {
-                                tempgraphdata.x[counter] = (double)counter / gpoints;
-                                tempgraphdata.y[counter] = t;
-                                tempgraphdata.date[counter] = Functions.ReadDateTime(tbyt);
+                                tempgraphdata.x[i] = (double)counter / gpoints;
+                                tempgraphdata.y[i] = t;
+                                tempgraphdata.date[i] = Functions.ReadDateTime(tbyt);
                             }
                             break;
                         }
@@ -711,6 +711,11 @@ namespace GPSNavigator.Classes
                     PDOPMax.Write(buffer.BPDOPMax, 0, 4);
                     PDOPMin.Write(buffer.BPDOPMin, 0, 4);
                 }
+            }
+
+            public void WriteTimebuffer(SingleDataBuffer buffer)
+            {
+                Time.Write(buffer.Bdatetime, 0, 6);
             }
 
             public void CloseFiles()

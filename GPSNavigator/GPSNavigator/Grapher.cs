@@ -286,8 +286,6 @@ namespace GPSNavigator
             {
                 double[] max = Functions.FindMaxes(data.max);
                 double[] min = Functions.FindMins(data.min);
-                //Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = SeriesDisplayEnum.Show;
-                //Chart1.ChartGroups[0].ChartData.SeriesList[2].Display = SeriesDisplayEnum.Show;
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
                 Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.date);
