@@ -25,16 +25,20 @@ namespace GPSNavigator
        // public DataBuffer dbuffer;
         public LogFileManager filemanager;
         public PointStyle ps;
+
+        public MomentDetail DetailForm = new MomentDetail();
+
         private graphtype selectedtype = graphtype.X;
+        private DateTime emptytime = new DateTime();
 
-
-        private int scroll1=-1;
         private double[] ylist = new double[Globals.Databuffercount];
         private double[] xlist = new double[Globals.Databuffercount];
         private DateTime[] tlist = new DateTime[Globals.Databuffercount];
 
         public Grapher(LogFileManager Filemanager)
         {
+            DetailForm.Show();
+            DetailForm.BringToFront();
             filemanager = Filemanager;
             InitializeComponent();
             Chart1.MouseMove += new MouseEventHandler(Chart1_MouseMove);
@@ -89,6 +93,8 @@ namespace GPSNavigator
 
         void Chart1_MouseClick(object sender, MouseEventArgs e)
         {
+            if (ps.PointIndex == -1)
+                ps.PointIndex = 0;
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                 var xpos = xlist[ps.PointIndex];
@@ -96,6 +102,7 @@ namespace GPSNavigator
                 if (fmin < 0f)
                     fmin = 0f;
                 fmax = fmin + 0.01f;
+                DetailForm.UpdateData(filemanager.ReadGPSstatus((float)xpos));
                 UserchangedRanges = false;
                 textBox2.Text = fmin.ToString();
                 UserchangedRanges = false;
@@ -277,25 +284,24 @@ namespace GPSNavigator
             ylist = data.y;
             tlist = data.date;
 
-            /*double[] x = new double[Globals.Databuffercount];
+            double[] time = new double[Globals.Databuffercount];
             for (int i = 0; i < Globals.Databuffercount; i++)
-            {
-                x[i] = (i % 2 == 0) ? max[i] : min[i];
-            }*/
+                time[i] = (data.date[i] == emptytime) ? double.NaN : (double)tlist[i].Ticks;
+
             if (fmax - fmin > 0.02f && selectedtype != graphtype.State && selectedtype != graphtype.Temperature && selectedtype != graphtype.UsedStats && selectedtype != graphtype.VisibleStats)
             {
                 double[] max = Functions.FindMaxes(data.max);
                 double[] min = Functions.FindMins(data.min);
-                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(time);
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
-                Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(time);
                 Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
-                Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(time);
                 Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
             }
             else
             {
-                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(time);
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
                 Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Clear();
                 Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Clear();
@@ -337,66 +343,106 @@ namespace GPSNavigator
                     Chart1.ChartArea.Axes[1].Text = "Buffer.X";
                     break;
                 case 1:
+                    selectedtype = graphtype.X_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.X_Processed";
+                    break;
+                case 2:
                     selectedtype = graphtype.Y;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Y";
                     break;
-                case 2:
+                case 3:
+                    selectedtype = graphtype.Y_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Y_Processed";
+                    break;
+                case 4:
                     selectedtype = graphtype.Z;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Z";
                     break;
-                case 3:
+                case 5:
+                    selectedtype = graphtype.Z_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Z_Processed";
+                    break;
+                case 6:
                     selectedtype = graphtype.Latitude;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Latitude";
                     break;
-                case 5:
+                case 7:
+                    selectedtype = graphtype.Latitude_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Latitude_Processed";
+                    break;
+                case 8:
                     selectedtype = graphtype.Altitude;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude";
                     break;
-                case 4:
-                    selectedtype = graphtype.Longitude;
-                    Chart1.ChartArea.Axes[1].Text = "Buffer.Longtitude";
+                case 9:
+                    selectedtype = graphtype.Altitude_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude_Processed";
                     break;
-                case 6:
+                case 10:
+                    selectedtype = graphtype.Longitude;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Longitude";
+                    break;
+                case 11:
+                    selectedtype = graphtype.Longitude_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Longitude_Processed";
+                    break;
+                case 12:
                     selectedtype = graphtype.Vx;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Vx";
                     break;
-                case 7:
+                case 13:
+                    selectedtype = graphtype.Vx_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Vx_Processed";
+                    break;
+                case 14:
                     selectedtype = graphtype.Vy;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Vy";
                     break;
-                case 8:
+                case 15:
+                    selectedtype = graphtype.Vy_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Vy_Processed";
+                    break;
+                case 16:
                     selectedtype = graphtype.Vz;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Vz";
                     break;
-                case 9:
+                case 17:
+                    selectedtype = graphtype.Vz_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Vz_Processed";
+                    break;
+                case 18:
                     selectedtype = graphtype.Ax;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Ax";
                     break;
-                case 10:
+                case 19:
                     selectedtype = graphtype.Ay;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Ay";
                     break;
-                case 11:
+                case 20:
                     selectedtype = graphtype.Az;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Az";
                     break;
-                case 12:
+                case 21:
+                    selectedtype = graphtype.A;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.A";
+                    break;
+                case 22:
                     selectedtype = graphtype.PDOP;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.PDOP";
                     break;
-                case 13:
+                case 23:
                     selectedtype = graphtype.State;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.State";
                     break;
-                case 14:
+                case 24:
                     selectedtype = graphtype.Temperature;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Temperature";
                     break;
-                case 15:
+                case 25:
                     selectedtype = graphtype.UsedStats;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.UsedStats";
                     break;
-                case 16:
+                case 26:
                     selectedtype = graphtype.VisibleStats;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
                     break;

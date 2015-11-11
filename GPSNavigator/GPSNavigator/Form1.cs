@@ -31,6 +31,14 @@ namespace GPSNavigator
         public Form1()
         {
             InitializeComponent();
+            /*
+            var NAN = 16.1234;
+            var byt = BitConverter.GetBytes(NAN);
+            var p = BitConverter.ToDouble(byt, 0);
+            var t = Functions.CopyByteWithOffset(byt, 4);
+            var re = Functions.BytetoFloat(t);
+            MessageBox.Show(Encoding.UTF8.GetString(BitConverter.GetBytes(NAN)));
+            */
             try
             {
                 serialPort1.Open();
@@ -69,7 +77,7 @@ namespace GPSNavigator
 
                             #region Extremum_Ifs
                            // message += dbuf.X + "  |  ";
-                            if (exthandler.ExtremumStarted && dbuf.state == 1)
+                            if (exthandler.ExtremumStarted)
                             {
                                 if (exthandler.ExtremeCounter++ >= 100)
                                 {
@@ -138,7 +146,7 @@ namespace GPSNavigator
                                 if (dbuf.PDOP > exthandler.PDOPMax) { exthandler.PDOPMax = dbuf.PDOP; exthandler.BPDOPMax = dbuf.BPDOP; }
                                 if (dbuf.PDOP < exthandler.PDOPMin) { exthandler.PDOPMin = dbuf.PDOP; exthandler.BPDOPMin = dbuf.BPDOP; }
                             }
-                            else if (dbuf.state == 1)
+                            else
                             {
                                 exthandler.ExtremumStarted = true;
                                 exthandler.AltitudeMax = exthandler.AltitudeMin = dbuf.Altitude;

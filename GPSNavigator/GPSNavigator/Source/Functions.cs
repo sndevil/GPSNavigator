@@ -275,7 +275,7 @@ namespace GPSNavigator.Source
             int t = array[3];
             for (int i = 2; i >= 0; --i)
                 t = t * 256 + array[i];
-            var t2 = Functions.formatFloat(t);
+            var t2 = (t == -524288) ? double.NaN : Functions.formatFloat(t);
             return t2;
         }
 
@@ -783,9 +783,10 @@ namespace GPSNavigator.Source
              * */
         }
 
-        public static SingleDataBuffer Process_Binary_Message_Full(byte[] data, int SerialNum, List<Satellite> GPS, List<Satellite> GLONASS)
+        public static SingleDataBuffer Process_Binary_Message_Full(byte[] data, int SerialNum,ref List<Satellite> GPS,ref List<Satellite> GLONASS)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
+            byte[] NaNBytes = {0,0,248,255};
 
             int msgSize = 0;
 
@@ -825,7 +826,8 @@ namespace GPSNavigator.Source
             index += 4;
 
             buffer.NumOfVisibleSats = 0;
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i];};
+            buffer.BSatStats[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BSatStats[i] = data[index + i]; };
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -845,7 +847,8 @@ namespace GPSNavigator.Source
             }
             index += 4;
             buffer.NumOfUsedSats = 0;
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i];};
+            buffer.BSatStats[7] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BSatStats[i + 4] = data[index + i]; };
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
@@ -863,7 +866,8 @@ namespace GPSNavigator.Source
             }
             index += 4;
 
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BSatStats[11] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BSatStats[8 + i] = data[index + i]; }
             for (int i = 0; i < 28; ++i)
             {
                 if (a % 2 == 1)
@@ -877,7 +881,8 @@ namespace GPSNavigator.Source
             }
             index += 4;
 
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.BSatStats[15] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BSatStats[12 + i] = data[index + i]; }
             for (int i = 0; i < 28; ++i)
             {
                 if (a % 2 == 1)
@@ -890,176 +895,333 @@ namespace GPSNavigator.Source
             index += 4;
 
             // X
-            buffer.BX[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BX[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX[i] = data[index + i]; };
                 buffer.X = formatFloat(a);
-            
+            }
+            else
+            {
+                buffer.X = double.NaN;
+                buffer.BX = NaNBytes;
+            }
             //dbuf.X[dbuf.counter] = formatFloat(a);
             index += 4;
 
             // X Processed
-            buffer.BX_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX_Processed[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BX_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX_Processed[i] = data[index + i]; };
                 buffer.X_Processed = formatFloat(a);
+            }
+            else
+            {
+                buffer.X_Processed = double.NaN;
+                buffer.BX_Processed = NaNBytes;
+            }
+
             index += 4;
 
             // Y
-            buffer.BY[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BY[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY[i] = data[index + i]; };
                 buffer.Y = formatFloat(a);
+            }
+            else
+            {
+                buffer.Y = double.NaN;
+                buffer.BY = NaNBytes;
+            }
+
             index += 4;
 
             // Y Processed
-            buffer.BY_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY_Processed[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BY_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY_Processed[i] = data[index + i]; };
                 buffer.Y_Processed = formatFloat(a);
+            }
+            else
+            {
+                buffer.Y_Processed = double.NaN;
+                buffer.BY_Processed = NaNBytes; 
+            }
             index += 4;
 
             // Z
-            buffer.BZ[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BZ[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ[i] = data[index + i]; };
                 buffer.Z = formatFloat(a);
+            }
+            else
+            {
+                buffer.Z = double.NaN;
+                buffer.BZ = NaNBytes;
+            }
             index += 4;
 
             // Z Processed
-            buffer.BZ_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ_Processed[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BZ_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ_Processed[i] = data[index + i]; };
                 buffer.Z_Processed = formatFloat(a);
+            }
+            else
+            {
+                buffer.Z_Processed = double.NaN;
+                buffer.BZ_Processed = NaNBytes;
+            }
             index += 4;
 
             //Latitude
-            buffer.BLatitude[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude[i] = data[index + i]; };
             if (state == 1)
-                buffer.Latitude = formatFloat(a);
+            {
+                buffer.BLatitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude[i] = data[index + i]; };
+                    buffer.Latitude = formatFloat(a);
+            }
+            else
+            {
+                buffer.Latitude = double.NaN;
+                buffer.BLatitude = NaNBytes;
+            }
             index += 4;
 
             //Latitude Processed
-            buffer.BLatitude_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude_Processed[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BLatitude_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude_Processed[i] = data[index + i]; };
                 var Latitude = formatFloat(a);
                 buffer.Latitude_Processed = Latitude;
+            }
+            else
+            {
+                buffer.Latitude_Processed = double.NaN;
+                buffer.BLatitude_Processed = NaNBytes;
             }
             index += 4;
 
             //Longitude
-            buffer.BLongitude[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude[i] = data[index + i]; };
             if (state == 1)
-                buffer.Longitude = formatFloat(a);
+            {
+                buffer.BLongitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude[i] = data[index + i]; };
+                    buffer.Longitude = formatFloat(a);
+            }
+            else
+            {
+                buffer.Longitude = double.NaN;
+                buffer.BLongitude = NaNBytes;
+            }
             index += 4;
 
             //Longitude Processed
-            buffer.BLongitude_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude_Processed[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BLongitude_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude_Processed[i] = data[index + i]; };
                 var Longitude = formatFloat(a);
                 buffer.Longitude_Processed = Longitude;
             }
+            else
+            {
+                buffer.Longitude_Processed = double.NaN;
+                buffer.BLongitude_Processed = NaNBytes;
+            }
+
             index += 4;
 
             //Altitude
-            buffer.BAltitude[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude[i] = data[index + i]; };
-            if (state == 1)
-                buffer.Altitude = formatFloat(a);
-            index += 4;
-
-            //Altitude Processed
-            buffer.BAltitude_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude_Processed[i] = data[index + i]; };
             if (state == 1)
             {
-                var Altitude = formatFloat(a);
-                buffer.Altitude_Processed = Altitude;
+                buffer.BAltitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude[i] = data[index + i]; };
+                buffer.Altitude = formatFloat(a);
+            }
+            else
+            {
+                buffer.Altitude = double.NaN;
+                buffer.BAltitude = NaNBytes;
             }
             index += 4;
 
-            // Vx
-            buffer.BVx[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx[i] = data[index + i]; };
+            //Altitude Processed
             if (state == 1)
+            {
+                buffer.BAltitude_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude_Processed[i] = data[index + i]; };
+                var Altitude = formatFloat(a);
+                buffer.Altitude_Processed = Altitude;
+            }
+            else
+            {
+                buffer.Altitude_Processed = double.NaN;
+                buffer.BAltitude_Processed = NaNBytes;
+            }
+
+            index += 4;
+
+            // Vx
+            if (state == 1)
+            {
+                buffer.BVx[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx[i] = data[index + i]; };
                 buffer.Vx = formatFloat(a);
+            }
+            else
+            {
+                buffer.Vx = double.NaN;
+                buffer.BVx = NaNBytes;
+            }
             index += 4;
 
             // Vx Processed
-            buffer.BVx_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx_Processed[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BVx_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx_Processed[i] = data[index + i]; };
                 buffer.Vx_Processed = formatFloat(a);
+            }
+            else
+            {
+                buffer.Vx_Processed = double.NaN;
+                buffer.BVx_Processed = NaNBytes;
+            }
             index += 4;
 
             // Vy
-            buffer.BVy[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BVy[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy[i] = data[index + i]; };
                 buffer.Vy = formatFloat(a);
+            }
+            else
+            {
+                buffer.Vy = double.NaN;
+                buffer.BVy = NaNBytes;
+            }
+
             index += 4;
 
             // Vy Processed
-            buffer.BVy_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy_Processed[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BVy_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy_Processed[i] = data[index + i]; };
                 buffer.Vy_Processed = formatFloat(a);
+            }
+            else
+            {
+                buffer.Vy_Processed = double.NaN;
+                buffer.BVy_Processed = NaNBytes;
+            }
             index += 4;
 
             // Vz
-            buffer.BVz[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BVz[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz[i] = data[index + i]; };
                 buffer.Vz = formatFloat(a);
+            }
+            else
+            {
+                buffer.Vz = double.NaN;
+                buffer.BVz = NaNBytes;
+            }
             index += 4;
 
             // Vz Processed
-            buffer.BVz_Processed[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz_Processed[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BVz_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz_Processed[i] = data[index + i]; };
                 buffer.Vz_Processed = formatFloat(a);
+            }
+            else
+            {
+                buffer.Vz_Processed = double.NaN;
+                buffer.BVz_Processed = NaNBytes;
+            }
             index += 4;
 
             //Ax acceleration
-            buffer.BAx[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAx[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BAx[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAx[i] = data[index + i]; };
                 buffer.Ax = formatFloat(a);
+            }
+            else
+            {
+                buffer.Ax = double.NaN;
+                buffer.BAx = NaNBytes;
+            }
             index += 4;
 
             //Ay acceleration
-            buffer.BAy[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAy[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BAy[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAy[i] = data[index + i]; };
                 buffer.Ay = formatFloat(a);
+            }
+            else
+            {
+                buffer.Ay = double.NaN;
+                buffer.BAy = NaNBytes;
+            }
             index += 4;
 
             //Az acceleration
-            buffer.BAz[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAz[i] = data[index + i]; };
             if (state == 1)
+            {
+                buffer.BAz[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAz[i] = data[index + i]; };
                 buffer.Az = formatFloat(a);
+            }
+            else
+            {
+                buffer.Az = double.NaN;
+                buffer.BAz = NaNBytes;
+            }
             index += 4;
 
             //V, V_Processed, A
             if (state == 1)
             {
                 buffer.V = (Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2)));
-                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(buffer.V),4);
-                buffer.V_Processed=(Math.Sqrt(Math.Pow(buffer.Vx_Processed, 2) + Math.Pow(buffer.Vy_Processed, 2) + Math.Pow(buffer.Vz_Processed, 2)));
-                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(buffer.V_Processed),4);
-                buffer.A=(Math.Sqrt(Math.Pow(buffer.Ax, 2) + Math.Pow(buffer.Ay, 2) + Math.Pow(buffer.Az, 2)));
-                buffer.BA = CopyByteWithOffset(BitConverter.GetBytes(buffer.A),4);
+                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(buffer.V), 4);
+                buffer.V_Processed = (Math.Sqrt(Math.Pow(buffer.Vx_Processed, 2) + Math.Pow(buffer.Vy_Processed, 2) + Math.Pow(buffer.Vz_Processed, 2)));
+                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(buffer.V_Processed), 4);
+                buffer.A = (Math.Sqrt(Math.Pow(buffer.Ax, 2) + Math.Pow(buffer.Ay, 2) + Math.Pow(buffer.Az, 2)));
+                buffer.BA = CopyByteWithOffset(BitConverter.GetBytes(buffer.A), 4);
             }
+            else
+            {
+                buffer.V = double.NaN;
+                buffer.V_Processed = double.NaN;
+                buffer.A = double.NaN;
+                buffer.BV = NaNBytes;
+                buffer.BV_Processed = NaNBytes;
+                buffer.BA = NaNBytes;
+            }
+
 
             //SNR GPS
             int readSNR = 0;
+            for (int i = 0; i < 12; i++)
+                buffer.BGPSstat[i] = data[index + i];
             for (int i = 0; i < 32; ++i)
             {
                 GPS[i].SNR = 0;
@@ -1077,6 +1239,8 @@ namespace GPSNavigator.Source
 
             //GLONASS SNR
             readSNR = 0;
+            for (int i = 0; i < 12; i++)
+                buffer.BGLONASSstat[i] = data[index + i];
             for (int i = 0; i < 28; ++i)
             {
                 GLONASS[i].SNR = 0;
@@ -1124,7 +1288,7 @@ namespace GPSNavigator.Source
                 GDOP = Decompress_DOP(data[index]);
                 index++;
                 buffer.PDOP = Decompress_DOP(data[index]);
-                buffer.BPDOP = CopyByteWithOffset(BitConverter.GetBytes(buffer.PDOP),4);
+                buffer.BPDOP = CopyByteWithOffset(BitConverter.GetBytes(buffer.PDOP), 4);
                 index++;
                 HDOP = Decompress_DOP(data[index]);
                 index++;
@@ -1132,6 +1296,11 @@ namespace GPSNavigator.Source
                 index++;
                 TDOP = Decompress_DOP(data[index]);
                 index++;
+            }
+            else
+            {
+                buffer.PDOP = double.NaN;
+                buffer.BPDOP = NaNBytes;
             }
 
             // Checksum
@@ -1377,9 +1546,10 @@ namespace GPSNavigator.Source
 
         }
 
-        public static SingleDataBuffer Process_Binary_Message_Compact(byte[] data, int SerialNum, List<Satellite> GPS)
+        public static SingleDataBuffer Process_Binary_Message_Compact(byte[] data, int SerialNum, ref List<Satellite> GPS)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
+            byte[] NaNBytes = { 0, 0, 248, 255 };
             // List<Satellite> GPS_satellite;
             //     dbuf = buffer;
             //     GPS_satellite = GPS;
@@ -1452,102 +1622,166 @@ namespace GPSNavigator.Source
             index += 4;
 
             // X
-            buffer.BX[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BX[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BX[i] = data[index + i]; };
                 buffer.X = formatFloat(a);
                 buffer.X_Processed = buffer.X;
+                buffer.BX_Processed = buffer.BX;
             }
-            buffer.BX_Processed = buffer.BX;
+            else
+            {
+                buffer.X = double.NaN;
+                buffer.X_Processed = double.NaN;
+                buffer.BX = NaNBytes;
+                buffer.BX_Processed = NaNBytes;
+            }
             index += 4;
 
             // Y
-            buffer.BY[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BY[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BY[i] = data[index + i]; };
                 buffer.Y = formatFloat(a);
                 buffer.Y_Processed = buffer.Y;
+                buffer.BY_Processed = buffer.BY;
             }
-            buffer.BY_Processed = buffer.BY;
+            else
+            {
+                buffer.Y = double.NaN;
+                buffer.Y_Processed = double.NaN;
+                buffer.BY = NaNBytes;
+                buffer.BY_Processed = NaNBytes;
+            }
             index += 4;
 
             // Z
-            buffer.BZ[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BZ[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BZ[i] = data[index + i]; };
+
                 buffer.Z = formatFloat(a);
                 buffer.Z_Processed = buffer.Z;
+                buffer.BZ_Processed = buffer.BZ;
             }
-            buffer.BZ_Processed = buffer.BZ;
+            else
+            {
+                buffer.Z = double.NaN;
+                buffer.Z_Processed = double.NaN;
+                buffer.BZ = NaNBytes;
+                buffer.BZ_Processed = NaNBytes;
+            }
             index += 4;
 
             //Latitude
-            buffer.BLatitude[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BLatitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLatitude[i] = data[index + i]; };
                 buffer.Latitude = formatFloat(a);
                 buffer.Latitude_Processed = buffer.Latitude;
+                buffer.BLatitude_Processed = buffer.BLatitude;
             }
-            buffer.BLatitude_Processed = buffer.BLatitude;
+            else
+            {
+                buffer.Latitude = double.NaN;
+                buffer.Latitude_Processed = double.NaN;
+                buffer.BLatitude = NaNBytes;
+                buffer.BLatitude_Processed = NaNBytes;
+            }
             index += 4;
 
             //Longitude
-            buffer.BLongitude[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BLongitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BLongitude[i] = data[index + i]; };
                 buffer.Longitude = formatFloat(a);
                 buffer.Longitude_Processed = buffer.Longitude;
+                buffer.BLongitude_Processed = buffer.BLongitude;
             }
-            buffer.BLongitude_Processed = buffer.BLongitude;
+            else
+            {
+                buffer.Longitude = double.NaN;
+                buffer.Longitude_Processed = double.NaN;
+                buffer.BLongitude = NaNBytes;
+                buffer.BLongitude_Processed = NaNBytes;
+            }
             index += 4;
 
             //Altitude
-            buffer.BAltitude[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BAltitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BAltitude[i] = data[index + i]; };
                 buffer.Altitude = formatFloat(a);
                 buffer.Altitude_Processed = buffer.Altitude;
+                buffer.BAltitude_Processed = buffer.BAltitude;
             }
-            buffer.BAltitude_Processed = buffer.BAltitude;
+            else
+            {
+                buffer.Altitude = double.NaN;
+                buffer.Altitude_Processed = double.NaN;
+                buffer.BAltitude = NaNBytes;
+                buffer.BAltitude_Processed = NaNBytes;
+            }
             index += 4;
 
             // Vx
-            buffer.BVx[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BVx[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVx[i] = data[index + i]; };
                 buffer.Vx = formatFloat(a);
                 buffer.Vx_Processed = buffer.Vx;
+                buffer.BVx_Processed = buffer.BVx;
             }
-            buffer.BVx_Processed = buffer.BVx;
+            else
+            {
+                buffer.Vx = double.NaN;
+                buffer.Vx_Processed = double.NaN;
+                buffer.BVx = NaNBytes;
+                buffer.BVx_Processed = NaNBytes;
+            }
             index += 4;
 
             // Vy
-            buffer.BVy[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BVy[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVy[i] = data[index + i]; };
                 buffer.Vy = formatFloat(a);
                 buffer.Vy_Processed = buffer.Vy;
+                buffer.BVy_Processed = buffer.BVy;
             }
-            buffer.BVy_Processed = buffer.BVy;
+            else
+            {
+                buffer.Vy = double.NaN;
+                buffer.Vy_Processed = double.NaN;
+                buffer.BVy = NaNBytes;
+                buffer.BVy_Processed = NaNBytes;
+            }
             index += 4;
 
             // Vz
-            buffer.BVz[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz[i] = data[index + i]; };
             if (state == 1)
             {
+                buffer.BVz[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BVz[i] = data[index + i]; };
                 buffer.Vz = formatFloat(a);
                 buffer.Vz_Processed = buffer.Vz;
+                buffer.BVz_Processed = buffer.BVz;
             }
-            buffer.BVz_Processed = buffer.BVz;
+            else
+            {
+                buffer.Vz = double.NaN;
+                buffer.Vz_Processed = double.NaN;
+                buffer.BVz = NaNBytes;
+                buffer.BVz_Processed = NaNBytes;
+            }
             index += 4;
 
             //V
@@ -1556,15 +1790,30 @@ namespace GPSNavigator.Source
                 var temp3 = Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2));
                 buffer.V = (temp3);
                 buffer.V_Processed = (temp3);
-                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(temp3),4);
-                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp3),4);
+                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(temp3), 4);
+                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp3), 4);
+            }
+            else
+            {
+                buffer.V = double.NaN;
+                buffer.V_Processed = double.NaN;
+                buffer.BV = NaNBytes;
+                buffer.BV_Processed = NaNBytes;
             }
             // DOP
             double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
-            buffer.BPDOP[3] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BPDOP[i] = data[index + i]; }
             if (state == 1)
+            {
+                buffer.BPDOP[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BPDOP[i] = data[index + i]; }
                 buffer.PDOP = (formatFloat(a));
+            }
+            else
+            {
+                buffer.PDOP = double.NaN;
+                buffer.BPDOP = NaNBytes;
+            }
+
             index += 4;
 
             int readSNR = 0;
@@ -2191,11 +2440,11 @@ namespace GPSNavigator.Source
             {
                 var key = packet[1];
                 if (key == Functions.BIN_FULL)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1, vars.GPSSat, vars.GLONASSsat);
+                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1,ref vars.GPSSat,ref vars.GLONASSsat);
                 else if (key == Functions.BIN_FULL_PLUS)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1, vars.GPSSat, vars.GLONASSsat);
+                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1,ref vars.GPSSat,ref vars.GLONASSsat);
                 else if (key == Functions.BIN_COMPACT)
-                    dbuffer = Functions.Process_Binary_Message_Compact(packet, 1 , vars.GPSSat);
+                    dbuffer = Functions.Process_Binary_Message_Compact(packet, 1 , ref vars.GPSSat);
             }
             catch
             {
@@ -2222,8 +2471,10 @@ namespace GPSNavigator.Source
                 var firstdata = ((int)(i * dt) - 1);
                 var rmax = input[(firstdata >= 0)? firstdata : 0];
                 for (int j = 1; j <= (int)dt; j++)
-                   if (input[(int)(i * dt) - j] > rmax)
-                       rmax = input[(int)(i * dt) - j];
+                    if (rmax == double.NaN && input[(int)(i * dt) - j] != double.NaN)
+                        rmax = input[(int)(i * dt) - j];
+                    else if (input[(int)(i * dt) - j] > rmax && input[(int)(i*dt) - j] != double.NaN)
+                        rmax = input[(int)(i * dt) - j];
                 for (int j = 1; j <= (int)(dto); j++)
                     output[(int)(i * dto) - j] = rmax;
             }
@@ -2240,7 +2491,9 @@ namespace GPSNavigator.Source
                 var firstdata = ((int)(i * dt) - 1);
                 var rmin = input[(firstdata >= 0) ? firstdata : 0];
                 for (int j = 1; j <= (int)dt; j++)
-                    if (input[(int)(i * dt) - j] < rmin)
+                    if (rmin == double.NaN && input[(int)(i * dt) - j] != double.NaN)
+                        rmin = input[(int)(i * dt) - j];
+                    else if (input[(int)(i * dt) - j] < rmin && input[(int)(i * dt) - j] != double.NaN)
                         rmin = input[(int)(i * dt) - j];
                 for (int j = 1; j <= (int)(dto); j++)
                     output[(int)(i * dto) - j] = rmin;
@@ -2260,6 +2513,18 @@ namespace GPSNavigator.Source
             mod = (mod < 4) ? -mod : 6 - mod;
             return (long)(Adress + mod);
         }
+        public static long QuantizePosition8bit(float Adress)
+        {
+            var mod = (int)(Adress % 8);
+            mod = (mod < 5) ? -mod : 8 - mod;
+            return (long)(Adress + mod);
+        }
+        public static long QuantizePosition12bit(float Adress)
+        {
+            var mod = (int)(Adress % 12);
+            mod = (mod < 7) ? -mod : 12 - mod;
+            return (long)(Adress + mod);
+        }
 
         public static DateTime ReadDateTime(byte[] input)
         {
@@ -2268,6 +2533,8 @@ namespace GPSNavigator.Source
 
             a = input[5]; for (int i = 2; i >= 0; --i) { a = a * 256 + input[2 + i]; }
             var localTOW = (int)a;
+            if (weekNumber > 65530)
+                return new DateTime();
             var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
             datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
             datetimeUTC = datetimeUTC.AddMilliseconds(localTOW);
@@ -2275,6 +2542,5 @@ namespace GPSNavigator.Source
             return datetimeUTC;
 
         }
-
     }
 }

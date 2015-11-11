@@ -138,6 +138,9 @@ namespace GPSNavigator.Classes
             public double NumOfUsedSats;
             public byte[] BNumOfUsedStats = new byte[4];
             public double NumOfVisibleSats;
+            public byte[] BGPSstat = new byte[12];
+            public byte[] BGLONASSstat = new byte[12];
+            public byte[] BSatStats = new byte[16];
             public byte[] BNumOfVisibleStats = new byte[4];
             public double state;
             public byte Bstate;
@@ -218,7 +221,7 @@ namespace GPSNavigator.Classes
             waitForMessageType,
             readMessage
         };
-        public enum graphtype { X, Y, Z, Vx, Vy, Vz, Ax, Ay, Az, Latitude, Longitude, Altitude, PDOP, State, Temperature, UsedStats, VisibleStats };
+        public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats };
 
         public class GEOpoint
         {
@@ -260,6 +263,8 @@ namespace GPSNavigator.Classes
             public DateTime[] date;
             public List<double> max;
             public List<double> min;
+            public SingleDataBuffer databuffer;
+
             public GraphData(int Points)
             {
                 x = new double[Points];
@@ -267,6 +272,21 @@ namespace GPSNavigator.Classes
                 date = new DateTime[Points];
                 max = new List<double>();
                 min = new List<double>();
+                databuffer = new SingleDataBuffer();
+            }
+        }
+
+        public class GPSData
+        {
+            public Satellite[] GPS;
+            public Satellite[] Glonass;
+            public int VisibleGPS, UsedGPS,VisibleGlonass, UsedGlonass;
+
+            public GPSData()
+            {
+                GPS = new Satellite[32];
+                Glonass = new Satellite[32];
+                VisibleGPS = UsedGPS = VisibleGlonass = VisibleGPS = 0;
             }
         }
 
@@ -283,6 +303,7 @@ namespace GPSNavigator.Classes
 
             private FileStream stream,maxstream,minstream,timestream;
             private FileStream Vx, Vy, Vz, Ax, Ay, Az, X, Y, Z, Altitude, Latitude, Longitude, PDOP, state, Temperature, UsedStats, VisibleStats, V, A;
+            private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p,GPS,Glonass,Sat;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin, VMax, VMin, AMax, AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
 
@@ -294,18 +315,22 @@ namespace GPSNavigator.Classes
                 {
                     #region initializing_streams
                     V = new FileStream(path + "\\V.glf", FileMode.Open, FileAccess.Read);
+                    V_p = new FileStream(path + "\\V_P.glf", FileMode.Open, FileAccess.Read);
                     VMax = new FileStream(path + "\\VMax.glf", FileMode.Open, FileAccess.Read);
                     VMin = new FileStream(path + "\\VMin.glf", FileMode.Open, FileAccess.Read);
                     A = new FileStream(path + "\\A.glf", FileMode.Open, FileAccess.Read);
                     AMax = new FileStream(path + "\\AMax.glf", FileMode.Open, FileAccess.Read);
                     AMin = new FileStream(path + "\\AMin.glf", FileMode.Open, FileAccess.Read);
                     Vx = new FileStream(path + "\\Vx.glf", FileMode.Open, FileAccess.Read);
+                    Vx_p = new FileStream(path + "\\Vx_P.glf", FileMode.Open, FileAccess.Read);
                     VxMax = new FileStream(path + "\\VxMax.glf", FileMode.Open, FileAccess.Read);
                     VxMin = new FileStream(path + "\\VxMin.glf", FileMode.Open, FileAccess.Read);
                     Vy = new FileStream(path + "\\Vy.glf", FileMode.Open, FileAccess.Read);
+                    Vy_p = new FileStream(path + "\\Vy_P.glf", FileMode.Open, FileAccess.Read);
                     VyMax = new FileStream(path + "\\VyMax.glf", FileMode.Open, FileAccess.Read);
                     VyMin = new FileStream(path + "\\VyMin.glf", FileMode.Open, FileAccess.Read);
                     Vz = new FileStream(path + "\\Vz.glf", FileMode.Open, FileAccess.Read);
+                    Vz_p = new FileStream(path + "\\Vz_P.glf", FileMode.Open, FileAccess.Read);
                     VzMax = new FileStream(path + "\\VzMax.glf", FileMode.Open, FileAccess.Read);
                     VzMin = new FileStream(path + "\\VzMin.glf", FileMode.Open, FileAccess.Read);
                     Ax = new FileStream(path + "\\Ax.glf", FileMode.Open, FileAccess.Read);
@@ -318,21 +343,27 @@ namespace GPSNavigator.Classes
                     AzMax = new FileStream(path + "\\AzMax.glf", FileMode.Open, FileAccess.Read);
                     AzMin = new FileStream(path + "\\AzMin.glf", FileMode.Open, FileAccess.Read);
                     X = new FileStream(path + "\\X.glf", FileMode.Open, FileAccess.Read);
+                    X_p = new FileStream(path + "\\X_P.glf", FileMode.Open, FileAccess.Read);
                     XMax = new FileStream(path + "\\XMax.glf", FileMode.Open, FileAccess.Read);
                     XMin = new FileStream(path + "\\XMin.glf", FileMode.Open, FileAccess.Read);
                     Y = new FileStream(path + "\\Y.glf", FileMode.Open, FileAccess.Read);
+                    Y_p = new FileStream(path + "\\Y_P.glf", FileMode.Open, FileAccess.Read);
                     YMax = new FileStream(path + "\\YMax.glf", FileMode.Open, FileAccess.Read);
                     YMin = new FileStream(path + "\\YMin.glf", FileMode.Open, FileAccess.Read);
                     Z = new FileStream(path + "\\Z.glf", FileMode.Open, FileAccess.Read);
+                    Z_p = new FileStream(path + "\\Z_P.glf", FileMode.Open, FileAccess.Read);
                     ZMax = new FileStream(path + "\\ZMax.glf", FileMode.Open, FileAccess.Read);
                     ZMin = new FileStream(path + "\\ZMin.glf", FileMode.Open, FileAccess.Read);
                     Altitude = new FileStream(path + "\\Altitude.glf", FileMode.Open, FileAccess.Read);
+                    Altitude_p = new FileStream(path + "\\Altitude_P.glf", FileMode.Open, FileAccess.Read);
                     AltitudeMax = new FileStream(path + "\\AltitudeMax.glf", FileMode.Open, FileAccess.Read);
                     AltitudeMin = new FileStream(path + "\\AltitudeMin.glf", FileMode.Open, FileAccess.Read);
                     Latitude = new FileStream(path + "\\Latitude.glf", FileMode.Open, FileAccess.Read);
+                    Latitude_p = new FileStream(path + "\\Latitude_P.glf", FileMode.Open, FileAccess.Read);
                     LatitudeMax = new FileStream(path + "\\LatitudeMax.glf", FileMode.Open, FileAccess.Read);
                     LatitudeMin = new FileStream(path + "\\LatitudeMin.glf", FileMode.Open, FileAccess.Read);
                     Longitude = new FileStream(path + "\\Longitude.glf", FileMode.Open, FileAccess.Read);
+                    Longitude_p = new FileStream(path + "\\Longitude_P.glf", FileMode.Open, FileAccess.Read);
                     LongitudeMax = new FileStream(path + "\\LongitudeMax.glf", FileMode.Open, FileAccess.Read);
                     LongitudeMin = new FileStream(path + "\\LongitudeMin.glf", FileMode.Open, FileAccess.Read);
                     PDOP = new FileStream(path + "\\PDOP.glf", FileMode.Open, FileAccess.Read);
@@ -343,6 +374,9 @@ namespace GPSNavigator.Classes
                     UsedStats = new FileStream(path + "\\UsedStats.glf", FileMode.Open, FileAccess.Read);
                     VisibleStats = new FileStream(path + "\\VisibleStats.glf", FileMode.Open, FileAccess.Read);
                     timestream = new FileStream(path + "\\Time.glf", FileMode.Open, FileAccess.Read);
+                    GPS = new FileStream(path + "\\GPS.glf", FileMode.Open, FileAccess.Read);
+                    Glonass = new FileStream(path + "\\Glonass.glf", FileMode.Open, FileAccess.Read);
+                    Sat = new FileStream(path + "\\Sat.glf", FileMode.Open, FileAccess.Read);
                     #endregion
                 }
                 catch
@@ -394,6 +428,11 @@ namespace GPSNavigator.Classes
                         maxstream = AltitudeMax;
                         minstream = AltitudeMin;
                         break;
+                    case graphtype.Altitude_p:
+                        stream = Altitude;
+                        maxstream = AltitudeMax;
+                        minstream = AltitudeMin;
+                        break;
                     case graphtype.Ax:
                         stream = Ax;
                         maxstream = AxMax;
@@ -414,8 +453,18 @@ namespace GPSNavigator.Classes
                         maxstream = LatitudeMax;
                         minstream = LatitudeMin;
                         break;
+                    case graphtype.Latitude_p:
+                        stream = Latitude_p;
+                        maxstream = LatitudeMax;
+                        minstream = LatitudeMin;
+                        break;
                     case graphtype.Longitude:
                         stream = Longitude;
+                        maxstream = LongitudeMax;
+                        minstream = LongitudeMin;
+                        break;
+                    case graphtype.Longitude_p:
+                        stream = Longitude_p;
                         maxstream = LongitudeMax;
                         minstream = LongitudeMin;
                         break;
@@ -445,8 +494,18 @@ namespace GPSNavigator.Classes
                         maxstream = VxMax;
                         minstream = VxMin;
                         break;
+                    case graphtype.Vx_p:
+                        stream = Vx_p;
+                        maxstream = VxMax;
+                        minstream = VxMin;
+                        break;
                     case graphtype.Vy:
                         stream = Vy;
+                        maxstream = VyMax;
+                        minstream = VyMin;
+                        break;
+                    case graphtype.Vy_p:
+                        stream = Vy_p;
                         maxstream = VyMax;
                         minstream = VyMin;
                         break;
@@ -455,8 +514,18 @@ namespace GPSNavigator.Classes
                         maxstream = VzMax;
                         minstream = VzMin;
                         break;
+                    case graphtype.Vz_p:
+                        stream = Vz_p;
+                        maxstream = VzMax;
+                        minstream = VzMin;
+                        break;
                     case graphtype.X:
                         stream = X;
+                        maxstream = XMax;
+                        minstream = XMin;
+                        break;
+                    case graphtype.X_p:
+                        stream = X_p;
                         maxstream = XMax;
                         minstream = XMin;
                         break;
@@ -465,10 +534,35 @@ namespace GPSNavigator.Classes
                         maxstream = YMax;
                         minstream = YMin;
                         break;
+                    case graphtype.Y_p:
+                        stream = Y_p;
+                        maxstream = YMax;
+                        minstream = YMin;
+                        break;
                     case graphtype.Z:
                         stream = Z;
                         maxstream = ZMax;
                         minstream = ZMin;
+                        break;
+                    case graphtype.Z_p:
+                        stream = Z_p;
+                        maxstream = ZMax;
+                        minstream = ZMin;
+                        break;
+                    case graphtype.A:
+                        stream = A;
+                        maxstream = AMin;
+                        minstream = AMax;
+                        break;
+                    case graphtype.V:
+                        stream = V;
+                        maxstream = VMax;
+                        minstream = VMin;
+                        break;
+                    case graphtype.V_p:
+                        stream = V_p;
+                        maxstream = VMax;
+                        minstream = VMin;
                         break;
                 }
                 #endregion
@@ -491,7 +585,7 @@ namespace GPSNavigator.Classes
                     byte[] tbyt = new byte[6];
                     while (true)
                     {
-                        double t,dt;
+                        double t;
                         if (type == graphtype.State || type == graphtype.Temperature)
                         {
                             t = stream.ReadByte();
@@ -515,8 +609,16 @@ namespace GPSNavigator.Classes
 
                         tempgraphdata.x[counter] = (double)stream.Position/stream.Length;//(double)stream.Position / stream.Length;
                         tempgraphdata.y[counter] = t;
-                        tempgraphdata.date[counter] = Functions.ReadDateTime(tbyt);
-
+                        var tempt = Functions.ReadDateTime(tbyt);
+                        if (counter == 0)
+                            tempgraphdata.date[counter] = tempt;
+                        else
+                        {
+                            if (tempgraphdata.date[counter - 1] > tempt)
+                                tempgraphdata.date[counter] = tempgraphdata.date[counter - 1];
+                            else
+                                tempgraphdata.date[counter] = tempt;
+                        }
                         if (counter++ >= gpoints - 1)
                             break;
                         if (stream.Position >= stream.Length - 3 && type != graphtype.State && type != graphtype.Temperature)
@@ -562,6 +664,113 @@ namespace GPSNavigator.Classes
                 return tempgraphdata;
             }
 
+            public GPSData ReadGPSstatus(float pos)
+            {
+                GPSData tempdata = new GPSData();
+                GPS.Position = Functions.QuantizePosition12bit(pos * GPS.Length);
+                Glonass.Position = Functions.QuantizePosition12bit(pos * Glonass.Length);
+                Sat.Position = Functions.QuantizePosition8bit(pos * Sat.Length);
+
+
+
+
+               // UsedStats.Position = Functions.QuantizePosition(pos * UsedStats.Length);
+               // VisibleStats.Position = Functions.QuantizePosition(pos * VisibleStats.Length);
+
+                byte[] stats = new byte[16];
+                Sat.Read(stats, 0, 8);
+
+                int visible = 0, used = 0;
+
+                int a = stats[3]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[i];}
+                for (int i = 0; i < 32; ++i)
+                {
+                    tempdata.GPS[i] = new Satellite();
+                    if (a % 2 == 1)
+                    {
+                        tempdata.GPS[i].Signal_Status = 1;       //visible
+                        visible++;
+                    }
+                    else
+                        tempdata.GPS[i].Signal_Status = 0;       //not visible
+                    a >>= 1;
+                }
+
+                a = stats[7]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[4 + i];}
+                for (int i = 0; i < 32; ++i)
+                {
+                    if (a % 2 == 1)
+                    {
+                        tempdata.GPS[i].Signal_Status = 2;       //Used
+                        used++;
+                    }
+                    a >>= 1;
+                }
+
+                tempdata.VisibleGPS = visible;
+                tempdata.UsedGPS = used;
+                visible = 0;
+                used = 0;
+
+                a = stats[11]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[8 + i];}
+                for (int i = 0; i < 32; ++i)
+                {
+                    tempdata.Glonass[i] = new Satellite();
+                    if (a % 2 == 1)
+                    {
+                        tempdata.Glonass[i].Signal_Status = 1;       //visible
+                        visible++;
+                    }
+                    else
+                        tempdata.Glonass[i].Signal_Status = 0;       //not visible
+                    a >>= 1;
+                }
+
+                a = stats[15]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[12 + i];}
+                for (int i = 0; i < 32; ++i)
+                {
+                    if (a % 2 == 1)
+                    {
+                        tempdata.Glonass[i].Signal_Status = 2;       //Used
+                        used++;
+                    }
+                    a >>= 1;
+                }
+
+                tempdata.VisibleGlonass = visible;
+                tempdata.UsedGlonass = used;
+
+                byte[] t = new byte[12];
+                GPS.Read(t, 0, 12);
+                int index = 0;
+                for (int i = 0; i < 32; ++i)
+                {
+                    if (tempdata.GPS[i].Signal_Status != 0)      //visible
+                    {
+                        tempdata.GPS[i].SNR = t[index];
+                        index++;
+                        if (index > 12)
+                            break;
+                    }
+                }
+
+                Glonass.Read(t, 0, 12);
+                index = 0;
+                for (int i = 0; i < 32; ++i)
+                {
+                    if (tempdata.Glonass[i].Signal_Status != 0)      //visible
+                    {
+                        tempdata.Glonass[i].SNR = t[index];
+                        index++;
+                        if (index > 12)
+                            break;
+                    }
+                }
+
+
+                return tempdata;
+            }
+
             public void ClearBuffer()
             {
                 vars.buffer = new DataBuffer();
@@ -593,25 +802,31 @@ namespace GPSNavigator.Classes
         public class Logger
         {
             private FileStream Vx,Vy,Vz,Ax,Ay,Az,X,Y,Z,Altitude,Latitude,Longitude,PDOP,state,Temperature,UsedStats,VisibleStats,V,A;
+            private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin,VMax,VMin,AMax,AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,Time;
+            private FileStream GPS, Glonass,Sat;
 
             public Logger(string DirPath)
             {
                 System.IO.Directory.CreateDirectory(DirPath);
                 V = new FileStream(DirPath + "V.glf", FileMode.Create, FileAccess.Write);
+                V_p = new FileStream(DirPath + "V_P.glf", FileMode.Create, FileAccess.Write);
                 VMax = new FileStream(DirPath + "VMax.glf", FileMode.Create, FileAccess.Write);
                 VMin = new FileStream(DirPath + "VMin.glf", FileMode.Create, FileAccess.Write);
                 A = new FileStream(DirPath + "A.glf", FileMode.Create, FileAccess.Write);
                 AMax = new FileStream(DirPath + "AMax.glf", FileMode.Create, FileAccess.Write);
                 AMin = new FileStream(DirPath + "AMin.glf", FileMode.Create, FileAccess.Write);
                 Vx = new FileStream(DirPath + "Vx.glf", FileMode.Create, FileAccess.Write);
+                Vx_p = new FileStream(DirPath + "Vx_P.glf", FileMode.Create, FileAccess.Write);
                 VxMax = new FileStream(DirPath + "VxMax.glf", FileMode.Create, FileAccess.Write);
                 VxMin = new FileStream(DirPath + "VxMin.glf", FileMode.Create, FileAccess.Write);
                 Vy = new FileStream(DirPath + "Vy.glf", FileMode.Create, FileAccess.Write);
+                Vy_p = new FileStream(DirPath + "Vy_P.glf", FileMode.Create, FileAccess.Write);
                 VyMax = new FileStream(DirPath + "VyMax.glf", FileMode.Create, FileAccess.Write);
                 VyMin = new FileStream(DirPath + "VyMin.glf", FileMode.Create, FileAccess.Write);
                 Vz = new FileStream(DirPath + "Vz.glf", FileMode.Create, FileAccess.Write);
+                Vz_p = new FileStream(DirPath + "Vz_P.glf", FileMode.Create, FileAccess.Write);
                 VzMax = new FileStream(DirPath + "VzMax.glf", FileMode.Create, FileAccess.Write);
                 VzMin = new FileStream(DirPath + "VzMin.glf", FileMode.Create, FileAccess.Write);
                 Ax = new FileStream(DirPath + "Ax.glf", FileMode.Create, FileAccess.Write);
@@ -624,21 +839,27 @@ namespace GPSNavigator.Classes
                 AzMax = new FileStream(DirPath + "AzMax.glf", FileMode.Create, FileAccess.Write);
                 AzMin = new FileStream(DirPath + "AzMin.glf", FileMode.Create, FileAccess.Write);
                 X = new FileStream(DirPath + "X.glf", FileMode.Create, FileAccess.Write);
+                X_p = new FileStream(DirPath + "X_P.glf", FileMode.Create, FileAccess.Write);
                 XMax = new FileStream(DirPath + "XMax.glf", FileMode.Create, FileAccess.Write);
                 XMin = new FileStream(DirPath + "XMin.glf", FileMode.Create, FileAccess.Write);
                 Y = new FileStream(DirPath + "Y.glf", FileMode.Create, FileAccess.Write);
+                Y_p = new FileStream(DirPath + "Y_P.glf", FileMode.Create, FileAccess.Write);
                 YMax = new FileStream(DirPath + "YMax.glf", FileMode.Create, FileAccess.Write);
                 YMin = new FileStream(DirPath + "YMin.glf", FileMode.Create, FileAccess.Write);
                 Z = new FileStream(DirPath + "Z.glf", FileMode.Create, FileAccess.Write);
+                Z_p = new FileStream(DirPath + "Z_P.glf", FileMode.Create, FileAccess.Write);
                 ZMax = new FileStream(DirPath + "ZMax.glf", FileMode.Create, FileAccess.Write);
                 ZMin = new FileStream(DirPath + "ZMin.glf", FileMode.Create, FileAccess.Write);
                 Altitude = new FileStream(DirPath + "Altitude.glf", FileMode.Create, FileAccess.Write);
+                Altitude_p = new FileStream(DirPath + "Altitude_P.glf", FileMode.Create, FileAccess.Write);
                 AltitudeMax = new FileStream(DirPath + "AltitudeMax.glf", FileMode.Create, FileAccess.Write);
                 AltitudeMin = new FileStream(DirPath + "AltitudeMin.glf", FileMode.Create, FileAccess.Write);
                 Latitude = new FileStream(DirPath + "Latitude.glf", FileMode.Create, FileAccess.Write);
+                Latitude_p = new FileStream(DirPath + "Latitude_P.glf", FileMode.Create, FileAccess.Write);
                 LatitudeMax = new FileStream(DirPath + "LatitudeMax.glf", FileMode.Create, FileAccess.Write);
                 LatitudeMin = new FileStream(DirPath + "LatitudeMin.glf", FileMode.Create, FileAccess.Write);
                 Longitude = new FileStream(DirPath + "Longitude.glf", FileMode.Create, FileAccess.Write);
+                Longitude_p = new FileStream(DirPath + "Longitude_P.glf", FileMode.Create, FileAccess.Write);
                 LongitudeMax = new FileStream(DirPath + "LongitudeMax.glf", FileMode.Create, FileAccess.Write);
                 LongitudeMin = new FileStream(DirPath + "LongitudeMin.glf", FileMode.Create, FileAccess.Write);
                 PDOP = new FileStream(DirPath + "PDOP.glf", FileMode.Create, FileAccess.Write);
@@ -649,12 +870,13 @@ namespace GPSNavigator.Classes
                 UsedStats = new FileStream(DirPath + "UsedStats.glf", FileMode.Create, FileAccess.Write);
                 VisibleStats = new FileStream(DirPath + "VisibleStats.glf", FileMode.Create, FileAccess.Write);
                 Time = new FileStream(DirPath + "Time.glf", FileMode.Create, FileAccess.Write);
+                GPS = new FileStream(DirPath + "GPS.glf", FileMode.Create, FileAccess.Write);
+                Glonass = new FileStream(DirPath + "Glonass.glf", FileMode.Create, FileAccess.Write);
+                Sat = new FileStream(DirPath + "Sat.glf", FileMode.Create, FileAccess.Write);
             }
 
             public void Writebuffer(SingleDataBuffer buffer)
             {
-                if (buffer.state == 1.0)
-                {
                     V.Write(buffer.BV, 0, 4);
                     A.Write(buffer.BA, 0, 4);
                     Vx.Write(buffer.BVx, 0, 4);
@@ -669,13 +891,25 @@ namespace GPSNavigator.Classes
                     Altitude.Write(buffer.BAltitude, 0, 4);
                     Latitude.Write(buffer.BLatitude, 0, 4);
                     Longitude.Write(buffer.BLongitude, 0, 4);
+                    V_p.Write(buffer.BV_Processed, 0, 4);
+                    Vx_p.Write(buffer.BVx_Processed, 0, 4);
+                    Vy_p.Write(buffer.BVy_Processed, 0, 4);
+                    Vz_p.Write(buffer.BVz_Processed, 0, 4);
+                    X_p.Write(buffer.BX_Processed, 0, 4);
+                    Y_p.Write(buffer.BY_Processed, 0, 4);
+                    Z_p.Write(buffer.BZ_Processed, 0, 4);
+                    Altitude_p.Write(buffer.BAltitude_Processed, 0, 4);
+                    Latitude_p.Write(buffer.BLatitude_Processed, 0, 4);
+                    Longitude_p.Write(buffer.BLongitude_Processed, 0, 4);
                     PDOP.Write(buffer.BPDOP, 0, 4);
                     state.WriteByte(buffer.Bstate);
                     Temperature.WriteByte(buffer.BTemperature);
                     UsedStats.Write(buffer.BNumOfUsedStats, 0, 4);
                     VisibleStats.Write(buffer.BNumOfVisibleStats, 0, 4);
                     Time.Write(buffer.Bdatetime, 0, 6);
-                }
+                    GPS.Write(buffer.BGPSstat, 0, 12);
+                    Glonass.Write(buffer.BGLONASSstat, 0, 12);
+                    Sat.Write(buffer.BSatStats, 0, 16);
                 if (buffer.WriteExtreme)
                 {
                     buffer.WriteExtreme = false;
@@ -721,15 +955,22 @@ namespace GPSNavigator.Classes
             {
                 Time.Close();
                 Vx.Close();
+                Vx_p.Close();
                 Vy.Close();
+                Vy_p.Close();
                 Vz.Close();
+                Vz_p.Close();
                 Ax.Close();
                 Ay.Close();
                 Az.Close();
                 X.Close();
+                X_p.Close();
                 Y.Close();
+                Y_p.Close();
                 Z.Close();
+                Z_p.Close();
                 V.Close();
+                V_p.Close();
                 A.Close();
                 Altitude.Close();
                 Latitude.Close();
@@ -739,6 +980,9 @@ namespace GPSNavigator.Classes
                 Temperature.Close();
                 UsedStats.Close();
                 VisibleStats.Close();
+                GPS.Close();
+                Glonass.Close();
+                Sat.Close();
                 VxMax.Close();
                 VxMin.Close();
                 VyMax.Close();
