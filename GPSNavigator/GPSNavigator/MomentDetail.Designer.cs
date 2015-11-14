@@ -47,10 +47,10 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
-            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
+            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
@@ -97,6 +97,10 @@
             this.chart1.BackSecondaryColor = System.Drawing.Color.White;
             this.chart1.BorderSkin.PageColor = System.Drawing.SystemColors.Control;
             this.chart1.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.FrameThin5;
+            chartArea1.InnerPlotPosition.Auto = false;
+            chartArea1.InnerPlotPosition.Height = 80F;
+            chartArea1.InnerPlotPosition.Width = 95F;
+            chartArea1.InnerPlotPosition.X = 5F;
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.Location = new System.Drawing.Point(206, 45);
@@ -105,7 +109,7 @@
             series1.ChartArea = "ChartArea1";
             series1.Name = "Visible GPS";
             this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(475, 190);
+            this.chart1.Size = new System.Drawing.Size(585, 190);
             this.chart1.TabIndex = 4;
             this.chart1.Text = "GPS";
             // 
@@ -146,7 +150,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(408, 205);
+            this.label9.Location = new System.Drawing.Point(452, 205);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(98, 13);
             this.label9.TabIndex = 10;
@@ -186,31 +190,11 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(408, 412);
+            this.label13.Location = new System.Drawing.Point(452, 413);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(98, 13);
             this.label13.TabIndex = 15;
             this.label13.Text = "Sat# ( SNR Value )";
-            // 
-            // chart2
-            // 
-            this.chart2.BackColor = System.Drawing.SystemColors.Control;
-            this.chart2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.chart2.BackImageTransparentColor = System.Drawing.Color.White;
-            this.chart2.BackSecondaryColor = System.Drawing.Color.White;
-            this.chart2.BorderSkin.PageColor = System.Drawing.SystemColors.Control;
-            this.chart2.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.FrameThin5;
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
-            this.chart2.Location = new System.Drawing.Point(206, 252);
-            this.chart2.Name = "chart2";
-            this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series2.ChartArea = "ChartArea1";
-            series2.Name = "Visible GPS";
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(475, 190);
-            this.chart2.TabIndex = 14;
-            this.chart2.Text = "GPS";
             // 
             // timer1
             // 
@@ -237,15 +221,38 @@
             this.label14.TabIndex = 18;
             this.label14.Text = "Position:";
             // 
+            // chart2
+            // 
+            this.chart2.BackColor = System.Drawing.SystemColors.Control;
+            this.chart2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.chart2.BackImageTransparentColor = System.Drawing.Color.White;
+            this.chart2.BackSecondaryColor = System.Drawing.Color.White;
+            this.chart2.BorderSkin.PageColor = System.Drawing.SystemColors.Control;
+            this.chart2.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.FrameThin5;
+            chartArea2.InnerPlotPosition.Auto = false;
+            chartArea2.InnerPlotPosition.Height = 80F;
+            chartArea2.InnerPlotPosition.Width = 95F;
+            chartArea2.InnerPlotPosition.X = 5F;
+            chartArea2.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea2);
+            this.chart2.Location = new System.Drawing.Point(206, 253);
+            this.chart2.Name = "chart2";
+            this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
+            series2.ChartArea = "ChartArea1";
+            series2.Name = "Visible GPS";
+            this.chart2.Series.Add(series2);
+            this.chart2.Size = new System.Drawing.Size(585, 190);
+            this.chart2.TabIndex = 19;
+            this.chart2.Text = "GPS";
+            // 
             // MomentDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(693, 463);
+            this.ClientSize = new System.Drawing.Size(820, 463);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label13);
-            this.Controls.Add(this.chart2);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.label10);
@@ -259,6 +266,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.chart2);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MomentDetail";
             this.Text = "MomentDetail";
@@ -285,9 +293,9 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
     }
 }

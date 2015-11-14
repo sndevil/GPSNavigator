@@ -1317,8 +1317,7 @@ namespace GPSNavigator.Source
                 SNRControlUpdate = false;
             }
 
-            Update_Controls(dbuf, state, TOW, SerialNum, HDOP, VDOP);
-             * */
+             */
         }
 
         public static void Process_Binary_Message_Compact(byte[] data, int SerialNum,ref DataBuffer buffer,List<Satellite> GPS)

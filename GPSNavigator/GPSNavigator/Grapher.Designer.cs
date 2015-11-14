@@ -164,6 +164,8 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.Chart1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Grapher";
             this.Text = "Grapher";
             this.Load += new System.EventHandler(this.Grapher_Load);

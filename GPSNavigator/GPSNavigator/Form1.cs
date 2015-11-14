@@ -31,14 +31,6 @@ namespace GPSNavigator
         public Form1()
         {
             InitializeComponent();
-            /*
-            var NAN = 16.1234;
-            var byt = BitConverter.GetBytes(NAN);
-            var p = BitConverter.ToDouble(byt, 0);
-            var t = Functions.CopyByteWithOffset(byt, 4);
-            var re = Functions.BytetoFloat(t);
-            MessageBox.Show(Encoding.UTF8.GetString(BitConverter.GetBytes(NAN)));
-            */
             try
             {
                 serialPort1.Open();
@@ -239,11 +231,16 @@ namespace GPSNavigator
             {
                 isPlaying = false;
                 button2.Text = "Play";
+                this.Text = "GPS Navigator";
             }
             else
             {
                 isPlaying = true;
                 button2.Text = "Pause";
+                if (isRecording)
+                    this.Text = "GPS Navigator (Recording)";
+                else
+                    this.Text = "GPS Navigator";
             }
         }
 
@@ -256,7 +253,7 @@ namespace GPSNavigator
         {
             isPlaying = false;
             button2.Text = "Play";
-
+            this.Text = "GPS Navigator";
             serialPort1.Close();
             this.Close();
             Application.Exit();
@@ -275,10 +272,8 @@ namespace GPSNavigator
         public void OpenLogFile(string path)
         {
             LogFileManager file = new LogFileManager(path,ref vars);
-           // file.ClearBuffer();
-            //var temp = file.Readbuffer();
             Grapher graphform = new Grapher(file);
-            graphform.Show(this);
+            graphform.Show();
             graphform.BringToFront();
         }
 
@@ -298,11 +293,13 @@ namespace GPSNavigator
                 {
                     log = new Logger(folderdialog.SelectedPath+"\\");
                     isRecording = true;
+                    this.Text = "GPS Navigator (Recording)";
                 }
             }
             else
             {
                 log.CloseFiles();
+                this.Text = "GPS Navigator (Recording)";
                 isRecording = false;
                 gotdata = false;
             }

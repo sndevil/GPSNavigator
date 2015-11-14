@@ -786,9 +786,15 @@ namespace GPSNavigator.Classes
                 GPS.Position = Functions.QuantizePosition12bit(pos * GPS.Length);
                 Glonass.Position = Functions.QuantizePosition12bit(pos * Glonass.Length);
                 Sat.Position = Functions.QuantizePosition8bit(pos * Sat.Length);
+                timestream.Position = Functions.QuantizePosition6bit(pos * timestream.Length);
 
                // UsedStats.Position = Functions.QuantizePosition(pos * UsedStats.Length);
                // VisibleStats.Position = Functions.QuantizePosition(pos * VisibleStats.Length);
+
+
+                byte[] time = new byte[6];
+                timestream.Read(time, 0, 6);
+                tempdata.Time = Functions.ReadDateTime(time);
 
                 byte[] stats = new byte[16];
                 Sat.Read(stats, 0, 8);

@@ -25,7 +25,7 @@ namespace GPSNavigator
         public LogFileManager filemanager;
         public PointStyle ps;
 
-        public MomentDetail DetailForm = new MomentDetail();
+        public MomentDetail DetailForm;
 
         private graphtype selectedtype = graphtype.X;
         private DateTime emptytime = new DateTime();
@@ -36,9 +36,10 @@ namespace GPSNavigator
 
         public Grapher(LogFileManager Filemanager)
         {
+            filemanager = Filemanager;
+            DetailForm = new MomentDetail(filemanager);
             DetailForm.Show();
             DetailForm.BringToFront();
-            filemanager = Filemanager;
             InitializeComponent();
             Chart1.MouseMove += new MouseEventHandler(Chart1_MouseMove);
             Chart1.MouseClick += new MouseEventHandler(Chart1_MouseClick);
@@ -101,7 +102,7 @@ namespace GPSNavigator
                 if (fmin < 0f)
                     fmin = 0f;
                 fmax = fmin + 0.01f;
-                DetailForm.UpdateData(xpos,tlist[ps.PointIndex],filemanager);
+                DetailForm.UpdateData(xpos,tlist[ps.PointIndex]);
                 UserchangedRanges = false;
                 textBox2.Text = fmin.ToString();
                 UserchangedRanges = false;
