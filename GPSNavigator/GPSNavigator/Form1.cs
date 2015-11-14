@@ -211,9 +211,6 @@ namespace GPSNavigator
                 this.logger.Text = text;
             }
         }
-        private void Enable_Timer()
-        {
-        }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -299,7 +296,7 @@ namespace GPSNavigator
             else
             {
                 log.CloseFiles();
-                this.Text = "GPS Navigator (Recording)";
+                this.Text = "GPS Navigator";
                 isRecording = false;
                 gotdata = false;
             }
