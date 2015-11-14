@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Diagnostics;
 using System.Windows.Forms;
 using GPSNavigator.Classes;
 using GPSNavigator.Source;
@@ -102,7 +101,7 @@ namespace GPSNavigator
                 if (fmin < 0f)
                     fmin = 0f;
                 fmax = fmin + 0.01f;
-                DetailForm.UpdateData(filemanager.ReadGPSstatus((float)xpos));
+                DetailForm.UpdateData(xpos,tlist[ps.PointIndex],filemanager);
                 UserchangedRanges = false;
                 textBox2.Text = fmin.ToString();
                 UserchangedRanges = false;
