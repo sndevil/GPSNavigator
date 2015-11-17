@@ -17,10 +17,11 @@ namespace GPSNavigator
     {
         public int min = 0, max = 1000;
         public long offset, bufferlength;
-        public float zoom = 0.01f,fmin = 0.0f, fmax = 1f;
+        public float zoom = 0.01f,fmin = 0.0f, fmax = 1f,zoommin,zoommax;
+        public double xpos = 0.0;
         public long length;
         public float delta;
-        public bool UserchangedRanges = true;
+        public bool UserchangedRanges = true , mousedown = false;
        // public DataBuffer dbuffer;
         public LogFileManager filemanager;
         public PointStyle ps;
@@ -41,6 +42,8 @@ namespace GPSNavigator
             DetailForm.Show();
             DetailForm.BringToFront();
             InitializeComponent();
+            Chart1.MouseDown += new MouseEventHandler(Chart1_MouseDown);
+            Chart1.MouseUp += new MouseEventHandler(Chart1_MouseUp);
             Chart1.MouseMove += new MouseEventHandler(Chart1_MouseMove);
             Chart1.MouseClick += new MouseEventHandler(Chart1_MouseClick);
             rangecontrol.ValueChanged += new EventHandler(rangecontrol_ValueChanged);
@@ -49,6 +52,39 @@ namespace GPSNavigator
             rangecontrol.Properties.Maximum = 1000;
             rangecontrol.Properties.Minimum = 0;
             rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
+        }
+
+        void Chart1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && mousedown)
+            {
+                mousedown = false;
+                zoommax = (float)xpos;
+                if (Math.Abs(zoommax - zoommin) > 0.00001f)
+                {
+                    if (zoommax < zoommin)
+                    {
+                        fmax = zoommin;
+                        fmin = zoommax;
+                    }
+                    else
+                    {
+                        fmax = zoommax;
+                        fmin = zoommin;
+                    }
+                    LoadData();
+                }
+            }
+        }
+
+        void Chart1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            {
+                mousedown = true;
+                zoommin = (float)xpos;
+            }
+
         }
 
         void text_Changed(object sender, EventArgs e)
@@ -97,7 +133,7 @@ namespace GPSNavigator
                 ps.PointIndex = 0;
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                var xpos = xlist[ps.PointIndex];
+                xpos = xlist[ps.PointIndex];
                 fmin = (float)xpos - 0.005f;
                 if (fmin < 0f)
                     fmin = 0f;
@@ -120,7 +156,8 @@ namespace GPSNavigator
                 fmax = 1f;
                 rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
             }
-            LoadData();
+            if (!mousedown)
+                LoadData();
         }
 
         void Chart1_MouseMove(object sender, MouseEventArgs e)
@@ -145,6 +182,7 @@ namespace GPSNavigator
                     {
                         ps.PointIndex = pointIndex;
                         ps.SeriesIndex = seriesIndex;
+                        xpos = xlist[pointIndex];
                         label3.Text = tlist[pointIndex].ToString();
                         label4.Text = ylist[pointIndex].ToString();
                     }

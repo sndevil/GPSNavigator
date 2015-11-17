@@ -13,9 +13,10 @@ namespace GPSNavigator
         public DataBuffer buffer = new DataBuffer();
         public BinaryRawDataBuffer rbuffer = new BinaryRawDataBuffer();
         public AttitudeInformation abuffer = new AttitudeInformation();
-        public List<Satellite> GPSSat = new List<Satellite>();
-        public List<Satellite> GLONASSsat = new List<Satellite>();
+        public Satellite[] GPSSat = new Satellite[32];
+        public Satellite[] GLONASSsat = new Satellite[32];
         public List<byte[]> licenses = new List<byte[]>();
+        public DateTime PacketTime = new DateTime();
 
 
         public const int Databuffercount = 3000;
@@ -23,11 +24,11 @@ namespace GPSNavigator
 
         public Globals()
         {
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i <32; i++)
             {
-                GPSSat.Add(new Satellite());
-                GLONASSsat.Add(new Satellite());
-                if (i < 16)
+                GPSSat[i] = new Satellite();
+                GLONASSsat[i] = new Satellite();
+                if (i<16)
                     licenses.Add(new byte[16]);
             }
         }

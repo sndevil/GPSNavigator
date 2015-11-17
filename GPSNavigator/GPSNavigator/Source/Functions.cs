@@ -441,7 +441,7 @@ namespace GPSNavigator.Source
             return msgSize;
         }
 
-        public static void Process_Binary_Message_Full(byte[] data, int SerialNum,ref DataBuffer buffer,List<Satellite> GPS,List<Satellite> GLONASS)
+        public static void Process_Binary_Message_Full(byte[] data, int SerialNum,ref DataBuffer buffer,Satellite[] GPS,Satellite[] GLONASS)
         {
            // DataBuffer dbuf;
            // List<Satellite> GPS_satellite;
@@ -783,7 +783,7 @@ namespace GPSNavigator.Source
              * */
         }
 
-        public static SingleDataBuffer Process_Binary_Message_Full(byte[] data, int SerialNum,ref List<Satellite> GPS,ref List<Satellite> GLONASS)
+        public static SingleDataBuffer Process_Binary_Message_Full(byte[] data, int SerialNum,ref Satellite[] GPS,ref Satellite[] GLONASS, ref DateTime PTime)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
             byte[] NaNBytes = {0,0,248,255};
@@ -1274,6 +1274,7 @@ namespace GPSNavigator.Source
             datetimeUTC = datetimeUTC.AddMilliseconds(TOW);
 
             buffer.datetime = datetimeUTC;
+            PTime = datetimeUTC;
 
             a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
             int packetDelay = (int)a;
@@ -1320,7 +1321,7 @@ namespace GPSNavigator.Source
              */
         }
 
-        public static void Process_Binary_Message_Compact(byte[] data, int SerialNum,ref DataBuffer buffer,List<Satellite> GPS)
+        public static void Process_Binary_Message_Compact(byte[] data, int SerialNum,ref DataBuffer buffer,Satellite[] GPS)
         {
            // DataBuffer dbuf;
            // List<Satellite> GPS_satellite;
@@ -1545,7 +1546,7 @@ namespace GPSNavigator.Source
 
         }
 
-        public static SingleDataBuffer Process_Binary_Message_Compact(byte[] data, int SerialNum, ref List<Satellite> GPS)
+        public static SingleDataBuffer Process_Binary_Message_Compact(byte[] data, int SerialNum, ref Satellite[] GPS, ref DateTime PTime)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
             byte[] NaNBytes = { 0, 0, 248, 255 };
@@ -1857,6 +1858,7 @@ namespace GPSNavigator.Source
             datetimeUTC = datetimeUTC.AddMilliseconds(TOW);
 
             dbuffer.datetime = datetimeUTC;
+            PTime = datetimeUTC;
 
             // Reserved
             GDOP = data[index];
@@ -1886,7 +1888,7 @@ namespace GPSNavigator.Source
 
         }
 
-        public static void Process_Binary_Message_SupplementGPS(byte[] data, int SerialNum,List<Satellite> GPS)
+        public static void Process_Binary_Message_SupplementGPS(byte[] data, int SerialNum,Satellite[] GPS)
         {
 
             int checksum = calcrc(data, BIN_GPS_SUPPLEMENT_MSG_SIZE - 4);
@@ -2386,7 +2388,7 @@ namespace GPSNavigator.Source
             attitudeInfoDataBuf.counter++;
         }
 
-        public static void handle_packet(byte[] packet, ref Globals vars)
+        /*public static void handle_packet(byte[] packet, ref Globals vars)
         {
             //vars.buffer = new DataBuffer();
             var key = packet[1];
@@ -2419,7 +2421,7 @@ namespace GPSNavigator.Source
                 //WriteText("Couldnt Find the matching processor");
 
             //WriteText(DateTime.Now + "  :  " + Encoding.UTF8.GetString(packet));
-        }
+        }*/
         public static void handle_packet(string packet, Globals vars)
         {
             if (packet.StartsWith("$GP"))
@@ -2432,18 +2434,18 @@ namespace GPSNavigator.Source
 
         }
 
-        public static SingleDataBuffer handle_packet(byte[] packet, Globals vars)
+        public static SingleDataBuffer handle_packet(byte[] packet,ref Globals vars)
         {
             //SingleDataBuffer dbuffer = new SingleDataBuffer();
             try
             {
                 var key = packet[1];
                 if (key == Functions.BIN_FULL)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1,ref vars.GPSSat,ref vars.GLONASSsat);
+                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1,ref vars.GPSSat,ref vars.GLONASSsat, ref vars.PacketTime);
                 else if (key == Functions.BIN_FULL_PLUS)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1,ref vars.GPSSat,ref vars.GLONASSsat);
+                    dbuffer = Functions.Process_Binary_Message_Full(packet, 1,ref vars.GPSSat,ref vars.GLONASSsat,ref vars.PacketTime);
                 else if (key == Functions.BIN_COMPACT)
-                    dbuffer = Functions.Process_Binary_Message_Compact(packet, 1 , ref vars.GPSSat);
+                    dbuffer = Functions.Process_Binary_Message_Compact(packet, 1 , ref vars.GPSSat, ref vars.PacketTime);
             }
             catch
             {

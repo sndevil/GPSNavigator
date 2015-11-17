@@ -20,7 +20,7 @@ namespace GPSNavigator
         LogFileManager filemanager;
         float position;
         int IndexCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS;
-        bool playing = false, reading = false,returned = false;
+        bool playing = false, reading = false,returned = false,realtime = false;
         public MomentDetail(LogFileManager manager)
         {
             filemanager = manager;
@@ -30,6 +30,23 @@ namespace GPSNavigator
             data = CacheData2[0];
             PlotGraph(data);
             CacheData = CacheData2;
+        }
+
+        public MomentDetail()
+        {
+            InitializeComponent();
+            chart1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
+            realtime = true;
+        }
+
+        public void UpdateData(Globals vars)
+        {
+            var tempgpsdata = new GPSData();
+            tempgpsdata.GPS = vars.GPSSat;
+            tempgpsdata.Glonass = vars.GLONASSsat;
+            tempgpsdata.Time = vars.PacketTime;
+            var t = chart1.Series.Count.ToString();
+            PlotGraph(tempgpsdata);
         }
 
         public void UpdateData(double xpos, DateTime time)
@@ -122,7 +139,7 @@ namespace GPSNavigator
                     catch
                     {
                         chart2.Series[0].Points.AddXY(i.ToString() + "(" + data.Glonass[i].SNR.ToString() + ")", data.Glonass[i].SNR);
-                        chart2.Series[0].Points[chart1.Series[0].Points.Count - 1].Color = Color.Blue;
+                        chart2.Series[0].Points[chart2.Series[0].Points.Count - 1].Color = Color.Blue;
                     }
                     VisibleGLONASS++;
                     counter++;
@@ -137,7 +154,7 @@ namespace GPSNavigator
                     catch
                     {
                         chart2.Series[0].Points.AddXY(i.ToString() + "(" + data.Glonass[i].SNR.ToString() + ")", data.Glonass[i].SNR);
-                        chart2.Series[0].Points[chart1.Series[0].Points.Count - 1].Color = Color.Green;
+                        chart2.Series[0].Points[chart2.Series[0].Points.Count - 1].Color = Color.Green;
                     }
                     VisibleGLONASS++;
                     UsedGLONASS++;

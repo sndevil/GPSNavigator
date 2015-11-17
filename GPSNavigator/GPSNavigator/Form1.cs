@@ -20,10 +20,12 @@ namespace GPSNavigator
         bool isRecording = false;
         bool isPlaying = true;
         bool gotdata = false;
+        bool showdetail = true;
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
         int serialcounter = 0,packetcounter = 0, timeoutCounter = 0,MaxTimeout = 5;
+        MomentDetail DetailForm = new MomentDetail();
         ExtremumHandler exthandler = new ExtremumHandler();
         string message = "";
         #endregion
@@ -65,8 +67,10 @@ namespace GPSNavigator
                             byt[1] = (byte)msgType;
                             serialPort1.Read(byt, 2, msgSize - 2);
                             
-                            dbuf = Functions.handle_packet(byt, vars);
-
+                            dbuf = Functions.handle_packet(byt,ref vars);
+                            if (showdetail)
+                                UpdateRealtimeData();
+                            //DetailForm.UpdateData(vars);
                             #region Extremum_Ifs
                            // message += dbuf.X + "  |  ";
                             if (exthandler.ExtremumStarted)
@@ -212,6 +216,21 @@ namespace GPSNavigator
             }
         }
 
+        delegate void ShowRealtime();
+
+        private void UpdateRealtimeData()
+        {
+            if (DetailForm.InvokeRequired)
+            {
+                ShowRealtime d = new ShowRealtime(UpdateRealtimeData);
+                this.Invoke(d, new object[] { });
+            }
+            else
+            {
+                DetailForm.UpdateData(vars);
+            }
+        }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             serialPort1.Close();
@@ -284,6 +303,8 @@ namespace GPSNavigator
             timer1.Start();
             if (checkBox1.Checked)
             {
+                if (showdetail)
+                    DetailForm.Show();
                 folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
                 folderdialog.ShowDialog();
                 if (folderdialog.SelectedPath != "")
@@ -320,6 +341,20 @@ namespace GPSNavigator
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             MaxTimeout = (int)numericUpDown1.Value;
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox2.Checked)
+            {
+                showdetail = true;
+                DetailForm.Show();
+            }
+            else
+            {
+                showdetail = false;
+                DetailForm.Hide();
+            }
         }
 
     }
