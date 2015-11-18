@@ -223,7 +223,7 @@ namespace GPSNavigator.Classes
             readMessage
         };
         public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats };
-
+        public enum PlaybackSpeed { NormalSpeed, Double, Quadrople, Half, Quarter };
         public class GEOpoint
         {
             public double Latitude;
@@ -283,6 +283,7 @@ namespace GPSNavigator.Classes
             public Satellite[] Glonass;
             public DateTime Time;
             public int VisibleGPS, UsedGPS,VisibleGlonass, UsedGlonass;
+            public float PDOP, Latitude, Longitude, Altitude;
 
             public GPSData()
             {
@@ -676,20 +677,25 @@ namespace GPSNavigator.Classes
                 Sat.Position = Functions.QuantizePosition8bit(pos * Sat.Length);
                 timestream.Position = Functions.QuantizePosition6bit(pos * timestream.Length);
 
+
+                Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = Functions.QuantizePosition(pos * PDOP.Length);
+                byte[] stats,time;
                 for (int counter = 0; counter < 100; counter++)
                 {
                     GPSData tempdata = new GPSData();
 
-                    byte[] time = new byte[6];
+                    time = new byte[6];
                     timestream.Read(time, 0, 6);
                     tempdata.Time = Functions.ReadDateTime(time);
 
-                    byte[] stats = new byte[16];
-                    Sat.Read(stats, 0, 8);
+                    stats = new byte[16];
+                    Sat.Read(stats, 0, 16);
 
                     int visible = 0, used = 0;
 
-                    int a = stats[3]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[i]; }
+                    long a = stats[3]; for (int i = 2; i >= 0; --i) {
+                        a = a * 256 + stats[i]; 
+                    }
                     for (int i = 0; i < 32; ++i)
                     {
                         tempdata.GPS[i] = new Satellite();
@@ -773,6 +779,16 @@ namespace GPSNavigator.Classes
                                 break;
                         }
                     }
+                    stats = new byte[4];
+                    PDOP.Read(stats, 0, 4);
+                    tempdata.PDOP = (float)Functions.BytetoFloat(stats);
+                    Altitude.Read(stats, 0, 4);
+                    tempdata.Altitude = (float)Functions.BytetoFloat(stats);
+                    Latitude.Read(stats, 0, 4);
+                    tempdata.Latitude = (float)Functions.BytetoFloat(stats);
+                    Longitude.Read(stats, 0, 4);
+                    tempdata.Longitude = (float)Functions.BytetoFloat(stats);
+
 
                     templist.Add(tempdata);
                 }
@@ -783,10 +799,11 @@ namespace GPSNavigator.Classes
             public GPSData ReadGPSstatus(float pos)
             {
                 GPSData tempdata = new GPSData();
-                GPS.Position = Functions.QuantizePosition12bit(pos * GPS.Length);
-                Glonass.Position = Functions.QuantizePosition12bit(pos * Glonass.Length);
+                Glonass.Position = GPS.Position = Functions.QuantizePosition12bit(pos * GPS.Length);
                 Sat.Position = Functions.QuantizePosition8bit(pos * Sat.Length);
                 timestream.Position = Functions.QuantizePosition6bit(pos * timestream.Length);
+
+                Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = Functions.QuantizePosition(pos * PDOP.Length);
 
                // UsedStats.Position = Functions.QuantizePosition(pos * UsedStats.Length);
                // VisibleStats.Position = Functions.QuantizePosition(pos * VisibleStats.Length);
@@ -797,11 +814,11 @@ namespace GPSNavigator.Classes
                 tempdata.Time = Functions.ReadDateTime(time);
 
                 byte[] stats = new byte[16];
-                Sat.Read(stats, 0, 8);
+                Sat.Read(stats, 0, 16);
 
                 int visible = 0, used = 0;
 
-                int a = stats[3]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[i];}
+                long a = stats[3]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[i];}
                 for (int i = 0; i < 32; ++i)
                 {
                     tempdata.GPS[i] = new Satellite();
@@ -886,6 +903,15 @@ namespace GPSNavigator.Classes
                     }
                 }
 
+                stats = new byte[4];
+                PDOP.Read(stats, 0, 4);
+                tempdata.PDOP = (float)Functions.BytetoFloat(stats);
+                Altitude.Read(stats, 0, 4);
+                tempdata.Altitude = (float)Functions.BytetoFloat(stats);
+                Latitude.Read(stats, 0, 4);
+                tempdata.Latitude = (float)Functions.BytetoFloat(stats);
+                Longitude.Read(stats, 0, 4);
+                tempdata.Longitude = (float)Functions.BytetoFloat(stats);
 
                 return tempdata;
             }
@@ -998,6 +1024,8 @@ namespace GPSNavigator.Classes
 
             public void Writebuffer(SingleDataBuffer buffer)
             {
+                try
+                {
                     V.Write(buffer.BV, 0, 4);
                     A.Write(buffer.BA, 0, 4);
                     Vx.Write(buffer.BVx, 0, 4);
@@ -1031,40 +1059,43 @@ namespace GPSNavigator.Classes
                     GPS.Write(buffer.BGPSstat, 0, 12);
                     Glonass.Write(buffer.BGLONASSstat, 0, 12);
                     Sat.Write(buffer.BSatStats, 0, 16);
-                if (buffer.WriteExtreme)
-                {
-                    buffer.WriteExtreme = false;
-                    VxMax.Write(buffer.BVxMax, 0, 4);
-                    VxMin.Write(buffer.BVxMin, 0, 4);
-                    VyMax.Write(buffer.BVyMax, 0, 4);
-                    VyMin.Write(buffer.BVyMin, 0, 4);
-                    VzMax.Write(buffer.BVzMax, 0, 4);
-                    VzMin.Write(buffer.BVzMin, 0, 4);
-                    AxMax.Write(buffer.BAxMax, 0, 4);
-                    AxMin.Write(buffer.BAxMin, 0, 4);
-                    AyMax.Write(buffer.BAyMax, 0, 4);
-                    AyMin.Write(buffer.BAyMin, 0, 4);
-                    AzMax.Write(buffer.BAzMax, 0, 4);
-                    AzMin.Write(buffer.BAzMin, 0, 4);
-                    XMax.Write(buffer.BXMax, 0, 4);
-                    XMin.Write(buffer.BXMin, 0, 4);
-                    YMax.Write(buffer.BYMax, 0, 4);
-                    YMin.Write(buffer.BYMin, 0, 4);
-                    ZMax.Write(buffer.BZMax, 0, 4);
-                    ZMin.Write(buffer.BZMin, 0, 4);
-                    VMax.Write(buffer.BVMax, 0, 4);
-                    VMin.Write(buffer.BVMin, 0, 4);
-                    AMax.Write(buffer.BAMax, 0, 4);
-                    AMin.Write(buffer.BAMin, 0, 4);
-                    AltitudeMax.Write(buffer.BAltitudeMax, 0, 4);
-                    AltitudeMin.Write(buffer.BAltitudeMin, 0, 4);
-                    LatitudeMax.Write(buffer.BLatitudeMax, 0, 4);
-                    LatitudeMin.Write(buffer.BLatitudeMin, 0, 4);
-                    LongitudeMax.Write(buffer.BLongitudeMax, 0, 4);
-                    LongitudeMin.Write(buffer.BLongitudeMin, 0, 4);
-                    PDOPMax.Write(buffer.BPDOPMax, 0, 4);
-                    PDOPMin.Write(buffer.BPDOPMin, 0, 4);
+                    if (buffer.WriteExtreme)
+                    {
+                        buffer.WriteExtreme = false;
+                        VxMax.Write(buffer.BVxMax, 0, 4);
+                        VxMin.Write(buffer.BVxMin, 0, 4);
+                        VyMax.Write(buffer.BVyMax, 0, 4);
+                        VyMin.Write(buffer.BVyMin, 0, 4);
+                        VzMax.Write(buffer.BVzMax, 0, 4);
+                        VzMin.Write(buffer.BVzMin, 0, 4);
+                        AxMax.Write(buffer.BAxMax, 0, 4);
+                        AxMin.Write(buffer.BAxMin, 0, 4);
+                        AyMax.Write(buffer.BAyMax, 0, 4);
+                        AyMin.Write(buffer.BAyMin, 0, 4);
+                        AzMax.Write(buffer.BAzMax, 0, 4);
+                        AzMin.Write(buffer.BAzMin, 0, 4);
+                        XMax.Write(buffer.BXMax, 0, 4);
+                        XMin.Write(buffer.BXMin, 0, 4);
+                        YMax.Write(buffer.BYMax, 0, 4);
+                        YMin.Write(buffer.BYMin, 0, 4);
+                        ZMax.Write(buffer.BZMax, 0, 4);
+                        ZMin.Write(buffer.BZMin, 0, 4);
+                        VMax.Write(buffer.BVMax, 0, 4);
+                        VMin.Write(buffer.BVMin, 0, 4);
+                        AMax.Write(buffer.BAMax, 0, 4);
+                        AMin.Write(buffer.BAMin, 0, 4);
+                        AltitudeMax.Write(buffer.BAltitudeMax, 0, 4);
+                        AltitudeMin.Write(buffer.BAltitudeMin, 0, 4);
+                        LatitudeMax.Write(buffer.BLatitudeMax, 0, 4);
+                        LatitudeMin.Write(buffer.BLatitudeMin, 0, 4);
+                        LongitudeMax.Write(buffer.BLongitudeMax, 0, 4);
+                        LongitudeMin.Write(buffer.BLongitudeMin, 0, 4);
+                        PDOPMax.Write(buffer.BPDOPMax, 0, 4);
+                        PDOPMin.Write(buffer.BPDOPMin, 0, 4);
+                    }
                 }
+                catch
+                { }
             }
 
             public void WriteTimebuffer(SingleDataBuffer buffer)

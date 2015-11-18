@@ -1,4 +1,6 @@
 DevExpress.Registration.LicenseHelper, DevExpress.Registration, Version=12.1.5.0, Culture=neutral, PublicKeyToken=940cfcde86f32efd
 DevExpress.XtraCharts.ChartControl, DevExpress.XtraCharts.v12.1.UI, Version=12.1.5.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a
+Infragistics.Win.UltraWinEditors.UltraTimeSpanEditor, Infragistics2.Win.UltraWinEditors.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb
+Infragistics.Win.UltraWinGauge.UltraGauge, Infragistics2.Win.UltraWinGauge.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb
 C1.Win.C1Chart.C1Chart, C1.Win.C1Chart.4, Version=4.0.20141.24071, Culture=neutral, PublicKeyToken=a22e16972c085838
 DevExpressReg.LicensePatcher, DevExpressReg, Version=12.1.0.0, Culture=neutral, PublicKeyToken=d6ff4ebaea2d8ac4

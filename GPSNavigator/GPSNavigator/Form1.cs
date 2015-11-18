@@ -24,7 +24,7 @@ namespace GPSNavigator
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
-        int serialcounter = 0,packetcounter = 0, timeoutCounter = 0,MaxTimeout = 5;
+        int serialcounter = 0,packetcounter = 0, timeoutCounter = 0,MaxTimeout = 5,DetailRefreshCounter = 0;
         MomentDetail DetailForm = new MomentDetail();
         ExtremumHandler exthandler = new ExtremumHandler();
         string message = "";
@@ -68,8 +68,11 @@ namespace GPSNavigator
                             serialPort1.Read(byt, 2, msgSize - 2);
                             
                             dbuf = Functions.handle_packet(byt,ref vars);
-                            if (showdetail)
-                                UpdateRealtimeData();
+                            if (showdetail && DetailRefreshCounter++ > 50)
+                            {
+                                UpdateRealtimeData(dbuf);
+                                DetailRefreshCounter = 0;
+                            }
                             //DetailForm.UpdateData(vars);
                             #region Extremum_Ifs
                            // message += dbuf.X + "  |  ";
@@ -216,18 +219,18 @@ namespace GPSNavigator
             }
         }
 
-        delegate void ShowRealtime();
+        delegate void ShowRealtime(SingleDataBuffer databuffer);
 
-        private void UpdateRealtimeData()
+        private void UpdateRealtimeData(SingleDataBuffer databuffer)
         {
             if (DetailForm.InvokeRequired)
             {
                 ShowRealtime d = new ShowRealtime(UpdateRealtimeData);
-                this.Invoke(d, new object[] { });
+                this.Invoke(d, new object[] { databuffer });
             }
             else
             {
-                DetailForm.UpdateData(vars);
+                DetailForm.UpdateData(vars,databuffer);
             }
         }
 

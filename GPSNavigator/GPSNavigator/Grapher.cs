@@ -409,20 +409,20 @@ namespace GPSNavigator
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Latitude_Processed";
                     break;
                 case 8:
-                    selectedtype = graphtype.Altitude;
-                    Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude";
-                    break;
-                case 9:
-                    selectedtype = graphtype.Altitude_p;
-                    Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude_Processed";
-                    break;
-                case 10:
                     selectedtype = graphtype.Longitude;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Longitude";
                     break;
-                case 11:
+                case 9:
                     selectedtype = graphtype.Longitude_p;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Longitude_Processed";
+                    break;
+                case 10:
+                    selectedtype = graphtype.Altitude;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude";
+                    break;
+                case 11:
+                    selectedtype = graphtype.Altitude_p;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude_Processed";
                     break;
                 case 12:
                     selectedtype = graphtype.Vx;
