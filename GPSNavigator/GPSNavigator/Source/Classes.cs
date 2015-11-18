@@ -139,15 +139,17 @@ namespace GPSNavigator.Classes
             public double NumOfUsedSats;
             public byte[] BNumOfUsedStats = new byte[4];
             public double NumOfVisibleSats;
-            public byte[] BGPSstat = new byte[12];
-            public byte[] BGLONASSstat = new byte[12];
-            public byte[] BSatStats = new byte[16];
+            public List<byte[]> BGPSstat = new List<byte[]>();
+            //public byte[] BGPSstat = new byte[12];
+            public List<byte[]> BGLONASSstat = new List<byte[]>();
+            //public byte[] BGLONASSstat = new byte[12];
+            public byte[] BSatStats = new byte[17];
             public byte[] BNumOfVisibleStats = new byte[4];
             public double state;
             public byte Bstate;
             public DateTime datetime;
             public byte[] Bdatetime = new byte[6];
-            public int statcounter;
+            public int statcounter,ChannelCounter = 1;
             public bool WriteExtreme = false;
         }
 
@@ -279,16 +281,16 @@ namespace GPSNavigator.Classes
 
         public class GPSData
         {
-            public Satellite[] GPS;
-            public Satellite[] Glonass;
+            public List<Satellite[]> GPS;
+            public List<Satellite[]> Glonass;
             public DateTime Time;
             public int VisibleGPS, UsedGPS,VisibleGlonass, UsedGlonass;
             public float PDOP, Latitude, Longitude, Altitude;
 
             public GPSData()
             {
-                GPS = new Satellite[32];
-                Glonass = new Satellite[32];
+                GPS = new List<Satellite[]>();
+                Glonass = new List<Satellite[]>();
                 VisibleGPS = UsedGPS = VisibleGlonass = VisibleGPS = 0;
                 Time = new DateTime();
             }
@@ -299,24 +301,27 @@ namespace GPSNavigator.Classes
         {
             public long start = 0;
             public long end;
-            public int position = 0;
+            public int position = 0, satcount;
             public float zoom = 1f,delta;
             public DateTime StartTime, EndTime;
             public long StartTick, EndTick, Duration;
             public string filepath;
+            public bool inited = false;
 
             private FileStream stream,maxstream,minstream,timestream;
             private FileStream Vx, Vy, Vz, Ax, Ay, Az, X, Y, Z, Altitude, Latitude, Longitude, PDOP, state, Temperature, UsedStats, VisibleStats, V, A;
-            private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p,GPS,Glonass,Sat;
+            private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p,Sat;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin, VMax, VMin, AMax, AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
-
+            private List<FileStream> GPS = new List<FileStream>();
+            private List<FileStream> Glonass = new List<FileStream>();
             private Globals vars;
 
             public LogFileManager(string path,ref Globals variables)
             {
                 try
                 {
+                    filepath = path;
                     #region initializing_streams
                     V = new FileStream(path + "\\V.glf", FileMode.Open, FileAccess.Read);
                     V_p = new FileStream(path + "\\V_P.glf", FileMode.Open, FileAccess.Read);
@@ -378,49 +383,13 @@ namespace GPSNavigator.Classes
                     UsedStats = new FileStream(path + "\\UsedStats.glf", FileMode.Open, FileAccess.Read);
                     VisibleStats = new FileStream(path + "\\VisibleStats.glf", FileMode.Open, FileAccess.Read);
                     timestream = new FileStream(path + "\\Time.glf", FileMode.Open, FileAccess.Read);
-                    GPS = new FileStream(path + "\\GPS.glf", FileMode.Open, FileAccess.Read);
-                    Glonass = new FileStream(path + "\\Glonass.glf", FileMode.Open, FileAccess.Read);
                     Sat = new FileStream(path + "\\Sat.glf", FileMode.Open, FileAccess.Read);
                     #endregion
-                    delta = (float)1200 / GPS.Length;
                 }
                 catch
                 {
                     throw new Exception("Log Files Opening Error");
                 }
-            }
-
-            //Legacy
-            public DataBuffer Readbuffer()
-            {
-                vars.Clear_buffer();
-                stream.Position = start;
-                var counter = 0;
-                while (true)
-                {
-                    if (stream.ReadByte() == '~')
-                    {
-                        int msgType = stream.ReadByte();
-
-                        int msgSize = Functions.checkMsgSize(msgType);
-                        if (msgSize == -1)          //packet not valid
-                            continue;
-
-                        if (stream.Position + msgSize - 2 > stream.Length || counter++ >= Globals.Databuffercount)
-                            break;
-
-                        byte[] byt = new byte[msgSize];
-                        byt[0] = (byte)'~';
-                        byt[1] = (byte)msgType;
-                        stream.Read(byt, 2, msgSize - 2);
-                        Functions.handle_packet(byt,ref vars);
-                        stream.Position += (int)delta - msgSize;
-                        //Process_Received_BinaryBytes(byt, radioGroupDevice.SelectedIndex);
-                    }
-                    if (stream.Position >= stream.Length - 10)
-                        break;
-                }
-                return vars.buffer;
             }
 
             public GraphData Readbuffer(graphtype type,float fstart, float fend,int gpoints)
@@ -672,9 +641,12 @@ namespace GPSNavigator.Classes
             public List<GPSData> ReadGPSCache(float pos)
             {
                 List<GPSData> templist = new List<GPSData>();
-                GPS.Position = Functions.QuantizePosition12bit(pos * GPS.Length);
-                Glonass.Position = Functions.QuantizePosition12bit(pos * Glonass.Length);
-                Sat.Position = Functions.QuantizePosition8bit(pos * Sat.Length);
+
+                for (int i = 0; i < satcount; i++)
+                {
+                    GPS[i].Position = Glonass[i].Position = Functions.QuantizePosition12bit(pos * Glonass[i].Length);
+                }
+                Sat.Position = Functions.QuantizePosition17bit(pos * Sat.Length);
                 timestream.Position = Functions.QuantizePosition6bit(pos * timestream.Length);
 
 
@@ -688,9 +660,16 @@ namespace GPSNavigator.Classes
                     timestream.Read(time, 0, 6);
                     tempdata.Time = Functions.ReadDateTime(time);
 
-                    stats = new byte[16];
-                    Sat.Read(stats, 0, 16);
-
+                    stats = new byte[17];
+                    Sat.Read(stats, 0, 17);
+                    satcount = stats[16];
+                    if (!inited)
+                        initSats(satcount);
+                    for (int j = 0; j < satcount; j++)
+                    {
+                        tempdata.GPS.Add(new Satellite[32]);
+                        tempdata.Glonass.Add(new Satellite[32]);
+                    }
                     int visible = 0, used = 0;
 
                     long a = stats[3]; for (int i = 2; i >= 0; --i) {
@@ -698,14 +677,17 @@ namespace GPSNavigator.Classes
                     }
                     for (int i = 0; i < 32; ++i)
                     {
-                        tempdata.GPS[i] = new Satellite();
+                        for (int j = 0; j<satcount;j++)
+                            tempdata.GPS[j][i] = new Satellite();
                         if (a % 2 == 1)
                         {
-                            tempdata.GPS[i].Signal_Status = 1;       //visible
+                            for (int j = 0;j<satcount;j++)
+                                tempdata.GPS[j][i].Signal_Status = 1;       //visible
                             visible++;
                         }
                         else
-                            tempdata.GPS[i].Signal_Status = 0;       //not visible
+                            for (int j = 0; j< satcount;j++)
+                                tempdata.GPS[j][i].Signal_Status = 0;       //not visible
                         a >>= 1;
                     }
 
@@ -714,7 +696,8 @@ namespace GPSNavigator.Classes
                     {
                         if (a % 2 == 1)
                         {
-                            tempdata.GPS[i].Signal_Status = 2;       //Used
+                            for (int j = 0 ; j< satcount;j++)
+                                tempdata.GPS[j][i].Signal_Status = 2;       //Used
                             used++;
                         }
                         a >>= 1;
@@ -728,14 +711,17 @@ namespace GPSNavigator.Classes
                     a = stats[11]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[8 + i]; }
                     for (int i = 0; i < 32; ++i)
                     {
-                        tempdata.Glonass[i] = new Satellite();
+                        for (int j = 0; j<satcount;j++)
+                            tempdata.Glonass[j][i] = new Satellite();
                         if (a % 2 == 1)
                         {
-                            tempdata.Glonass[i].Signal_Status = 1;       //visible
+                            for (int j = 0; j<satcount;j++)
+                                tempdata.Glonass[j][i].Signal_Status = 1;       //visible
                             visible++;
                         }
                         else
-                            tempdata.Glonass[i].Signal_Status = 0;       //not visible
+                            for (int j = 0; j < satcount;j++)
+                                tempdata.Glonass[j][i].Signal_Status = 0;       //not visible
                         a >>= 1;
                     }
 
@@ -744,7 +730,8 @@ namespace GPSNavigator.Classes
                     {
                         if (a % 2 == 1)
                         {
-                            tempdata.Glonass[i].Signal_Status = 2;       //Used
+                            for (int j = 0;j<satcount;j++)
+                                tempdata.Glonass[j][i].Signal_Status = 2;       //Used
                             used++;
                         }
                         a >>= 1;
@@ -754,29 +741,34 @@ namespace GPSNavigator.Classes
                     tempdata.UsedGlonass = used;
 
                     byte[] t = new byte[12];
-                    GPS.Read(t, 0, 12);
-                    int index = 0;
-                    for (int i = 0; i < 32; ++i)
+                    for (int j = 0; j < satcount; j++)
                     {
-                        if (tempdata.GPS[i].Signal_Status != 0)      //visible
+                        GPS[j].Read(t, 0, 12);
+                        int index = 0;
+                        for (int i = 0; i < 32; ++i)
                         {
-                            tempdata.GPS[i].SNR = t[index];
-                            index++;
-                            if (index > 12)
-                                break;
+                            if (tempdata.GPS[j][i].Signal_Status != 0)      //visible
+                            {
+                                tempdata.GPS[j][i].SNR = t[index];
+                                index++;
+                                if (index > 12)
+                                    break;
+                            }
                         }
                     }
-
-                    Glonass.Read(t, 0, 12);
-                    index = 0;
-                    for (int i = 0; i < 32; ++i)
+                    for (int j = 0; j < satcount; j++)
                     {
-                        if (tempdata.Glonass[i].Signal_Status != 0)      //visible
+                        Glonass[j].Read(t, 0, 12);
+                        int index = 0;
+                        for (int i = 0; i < 32; ++i)
                         {
-                            tempdata.Glonass[i].SNR = t[index];
-                            index++;
-                            if (index > 12)
-                                break;
+                            if (tempdata.Glonass[j][i].Signal_Status != 0)      //visible
+                            {
+                                tempdata.Glonass[j][i].SNR = t[index];
+                                index++;
+                                if (index > 12)
+                                    break;
+                            }
                         }
                     }
                     stats = new byte[4];
@@ -799,8 +791,8 @@ namespace GPSNavigator.Classes
             public GPSData ReadGPSstatus(float pos)
             {
                 GPSData tempdata = new GPSData();
-                Glonass.Position = GPS.Position = Functions.QuantizePosition12bit(pos * GPS.Length);
-                Sat.Position = Functions.QuantizePosition8bit(pos * Sat.Length);
+
+                Sat.Position = Functions.QuantizePosition17bit(pos * Sat.Length);
                 timestream.Position = Functions.QuantizePosition6bit(pos * timestream.Length);
 
                 Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = Functions.QuantizePosition(pos * PDOP.Length);
@@ -813,22 +805,35 @@ namespace GPSNavigator.Classes
                 timestream.Read(time, 0, 6);
                 tempdata.Time = Functions.ReadDateTime(time);
 
-                byte[] stats = new byte[16];
-                Sat.Read(stats, 0, 16);
+                byte[] stats = new byte[17];
+                Sat.Read(stats, 0, 17);              
 
                 int visible = 0, used = 0;
+                satcount = stats[16];
+                if (!inited)
+                    initSats(satcount);
+
+                for (int i = 0; i < satcount; i++)
+                {
+                    tempdata.GPS.Add(new Satellite[32]);
+                    tempdata.Glonass.Add(new Satellite[32]);
+                    Glonass[i].Position = GPS[i].Position = Functions.QuantizePosition12bit(pos * GPS[i].Length);
+                }
 
                 long a = stats[3]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[i];}
                 for (int i = 0; i < 32; ++i)
                 {
-                    tempdata.GPS[i] = new Satellite();
+                    for (int j = 0; j < satcount; j++)
+                        tempdata.GPS[j][i] = new Satellite();
                     if (a % 2 == 1)
                     {
-                        tempdata.GPS[i].Signal_Status = 1;       //visible
+                        for (int j = 0; j < satcount; j++)
+                            tempdata.GPS[j][i].Signal_Status = 1;       //visible
                         visible++;
                     }
                     else
-                        tempdata.GPS[i].Signal_Status = 0;       //not visible
+                        for (int j = 0; j < satcount; j++)
+                            tempdata.GPS[j][i].Signal_Status = 0;       //not visible
                     a >>= 1;
                 }
 
@@ -837,7 +842,8 @@ namespace GPSNavigator.Classes
                 {
                     if (a % 2 == 1)
                     {
-                        tempdata.GPS[i].Signal_Status = 2;       //Used
+                        for (int j = 0; j < satcount; j++)
+                            tempdata.GPS[j][i].Signal_Status = 2;       //Used
                         used++;
                     }
                     a >>= 1;
@@ -851,14 +857,17 @@ namespace GPSNavigator.Classes
                 a = stats[11]; for (int i = 2; i >= 0; --i) { a = a * 256 + stats[8 + i];}
                 for (int i = 0; i < 32; ++i)
                 {
-                    tempdata.Glonass[i] = new Satellite();
+                    for (int j = 0; j < satcount; j++)
+                        tempdata.Glonass[j][i] = new Satellite();
                     if (a % 2 == 1)
                     {
-                        tempdata.Glonass[i].Signal_Status = 1;       //visible
+                        for (int j = 0; j < satcount; j++)
+                            tempdata.Glonass[j][i].Signal_Status = 1;       //visible
                         visible++;
                     }
                     else
-                        tempdata.Glonass[i].Signal_Status = 0;       //not visible
+                        for (int j = 0; j < satcount; j++)
+                            tempdata.Glonass[j][i].Signal_Status = 0;       //not visible
                     a >>= 1;
                 }
 
@@ -867,7 +876,8 @@ namespace GPSNavigator.Classes
                 {
                     if (a % 2 == 1)
                     {
-                        tempdata.Glonass[i].Signal_Status = 2;       //Used
+                        for (int j = 0; j < satcount; j++)
+                            tempdata.Glonass[j][i].Signal_Status = 2;       //Used
                         used++;
                     }
                     a >>= 1;
@@ -877,29 +887,35 @@ namespace GPSNavigator.Classes
                 tempdata.UsedGlonass = used;
 
                 byte[] t = new byte[12];
-                GPS.Read(t, 0, 12);
-                int index = 0;
-                for (int i = 0; i < 32; ++i)
+                for (int j = 0; j < satcount; j++)
                 {
-                    if (tempdata.GPS[i].Signal_Status != 0)      //visible
+                    GPS[j].Read(t, 0, 12);
+                    int index = 0;
+                    for (int i = 0; i < 32; ++i)
                     {
-                        tempdata.GPS[i].SNR = t[index];
-                        index++;
-                        if (index > 12)
-                            break;
+                        if (tempdata.GPS[j][i].Signal_Status != 0)      //visible
+                        {
+                            tempdata.GPS[j][i].SNR = t[index];
+                            index++;
+                            if (index > 12)
+                                break;
+                        }
                     }
                 }
 
-                Glonass.Read(t, 0, 12);
-                index = 0;
-                for (int i = 0; i < 32; ++i)
+                for (int j = 0; j < satcount; j++)
                 {
-                    if (tempdata.Glonass[i].Signal_Status != 0)      //visible
+                    Glonass[j].Read(t, 0, 12);
+                    int index = 0;
+                    for (int i = 0; i < 32; ++i)
                     {
-                        tempdata.Glonass[i].SNR = t[index];
-                        index++;
-                        if (index > 12)
-                            break;
+                        if (tempdata.Glonass[j][i].Signal_Status != 0)      //visible
+                        {
+                            tempdata.Glonass[j][i].SNR = t[index];
+                            index++;
+                            if (index > 12)
+                                break;
+                        }
                     }
                 }
 
@@ -914,6 +930,17 @@ namespace GPSNavigator.Classes
                 tempdata.Longitude = (float)Functions.BytetoFloat(stats);
 
                 return tempdata;
+            }
+
+            private void initSats(int count)
+            {
+                inited = true;
+                for (int i = 0; i < count; i++)
+                {
+                    GPS.Add(new FileStream(filepath + "\\GPS"+i.ToString()+".glf", FileMode.Open, FileAccess.Read));
+                    Glonass.Add(new FileStream(filepath + "\\Glonass" + i.ToString() + ".glf", FileMode.Open, FileAccess.Read));
+                }
+                delta = (float)1200 / GPS[0].Length;
             }
 
             public void ClearBuffer()
@@ -952,10 +979,16 @@ namespace GPSNavigator.Classes
             private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin,VMax,VMin,AMax,AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,Time;
-            private FileStream GPS, Glonass,Sat;
+            private FileStream Sat;
+            private List<FileStream> GPS,Glonass;
+            private string Dirpath;
+            private bool inited = false;
 
             public Logger(string DirPath)
             {
+                GPS = new List<FileStream>();
+                Glonass = new List<FileStream>();
+                Dirpath = DirPath;
                 System.IO.Directory.CreateDirectory(DirPath);
                 V = new FileStream(DirPath + "V.glf", FileMode.Create, FileAccess.Write);
                 V_p = new FileStream(DirPath + "V_P.glf", FileMode.Create, FileAccess.Write);
@@ -1017,13 +1050,23 @@ namespace GPSNavigator.Classes
                 UsedStats = new FileStream(DirPath + "UsedStats.glf", FileMode.Create, FileAccess.Write);
                 VisibleStats = new FileStream(DirPath + "VisibleStats.glf", FileMode.Create, FileAccess.Write);
                 Time = new FileStream(DirPath + "Time.glf", FileMode.Create, FileAccess.Write);
-                GPS = new FileStream(DirPath + "GPS.glf", FileMode.Create, FileAccess.Write);
-                Glonass = new FileStream(DirPath + "Glonass.glf", FileMode.Create, FileAccess.Write);
                 Sat = new FileStream(DirPath + "Sat.glf", FileMode.Create, FileAccess.Write);
+            }
+
+            public void initSats(int count)
+            {
+                inited = true;
+                for (int i = 0; i < count; i++)
+                {
+                    GPS.Add(new FileStream(Dirpath + "GPS"+i.ToString()+".glf", FileMode.Create, FileAccess.Write));
+                    Glonass.Add(new FileStream(Dirpath + "Glonass"+i.ToString()+".glf", FileMode.Create, FileAccess.Write));
+                }
             }
 
             public void Writebuffer(SingleDataBuffer buffer)
             {
+                if (!inited)
+                    initSats(buffer.ChannelCounter);
                 try
                 {
                     V.Write(buffer.BV, 0, 4);
@@ -1056,9 +1099,12 @@ namespace GPSNavigator.Classes
                     UsedStats.Write(buffer.BNumOfUsedStats, 0, 4);
                     VisibleStats.Write(buffer.BNumOfVisibleStats, 0, 4);
                     Time.Write(buffer.Bdatetime, 0, 6);
-                    GPS.Write(buffer.BGPSstat, 0, 12);
-                    Glonass.Write(buffer.BGLONASSstat, 0, 12);
-                    Sat.Write(buffer.BSatStats, 0, 16);
+                    for (int i = 0; i < buffer.ChannelCounter; i++)
+                    {
+                        GPS[i].Write(buffer.BGPSstat[i], 0, 12);
+                        Glonass[i].Write(buffer.BGLONASSstat[i], 0, 12);
+                    }
+                    Sat.Write(buffer.BSatStats, 0, 17);
                     if (buffer.WriteExtreme)
                     {
                         buffer.WriteExtreme = false;
@@ -1132,8 +1178,8 @@ namespace GPSNavigator.Classes
                 Temperature.Close();
                 UsedStats.Close();
                 VisibleStats.Close();
-                GPS.Close();
-                Glonass.Close();
+                foreach (FileStream f in GPS) f.Close();
+                foreach (FileStream f in Glonass) f.Close();                
                 Sat.Close();
                 VxMax.Close();
                 VxMin.Close();

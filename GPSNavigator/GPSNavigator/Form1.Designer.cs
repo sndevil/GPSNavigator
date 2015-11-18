@@ -46,6 +46,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
@@ -198,6 +199,13 @@
             this.checkBox2.UseVisualStyleBackColor = true;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
+            // serialPort2
+            // 
+            this.serialPort2.BaudRate = 115200;
+            this.serialPort2.ReadBufferSize = 2560000;
+            this.serialPort2.ReceivedBytesThreshold = 20;
+            this.serialPort2.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort2_DataReceived);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -244,6 +252,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.IO.Ports.SerialPort serialPort2;
     }
 }
 
