@@ -662,7 +662,15 @@ namespace GPSNavigator.Classes
 
                     stats = new byte[17];
                     Sat.Read(stats, 0, 17);
-                    satcount = stats[16] + 1;
+                    if (stats[16] > satcount)
+                    {
+                        for (int i = satcount; i < stats[16]; i++)
+                        {
+                            GPS.Add(new FileStream(filepath + "\\GPS" + i.ToString() + ".glf", FileMode.Open, FileAccess.Read));
+                            Glonass.Add(new FileStream(filepath + "\\Glonass" + i.ToString() + ".glf", FileMode.Open, FileAccess.Read));
+                        }
+                        satcount = stats[16];
+                    }
                     if (!inited)
                         initSats(satcount);
                     for (int j = 0; j < satcount; j++)
@@ -809,7 +817,15 @@ namespace GPSNavigator.Classes
                 Sat.Read(stats, 0, 17);              
 
                 int visible = 0, used = 0;
-                satcount = stats[16] + 1;
+                if (stats[16] > satcount)
+                {
+                    for (int i = satcount; i < stats[16]; i++)
+                    {
+                        GPS.Add(new FileStream(filepath + "\\GPS" + i.ToString() + ".glf", FileMode.Open, FileAccess.Read));
+                        Glonass.Add(new FileStream(filepath + "\\Glonass" + i.ToString() + ".glf", FileMode.Open, FileAccess.Read));
+                    }
+                    satcount = stats[16];
+                }
                 if (!inited)
                     initSats(satcount);
 
@@ -935,11 +951,6 @@ namespace GPSNavigator.Classes
             private void initSats(int count)
             {
                 inited = true;
-                for (int i = 0; i < count; i++)
-                {
-                    GPS.Add(new FileStream(filepath + "\\GPS"+i.ToString()+".glf", FileMode.Open, FileAccess.Read));
-                    Glonass.Add(new FileStream(filepath + "\\Glonass" + i.ToString() + ".glf", FileMode.Open, FileAccess.Read));
-                }
                 delta = (float)1200 / GPS[0].Length;
             }
 
@@ -1186,8 +1197,11 @@ namespace GPSNavigator.Classes
                 V_p.Close();
                 A.Close();
                 Altitude.Close();
+                Altitude_p.Close();
                 Latitude.Close();
+                Latitude_p.Close();
                 Longitude.Close();
+                Longitude_p.Close();
                 PDOP.Close();
                 state.Close();
                 Temperature.Close();

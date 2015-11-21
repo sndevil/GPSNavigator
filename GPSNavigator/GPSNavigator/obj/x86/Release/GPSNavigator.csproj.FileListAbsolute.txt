@@ -52,3 +52,15 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\es\D
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\ja\DevExpress.XtraCharts.v12.1.resources.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\ru\DevExpress.XtraCharts.v12.1.resources.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\ja\DevExpress.XtraCharts.v12.1.UI.resources.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Ionic.Zip.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Ionic.Zlib.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Shared.v12.1.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Win.UltraWinEditors.v12.1.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Win.UltraWinGauge.v12.1.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Win.v12.1.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics4.Win.UltraWinChart.v12.1.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Shared.v12.1.xml
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Win.UltraWinEditors.v12.1.xml
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Win.UltraWinGauge.v12.1.xml
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics2.Win.v12.1.xml
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Release\Infragistics4.Win.UltraWinChart.v12.1.xml

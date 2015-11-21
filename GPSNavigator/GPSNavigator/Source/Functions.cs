@@ -783,7 +783,7 @@ namespace GPSNavigator.Source
              * */
         }
 
-        public static SingleDataBuffer Process_Binary_Message_Full(byte[] data, int SerialNum,ref Satellite[] GPS,ref Satellite[] GLONASS, ref DateTime PTime)
+        public static SingleDataBuffer Process_Binary_Message_Full(byte[] data, int SerialNum,ref List<Satellite[]> GPS,ref List<Satellite[]> GLONASS, ref DateTime PTime)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
             byte[] NaNBytes = {0,0,248,255};
@@ -791,7 +791,22 @@ namespace GPSNavigator.Source
             buffer.BGLONASSstat.Add(new byte[12]);
             buffer.ChannelCounter = 1;
             buffer.BSatStats[16] = (byte)1;
-
+            var tempsat = new List<Satellite[]>();
+            if (GPS.Count < 1)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    tempsat.Add(new Satellite[32]);
+                    for (int j = 0; j < 32; j++)
+                    {
+                        tempsat[i][j] = new Satellite();
+                    }
+                    if (i % 2 == 0)
+                        GPS.Add(tempsat[i]);
+                    else
+                        GLONASS.Add(tempsat[i]);
+                }
+            }
 
             int msgSize = 0;
 
@@ -837,11 +852,11 @@ namespace GPSNavigator.Source
             {
                 if (a % 2 == 1)
                 {
-                    GPS[i].Signal_Status = 1;       //visible
+                    GPS[0][i].Signal_Status = 1;       //visible
                     buffer.NumOfVisibleSats++;
                 }
                 else
-                    GPS[i].Signal_Status = 0;       //not visible
+                    GPS[0][i].Signal_Status = 0;       //not visible
                 a >>= 1;
             }
             var temp = buffer.NumOfVisibleSats;
@@ -858,7 +873,7 @@ namespace GPSNavigator.Source
             {
                 if (a % 2 == 1)
                 {
-                    GPS[i].Signal_Status = 2;       //Used
+                    GPS[0][i].Signal_Status = 2;       //Used
                     buffer.NumOfUsedSats++;
                 }
                 a >>= 1;
@@ -877,11 +892,11 @@ namespace GPSNavigator.Source
             {
                 if (a % 2 == 1)
                 {
-                    GLONASS[i].Signal_Status = 1;       //visible
+                    GLONASS[0][i].Signal_Status = 1;       //visible
                     buffer.NumOfVisibleSats++;
                 }
                 else
-                    GLONASS[i].Signal_Status = 0;       //not visible
+                    GLONASS[0][i].Signal_Status = 0;       //not visible
                 a >>= 1;
             }
             index += 4;
@@ -892,13 +907,12 @@ namespace GPSNavigator.Source
             {
                 if (a % 2 == 1)
                 {
-                    GLONASS[i].Signal_Status = 2;       //Used
+                    GLONASS[0][i].Signal_Status = 2;       //Used
                     buffer.NumOfUsedSats++;
                 }
                 a >>= 1;
             }
             index += 4;
-            buffer.BSatStats[16] = (byte)(1);
 
             // X
             if (state == 1)
@@ -1230,11 +1244,11 @@ namespace GPSNavigator.Source
                 buffer.BGPSstat[0][i] = data[index + i];
             for (int i = 0; i < 32; ++i)
             {
-                GPS[i].SNR = 0;
+                GPS[0][i].SNR = 0;
 
-                if (GPS[i].Signal_Status != 0)      //visible
+                if (GPS[0][i].Signal_Status != 0)      //visible
                 {
-                    GPS[i].SNR = data[index];
+                    GPS[0][i].SNR = data[index];
                     index++;
                     readSNR++;
                     if (readSNR > 12)
@@ -1249,11 +1263,11 @@ namespace GPSNavigator.Source
                 buffer.BGLONASSstat[0][i] = data[index + i];
             for (int i = 0; i < 28; ++i)
             {
-                GLONASS[i].SNR = 0;
+                GLONASS[0][i].SNR = 0;
 
-                if (GLONASS[i].Signal_Status != 0)      //visible
+                if (GLONASS[0][i].Signal_Status != 0)      //visible
                 {
-                    GLONASS[i].SNR = data[index];
+                    GLONASS[0][i].SNR = data[index];
                     index++;
                     readSNR++;
                     if (readSNR > 12)
@@ -2101,7 +2115,7 @@ namespace GPSNavigator.Source
 
             byte[] NaNBytes = { 0, 0, 248, 255 };
             dbuf.ChannelCounter = 2;
-            dbuf.BSatStats[16] = (byte)1;
+            dbuf.BSatStats[16] = (byte)2;
             int SatIndex = serialNum - 1;
 
             int checksum = calcrc(data, BIN_DUAL_CHANNEL_MSG_SIZE - 4);
@@ -2154,6 +2168,12 @@ namespace GPSNavigator.Source
 
                 a >>= 1;
             }
+            var temp2 = dbuf.NumOfVisibleSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                dbuf.BNumOfVisibleStats[i] = (byte)(temp2 % 256);
+                temp2 /= 256;
+            }
             index += 4;
 
             dbuf.NumOfUsedSats = 0;
@@ -2169,6 +2189,12 @@ namespace GPSNavigator.Source
                 }
                 a >>= 1;
                 //GPSsatAnt2[i].Signal_Status = GPS[SatIndex][i].Signal_Status;
+            }
+            temp2 = dbuf.NumOfUsedSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                dbuf.BNumOfUsedStats[i] = (byte)(temp2 % 256);
+                temp2 /= 256;
             }
             index += 4;
             dbuf.BSatStats[11] = data[index + 3];
@@ -2923,9 +2949,9 @@ namespace GPSNavigator.Source
             //{
                 var key = packet[1];
                 if (key == Functions.BIN_FULL)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSSat, ref vars.GLONASSsat, ref vars.PacketTime);
+                    dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
                 else if (key == Functions.BIN_FULL_PLUS)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSSat, ref vars.GLONASSsat, ref vars.PacketTime);
+                    dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
                 else if (key == Functions.BIN_COMPACT)
                     dbuffer = Functions.Process_Binary_Message_Compact(packet, number, ref vars.GPSSat, ref vars.PacketTime);
                 else if (key == Functions.BIN_DUAL_CHANNEL)

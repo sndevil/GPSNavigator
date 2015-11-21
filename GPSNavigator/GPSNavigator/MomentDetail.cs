@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using GPSNavigator.Classes;
 using Infragistics.UltraGauge.Resources;
+using System.Windows.Forms.DataVisualization.Charting;
 
 
 namespace GPSNavigator
@@ -20,20 +21,21 @@ namespace GPSNavigator
         List<GPSData> CacheData2 = new List<GPSData>();
         LogFileManager filemanager;
         float position;
-        int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS;
+        int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS,Chart1Item, Chart2Item;
         bool playing = false, reading = false,returned = false,realtime = false;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
-        EllipseAnnotation DateLabel;
+        Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
 
         public MomentDetail(LogFileManager manager)
         {
             filemanager = manager;
             InitializeComponent();
             ControlPanel.Visible = true;
-            DateLabel = ultraGaugeClock.Annotations[0] as EllipseAnnotation;
+            DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
             ReadCache(0f);
             data = CacheData2[0];
+            UpdateComboBoxes(data.GPS.Count);
             PlotGraph(data);
             CacheData = CacheData2;
         }
@@ -42,8 +44,8 @@ namespace GPSNavigator
         {
             InitializeComponent();
             ControlPanel.Visible = false;
-            DateLabel = ultraGaugeClock.Annotations[0] as EllipseAnnotation;
-            chart1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
+            DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
+            chart1.Series[0].XValueType = ChartValueType.String;
             realtime = true;
         }
 
@@ -74,7 +76,29 @@ namespace GPSNavigator
             CacheData = CacheData2;
         }
 
-        public void updateLabels(DateTime dt,int vgps,int ugps,int vglonass,int uglonass,float PDOP, float Altitude, float Longitude, float Latitude)
+        public void UpdateComboBoxes(int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                try
+                {
+                    comboBox1.Items[i] = "Antenna " + i.ToString();
+                    comboBox2.Items[i] = "Antenna " + i.ToString();
+                }
+                catch
+                {
+                    comboBox1.Items.Add("Antenna " + i.ToString());
+                    comboBox2.Items.Add("Antenna " + i.ToString());
+                }
+            }
+            if (comboBox1.SelectedIndex < 0)
+            {
+                comboBox1.SelectedIndex = 0;
+                comboBox2.SelectedIndex = 0;
+            }
+        }
+
+        public void updateLabels(DateTime dt, int vgps, int ugps, int vglonass, int uglonass, float PDOP, float Altitude, float Longitude, float Latitude)
         {
             if (vgps != 0 || ugps != 0 || vglonass != 0 || uglonass != 0)
             {
@@ -108,36 +132,40 @@ namespace GPSNavigator
 
         public void PlotGraph(GPSData data)
         {
-            VisibleGLONASS = VisibleGPS = UsedGLONASS = UsedGPS = 0;
             System.Windows.Forms.DataVisualization.Charting.Chart tempchart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            int counter = 0;
-            for (int j = 0; j < data.GPS.Count; j++)
+            int counter = 0,showindex = -1;
+            for (int j = 0; j < 2; j++)
             {
+                VisibleGLONASS = VisibleGPS = UsedGLONASS = UsedGPS = 0;
                 switch (j)
                 {
                     case 0:
                         tempchart = chart1;
+                        showindex = Chart1Item;
                         break;
                     case 1:
                         tempchart = chart2;
+                        showindex = Chart2Item;
                         break;
                 }
-                /////for showing data series j > 0, make other charts
+
                 var tempsat = new Satellite[64];
                 for (int i = 0; i < 64; i++)
                 {
-                    tempsat[i] = (i < 32) ? data.GPS[j][i] : data.Glonass[j][i - 32];
+                    tempsat[i] = (i < 32) ? data.GPS[showindex][i] : data.Glonass[showindex][i - 32];
                     if (tempsat[i].Signal_Status == 1)
                     {
                         try
                         {
                             tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[counter].Color = (i < 32) ? Color.Blue : Color.Red;
+                            tempchart.Series[0].Points[counter].Color = Color.Blue;
+                            tempchart.Series[0].Points[counter].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
                         }
                         catch
                         {
                             tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = (i < 32) ? Color.Blue : Color.Red;
+                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
+                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
                         }
                         if (i < 32) VisibleGPS++;else VisibleGLONASS++;
                         counter++;
@@ -147,12 +175,14 @@ namespace GPSNavigator
                         try
                         {
                             tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[counter].Color = (i < 32) ? Color.Green : Color.Yellow;
+                            tempchart.Series[0].Points[counter].Color = Color.Green;
+                            tempchart.Series[0].Points[counter].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
                         }
                         catch
                         {
                             tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = (i < 32) ? Color.Green : Color.Yellow;
+                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Green;
+                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
                         }
                         if (i < 32) VisibleGPS++; else VisibleGLONASS++;
                         if (i < 32) UsedGPS++; else UsedGLONASS++;
@@ -167,8 +197,9 @@ namespace GPSNavigator
                 counter = 0;
             }
             //removing previous unneccesary datas
-            updateLabels(data.Time,VisibleGPS/2,UsedGPS/2,VisibleGLONASS/2,UsedGLONASS/2,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
+            updateLabels(data.Time,VisibleGPS,UsedGPS,VisibleGLONASS,UsedGLONASS,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
         }
+
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -180,12 +211,13 @@ namespace GPSNavigator
                     playing = false;
                     this.Text = "MomentDetail";
                 }
-                PlotGraph(CacheData[(IndexCounter < 100)?IndexCounter: 99]);
-
+                var toplot = CacheData[(IndexCounter < 100) ? IndexCounter : 99];
+                PlotGraph(toplot);
+                UpdateComboBoxes(toplot.GPS.Count);
                 switch (playspeed)
                 {
                     case PlaybackSpeed.NormalSpeed:
-                        IndexCounter++;
+                        IndexCounter+=2;
                         break;
                     case PlaybackSpeed.Half:
                         if (SlowCounter++ >= 2)
@@ -202,10 +234,10 @@ namespace GPSNavigator
                         }
                         break;
                     case PlaybackSpeed.Double:
-                        IndexCounter += 2;
+                        IndexCounter += 4;
                         break;
                     case PlaybackSpeed.Quadrople:
-                        IndexCounter += 4;
+                        IndexCounter += 8;
                         break;
                 }
 
@@ -286,5 +318,34 @@ namespace GPSNavigator
                 playspeed = PlaybackSpeed.Quadrople;
         }
         #endregion
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label13.Text = comboBox2.SelectedItem.ToString() + " SNR Value";
+            Chart2Item = comboBox2.SelectedIndex;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label9.Text = comboBox1.SelectedItem.ToString() + " SNR Value";
+            Chart1Item = comboBox1.SelectedIndex;
+        }
+
+        private void ChartVisibleCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ChartVisibleCheck.Checked)
+            {
+                chart2.Visible = true;
+                label13.Visible = true;
+                comboBox2.Visible = true;
+            }
+            else
+            {
+                chart2.Visible = false;
+                label13.Visible = false;
+                comboBox2.Visible = false;
+            }
+
+        }
     }
 }

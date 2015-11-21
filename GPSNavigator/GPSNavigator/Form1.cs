@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using GPSNavigator.Source;
 using GPSNavigator.Classes;
+using Ionic.Zip;
 
 namespace GPSNavigator
 {
@@ -438,12 +439,15 @@ namespace GPSNavigator
 
         private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
+            /*folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
             folderdialog.ShowDialog();
             if (folderdialog.SelectedPath != "")
             {
                 OpenLogFile(folderdialog.SelectedPath);
-            }
+            }*/
+            opendialog.FileName = "";
+            opendialog.Filter = "LogPackage File (*.GLP)|*.GLP|All Files|*.*";
+            opendialog.ShowDialog();
         }
 
         public void OpenLogFile(string path)
@@ -456,7 +460,12 @@ namespace GPSNavigator
 
         private void opendialog_FileOk(object sender, CancelEventArgs e)
         {
-            OpenLogFile(opendialog.FileName);
+            Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\",true);
+            using (ZipFile z = ZipFile.Read(opendialog.FileName))
+            {
+                z.ExtractAll(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
+            }
+            OpenLogFile(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -466,18 +475,20 @@ namespace GPSNavigator
             {
                 if (showdetail)
                     DetailForm.Show();
-                folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
-                folderdialog.ShowDialog();
-                if (folderdialog.SelectedPath != "")
-                {
-                    log = new Logger(folderdialog.SelectedPath+"\\");
-                    isRecording = true;
-                    this.Text = "GPS Navigator (Recording)";
-                }
+                savedialog.FileName = "";
+                savedialog.Filter = "LogPackage File (*.GLP)|*.GLP";
+                savedialog.ShowDialog();
             }
             else
             {
                 log.CloseFiles();
+                try { File.Delete(savedialog.FileName); }
+                catch{}
+                using (ZipFile z  = new ZipFile(savedialog.FileName))
+                {
+                    z.AddDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+                    z.Save();
+                }
                 this.Text = "GPS Navigator";
                 isRecording = false;
                 gotdata = false;
@@ -486,7 +497,7 @@ namespace GPSNavigator
 
         private void savedialog_FileOk(object sender, CancelEventArgs e)
         {
-            log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "Logs\\");
+            log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
             isRecording = true;
         }
 

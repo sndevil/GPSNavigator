@@ -42,6 +42,7 @@ namespace GPSNavigator
             DetailForm.Show();
             DetailForm.BringToFront();
             InitializeComponent();
+            this.Text = "Grapher ("+Filemanager.filepath+")";
             Chart1.MouseDown += new MouseEventHandler(Chart1_MouseDown);
             Chart1.MouseUp += new MouseEventHandler(Chart1_MouseUp);
             Chart1.MouseMove += new MouseEventHandler(Chart1_MouseMove);
