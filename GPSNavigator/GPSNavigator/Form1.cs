@@ -388,7 +388,7 @@ namespace GPSNavigator
             }
             else
             {
-                DetailForm.UpdateData(vars,databuffer);
+                DetailForm.UpdateData(vars,databuffer,0);
             }
         }
 

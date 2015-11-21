@@ -2081,6 +2081,17 @@ namespace GPSNavigator.Source
             dbuf.BGPSstat.Add(new byte[12]);
             dbuf.BGLONASSstat.Add(new byte[12]);
             dbuf.BGLONASSstat.Add(new byte[12]);
+            if (GPS.Count < 2)
+            {
+                Satellite[] temp = new Satellite[32];
+                for (int i = 0; i < 32; i++)
+                    temp[i] = new Satellite();
+                for (int i = GPS.Count; i < 2; i++)
+                {
+                    GPS.Add(temp);
+                    GLONASS.Add(temp);
+                }
+            }
 
             byte[] NaNBytes = { 0, 0, 248, 255 };
             dbuf.ChannelCounter = 2;
@@ -2892,8 +2903,8 @@ namespace GPSNavigator.Source
         public static SingleDataBuffer handle_packet(byte[] packet,ref Globals vars, int number)
         {
             //SingleDataBuffer dbuffer = new SingleDataBuffer();
-            try
-            {
+            //try
+            //{
                 var key = packet[1];
                 if (key == Functions.BIN_FULL)
                     dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSSat, ref vars.GLONASSsat, ref vars.PacketTime);
@@ -2903,11 +2914,11 @@ namespace GPSNavigator.Source
                     dbuffer = Functions.Process_Binary_Message_Compact(packet, number, ref vars.GPSSat, ref vars.PacketTime);
                 else if (key == Functions.BIN_DUAL_CHANNEL)
                     dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist);
-            }
-            catch
-            {
+            //}
+            //catch
+            //{
 
-            }
+            //}
             return dbuffer;
         }
 

@@ -662,7 +662,7 @@ namespace GPSNavigator.Classes
 
                     stats = new byte[17];
                     Sat.Read(stats, 0, 17);
-                    satcount = stats[16];
+                    satcount = stats[16] + 1;
                     if (!inited)
                         initSats(satcount);
                     for (int j = 0; j < satcount; j++)
@@ -809,7 +809,7 @@ namespace GPSNavigator.Classes
                 Sat.Read(stats, 0, 17);              
 
                 int visible = 0, used = 0;
-                satcount = stats[16];
+                satcount = stats[16] + 1;
                 if (!inited)
                     initSats(satcount);
 

@@ -47,11 +47,11 @@ namespace GPSNavigator
             realtime = true;
         }
 
-        public void UpdateData(Globals vars, SingleDataBuffer data)
+        public void UpdateData(Globals vars, SingleDataBuffer data, int ChannelNum)
         {
             var tempgpsdata = new GPSData();
-            tempgpsdata.GPS.Add(vars.GPSSat);
-            tempgpsdata.Glonass.Add(vars.GLONASSsat);
+            tempgpsdata.GPS.Add(vars.GPSlist[ChannelNum]);
+            tempgpsdata.Glonass.Add(vars.GLONASSlist[ChannelNum]);
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.PDOP = (float)data.PDOP;
             tempgpsdata.Latitude = (float)data.Latitude;
@@ -106,53 +106,67 @@ namespace GPSNavigator
         public void PlotGraph(GPSData data)
         {
             VisibleGLONASS = VisibleGPS = UsedGLONASS = UsedGPS = 0;
-            
+            System.Windows.Forms.DataVisualization.Charting.Chart tempchart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             int counter = 0;
             for (int j = 0; j < data.GPS.Count; j++)
             {
-                /////for showing data series j > 0, make other charts
-                for (int i = 0; i < 32; i++)
+                switch (j)
                 {
-                    if (data.GPS[j][i].Signal_Status == 1)
+                    case 0:
+                        tempchart = chart1;
+                        break;
+                    case 1:
+                        tempchart = chart2;
+                        break;
+                }
+                /////for showing data series j > 0, make other charts
+                var tempsat = new Satellite[64];
+                for (int i = 0; i < 64; i++)
+                {
+                    tempsat[i] = (i < 32) ? data.GPS[j][i] : data.Glonass[j][i - 32];
+                    if (tempsat[i].Signal_Status == 1)
                     {
                         try
                         {
-                            chart1.Series[0].Points[counter].SetValueXY(i.ToString() + "(" + data.GPS[j][i].SNR.ToString() + ")", data.GPS[j][i].SNR);
-                            chart1.Series[0].Points[counter].Color = Color.Blue;
+                            //Infragistics.UltraChart.Data.Series.Is
+                            tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
+                            tempchart.Series[0].Points[counter].Color = (i < 32) ? Color.Blue : Color.Red;
                         }
                         catch
                         {
-                            chart1.Series[0].Points.AddXY(i.ToString() + "(" + data.GPS[j][i].SNR.ToString() + ")", data.GPS[j][i].SNR);
-                            chart1.Series[0].Points[chart1.Series[0].Points.Count - 1].Color = Color.Blue;
+                            tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
+                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = (i < 32) ? Color.Blue : Color.Red;
                         }
-                        VisibleGPS++;
+                        if (i < 32) VisibleGPS++;else VisibleGLONASS++;
                         counter++;
                     }
-                    if (data.GPS[j][i].Signal_Status == 2)
+                    if (tempsat[i].Signal_Status == 2)
                     {
                         try
                         {
-                            chart1.Series[0].Points[counter].SetValueXY(i.ToString() + "(" + data.GPS[j][i].SNR.ToString() + ")", data.GPS[j][i].SNR);
-                            chart1.Series[0].Points[counter].Color = Color.Green;
+                            tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
+                            tempchart.Series[0].Points[counter].Color = (i < 32) ? Color.Green : Color.Yellow;
                         }
                         catch
                         {
-                            chart1.Series[0].Points.AddXY(i.ToString() + "(" + data.GPS[j][i].SNR.ToString() + ")", data.GPS[j][i].SNR);
-                            chart1.Series[0].Points[chart1.Series[0].Points.Count - 1].Color = Color.Green;
+                            tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
+                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = (i < 32) ? Color.Green : Color.Yellow;
                         }
-                        VisibleGPS++;
-                        UsedGPS++;
+                        if (i < 32) VisibleGPS++; else VisibleGLONASS++;
+                        if (i < 32) UsedGPS++; else UsedGLONASS++;
                         counter++;
                     }
                 }
+                if (counter < tempchart.Series[0].Points.Count && counter != 0)
+                {
+                    for (int i = tempchart.Series[0].Points.Count - 1; i >= counter; i--)
+                        tempchart.Series[0].Points.RemoveAt(i);
+                }
+                counter = 0;
             }
             //removing previous unneccesary datas
-            if (counter < chart1.Series[0].Points.Count && counter != 0)
-            {
-                for (int i = chart1.Series[0].Points.Count-1; i >= counter; i--)
-                    chart1.Series[0].Points.RemoveAt(i);
-            }
-            counter = 0;
+
+            /*
             for (int j = 0; j < data.Glonass.Count; j++)
             {
                 for (int i = 0; i < 32; i++)
@@ -195,8 +209,8 @@ namespace GPSNavigator
             {
                 for (int i = chart2.Series[0].Points.Count - 1; i >= counter; i--)
                     chart2.Series[0].Points.RemoveAt(i);
-            }
-            updateLabels(data.Time,VisibleGPS,UsedGPS,VisibleGLONASS,UsedGLONASS,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
+            }*/
+            updateLabels(data.Time,VisibleGPS/2,UsedGPS/2,VisibleGLONASS/2,UsedGLONASS/2,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -254,6 +268,7 @@ namespace GPSNavigator
             }
         }
 
+        #region PlaybackFuncs
         private void button1_Click(object sender, EventArgs e)
         {
             if (playing)
@@ -313,5 +328,6 @@ namespace GPSNavigator
             if (QuadRadio.Checked)
                 playspeed = PlaybackSpeed.Quadrople;
         }
+        #endregion
     }
 }
