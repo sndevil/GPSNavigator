@@ -149,7 +149,7 @@ namespace GPSNavigator.Classes
             public byte Bstate;
             public DateTime datetime;
             public byte[] Bdatetime = new byte[6];
-            public int statcounter,ChannelCounter = 1;
+            public int statcounter,ChannelCounter = 0;
             public bool WriteExtreme = false;
         }
 
@@ -982,6 +982,7 @@ namespace GPSNavigator.Classes
             private FileStream Sat;
             private List<FileStream> GPS,Glonass;
             private string Dirpath;
+            private long GPSByteCount = 0;
             private bool inited = false;
 
             public Logger(string DirPath)
@@ -1055,17 +1056,22 @@ namespace GPSNavigator.Classes
 
             public void initSats(int count)
             {
-                inited = true;
-                for (int i = 0; i < count; i++)
+                for (int i = GPS.Count; i < count; i++)
                 {
                     GPS.Add(new FileStream(Dirpath + "GPS"+i.ToString()+".glf", FileMode.Create, FileAccess.Write));
                     Glonass.Add(new FileStream(Dirpath + "Glonass"+i.ToString()+".glf", FileMode.Create, FileAccess.Write));
+                    var ind = GPS.Count-1;
+                    for (long j = 0; j < GPSByteCount; j++)
+                    {
+                        GPS[ind].Write(Globals.GPSNAN, 0, 12);
+                        Glonass[ind].Write(Globals.GPSNAN, 0, 12);
+                    }
                 }
             }
 
             public void Writebuffer(SingleDataBuffer buffer)
             {
-                if (!inited)
+                if (buffer.ChannelCounter > GPS.Count)
                     initSats(buffer.ChannelCounter);
                 try
                 {
@@ -1099,10 +1105,19 @@ namespace GPSNavigator.Classes
                     UsedStats.Write(buffer.BNumOfUsedStats, 0, 4);
                     VisibleStats.Write(buffer.BNumOfVisibleStats, 0, 4);
                     Time.Write(buffer.Bdatetime, 0, 6);
-                    for (int i = 0; i < buffer.ChannelCounter; i++)
+                    for (int i = 0; i < GPS.Count; i++)
                     {
-                        GPS[i].Write(buffer.BGPSstat[i], 0, 12);
-                        Glonass[i].Write(buffer.BGLONASSstat[i], 0, 12);
+                        if (i < buffer.ChannelCounter)
+                        {
+                            GPS[i].Write(buffer.BGPSstat[i], 0, 12);
+                            Glonass[i].Write(buffer.BGLONASSstat[i], 0, 12);
+                        }
+                        else
+                        {
+                            GPS[i].Write(Globals.GPSNAN, 0, 12);
+                            Glonass[i].Write(Globals.GPSNAN, 0, 12);
+                        }
+                        GPSByteCount++;
                     }
                     Sat.Write(buffer.BSatStats, 0, 17);
                     if (buffer.WriteExtreme)

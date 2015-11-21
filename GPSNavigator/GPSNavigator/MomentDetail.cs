@@ -50,8 +50,11 @@ namespace GPSNavigator
         public void UpdateData(Globals vars, SingleDataBuffer data, int ChannelNum)
         {
             var tempgpsdata = new GPSData();
-            tempgpsdata.GPS.Add(vars.GPSlist[ChannelNum]);
-            tempgpsdata.Glonass.Add(vars.GLONASSlist[ChannelNum]);
+            for (int i = 0; i < vars.GPSlist.Count; i++)
+            {
+                tempgpsdata.GPS.Add(vars.GPSlist[i]);
+                tempgpsdata.Glonass.Add(vars.GLONASSlist[i]);
+            }
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.PDOP = (float)data.PDOP;
             tempgpsdata.Latitude = (float)data.Latitude;
@@ -128,7 +131,6 @@ namespace GPSNavigator
                     {
                         try
                         {
-                            //Infragistics.UltraChart.Data.Series.Is
                             tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
                             tempchart.Series[0].Points[counter].Color = (i < 32) ? Color.Blue : Color.Red;
                         }
@@ -165,51 +167,6 @@ namespace GPSNavigator
                 counter = 0;
             }
             //removing previous unneccesary datas
-
-            /*
-            for (int j = 0; j < data.Glonass.Count; j++)
-            {
-                for (int i = 0; i < 32; i++)
-                {
-                    if (data.Glonass[j][i].Signal_Status == 1)
-                    {
-                        try
-                        {
-                            chart2.Series[0].Points[counter].SetValueXY(i.ToString() + "(" + data.Glonass[j][i].SNR.ToString() + ")", data.Glonass[j][i].SNR);
-                            chart2.Series[0].Points[counter].Color = Color.Blue;
-                        }
-                        catch
-                        {
-                            chart2.Series[0].Points.AddXY(i.ToString() + "(" + data.Glonass[j][i].SNR.ToString() + ")", data.Glonass[j][i].SNR);
-                            chart2.Series[0].Points[chart2.Series[0].Points.Count - 1].Color = Color.Blue;
-                        }
-                        VisibleGLONASS++;
-                        counter++;
-                    }
-                    if (data.Glonass[j][i].Signal_Status == 2)
-                    {
-                        try
-                        {
-                            chart2.Series[0].Points[counter].SetValueXY(i.ToString() + "(" + data.Glonass[j][i].SNR.ToString() + ")", data.Glonass[j][i].SNR);
-                            chart2.Series[0].Points[counter].Color = Color.Green;
-                        }
-                        catch
-                        {
-                            chart2.Series[0].Points.AddXY(i.ToString() + "(" + data.Glonass[j][i].SNR.ToString() + ")", data.Glonass[j][i].SNR);
-                            chart2.Series[0].Points[chart2.Series[0].Points.Count - 1].Color = Color.Green;
-                        }
-                        VisibleGLONASS++;
-                        UsedGLONASS++;
-                        counter++;
-                    }
-                }
-            }
-            //removing previous unneccesary datas
-            if (counter < chart2.Series[0].Points.Count && counter != 0)
-            {
-                for (int i = chart2.Series[0].Points.Count - 1; i >= counter; i--)
-                    chart2.Series[0].Points.RemoveAt(i);
-            }*/
             updateLabels(data.Time,VisibleGPS/2,UsedGPS/2,VisibleGLONASS/2,UsedGLONASS/2,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
         }
 

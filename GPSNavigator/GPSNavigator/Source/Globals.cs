@@ -19,6 +19,7 @@ namespace GPSNavigator
         public Satellite[] GLONASSsat = new Satellite[32];
         public List<byte[]> licenses = new List<byte[]>();
         public DateTime PacketTime = new DateTime();
+        public static byte[] GPSNAN = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 
         public const int Databuffercount = 3000;
@@ -33,8 +34,8 @@ namespace GPSNavigator
                 if (i<16)
                     licenses.Add(new byte[16]);
             }
-            GPSlist.Add(GPSSat);
-            GLONASSlist.Add(GLONASSsat);
+            //GPSlist.Add(GPSSat);
+            //GLONASSlist.Add(GLONASSsat);
         }
 
         public void Clear_buffer()
