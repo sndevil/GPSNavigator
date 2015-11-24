@@ -49,8 +49,11 @@
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
             this.serialPorts = new System.Windows.Forms.ComboBox();
             this.openPort = new System.Windows.Forms.Button();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.SuspendLayout();
             // 
             // serialPort1
@@ -225,11 +228,40 @@
             this.openPort.UseVisualStyleBackColor = true;
             this.openPort.Click += new System.EventHandler(this.openPort_Click);
             // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(142, 469);
+            this.numericUpDown2.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(152, 20);
+            this.numericUpDown2.TabIndex = 11;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDown2.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 471);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(113, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Refresh Rate Counter:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(331, 471);
+            this.ClientSize = new System.Drawing.Size(331, 493);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.numericUpDown2);
             this.Controls.Add(this.openPort);
             this.Controls.Add(this.serialPorts);
             this.Controls.Add(this.checkBox2);
@@ -249,6 +281,7 @@
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,6 +309,8 @@
         private System.IO.Ports.SerialPort serialPort2;
         private System.Windows.Forms.ComboBox serialPorts;
         private System.Windows.Forms.Button openPort;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.Label label3;
     }
 }
 

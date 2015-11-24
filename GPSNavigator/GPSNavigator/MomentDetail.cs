@@ -21,7 +21,7 @@ namespace GPSNavigator
         List<GPSData> CacheData2 = new List<GPSData>();
         LogFileManager filemanager;
         float position;
-        int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS,Chart1Item, Chart2Item;
+        int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS,Chart1Item, Chart2Item=-1;
         bool playing = false, reading = false,returned = false,realtime = false;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
@@ -153,45 +153,47 @@ namespace GPSNavigator
                         showindex = Chart2Item;
                         break;
                 }
-
-                var tempsat = new Satellite[64];
-                for (int i = 0; i < 64; i++)
+                if (showindex != -1)
                 {
-                    tempsat[i] = (i < 32) ? data.GPS[showindex][i] : data.Glonass[showindex][i - 32];
-                    if (tempsat[i].Signal_Status == 1)
+                    var tempsat = new Satellite[64];
+                    for (int i = 0; i < 64; i++)
                     {
-                        try
+                        tempsat[i] = (i < 32) ? data.GPS[showindex][i] : data.Glonass[showindex][i - 32];
+                        if (tempsat[i].Signal_Status == 1)
                         {
-                            tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[counter].Color = Color.Blue;
-                            tempchart.Series[0].Points[counter].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
+                            try
+                            {
+                                tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points[counter].Color = Color.Blue;
+                                tempchart.Series[0].Points[counter].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                            }
+                            catch
+                            {
+                                tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
+                                tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                            }
+                            if (i < 32) VisibleGPS++; else VisibleGLONASS++;
+                            counter++;
                         }
-                        catch
+                        if (tempsat[i].Signal_Status == 2)
                         {
-                            tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
-                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
+                            try
+                            {
+                                tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points[counter].Color = Color.Green;
+                                tempchart.Series[0].Points[counter].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                            }
+                            catch
+                            {
+                                tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Green;
+                                tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                            }
+                            if (i < 32) VisibleGPS++; else VisibleGLONASS++;
+                            if (i < 32) UsedGPS++; else UsedGLONASS++;
+                            counter++;
                         }
-                        if (i < 32) VisibleGPS++;else VisibleGLONASS++;
-                        counter++;
-                    }
-                    if (tempsat[i].Signal_Status == 2)
-                    {
-                        try
-                        {
-                            tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[counter].Color = Color.Green;
-                            tempchart.Series[0].Points[counter].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
-                        }
-                        catch
-                        {
-                            tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + i.ToString() : "GL" + (i - 32).ToString()), tempsat[i].SNR);
-                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Green;
-                            tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i > 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None; 
-                        }
-                        if (i < 32) VisibleGPS++; else VisibleGLONASS++;
-                        if (i < 32) UsedGPS++; else UsedGLONASS++;
-                        counter++;
                     }
                 }
                 if (counter < tempchart.Series[0].Points.Count && counter != 0)
@@ -328,6 +330,8 @@ namespace GPSNavigator
         {
             label13.Text = comboBox2.SelectedItem.ToString() + " SNR Value";
             Chart2Item = comboBox2.SelectedIndex;
+            if (Chart2Item == Chart1Item)
+                Chart2Item = -1;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

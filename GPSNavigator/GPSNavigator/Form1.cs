@@ -26,7 +26,7 @@ namespace GPSNavigator
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
-        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, serial1_MsgSize=-1;
+        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, serial1_MsgSize=-1,RefreshRate = 50;
         MomentDetail DetailForm = new MomentDetail();
         ExtremumHandler exthandler = new ExtremumHandler();
         string message = "";
@@ -91,7 +91,7 @@ namespace GPSNavigator
                             {
                                 dbuf.error = false;
                             }
-                            if (showdetail && DetailRefreshCounter++ > 2)
+                            if (showdetail && DetailRefreshCounter++ > RefreshRate)
                             {
                                 UpdateRealtimeData(dbuf);
                                 DetailRefreshCounter = 0;
@@ -599,6 +599,11 @@ namespace GPSNavigator
         {
             serialPort1.Close();
             openPort.Text = "Open Port";
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshRate = (int)numericUpDown2.Value;
         }
 
     }
