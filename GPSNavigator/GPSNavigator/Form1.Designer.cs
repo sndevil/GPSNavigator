@@ -47,6 +47,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.serialPort2 = new System.IO.Ports.SerialPort(this.components);
+            this.serialPorts = new System.Windows.Forms.ComboBox();
+            this.openPort = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
@@ -62,12 +64,12 @@
             // logger
             // 
             this.logger.AcceptsReturn = true;
-            this.logger.Location = new System.Drawing.Point(12, 37);
+            this.logger.Location = new System.Drawing.Point(12, 62);
             this.logger.Multiline = true;
             this.logger.Name = "logger";
             this.logger.ReadOnly = true;
             this.logger.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logger.Size = new System.Drawing.Size(307, 371);
+            this.logger.Size = new System.Drawing.Size(307, 346);
             this.logger.TabIndex = 0;
             // 
             // button2
@@ -189,8 +191,6 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox2.Location = new System.Drawing.Point(96, 418);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(85, 17);
@@ -206,11 +206,32 @@
             this.serialPort2.ReceivedBytesThreshold = 20;
             this.serialPort2.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort2_DataReceived);
             // 
+            // serialPorts
+            // 
+            this.serialPorts.FormattingEnabled = true;
+            this.serialPorts.Location = new System.Drawing.Point(12, 35);
+            this.serialPorts.Name = "serialPorts";
+            this.serialPorts.Size = new System.Drawing.Size(227, 21);
+            this.serialPorts.TabIndex = 9;
+            this.serialPorts.SelectedIndexChanged += new System.EventHandler(this.serialPorts_SelectedIndexChanged);
+            // 
+            // openPort
+            // 
+            this.openPort.Location = new System.Drawing.Point(248, 35);
+            this.openPort.Name = "openPort";
+            this.openPort.Size = new System.Drawing.Size(70, 21);
+            this.openPort.TabIndex = 10;
+            this.openPort.Text = "Open Port";
+            this.openPort.UseVisualStyleBackColor = true;
+            this.openPort.Click += new System.EventHandler(this.openPort_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(331, 471);
+            this.Controls.Add(this.openPort);
+            this.Controls.Add(this.serialPorts);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -253,6 +274,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.IO.Ports.SerialPort serialPort2;
+        private System.Windows.Forms.ComboBox serialPorts;
+        private System.Windows.Forms.Button openPort;
     }
 }
 

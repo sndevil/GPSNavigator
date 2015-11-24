@@ -150,7 +150,7 @@ namespace GPSNavigator.Classes
             public DateTime datetime;
             public byte[] Bdatetime = new byte[6];
             public int statcounter,ChannelCounter = 0;
-            public bool WriteExtreme = false;
+            public bool WriteExtreme = false,error = false;
         }
 
         public class ExtremumHandler

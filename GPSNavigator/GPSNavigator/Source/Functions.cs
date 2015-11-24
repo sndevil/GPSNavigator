@@ -866,6 +866,7 @@ namespace GPSNavigator.Source
                 temp /= 256;
             }
             index += 4;
+
             buffer.NumOfUsedSats = 0;
             buffer.BSatStats[7] = data[index + 3];
             a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BSatStats[i + 4] = data[index + i]; };
@@ -1292,6 +1293,8 @@ namespace GPSNavigator.Source
             var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
             datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
             datetimeUTC = datetimeUTC.AddMilliseconds(TOW);
+            if (datetimeUTC.Year > 2020 || datetimeUTC.Year < 2000)
+                buffer.error = true;
 
             buffer.datetime = datetimeUTC;
             PTime = datetimeUTC;
@@ -2955,12 +2958,17 @@ namespace GPSNavigator.Source
                 else if (key == Functions.BIN_COMPACT)
                     dbuffer = Functions.Process_Binary_Message_Compact(packet, number, ref vars.GPSSat, ref vars.PacketTime);
                 else if (key == Functions.BIN_DUAL_CHANNEL)
-                    dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist,ref vars.PacketTime);
+                    dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+                else
+                {
+                    dbuffer.ToString();
+                    }
             //}
             //catch
             //{
 
             //}
+
             return dbuffer;
         }
 

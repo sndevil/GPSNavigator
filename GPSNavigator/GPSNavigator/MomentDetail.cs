@@ -36,6 +36,10 @@ namespace GPSNavigator
             ReadCache(0f);
             data = CacheData2[0];
             UpdateComboBoxes(data.GPS.Count);
+            if (data.GPS.Count > 1)
+                ShowSecondGraph();
+            else
+                HideSecondGraph();
             PlotGraph(data);
             CacheData = CacheData2;
         }
@@ -47,6 +51,7 @@ namespace GPSNavigator
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = ChartValueType.String;
             realtime = true;
+            HideSecondGraph();
         }
 
         public void UpdateData(Globals vars, SingleDataBuffer data, int ChannelNum)
@@ -334,18 +339,23 @@ namespace GPSNavigator
         private void ChartVisibleCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (ChartVisibleCheck.Checked)
-            {
-                chart2.Visible = true;
-                label13.Visible = true;
-                comboBox2.Visible = true;
-            }
+                ShowSecondGraph();
             else
-            {
-                chart2.Visible = false;
-                label13.Visible = false;
-                comboBox2.Visible = false;
-            }
+                HideSecondGraph();
 
+        }
+        private void HideSecondGraph()
+        {
+            chart2.Visible = false;
+            label13.Visible = false;
+            comboBox2.Visible = false;
+        }
+        private void ShowSecondGraph()
+        {
+            chart2.Visible = true;
+            label13.Visible = true;
+            label13.BringToFront();
+            comboBox2.Visible = true;
         }
     }
 }
