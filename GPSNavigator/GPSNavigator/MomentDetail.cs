@@ -61,6 +61,7 @@ namespace GPSNavigator
             {
                 tempgpsdata.GPS.Add(vars.GPSlist[i]);
                 tempgpsdata.Glonass.Add(vars.GLONASSlist[i]);
+                UpdateComboBoxes(vars.GPSlist.Count);
             }
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.PDOP = (float)data.PDOP;
@@ -141,7 +142,6 @@ namespace GPSNavigator
             int counter = 0,showindex = -1;
             for (int j = 0; j < 2; j++)
             {
-                VisibleGLONASS = VisibleGPS = UsedGLONASS = UsedGPS = 0;
                 switch (j)
                 {
                     case 0:
@@ -155,6 +155,7 @@ namespace GPSNavigator
                 }
                 if (showindex != -1)
                 {
+                    VisibleGLONASS = VisibleGPS = UsedGLONASS = UsedGPS = 0;
                     var tempsat = new Satellite[64];
                     for (int i = 0; i < 64; i++)
                     {

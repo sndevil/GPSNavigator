@@ -60,6 +60,7 @@ namespace GPSNavigator.Source
         public const int BIN_SETTING_MSG_SIZE = 41;
         public const int BIN_ATTITUDE_INFO_MSG_SIZE = 40;
         public const int BIN_DUAL_CHANNEL_MSG_SIZE = 164;
+        public const int BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE = 88;
 
 
         public const int BIN_FULL = 0;
@@ -418,7 +419,7 @@ namespace GPSNavigator.Source
             else if (msgType == BIN_FULL_PLUS)
                 msgSize = BIN_FULL_PLUS_MSG_SIZE;
             else if (msgType == BIN_COMPACT)
-                msgSize = BIN_COMPACT_MSG_SIZE;
+                msgSize = BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE;//Was BIN_COMPACT_MSG_SIZE
             else if (msgType == BIN_GPS_SUPPLEMENT)
                 msgSize = BIN_GPS_SUPPLEMENT_MSG_SIZE;
             else if (msgType == BIN_DEBUG)
@@ -819,11 +820,12 @@ namespace GPSNavigator.Source
             byte checksum0 = (byte)(checksum & 0xFF);
             byte checksum1 = (byte)((checksum >> 8) & 0xFF);
 
-            // if (checksum0 != data[msgSize - 3] || checksum1 != data[msgSize - 2])
-            //{
+            if (checksum0 != data[msgSize - 3] || checksum1 != data[msgSize - 2])
+            {
             //Show_Error("CheckSum Error", "Recieved checksum is incorrect");
-            //   return;
-            // }
+               throw new Exception("Checksum Error");
+               //return new SingleDataBuffer();
+            }
 
             int index = 1;      //header
             index++;    //messageType
@@ -1569,21 +1571,47 @@ namespace GPSNavigator.Source
 
         }
 
-        public static SingleDataBuffer Process_Binary_Message_Compact(byte[] data, int SerialNum, ref Satellite[] GPS, ref DateTime PTime)
+
+        //Check Single Channel Compact
+        public static SingleDataBuffer Process_Binary_Message_Compact(byte[] data, int SerialNum, ref List<Satellite[]> GPS,ref List<Satellite[]> GLONASS, ref DateTime PTime)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
             byte[] NaNBytes = { 0, 0, 248, 255 };
-            // List<Satellite> GPS_satellite;
-            //     dbuf = buffer;
-            //     GPS_satellite = GPS;
+            buffer.BGPSstat.Add(new byte[12]);
+            buffer.BGLONASSstat.Add(new byte[12]);
+            buffer.ChannelCounter = 1;
+            buffer.BSatStats[16] = (byte)1;
+            var tempsat = new List<Satellite[]>();
+            if (GPS.Count < 1)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    tempsat.Add(new Satellite[32]);
+                    for (int j = 0; j < 32; j++)
+                    {
+                        tempsat[i][j] = new Satellite();
+                    }
+                    if (i % 2 == 0)
+                        GPS.Add(tempsat[i]);
+                    else
+                        GLONASS.Add(tempsat[i]);
+                }
+            }
+            int msgSize = 0;
 
-            Int64 a;
-            byte checksum0 = 0, checksum1 = 0;
+            if (data[1] == BIN_COMPACT)
+                msgSize = BIN_COMPACT_MSG_SIZE;
 
-            int checksum = calcrc(data, BIN_COMPACT_MSG_SIZE - 4);
-            checksum0 = (byte)(checksum & 0xFF);
-            checksum1 = (byte)((checksum >> 8) & 0xFF);
+            int checksum = calcrc(data, msgSize - 4);
+            byte checksum0 = (byte)(checksum & 0xFF);
+            byte checksum1 = (byte)((checksum >> 8) & 0xFF);
 
+            if (checksum0 != data[msgSize - 3] || checksum1 != data[msgSize - 2])
+            {
+                //Show_Error("CheckSum Error", "Recieved checksum is incorrect");
+                throw new Exception("Checksum Error");
+                //return new SingleDataBuffer();
+            }
 
             int index = 1;      //header
             index++;        //messageType
@@ -1600,21 +1628,23 @@ namespace GPSNavigator.Source
             index++;
 
             buffer.Bdatetime[5] = data[index + 3];
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
+            Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
             double TOW = a;      //millisecond
             index += 4;
 
-            buffer.NumOfVisibleSats=0;
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i];}
+            buffer.NumOfVisibleSats = 0;
+            buffer.BSatStats[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BSatStats[i] = data[index + i]; };
             for (int i = 0; i < 32; ++i)
             {
+                GLONASS[0][i].Signal_Status = 0;
                 if (a % 2 == 1)
                 {
-                    GPS[i].Signal_Status = 1;       //visible
+                    GPS[0][i].Signal_Status = 1;       //visible
                     buffer.NumOfVisibleSats++;
                 }
                 else
-                    GPS[i].Signal_Status = 0;       //not visible
+                    GPS[0][i].Signal_Status = 0;       //not visible
                 a >>= 1;
             }
             var temp = buffer.NumOfVisibleSats;
@@ -1625,13 +1655,14 @@ namespace GPSNavigator.Source
             }
             index += 4;
 
-            buffer.NumOfUsedSats=0;
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            buffer.NumOfUsedSats = 0;
+            buffer.BSatStats[7] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BSatStats[i + 4] = data[index + i]; };
             for (int i = 0; i < 32; ++i)
             {
                 if (a % 2 == 1)
                 {
-                    GPS[i].Signal_Status = 2;       //Used
+                    GPS[0][i].Signal_Status = 2;       //Used
                     buffer.NumOfUsedSats++;
                 }
                 a >>= 1;
@@ -1639,7 +1670,7 @@ namespace GPSNavigator.Source
             var temp2 = buffer.NumOfUsedSats;
             for (int i = 0; i <= 3; i++)
             {
-                buffer.BNumOfVisibleStats[i] = (byte)(temp2 % 256);
+                buffer.BNumOfUsedStats[i] = (byte)(temp2 % 256);
                 temp2 /= 256;
             }
             index += 4;
@@ -1843,14 +1874,14 @@ namespace GPSNavigator.Source
             bool highBits = false;
             for (int i = 0; i < 32; ++i)
             {
-                GPS[i].SNR = 0;
+                GPS[0][i].SNR = 0;
 
-                if (GPS[i].Signal_Status != 0)      //visible
+                if (GPS[0][i].Signal_Status != 0)      //visible
                 {
                     if (highBits)
                     {
                         highBits = false;
-                        GPS[i].SNR = (data[index] & 0xF) + 40;
+                        GPS[0][i].SNR = (data[index] & 0xF) + 40;
                         index++;
                         readSNR++;
                         if (readSNR > 8)
@@ -1859,7 +1890,7 @@ namespace GPSNavigator.Source
                     else
                     {
                         highBits = true;
-                        GPS[i].SNR = ((data[index] & 0xF0) >> 4) + 40;
+                        GPS[0][i].SNR = ((data[index] & 0xF0) >> 4) + 40;
                     }
                 }
             }
@@ -2590,6 +2621,405 @@ namespace GPSNavigator.Source
            // Update_Controls(dbuf, state, TOW, serialNum, HDOP, VDOP);
         }
 
+        public static SingleDataBuffer Process_Binary_Message_Compact_Dual_Channel(byte[] data, int serialNum, ref List<Satellite[]> GPS, ref List<Satellite[]> GLONASS, ref DateTime PTime)
+        {
+            SingleDataBuffer dbuf = new SingleDataBuffer();
+            dbuf.BGPSstat.Add(new byte[12]);
+            dbuf.BGPSstat.Add(new byte[12]);
+            dbuf.BGLONASSstat.Add(new byte[12]);
+            dbuf.BGLONASSstat.Add(new byte[12]);
+            var temp = new List<Satellite[]>();
+            var max = 2 * (2 - GPS.Count);
+            if (GPS.Count < 2)
+            {
+                for (int i = 0; i < max; i++)
+                {
+                    temp.Add(new Satellite[32]);
+                    for (int j = 0; j < 32; j++)
+                    {
+                        temp[i][j] = new Satellite();
+                    }
+                    if (i % 2 == 0)
+                        GPS.Add(temp[i]);
+                    else
+                        GLONASS.Add(temp[i]);
+                }
+            }
+
+            byte[] NaNBytes = { 0, 0, 248, 255 };
+            dbuf.ChannelCounter = 2;
+            dbuf.BSatStats[16] = (byte)2;
+            int SatIndex = serialNum - 1;
+
+            int checksum = calcrc(data, BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE - 4);
+            byte checksum0 = (byte)(checksum & 0xFF);
+            byte checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+            if (checksum0 != data[BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE - 3] || checksum1 != data[BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE - 2])
+            {
+                throw new Exception("Checksum Error");
+                //Error
+            }
+            //if (serialNum == 0)
+            //   DataReceiveTimeOut = 0;
+            //else
+            //   DataReceiveTimeOutS2 = 0;
+
+            int index = 1;      //header
+            index++;    //messageType
+
+            // State
+            int state = data[index];
+            dbuf.state = state;
+            dbuf.Bstate = data[index];
+            index++;
+
+            // Temperature
+            dbuf.Temperature = data[index];
+            dbuf.BTemperature = data[index];
+            index++;
+
+            dbuf.Bdatetime[5] = data[index + 3];
+            Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.Bdatetime[2 + i] = data[index + i]; }
+            double TOW = a;     //millisecond
+            index += 4;
+
+            dbuf.NumOfVisibleSats = 0;
+
+            dbuf.BSatStats[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BSatStats[i] = data[index + i]; };
+            for (int i = 0; i < 32; ++i)
+            {
+                if (a % 2 == 1)
+                {
+                    for (int j = 0; j < GPS.Count; j++)
+                    {
+                        GPS[j][i].Signal_Status = 1;       //visible
+                        GLONASS[j][i].Signal_Status = 0;
+                    }
+                    dbuf.NumOfVisibleSats++;
+                }
+                else
+                    for (int j = 0; j < GPS.Count; j++)
+                    {
+                        GPS[j][i].Signal_Status = 0;       //not visible
+                        GLONASS[j][i].Signal_Status = 0;
+                    }
+
+                a >>= 1;
+            }
+            var temp2 = dbuf.NumOfVisibleSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                dbuf.BNumOfVisibleStats[i] = (byte)(temp2 % 256);
+                temp2 /= 256;
+            }
+            index += 4;
+
+            dbuf.NumOfUsedSats = 0;
+            dbuf.BSatStats[7] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BSatStats[4 + i] = data[index + i]; }
+            for (int i = 0; i < 32; ++i)
+            {
+                if (a % 2 == 1)
+                {
+                    for (int j = 0; j < GPS.Count; j++)
+                    {
+                        GLONASS[j][i].Signal_Status = 0;
+                        GPS[j][i].Signal_Status = 2;       //Used
+                    }
+                    dbuf.NumOfUsedSats++;
+                }
+                a >>= 1;
+                //GPSsatAnt2[i].Signal_Status = GPS[SatIndex][i].Signal_Status;
+            }
+            temp2 = dbuf.NumOfUsedSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                dbuf.BNumOfUsedStats[i] = (byte)(temp2 % 256);
+                temp2 /= 256;
+            }
+            index += 4;
+            
+            // X
+            if (state == 1)
+            {
+                dbuf.BX_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BX_Processed[i] = data[index + i]; };
+                dbuf.X = dbuf.X_Processed = formatFloat(a);
+                dbuf.BX = dbuf.BX_Processed;
+
+            }
+            else
+            {
+                dbuf.X = dbuf.X_Processed = double.NaN;
+                dbuf.BX = dbuf.BX_Processed = NaNBytes;
+            }
+            index += 4;
+
+            // Y
+            if (state == 1)
+            {
+                dbuf.BY_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BY_Processed[i] = data[index + i]; };
+                dbuf.Y = dbuf.Y_Processed = formatFloat(a);
+                dbuf.BY = dbuf.BY_Processed;
+            }
+            else
+            {
+                dbuf.Y = dbuf.Y_Processed = double.NaN;
+                dbuf.BY = dbuf.BY_Processed = NaNBytes;
+            }
+            index += 4;
+
+            // Z
+            if (state == 1)
+            {
+                dbuf.BZ_Processed[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BZ_Processed[i] = data[index + i]; };
+                dbuf.Z = dbuf.Z_Processed = formatFloat(a);
+                dbuf.BZ = dbuf.BZ_Processed;
+            }
+            else
+            {
+                dbuf.Z = dbuf.Z_Processed = double.NaN;
+                dbuf.BZ = dbuf.BZ_Processed = NaNBytes;
+            }
+            index += 4;
+
+            //Latitude
+            if (state == 1)
+            {
+                dbuf.BLatitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BLatitude[i] = data[index + i]; };
+                dbuf.Latitude_Processed = dbuf.Latitude = formatFloat(a);
+                dbuf.BLatitude_Processed = dbuf.BLatitude;
+            }
+            else
+            {
+                dbuf.Latitude_Processed = dbuf.Latitude = double.NaN;
+                dbuf.BLatitude_Processed = dbuf.BLatitude = NaNBytes;
+            }
+            index += 4;
+
+            //Longitude
+            if (state == 1)
+            {
+                dbuf.BLongitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BLongitude[i] = data[index + i]; };
+                dbuf.Longitude_Processed = dbuf.Longitude = formatFloat(a);
+                dbuf.BLongitude_Processed = dbuf.BLongitude;
+            }
+            else
+            {
+                dbuf.Longitude_Processed = dbuf.Longitude = double.NaN;
+                dbuf.BLongitude_Processed = dbuf.BLongitude = NaNBytes;
+            }
+            index += 4;
+
+            //Altitude
+            if (state == 1)
+            {
+                dbuf.BAltitude[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BAltitude[i] = data[index + i]; };
+                dbuf.Altitude_Processed = dbuf.Altitude = formatFloat(a);
+                dbuf.BAltitude_Processed = dbuf.BAltitude;
+            }
+            else
+            {
+                dbuf.Altitude_Processed = dbuf.Altitude = double.NaN;
+                dbuf.BAltitude_Processed = dbuf.BAltitude = NaNBytes;
+            }
+            index += 4;
+
+            // Vx
+            if (state == 1)
+            {
+                dbuf.BVx[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BVx[i] = data[index + i]; };
+                dbuf.Vx_Processed = dbuf.Vx = formatFloat(a);
+                dbuf.BVx_Processed = dbuf.BVx;
+            }
+            else
+            {
+                dbuf.Vx_Processed = dbuf.Vx = double.NaN;
+                dbuf.BVx_Processed = dbuf.BVx = NaNBytes;
+            }
+            index += 4;
+
+            // Vy
+            if (state == 1)
+            {
+                dbuf.BVy[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BVy[i] = data[index + i]; };
+                dbuf.Vy_Processed = dbuf.Vy = formatFloat(a);
+                dbuf.BVy_Processed = dbuf.BVy;
+            }
+            else
+            {
+                dbuf.Vy_Processed = dbuf.Vy = double.NaN;
+                dbuf.BVy_Processed = dbuf.BVy = NaNBytes;
+            }
+            index += 4;
+
+            // Vz
+            if (state == 1)
+            {
+                dbuf.BVz[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BVz[i] = data[index + i]; };
+                dbuf.Vz_Processed = dbuf.Vz = formatFloat(a);
+                dbuf.BVz_Processed = dbuf.BVz;
+            }
+            else
+            {
+                dbuf.Vz_Processed = dbuf.Vz = double.NaN;
+                dbuf.BVz_Processed = dbuf.BVz = NaNBytes;
+            }
+            index += 4;
+
+            //Ax acceleration
+
+                dbuf.Ax = double.NaN;
+                dbuf.BAx = NaNBytes;
+
+            //Ay acceleration
+
+                dbuf.Ay = double.NaN;
+                dbuf.BAy = NaNBytes;
+
+            //Az acceleration
+
+                dbuf.Az = double.NaN;
+                dbuf.BAz = NaNBytes;
+
+            //V, V_Processed, A
+            if (state == 1)
+            {
+                dbuf.V_Processed = dbuf.V = (Math.Sqrt(Math.Pow(dbuf.Vx, 2) + Math.Pow(dbuf.Vy, 2) + Math.Pow(dbuf.Vz, 2)));
+                dbuf.BV_Processed = dbuf.BV = CopyByteWithOffset(BitConverter.GetBytes(dbuf.V), 4);
+                dbuf.A = double.NaN;
+                dbuf.BA = NaNBytes;
+            }
+            else
+            {
+                dbuf.V = double.NaN;
+                dbuf.V_Processed = double.NaN;
+                dbuf.A = double.NaN;
+                dbuf.BV = NaNBytes;
+                dbuf.BV_Processed = NaNBytes;
+                dbuf.BA = NaNBytes;
+            }
+
+            // DOP
+            double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
+            if (state == 1)
+            {
+                dbuf.BPDOP[3] = data[index + 3];
+                a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BPDOP[i] = data[index + i]; }
+                dbuf.PDOP = (formatFloat(a));
+            }
+            else
+            {
+                dbuf.PDOP = double.NaN;
+                dbuf.BPDOP = NaNBytes;
+            }
+
+            index += 4;
+
+            int readSNR = 0,GPSCount = 0,snr = -1;
+            bool highBits = false;
+            for (int i = 0; i < 32; ++i)
+            {
+                GPS[0][i].SNR = 0;
+
+                if (GPS[0][i].Signal_Status != 0)      //visible
+                {
+                    if (highBits)
+                    {
+                        highBits = false;
+                        snr = (data[index] & 0xF) + 40;
+                        GPS[0][i].SNR = (double)snr;
+                        dbuf.BGPSstat[0][GPSCount++] = (byte)snr;
+                        index++;
+                        readSNR++;
+                        if (readSNR > 8)
+                            break;
+                    }
+                    else
+                    {
+                        highBits = true;
+                        snr = ((data[index] & 0xF0) >> 4) + 40;
+                        GPS[0][i].SNR = (double)snr;
+                        dbuf.BGPSstat[0][GPSCount++] = (byte)snr;
+                    }
+                }
+            }
+            index += 8 - readSNR;
+
+            readSNR = 0;
+            GPSCount = 0;
+            snr = -1;
+            highBits = false;
+            for (int i = 0; i < 32; ++i)
+            {
+                GPS[1][i].SNR = 0;
+
+                if (GPS[1][i].Signal_Status != 0)      //visible
+                {
+                    if (highBits)
+                    {
+                        highBits = false;
+                        snr = (data[index] & 0xF) + 40;
+                        GPS[1][i].SNR = (double)snr;
+                        dbuf.BGPSstat[1][GPSCount++] = (byte)snr;
+                        index++;
+                        readSNR++;
+                        if (readSNR > 8)
+                            break;
+                    }
+                    else
+                    {
+                        highBits = true;
+                        snr = ((data[index] & 0xF0) >> 4) + 40;
+                        GPS[1][i].SNR = (double)snr;
+                        dbuf.BGPSstat[1][GPSCount++] = (byte)snr;
+                    }
+                }
+            }
+            index += 8 - readSNR;
+
+
+
+
+            a = data[index] + data[index + 1] * 256;
+            dbuf.Bdatetime[0] = data[index];
+            dbuf.Bdatetime[1] = data[index + 1];
+            var weekNumber = (int)a;
+            index += 2;
+
+            //UTC Offset
+            index += 2;
+
+            var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
+            datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
+            datetimeUTC = datetimeUTC.AddMilliseconds(TOW);
+
+            dbuf.datetime = datetimeUTC;
+            PTime = datetimeUTC;
+
+            ////
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            int packetDelay = (int)a;
+            index += 4;
+
+            // Checksum
+            index += 2;
+
+            // Trailer
+            return dbuf;
+            // Update_Controls(dbuf, state, TOW, serialNum, HDOP, VDOP);
+        }
+
         public static void Process_Binary_Message_Licence(byte[] data, int serialNum,List<byte[]> licenses)
         {
             byte checksum0 = 0, checksum1 = 0;
@@ -2956,7 +3386,7 @@ namespace GPSNavigator.Source
                 else if (key == Functions.BIN_FULL_PLUS)
                     dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
                 else if (key == Functions.BIN_COMPACT)
-                    dbuffer = Functions.Process_Binary_Message_Compact(packet, number, ref vars.GPSSat, ref vars.PacketTime);
+                    dbuffer = Functions.Process_Binary_Message_Compact_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
                 else if (key == Functions.BIN_DUAL_CHANNEL)
                     dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
                 else

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.IO.Ports;
+using System.Resources;
 using System.Windows.Forms;
 using System.Diagnostics;
 using GPSNavigator.Source;
@@ -22,16 +23,18 @@ namespace GPSNavigator
         bool isRecording = false;
         bool isPlaying = true;
         bool gotdata = false;
-        bool showdetail = true;
+        bool showdetail = false;
+        bool saved = false;
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
-        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, serial1_MsgSize=-1,RefreshRate = 50;
+        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0,Demanding_Size = 1, serial1_MsgSize=-1,RefreshRate = 50;
         MomentDetail DetailForm = new MomentDetail();
         ExtremumHandler exthandler = new ExtremumHandler();
         string message = "";
-        byte[] byt = new byte[2];
+        byte[] byt = new byte[150];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
+        ZipFile z;
 
         #endregion
 
@@ -53,36 +56,38 @@ namespace GPSNavigator
             timeoutCounter = 0;
             gotdata = true;
             SingleDataBuffer dbuf;
-            if (isPlaying)
+            while (isPlaying && serialPort1.BytesToRead > ((Serial1State == BinaryProtocolState.readMessage) ? serial1_MsgSize - 3 : 0))
             {
-                switch (Serial1State)
+                try
                 {
-                    case BinaryProtocolState.waitForPacket:
-                        serialPort1.Read(byt, 0, 1);
-                        if (byt[0] == '~')
-                            Serial1State = BinaryProtocolState.waitForMessageType;
-                        break;
+                    switch (Serial1State)
+                    {
+                        case BinaryProtocolState.waitForPacket:
+                            serialPort1.Read(byt, 0, 1);
+                            if (byt[0] == '~')
+                                Serial1State = BinaryProtocolState.waitForMessageType;
+                            break;
 
-                    case BinaryProtocolState.waitForMessageType:
-                        serialPort1.Read(byt, 1, 1);
-                        Serial1State = BinaryProtocolState.readMessage;
+                        case BinaryProtocolState.waitForMessageType:
+                            serialPort1.Read(byt, 1, 1);
+                            Serial1State = BinaryProtocolState.readMessage;
 
-                        int msgType = byt[1];
+                            int msgType = byt[1];
 
-                        serial1_MsgSize = Functions.checkMsgSize(msgType);
-                        if (serial1_MsgSize == -1)          //packet not valid
-                            Serial1State = BinaryProtocolState.waitForPacket;
-                        else
-                        {
-                            byt = new byte[serial1_MsgSize];
-                            byt[0] = (byte)'~';
-                            byt[1] = (byte)msgType;
-                        }
-                        break;
+                            serial1_MsgSize = Functions.checkMsgSize(msgType);
+                            if (serial1_MsgSize == -1)          //packet not valid
+                                Serial1State = BinaryProtocolState.waitForPacket;
+                            else
+                            {
+                                byt = new byte[serial1_MsgSize];
+                                byt[0] = (byte)'~';
+                                byt[1] = (byte)msgType;
+                            }
+                            break;
 
-                    case BinaryProtocolState.readMessage:
-                        if (serialPort1.BytesToRead >= serial1_MsgSize - 2)
-                        {
+                        case BinaryProtocolState.readMessage:
+                            if (serialPort1.BytesToRead < serial1_MsgSize - 2)
+                                break;
                             Serial1State = BinaryProtocolState.waitForPacket;
                             serialPort1.Read(byt, 2, serial1_MsgSize - 2);
 
@@ -91,7 +96,7 @@ namespace GPSNavigator
                             {
                                 dbuf.error = false;
                             }
-                            if (showdetail && DetailRefreshCounter++ > RefreshRate)
+                            if (showdetail && DetailRefreshCounter++ > RefreshRate-1)
                             {
                                 UpdateRealtimeData(dbuf);
                                 DetailRefreshCounter = 0;
@@ -217,17 +222,20 @@ namespace GPSNavigator
                             }
                             else
                                 packetcounter++;
-                        }
-                        break;
+                            break;
 
-                    default:
-                        Serial1State = BinaryProtocolState.waitForPacket;
-                        break;
+                        default:
+                            Serial1State = BinaryProtocolState.waitForPacket;
+                            break;
+                    }
                 }
-
+                catch
+                {
+                }
             }
-            
+
         }
+
 
         public void ToggleDetailForm()
         {
@@ -438,16 +446,23 @@ namespace GPSNavigator
 
         private void button2_Click(object sender, EventArgs e)
         {
+            //bool result = asynctask.EndInvoke(asyncresult);
+            //if (result)
+            //    this.Text = "GPS Navigator";
+
+
+
             if (isPlaying)
             {
                 isPlaying = false;
-                button2.Text = "Play";
+                button2.BackgroundImage = GPSNavigator.Properties.Resources.play;
+                //button2.Text = "Play";
                 this.Text = "GPS Navigator";
             }
             else
             {
                 isPlaying = true;
-                button2.Text = "Pause";
+                button2.BackgroundImage = GPSNavigator.Properties.Resources.pause;
                 if (isRecording)
                     this.Text = "GPS Navigator (Recording)";
                 else
@@ -501,45 +516,26 @@ namespace GPSNavigator
             OpenLogFile(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            timer1.Start();
-            if (checkBox1.Checked)
-            {
-                if (showdetail)
-                    DetailForm.Show();
-                savedialog.FileName = "";
-                savedialog.Filter = "LogPackage File (*.GLP)|*.GLP";
-                savedialog.ShowDialog();
-            }
-            else
-            {
-                log.CloseFiles();
-                try { File.Delete(savedialog.FileName); }
-                catch{}
-                using (ZipFile z  = new ZipFile(savedialog.FileName))
-                {
-                    z.AddDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
-                    z.Save();
-                }
-                this.Text = "GPS Navigator";
-                isRecording = false;
-                gotdata = false;
-            }
-        }
-
         private void savedialog_FileOk(object sender, CancelEventArgs e)
         {
+            if (showdetail)
+                DetailForm.Show();
             log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
             isRecording = true;
+            button1.BackgroundImage = GPSNavigator.Properties.Resources.stop;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (isRecording && gotdata)
             {
-                if (timeoutCounter++ > MaxTimeout)
-                    checkBox1.Checked = false;
+                if (timeoutCounter++ > MaxTimeout) { }
+                    //checkBox1.Checked = false;
+            }
+            if (saved)
+            {
+                toolStripProgressBar1.Value = 0;
+                saved = false;
             }
         }
 
@@ -604,6 +600,80 @@ namespace GPSNavigator
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
             RefreshRate = (int)numericUpDown2.Value;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            timer1.Start();
+            if (!isRecording)
+            {
+                savedialog.FileName = "";
+                savedialog.Filter = "LogPackage File (*.GLP)|*.GLP";
+                savedialog.ShowDialog();
+            }
+            else
+            {
+                if (savedialog.FileName != "")
+                {
+                    log.CloseFiles();
+                    try { File.Delete(savedialog.FileName); }
+                    catch { }
+
+                    button1.BackgroundImage = GPSNavigator.Properties.Resources.record;
+                    isRecording = false;
+                    gotdata = false;
+                    this.Text = "GPS Navigator (Packaging Log Files, Dont Close)";
+                    SaverThread asynctask = new SaverThread(SaveFiles);
+                    IAsyncResult asyncresult = asynctask.BeginInvoke(null,null);
+                }
+            }
+        }
+        private delegate bool SaverThread();
+        private bool SaveFiles()
+        {
+            try
+            {
+                ProgressbarChangeValue(10);
+                using (z = new ZipFile(savedialog.FileName))
+                {
+                    z.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
+                    z.CompressionMethod = CompressionMethod.None;
+                    z.AddDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+                    z.Save();
+                }
+                ProgressbarChangeValue(100);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        private delegate void Progressbar(int percent);
+
+        private void ProgressbarChangeValue(int percent)
+        {
+            if (this.InvokeRequired)
+            {
+                Progressbar d = new Progressbar(ProgressbarChangeValue);
+                this.Invoke(d, new object[] { percent });
+            }
+            else
+            {
+                toolStripProgressBar1.Value = percent;
+                if (percent == 100)
+                    this.Text = "GPS Navigator";
+                saved = true;
+            }
+        }
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((string)comboBox1.SelectedItem == "4800")
+                serialPort1.BaudRate = 4800;
+            else if ((string)comboBox1.SelectedItem == "115200")
+                serialPort1.BaudRate = 115200;
         }
 
     }
