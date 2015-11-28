@@ -107,14 +107,16 @@
             this.PreviousFrame = new System.Windows.Forms.Button();
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.label13 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.ChartVisibleCheck = new System.Windows.Forms.CheckBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.ControlPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -168,7 +170,6 @@
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea3.AxisX.LabelStyle.Angle = 90;
             chartArea3.AxisX.LabelStyle.TruncatedLabels = true;
             chartArea3.AxisX2.LabelAutoFitMinFontSize = 5;
             chartArea3.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
@@ -246,23 +247,25 @@
             // label10
             // 
             this.label10.BackColor = System.Drawing.Color.Blue;
+            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label10.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label10.Location = new System.Drawing.Point(9, 465);
+            this.label10.Location = new System.Drawing.Point(603, 539);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(92, 18);
             this.label10.TabIndex = 11;
-            this.label10.Text = "Visible GPS";
+            this.label10.Text = "Visible Sat";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label11
             // 
             this.label11.BackColor = System.Drawing.Color.Green;
+            this.label11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label11.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label11.Location = new System.Drawing.Point(9, 488);
+            this.label11.Location = new System.Drawing.Point(699, 539);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(92, 18);
             this.label11.TabIndex = 12;
-            this.label11.Text = "Used GPS";
+            this.label11.Text = "Used Sat";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label12
@@ -664,28 +667,6 @@
             this.label13.TabIndex = 42;
             this.label13.Text = "No Antenna Found";
             // 
-            // label15
-            // 
-            this.label15.BackColor = System.Drawing.Color.Yellow;
-            this.label15.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.label15.Location = new System.Drawing.Point(9, 534);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(92, 18);
-            this.label15.TabIndex = 44;
-            this.label15.Text = "Used GLONASS";
-            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label16
-            // 
-            this.label16.BackColor = System.Drawing.Color.Red;
-            this.label16.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label16.Location = new System.Drawing.Point(9, 511);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(92, 18);
-            this.label16.TabIndex = 43;
-            this.label16.Text = "Visible GLONASS";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
@@ -716,16 +697,41 @@
             this.ChartVisibleCheck.UseVisualStyleBackColor = false;
             this.ChartVisibleCheck.CheckedChanged += new System.EventHandler(this.ChartVisibleCheck_CheckedChanged);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel2,
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 536);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(820, 22);
+            this.statusStrip1.TabIndex = 48;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.BackColor = System.Drawing.Color.Salmon;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(46, 17);
+            this.toolStripStatusLabel1.Text = "No Data";
+            // 
+            // toolStripStatusLabel2
+            // 
+            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(42, 17);
+            this.toolStripStatusLabel2.Text = "Status:";
+            // 
             // MomentDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(820, 558);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.ChartVisibleCheck);
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.label16);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.chart2);
             this.Controls.Add(this.ControlPanel);
@@ -740,8 +746,6 @@
             this.Controls.Add(this.ultraGaugeClock);
             this.Controls.Add(this.label14);
             this.Controls.Add(this.label12);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.label10);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -755,10 +759,13 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MomentDetail";
             this.Text = "MomentDetail";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MomentDetail_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ControlPanel.ResumeLayout(false);
             this.ControlPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -801,10 +808,11 @@
         private System.Windows.Forms.RadioButton QuarterRadio;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.CheckBox ChartVisibleCheck;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
     }
 }

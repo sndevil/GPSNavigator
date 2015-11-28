@@ -53,7 +53,10 @@
             this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -270,6 +273,9 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.StatusLabel,
+            this.toolStripStatusLabel3,
             this.toolStripProgressBar1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 496);
             this.statusStrip1.Name = "statusStrip1";
@@ -277,10 +283,34 @@
             this.statusStrip1.TabIndex = 15;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(42, 17);
+            this.toolStripStatusLabel1.Text = "Status:";
+            // 
             // toolStripProgressBar1
             // 
+            this.toolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Right)
+                        | System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+            this.StatusLabel.BorderStyle = System.Windows.Forms.Border3DStyle.Sunken;
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(75, 17);
+            this.StatusLabel.Text = "Disconnected";
+            // 
+            // toolStripStatusLabel3
+            // 
+            this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(85, 17);
+            this.toolStripStatusLabel3.Text = "                          ";
             // 
             // Form1
             // 
@@ -335,7 +365,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox checkBox2;
         private System.IO.Ports.SerialPort serialPort2;
         private System.Windows.Forms.ComboBox serialPorts;
         private System.Windows.Forms.Button openPort;
@@ -345,6 +374,10 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
+        public System.Windows.Forms.CheckBox checkBox2;
     }
 }
 

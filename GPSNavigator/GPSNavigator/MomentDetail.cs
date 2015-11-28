@@ -21,15 +21,18 @@ namespace GPSNavigator
         List<GPSData> CacheData2 = new List<GPSData>();
         LogFileManager filemanager;
         float position;
-        int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS,Chart1Item, Chart2Item=-1;
-        bool playing = false, reading = false,returned = false,realtime = false;
+        int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS,Chart1Item, Chart2Item=-1, DataTimeOut = 100;
+        bool playing = false, reading = false,returned = false,realtime = false,Receiving = false;
+        public bool paused = false;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
+        Form1 ParentForm;// = new Form1();
 
         public MomentDetail(LogFileManager manager)
         {
             filemanager = manager;
             InitializeComponent();
+            toolStripStatusLabel1.Visible = false;
             ControlPanel.Visible = true;
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
@@ -42,11 +45,14 @@ namespace GPSNavigator
                 HideSecondGraph();
             PlotGraph(data);
             CacheData = CacheData2;
+            realtime = false;
         }
 
-        public MomentDetail()
+        public MomentDetail(Form1 Parent)
         {
             InitializeComponent();
+            ParentForm = Parent;
+            toolStripStatusLabel1.Visible = true;
             ControlPanel.Visible = false;
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = ChartValueType.String;
@@ -56,6 +62,8 @@ namespace GPSNavigator
 
         public void UpdateData(Globals vars, SingleDataBuffer data, int ChannelNum)
         {
+            Receiving = true;
+            DataTimeOut = 100;
             var tempgpsdata = new GPSData();
             for (int i = 0; i < vars.GPSlist.Count; i++)
             {
@@ -153,7 +161,7 @@ namespace GPSNavigator
                         showindex = Chart2Item;
                         break;
                 }
-                if (showindex != -1)
+                if (showindex != -1 && data.GPS.Count > j)
                 {
                     VisibleGLONASS = VisibleGPS = UsedGLONASS = UsedGPS = 0;
                     var tempsat = new Satellite[64];
@@ -197,7 +205,7 @@ namespace GPSNavigator
                         }
                     }
                 }
-                if (counter < tempchart.Series[0].Points.Count && counter != 0)
+                if (counter < tempchart.Series[0].Points.Count)// && counter != 0)
                 {
                     for (int i = tempchart.Series[0].Points.Count - 1; i >= counter; i--)
                         tempchart.Series[0].Points.RemoveAt(i);
@@ -211,6 +219,23 @@ namespace GPSNavigator
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (!paused)
+            {
+                if (DataTimeOut >= 0)
+                    DataTimeOut--;
+                if (Receiving)
+                {
+                    toolStripStatusLabel1.Text = "Receiving Data";
+                    toolStripStatusLabel1.BackColor = Color.Lime;
+                }
+                if (DataTimeOut < 0 && Receiving)
+                {
+                    toolStripStatusLabel1.Text = "No Data";
+                    toolStripStatusLabel1.BackColor = Color.Salmon;
+                    Receiving = false;
+                    PlotGraph(new GPSData());
+                }
+            }
             if (playing)
             {
                 if (position >= 1f)
@@ -361,6 +386,12 @@ namespace GPSNavigator
             label13.Visible = true;
             label13.BringToFront();
             comboBox2.Visible = true;
+        }
+
+        private void MomentDetail_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (realtime)
+                ParentForm.checkBox2.Checked = false;
         }
     }
 }

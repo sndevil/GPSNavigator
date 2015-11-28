@@ -29,26 +29,38 @@ namespace GPSNavigator
         FileStream temp;
         Logger log;
         int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0,Demanding_Size = 1, serial1_MsgSize=-1,RefreshRate = 50;
-        MomentDetail DetailForm = new MomentDetail();
+        MomentDetail DetailForm;
         ExtremumHandler exthandler = new ExtremumHandler();
         string message = "";
         byte[] byt = new byte[150];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
         ZipFile z;
 
+        enum Form1Status { Disconnected, Connected, Recording, Saving }
+        Form1Status status = Form1Status.Disconnected;
         #endregion
 
         public Form1()
         {
             InitializeComponent();
+            DetailForm = new MomentDetail(this);
             ToggleDetailForm();
+            RefreshSerial();
+            serialPorts.SelectedIndex = 0;
+            if (OpenPort())
+            {
+                status = Form1Status.Connected;
+                StatusLabel.Text = "Connected";
+                openPort.Text = "Close Port";
+            }
+        }
+
+        void RefreshSerial()
+        {
             foreach (string s in SerialPort.GetPortNames())
             {
                 serialPorts.Items.Add(s);
             }
-            serialPorts.SelectedIndex = 0;
-            if (OpenPort())
-                openPort.Text = "Close Port";
         }
 
         void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
@@ -446,23 +458,19 @@ namespace GPSNavigator
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //bool result = asynctask.EndInvoke(asyncresult);
-            //if (result)
-            //    this.Text = "GPS Navigator";
-
-
-
             if (isPlaying)
             {
                 isPlaying = false;
                 button2.BackgroundImage = GPSNavigator.Properties.Resources.play;
                 //button2.Text = "Play";
+                DetailForm.paused = true;
                 this.Text = "GPS Navigator";
             }
             else
             {
                 isPlaying = true;
                 button2.BackgroundImage = GPSNavigator.Properties.Resources.pause;
+                DetailForm.paused = false;
                 if (isRecording)
                     this.Text = "GPS Navigator (Recording)";
                 else
@@ -487,12 +495,6 @@ namespace GPSNavigator
 
         private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            /*folderdialog.RootFolder = Environment.SpecialFolder.Desktop;
-            folderdialog.ShowDialog();
-            if (folderdialog.SelectedPath != "")
-            {
-                OpenLogFile(folderdialog.SelectedPath);
-            }*/
             opendialog.FileName = "";
             opendialog.Filter = "LogPackage File (*.GLP)|*.GLP|All Files|*.*";
             opendialog.ShowDialog();
@@ -522,6 +524,8 @@ namespace GPSNavigator
                 DetailForm.Show();
             log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
             isRecording = true;
+            status = Form1Status.Recording;
+            StatusLabel.Text = "Recording";
             button1.BackgroundImage = GPSNavigator.Properties.Resources.stop;
         }
 
@@ -549,12 +553,27 @@ namespace GPSNavigator
             if (checkBox2.Checked)
             {
                 showdetail = true;
-                DetailForm.Show();
+                try
+                {
+                    DetailForm.Show();
+                }
+                catch
+                {
+                    DetailForm = new MomentDetail(this);
+                    DetailForm.Show();
+                }
             }
             else
             {
                 showdetail = false;
-                DetailForm.Hide();
+                try
+                {
+                    DetailForm.Hide();
+                }
+                catch
+                {
+                    DetailForm = new MomentDetail(this);
+                }
             }
         }
 
@@ -570,7 +589,11 @@ namespace GPSNavigator
             if (!serialPort1.IsOpen)
             {
                 if (OpenPort())
+                {
+                    status = Form1Status.Connected;
+                    StatusLabel.Text = "Connected";
                     openPort.Text = "Close Port";
+                }
             }
             else
             {
@@ -595,6 +618,8 @@ namespace GPSNavigator
         {
             serialPort1.Close();
             openPort.Text = "Open Port";
+            status = Form1Status.Disconnected;
+            StatusLabel.Text = "Disconnected";
         }
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
@@ -615,6 +640,8 @@ namespace GPSNavigator
             {
                 if (savedialog.FileName != "")
                 {
+                    status = Form1Status.Saving;
+                    StatusLabel.Text = "Saving";
                     log.CloseFiles();
                     try { File.Delete(savedialog.FileName); }
                     catch { }
@@ -625,6 +652,8 @@ namespace GPSNavigator
                     this.Text = "GPS Navigator (Packaging Log Files, Dont Close)";
                     SaverThread asynctask = new SaverThread(SaveFiles);
                     IAsyncResult asyncresult = asynctask.BeginInvoke(null,null);
+                    status = Form1Status.Connected;
+                    StatusLabel.Text = "Connected";
                 }
             }
         }
@@ -633,7 +662,7 @@ namespace GPSNavigator
         {
             try
             {
-                ProgressbarChangeValue(10);
+                ProgressbarChangeValue(30);
                 using (z = new ZipFile(savedialog.FileName))
                 {
                     z.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
