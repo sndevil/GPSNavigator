@@ -28,6 +28,7 @@ namespace GPSNavigator
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
+        DateTime RecordStarttime;
         int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0,Demanding_Size = 1, serial1_MsgSize=-1,RefreshRate = 50;
         MomentDetail DetailForm;
         ExtremumHandler exthandler = new ExtremumHandler();
@@ -530,6 +531,7 @@ namespace GPSNavigator
             log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
             isRecording = true;
             status = Form1Status.Recording;
+            RecordStarttime = DateTime.Now;
             StatusLabel.Text = "Recording";
             button1.BackgroundImage = GPSNavigator.Properties.Resources.stop;
         }
@@ -538,8 +540,13 @@ namespace GPSNavigator
         {
             if (isRecording && gotdata)
             {
-                if (timeoutCounter++ > MaxTimeout) { }
+                if (AutoCancel.Checked)
+                    if (++timeoutCounter > MaxTimeout)
+                        EndRecording();
                     //checkBox1.Checked = false;
+
+                var dt = DateTime.Now - RecordStarttime;
+                timeLabel.Text = dt.Hours.ToString("00") + " : " + dt.Minutes.ToString("00") + " : " + dt.Seconds.ToString("00");
             }
             if (saved)
             {
@@ -645,20 +652,7 @@ namespace GPSNavigator
             {
                 if (savedialog.FileName != "")
                 {
-                    status = Form1Status.Saving;
-                    StatusLabel.Text = "Saving";
-                    log.CloseFiles();
-                    try { File.Delete(savedialog.FileName); }
-                    catch { }
-
-                    button1.BackgroundImage = GPSNavigator.Properties.Resources.record;
-                    isRecording = false;
-                    gotdata = false;
-                    this.Text = "GPS Navigator (Packaging Log Files, Dont Close)";
-                    SaverThread asynctask = new SaverThread(SaveFiles);
-                    IAsyncResult asyncresult = asynctask.BeginInvoke(null,null);
-                    status = Form1Status.Connected;
-                    StatusLabel.Text = "Connected";
+                    EndRecording();
                 }
             }
         }
@@ -684,7 +678,23 @@ namespace GPSNavigator
             }
         }
 
-
+        private void EndRecording()
+        {
+            status = Form1Status.Saving;
+            StatusLabel.Text = "Saving";
+            log.CloseFiles();
+            try { File.Delete(savedialog.FileName); }
+            catch { }
+            timeLabel.Text = "                          ";
+            button1.BackgroundImage = GPSNavigator.Properties.Resources.record;
+            isRecording = false;
+            gotdata = false;
+            this.Text = "GPS Navigator (Packaging Log Files, Dont Close)";
+            SaverThread asynctask = new SaverThread(SaveFiles);
+            IAsyncResult asyncresult = asynctask.BeginInvoke(null, null);
+            status = Form1Status.Connected;
+            StatusLabel.Text = "Connected";
+        }
         private delegate void Progressbar(int percent);
 
         private void ProgressbarChangeValue(int percent)

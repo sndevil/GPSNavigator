@@ -22,9 +22,10 @@ namespace GPSNavigator
         LogFileManager filemanager;
         float position;
         int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS,Chart1Item, Chart2Item=-1, DataTimeOut = 100;
-        bool playing = false, reading = false,returned = false,realtime = false,Receiving = false;
+        bool playing = false, reading = false,returned = false,realtime = false,Receiving = false,StartedCounting = false;
         public bool paused = false;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
+        DateTime StartTime, EndTime;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
         Form1 ParentForm;// = new Form1();
 
@@ -121,6 +122,20 @@ namespace GPSNavigator
                 label6.Text = vglonass.ToString();
                 label8.Text = uglonass.ToString();
             }
+            if (!StartedCounting && (vgps + vglonass) == 4)
+            {
+                StartedCounting = true;
+                StartTime = DateTime.Now;
+                StartTimeLabel.Text = StartTime.ToLongTimeString();
+            }
+            else if (StartedCounting && (ugps + uglonass) > 3)
+            {
+                StartedCounting = false;
+                EndTime = DateTime.Now;
+                EndTimeLabel.Text = EndTime.ToLongTimeString();
+            }
+
+
 
             PDOPValue.Text = PDOP.ToString();
             LatitudeValue.Text = Latitude.ToString();
