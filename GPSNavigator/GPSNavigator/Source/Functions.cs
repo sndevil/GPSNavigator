@@ -366,7 +366,7 @@ namespace GPSNavigator.Source
             return Checksum;
         }
 
-        private static char Calculate_Checksum_Char(char[] Data, int num)
+        public static char Calculate_Checksum_Char(char[] Data, int num)
         {
             char Checksum = (char)0;
 
@@ -3075,7 +3075,7 @@ namespace GPSNavigator.Source
             }*/
         }
 
-        public static void Process_Binary_Message_Setting(byte[] data, int serialNum)
+        public static void Process_Binary_Message_Setting_(byte[] data, int serialNum)
         {
             byte checksum0 = 0, checksum1 = 0;
 
@@ -3193,6 +3193,147 @@ namespace GPSNavigator.Source
             //Ionospheric Correction
             //radDDLIonospheric.SelectedIndex = data[index];
             index++;
+        }
+
+        public static SingleDataBuffer Process_Binary_Message_Setting(byte[] data, int serialNum)
+        {
+            SingleDataBuffer dbuf = new SingleDataBuffer();
+            dbuf.settingbuffer.SettingReceived = true;
+            byte checksum0 = 0, checksum1 = 0;
+
+            int checksum = calcrc(data, BIN_SETTING_MSG_SIZE - 4);
+            checksum0 = (byte)(checksum & 0xFF);
+            checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+            int index = 1;      //header
+            index++;        //messageType
+
+            //Sat Type
+            int SatType = data[index];
+            //dbuf.settingbuffer.
+            index++;
+
+            //Number of satellites
+            dbuf.settingbuffer.SatNum = data[index];
+            index++;
+            dbuf.settingbuffer.GPSNum = data[index];
+            index++;
+            dbuf.settingbuffer.GLONASSNum = data[index];
+            index++;
+            dbuf.settingbuffer.GalileoNum = data[index];
+            index++;
+            dbuf.settingbuffer.CompassNum = data[index];
+            index++;
+
+            //Pos Type
+            dbuf.settingbuffer.PosType = data[index] - 1;
+            //radDDLPosTyp.SelectedIndex = data[index] - 1;
+            index++;
+
+            // if (radDDLSelectSerial.FindStringExact(radDDLSelectSerial.Text) == 1)
+            //    index += 5;
+
+            int baudRate = data[index];
+            index++;
+            baudRate = (baudRate << 8) + data[index];
+            index++;
+            baudRate = (baudRate << 8) + data[index];
+            index++;
+            dbuf.settingbuffer.BaudRate = baudRate;
+
+            int PacketType = data[index];
+            index++;
+            PacketType = (PacketType << 8) + data[index];
+            index++;
+            dbuf.settingbuffer.PacketType = PacketType;
+
+
+            //if (radDDLSelectSerial.FindStringExact(radDDLSelectSerial.Text) == 0)
+            //    index += 5;
+
+            //radDDLRefreshRate.Text = data[index].ToString();
+            dbuf.settingbuffer.RefreshRate = data[index];
+            index++;
+
+            int PDOP_Threshold = data[index];
+            index++;
+            PDOP_Threshold = (PDOP_Threshold << 8) + data[index];
+            index++;
+            dbuf.settingbuffer.PDOPTh = PDOP_Threshold;
+            //textEditPdopTHD.Text = PDOP_Threshold.ToString();
+
+            //GPS Use Threshold
+            //textEditGpsUseTHD.Text = (data[index] / 4).ToString();
+            dbuf.settingbuffer.GPSUseTh = (data[index] / 4);
+            index++;
+
+            //GLONASS Use Threshold
+            //textEditGlonassTHD.Text = (data[index] / 4).ToString();
+            dbuf.settingbuffer.GLONASSUseTh = (data[index] / 4);
+            index++;
+
+            //GPS Deassign Threshold
+            //textEditGpsDeassTHD.Text = (data[index] / 4).ToString();
+            dbuf.settingbuffer.GPSDisTh = data[index] / 4;
+            index++;
+
+            //GLONASS Deassign Threshold
+            //textEditGlonassDeassTHD.Text = (data[index] / 4).ToString();
+            dbuf.settingbuffer.GLONASSDisTh = data[index] / 4;
+            index++;
+
+            //Reliability Deassign Threshold
+            //textEditReliabilityTHD.Text = (data[index] / 100).ToString();
+            dbuf.settingbuffer.RelyDisTh = data[index] / 100;
+            index++;
+
+            //Satellite Distance Error Threshold
+            int SatDistErrTHD = data[index];
+            index++;
+            SatDistErrTHD = ((SatDistErrTHD << 8) + data[index]) / 10;
+            index++;
+            dbuf.settingbuffer.SatDisErrTh = SatDistErrTHD;
+            //textEditSatDistErrTHD.Text = SatDistErrTHD.ToString();
+
+            int MAX_Speed = data[index];
+            index++;
+            MAX_Speed = (MAX_Speed << 8) + data[index];
+            index++;
+            dbuf.settingbuffer.MaxSpeed = MAX_Speed;
+            //textEditMaxSpeed.Text = MAX_Speed.ToString();
+
+            int MAX_Acceleration = data[index];
+            index++;
+            MAX_Acceleration = ((MAX_Acceleration << 8) + data[index]) / 10;
+            index++;
+            dbuf.settingbuffer.MaxAcc = MAX_Acceleration;
+            //textEditMaxAcc.Text = MAX_Acceleration.ToString();
+
+            //Mask Angle
+            //textEditMaskAngle.Text = data[index].ToString();
+            dbuf.settingbuffer.MaskAngle = data[index];
+            index++;
+
+            //Green Satellite Type
+            // radDDLGreenType.SelectedIndex = data[index];
+            dbuf.settingbuffer.GreenSatType = data[index];
+            index++;
+
+            //Tropospheric Correction
+            //radDDLTropo.SelectedIndex = data[index];
+            dbuf.settingbuffer.TropoCor = data[index];
+            index++;
+
+            //Automatic Max Angle Attitude
+            //radDDLAutoMaxAngle.SelectedIndex = data[index];
+            dbuf.settingbuffer.AutoMaxAngle = data[index];
+            index++;
+
+            //Ionospheric Correction
+            //radDDLIonospheric.SelectedIndex = data[index];
+            dbuf.settingbuffer.IonoCor = data[index];
+            index++;
+            return dbuf;
         }
 
         public static void Process_Binary_Message_Attitude_Info(byte[] data, int serialNum,ref DataBuffer databuffer,ref AttitudeInformation attitudeInfoDataBuf)
@@ -3377,27 +3518,22 @@ namespace GPSNavigator.Source
 
         public static SingleDataBuffer handle_packet(byte[] packet,ref Globals vars, int number)
         {
-            //SingleDataBuffer dbuffer = new SingleDataBuffer();
-            //try
-            //{
-                var key = packet[1];
-                if (key == Functions.BIN_FULL)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
-                else if (key == Functions.BIN_FULL_PLUS)
-                    dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
-                else if (key == Functions.BIN_COMPACT)
-                    dbuffer = Functions.Process_Binary_Message_Compact_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
-                else if (key == Functions.BIN_DUAL_CHANNEL)
-                    dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
-                else
-                {
-                    dbuffer.ToString();
-                    }
-            //}
-            //catch
-            //{
 
-            //}
+            var key = packet[1];
+            if (key == Functions.BIN_FULL)
+                dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+            else if (key == Functions.BIN_FULL_PLUS)
+                dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+            else if (key == Functions.BIN_COMPACT)
+                dbuffer = Functions.Process_Binary_Message_Compact_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+            else if (key == Functions.BIN_SETTING)
+                dbuffer = Functions.Process_Binary_Message_Setting(packet, number);
+            else if (key == Functions.BIN_DUAL_CHANNEL)
+                dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+            else
+            {
+                dbuffer.ToString();
+            }
 
             return dbuffer;
         }

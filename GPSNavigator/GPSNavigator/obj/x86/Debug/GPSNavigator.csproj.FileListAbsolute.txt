@@ -62,3 +62,4 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infrag
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.UltraWinGauge.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics4.Win.UltraWinChart.v12.1.xml
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.ControlPanel.resources

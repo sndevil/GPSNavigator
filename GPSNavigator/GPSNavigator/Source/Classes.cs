@@ -145,6 +145,7 @@ namespace GPSNavigator.Classes
             //public byte[] BGLONASSstat = new byte[12];
             public byte[] BSatStats = new byte[17];
             public byte[] BNumOfVisibleStats = new byte[4];
+            public SettingBuffer settingbuffer = new SettingBuffer();
             public double state;
             public byte Bstate;
             public DateTime datetime;
@@ -153,6 +154,14 @@ namespace GPSNavigator.Classes
             public bool WriteExtreme = false,error = false;
         }
 
+        public class SettingBuffer
+        {
+            public int SatNum, GPSNum, GLONASSNum, GalileoNum, CompassNum, BaudRate, PacketType, PDOPTh, GPSUseTh, GPSDisTh, GLONASSUseTh, GLONASSDisTh, RelyDisTh
+                , SatDisErrTh, MaxSpeed, MaxAcc, MaskAngle, GreenSatType, TropoCor, IonoCor, AutoMaxAngle,PosType,RefreshRate;
+            public bool SettingReceived = false;
+
+        }
+        //public enum PositioningType { GPS, GLONASS, Both }
         public class ExtremumHandler
         {
             public double AltitudeMax, AltitudeMin;

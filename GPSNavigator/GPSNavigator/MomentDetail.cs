@@ -172,13 +172,13 @@ namespace GPSNavigator
                         {
                             try
                             {
-                                tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[counter].Color = Color.Blue;
                                 tempchart.Series[0].Points[counter].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
                             }
                             catch
                             {
-                                tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points.AddXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
                             }
@@ -189,13 +189,13 @@ namespace GPSNavigator
                         {
                             try
                             {
-                                tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[counter].Color = Color.Green;
                                 tempchart.Series[0].Points[counter].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
                             }
                             catch
                             {
-                                tempchart.Series[0].Points.AddXY(((i < 32) ? "GP" + (i + 1).ToString() : "GL" + (i - 31).ToString()), tempsat[i].SNR);
+                                tempchart.Series[0].Points.AddXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Green;
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
                             }

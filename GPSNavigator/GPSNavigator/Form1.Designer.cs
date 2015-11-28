@@ -49,14 +49,16 @@
             this.openPort = new System.Windows.Forms.Button();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.controlPanelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -94,7 +96,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.settingToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(331, 24);
@@ -236,38 +239,29 @@
             this.label3.TabIndex = 12;
             this.label3.Text = "Refresh Rate Counter:";
             // 
-            // button1
-            // 
-            this.button1.BackgroundImage = global::GPSNavigator.Properties.Resources.record;
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(289, 411);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(29, 29);
-            this.button1.TabIndex = 13;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // button2
-            // 
-            this.button2.BackgroundImage = global::GPSNavigator.Properties.Resources.pause;
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Location = new System.Drawing.Point(254, 411);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(29, 29);
-            this.button2.TabIndex = 2;
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
+            "1200",
+            "2400",
             "4800",
-            "115200"});
+            "9600",
+            "14400",
+            "19200",
+            "28800",
+            "38400",
+            "56000",
+            "57600",
+            "115200",
+            "230400",
+            "460800",
+            "921600"});
             this.comboBox1.Location = new System.Drawing.Point(125, 35);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(114, 21);
             this.comboBox1.TabIndex = 14;
+            this.comboBox1.Text = "115200";
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // statusStrip1
@@ -311,6 +305,43 @@
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(85, 17);
             this.toolStripStatusLabel3.Text = "                          ";
+            // 
+            // settingToolStripMenuItem
+            // 
+            this.settingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.controlPanelToolStripMenuItem});
+            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
+            this.settingToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.settingToolStripMenuItem.Text = "&Setting";
+            // 
+            // controlPanelToolStripMenuItem
+            // 
+            this.controlPanelToolStripMenuItem.Name = "controlPanelToolStripMenuItem";
+            this.controlPanelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.controlPanelToolStripMenuItem.Text = "&Control Panel";
+            this.controlPanelToolStripMenuItem.Click += new System.EventHandler(this.controlPanelToolStripMenuItem_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackgroundImage = global::GPSNavigator.Properties.Resources.record;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button1.Location = new System.Drawing.Point(289, 411);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(29, 29);
+            this.button1.TabIndex = 13;
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // button2
+            // 
+            this.button2.BackgroundImage = global::GPSNavigator.Properties.Resources.pause;
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button2.Location = new System.Drawing.Point(254, 411);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(29, 29);
+            this.button2.TabIndex = 2;
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
@@ -378,6 +409,8 @@
         private System.Windows.Forms.ToolStripStatusLabel StatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         public System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem controlPanelToolStripMenuItem;
     }
 }
 

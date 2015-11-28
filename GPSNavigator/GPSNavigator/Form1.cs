@@ -35,7 +35,7 @@ namespace GPSNavigator
         byte[] byt = new byte[150];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
         ZipFile z;
-
+        ControlPanel controlPanel;
         enum Form1Status { Disconnected, Connected, Recording, Saving }
         Form1Status status = Form1Status.Disconnected;
         #endregion
@@ -44,6 +44,7 @@ namespace GPSNavigator
         {
             InitializeComponent();
             DetailForm = new MomentDetail(this);
+            controlPanel = new ControlPanel(this);
             ToggleDetailForm();
             RefreshSerial();
             serialPorts.SelectedIndex = 0;
@@ -248,6 +249,10 @@ namespace GPSNavigator
 
         }
 
+        public void Serial1_Write(byte[] data,int offset, int count)
+        {
+            serialPort1.Write(data, offset, count);
+        }
 
         public void ToggleDetailForm()
         {
@@ -703,6 +708,19 @@ namespace GPSNavigator
                 serialPort1.BaudRate = 4800;
             else if ((string)comboBox1.SelectedItem == "115200")
                 serialPort1.BaudRate = 115200;
+        }
+
+        private void controlPanelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                controlPanel.Show();
+            }
+            catch
+            {
+                controlPanel = new ControlPanel(this);
+                controlPanel.Show();
+            }
         }
 
     }
