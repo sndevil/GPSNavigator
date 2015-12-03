@@ -228,6 +228,16 @@ namespace GPSNavigator
                 counter = 0;
             }
             //removing previous unneccesary datas
+            if (VisibleGPS + VisibleGLONASS > 14)
+            {
+                chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 90;
+                chart2.ChartAreas[0].AxisX.LabelStyle.Angle = 90;
+            }
+            else
+            {
+                chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
+                chart2.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
+            }
             updateLabels(data.Time,VisibleGPS,UsedGPS,VisibleGLONASS,UsedGLONASS,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
         }
 
