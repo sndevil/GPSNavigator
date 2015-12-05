@@ -73,6 +73,7 @@
             "Vy_Processed",
             "Vz",
             "Vz_Processed",
+            "V",
             "Ax",
             "Ay",
             "Az",
@@ -168,6 +169,7 @@
             this.MinimizeBox = false;
             this.Name = "Grapher";
             this.Text = "Grapher";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Grapher_FormClosed);
             this.Load += new System.EventHandler(this.Grapher_Load);
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol.Properties)).EndInit();

@@ -331,16 +331,16 @@ namespace GPSNavigator
             {
                 double[] max = Functions.FindMaxes(data.max);
                 double[] min = Functions.FindMins(data.min);
-                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(time);
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
-                Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(time);
+                Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.date);//time
                 Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
-                Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(time);
+                Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.date);//time
                 Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
             }
             else
             {
-                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(time);
+                Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
                 Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Clear();
                 Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Clear();
@@ -450,38 +450,42 @@ namespace GPSNavigator
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Vz_Processed";
                     break;
                 case 18:
+                    selectedtype = graphtype.V;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.V";
+                    break;
+                case 19:
                     selectedtype = graphtype.Ax;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Ax";
                     break;
-                case 19:
+                case 20:
                     selectedtype = graphtype.Ay;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Ay";
                     break;
-                case 20:
+                case 21:
                     selectedtype = graphtype.Az;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Az";
                     break;
-                case 21:
+                case 22:
                     selectedtype = graphtype.A;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.A";
                     break;
-                case 22:
+                case 23:
                     selectedtype = graphtype.PDOP;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.PDOP";
                     break;
-                case 23:
+                case 24:
                     selectedtype = graphtype.State;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.State";
                     break;
-                case 24:
+                case 25:
                     selectedtype = graphtype.Temperature;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.Temperature";
                     break;
-                case 25:
+                case 26:
                     selectedtype = graphtype.UsedStats;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.UsedStats";
                     break;
-                case 26:
+                case 27:
                     selectedtype = graphtype.VisibleStats;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
                     break;
@@ -493,6 +497,11 @@ namespace GPSNavigator
         {
             var t = filemanager.Readbuffer(selectedtype, fmin, fmax, Globals.Databuffercount);
             PlotGraph(t);
+        }
+
+        private void Grapher_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            filemanager.Close();
         }
     }
 }

@@ -516,12 +516,19 @@ namespace GPSNavigator
 
         private void opendialog_FileOk(object sender, CancelEventArgs e)
         {
-            Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\",true);
-            using (ZipFile z = ZipFile.Read(opendialog.FileName))
-            {
-                z.ExtractAll(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
-            }
-            OpenLogFile(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+           // try
+            //{
+                Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\", true);
+                using (ZipFile z = ZipFile.Read(opendialog.FileName))
+                {
+                    z.ExtractAll(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
+                }
+                OpenLogFile(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+            //}
+            //catch
+            //{
+              //  MessageBox.Show("Close the already open files");
+            //}
         }
 
         private void savedialog_FileOk(object sender, CancelEventArgs e)

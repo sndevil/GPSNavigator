@@ -861,12 +861,7 @@ namespace GPSNavigator.Source
                     GPS[0][i].Signal_Status = 0;       //not visible
                 a >>= 1;
             }
-            var temp = buffer.NumOfVisibleSats;
-            for (int i = 0; i<=3; i++)
-            {
-                buffer.BNumOfVisibleStats[i] = (byte)(temp % 256);
-                temp /= 256;
-            }
+            
             index += 4;
 
             buffer.NumOfUsedSats = 0;
@@ -880,12 +875,6 @@ namespace GPSNavigator.Source
                     buffer.NumOfUsedSats++;
                 }
                 a >>= 1;
-            }
-            var temp2 = buffer.NumOfUsedSats;
-            for (int i = 0; i <= 3; i++)
-            {
-                buffer.BNumOfUsedStats[i] = (byte)(temp2 % 256);
-                temp2 /= 256;
             }
             index += 4;
 
@@ -916,6 +905,19 @@ namespace GPSNavigator.Source
                 a >>= 1;
             }
             index += 4;
+
+            var temp = buffer.NumOfVisibleSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                buffer.BNumOfVisibleStats[i] = (byte)(temp % 256);
+                temp /= 256;
+            }
+            temp = buffer.NumOfUsedSats;
+            for (int i = 0; i <= 3; i++)
+            {
+                buffer.BNumOfUsedStats[i] = (byte)(temp % 256);
+                temp /= 256;
+            }
 
             // X
             if (state == 1)
@@ -1224,11 +1226,11 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 buffer.V = (Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2)));
-                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(buffer.V), 4);
+                buffer.BV = Functions.CopyByteWithOffset(BitConverter.GetBytes(buffer.V),4);
                 buffer.V_Processed = (Math.Sqrt(Math.Pow(buffer.Vx_Processed, 2) + Math.Pow(buffer.Vy_Processed, 2) + Math.Pow(buffer.Vz_Processed, 2)));
                 buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(buffer.V_Processed), 4);
                 buffer.A = (Math.Sqrt(Math.Pow(buffer.Ax, 2) + Math.Pow(buffer.Ay, 2) + Math.Pow(buffer.Az, 2)));
-                buffer.BA = CopyByteWithOffset(BitConverter.GetBytes(buffer.A), 4);
+                buffer.BA = Functions.CopyByteWithOffset(BitConverter.GetBytes(buffer.A), 4);
             }
             else
             {
@@ -1844,8 +1846,7 @@ namespace GPSNavigator.Source
                 var temp3 = Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2));
                 buffer.V = (temp3);
                 buffer.V_Processed = (temp3);
-                buffer.BV = CopyByteWithOffset(BitConverter.GetBytes(temp3), 4);
-                buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp3), 4);
+                buffer.BV = buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp3), 4);
             }
             else
             {
@@ -2482,11 +2483,11 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 dbuf.V = (Math.Sqrt(Math.Pow(dbuf.Vx, 2) + Math.Pow(dbuf.Vy, 2) + Math.Pow(dbuf.Vz, 2)));
-                dbuf.BV = CopyByteWithOffset(BitConverter.GetBytes(dbuf.V), 4);
+                dbuf.BV = Functions.CopyByteWithOffset(BitConverter.GetBytes(dbuf.V), 4);
                 dbuf.V_Processed = (Math.Sqrt(Math.Pow(dbuf.Vx_Processed, 2) + Math.Pow(dbuf.Vy_Processed, 2) + Math.Pow(dbuf.Vz_Processed, 2)));
                 dbuf.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(dbuf.V_Processed), 4);
                 dbuf.A = (Math.Sqrt(Math.Pow(dbuf.Ax, 2) + Math.Pow(dbuf.Ay, 2) + Math.Pow(dbuf.Az, 2)));
-                dbuf.BA = CopyByteWithOffset(BitConverter.GetBytes(dbuf.A), 4);
+                dbuf.BA = Functions.CopyByteWithOffset(BitConverter.GetBytes(dbuf.A), 4);
             }
             else
             {

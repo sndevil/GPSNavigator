@@ -197,6 +197,8 @@
     <None Include="Resources\pause.png" />
     <None Include="Resources\media-controls-stop-icon.png" />
     <None Include="Resources\play1.png" />
+    <None Include="Resources\black_down_pointing_triangle_u25BC_icon_256x256.png" />
+    <None Include="Resources\black_down_pointing_triangle_u25BC_icon_256x2561.png" />
     <Content Include="Resources\record-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

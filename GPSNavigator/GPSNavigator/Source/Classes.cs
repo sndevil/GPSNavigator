@@ -292,14 +292,15 @@ namespace GPSNavigator.Classes
         {
             public List<Satellite[]> GPS;
             public List<Satellite[]> Glonass;
+            public SingleDataBuffer Dbuf;
             public DateTime Time;
             public int VisibleGPS, UsedGPS,VisibleGlonass, UsedGlonass;
-            public float PDOP, Latitude, Longitude, Altitude;
 
             public GPSData()
             {
                 GPS = new List<Satellite[]>();
                 Glonass = new List<Satellite[]>();
+                Dbuf = new SingleDataBuffer();
                 VisibleGPS = UsedGPS = VisibleGlonass = VisibleGPS = 0;
                 Time = new DateTime();
             }
@@ -789,14 +790,15 @@ namespace GPSNavigator.Classes
                         }
                     }
                     stats = new byte[4];
+                    tempdata.Dbuf = new SingleDataBuffer();
                     PDOP.Read(stats, 0, 4);
-                    tempdata.PDOP = (float)Functions.BytetoFloat(stats);
+                    tempdata.Dbuf.PDOP = (float)Functions.BytetoFloat(stats);
                     Altitude.Read(stats, 0, 4);
-                    tempdata.Altitude = (float)Functions.BytetoFloat(stats);
+                    tempdata.Dbuf.Altitude = (float)Functions.BytetoFloat(stats);
                     Latitude.Read(stats, 0, 4);
-                    tempdata.Latitude = (float)Functions.BytetoFloat(stats);
+                    tempdata.Dbuf.Latitude = (float)Functions.BytetoFloat(stats);
                     Longitude.Read(stats, 0, 4);
-                    tempdata.Longitude = (float)Functions.BytetoFloat(stats);
+                    tempdata.Dbuf.Longitude = (float)Functions.BytetoFloat(stats);
 
 
                     templist.Add(tempdata);
@@ -945,14 +947,15 @@ namespace GPSNavigator.Classes
                 }
 
                 stats = new byte[4];
+                tempdata.Dbuf = new SingleDataBuffer();
                 PDOP.Read(stats, 0, 4);
-                tempdata.PDOP = (float)Functions.BytetoFloat(stats);
+                tempdata.Dbuf.PDOP = (float)Functions.BytetoFloat(stats);
                 Altitude.Read(stats, 0, 4);
-                tempdata.Altitude = (float)Functions.BytetoFloat(stats);
+                tempdata.Dbuf.Altitude = (float)Functions.BytetoFloat(stats);
                 Latitude.Read(stats, 0, 4);
-                tempdata.Latitude = (float)Functions.BytetoFloat(stats);
+                tempdata.Dbuf.Latitude = (float)Functions.BytetoFloat(stats);
                 Longitude.Read(stats, 0, 4);
-                tempdata.Longitude = (float)Functions.BytetoFloat(stats);
+                tempdata.Dbuf.Longitude = (float)Functions.BytetoFloat(stats);
 
                 return tempdata;
             }
@@ -989,6 +992,74 @@ namespace GPSNavigator.Classes
                 return sbuffer;
             }
 
+            public void Close()
+            {
+                foreach (FileStream f in GPS)
+                    f.Close();
+                foreach (FileStream f in Glonass)
+                    f.Close();
+                V.Close();
+                V_p.Close();
+                VMax.Close();
+                VMin.Close();
+                A.Close();
+                AMax.Close();
+                AMin.Close();
+                Vx.Close();
+                Vx_p.Close();
+                VxMax.Close();
+                VxMin.Close();
+                Vy.Close();
+                Vy_p.Close();
+                VyMax.Close();
+                VyMin.Close();
+                Vz.Close();
+                Vz_p.Close();
+                VzMax.Close();
+                VzMin.Close();
+                Ax.Close();
+                AxMax.Close();
+                AxMin.Close();
+                Ay.Close();
+                AyMax.Close();
+                AyMin.Close();
+                Az.Close();
+                AzMax.Close();
+                AzMin.Close();
+                X.Close();
+                X_p.Close();
+                XMax.Close();
+                XMin.Close();
+                Y.Close();
+                Y_p.Close();
+                YMax.Close();
+                YMin.Close();
+                Z.Close();
+                Z_p.Close();
+                ZMax.Close();
+                ZMin.Close();
+                Altitude.Close();
+                Altitude_p.Close();
+                AltitudeMax.Close();
+                AltitudeMin.Close();
+                Latitude.Close();
+                Latitude_p.Close();
+                LatitudeMax.Close();
+                LatitudeMin.Close();
+                Longitude.Close();
+                Longitude_p.Close();
+                LongitudeMax.Close();
+                LongitudeMin.Close();
+                PDOP.Close();
+                PDOPMax.Close();
+                PDOPMin.Close();
+                state.Close();
+                Temperature.Close();
+                UsedStats.Close();
+                VisibleStats.Close();
+                timestream.Close();
+                Sat.Close();
+            }
         }
 
         public delegate List<GPSData> AsyncCaller(float pos);

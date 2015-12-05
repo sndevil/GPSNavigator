@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using GPSNavigator.Classes;
+using GPSNavigator.Source;
 using Infragistics.UltraGauge.Resources;
 using System.Windows.Forms.DataVisualization.Charting;
 
@@ -21,13 +22,15 @@ namespace GPSNavigator
         List<GPSData> CacheData2 = new List<GPSData>();
         LogFileManager filemanager;
         float position;
-        int IndexCounter = 0,SlowCounter = 0, VisibleGPS,VisibleGLONASS,UsedGPS,UsedGLONASS,Chart1Item, Chart2Item=-1, DataTimeOut = 100;
-        bool playing = false, reading = false,returned = false,realtime = false,Receiving = false,StartedCounting = false;
+        int IndexCounter = 0, SlowCounter = 0, VisibleGPS, VisibleGLONASS, UsedGPS, UsedGLONASS, Chart1Item, Chart2Item = -1, DataTimeOut = 100;
+        bool playing = false, reading = false, returned = false, realtime = false, Receiving = false, StartedCounting = false, ShowingGraph = false, ShowingControlPanel = false;
         public bool paused = false;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
         DateTime StartTime, EndTime;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
         Form1 ParentForm;// = new Form1();
+        SettingBuffer Settings = new SettingBuffer();
+        graphtype RealtimeGraphType = graphtype.X;
 
         public MomentDetail(LogFileManager manager)
         {
@@ -35,9 +38,12 @@ namespace GPSNavigator
             InitializeComponent();
             toolStripStatusLabel1.Visible = false;
             ControlPanel.Visible = true;
+            ControlPanelButton.Visible = false;
+            GraphToggle.Visible = false;
+
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
-            ReadCache(0f);
+            ReadCache(0f,true);
             data = CacheData2[0];
             UpdateComboBoxes(data.GPS.Count);
             if (data.GPS.Count > 1)
@@ -52,9 +58,13 @@ namespace GPSNavigator
         public MomentDetail(Form1 Parent)
         {
             InitializeComponent();
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
             ParentForm = Parent;
             toolStripStatusLabel1.Visible = true;
             ControlPanel.Visible = false;
+            ControlPanelButton.Visible = true;
+            GraphToggle.Visible = true;
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = ChartValueType.String;
             realtime = true;
@@ -73,20 +83,19 @@ namespace GPSNavigator
                 UpdateComboBoxes(vars.GPSlist.Count);
             }
             tempgpsdata.Time = vars.PacketTime;
-            tempgpsdata.PDOP = (float)data.PDOP;
-            tempgpsdata.Latitude = (float)data.Latitude;
-            tempgpsdata.Longitude = (float)data.Longitude;
-            tempgpsdata.Altitude = (float)data.Altitude;
+            tempgpsdata.Dbuf = data;
             var t = chart1.Series.Count.ToString();
             PlotGraph(tempgpsdata);
+            if (ShowingGraph)
+                UpdateGraph(tempgpsdata);
         }
 
         public void UpdateData(double xpos, DateTime time)
         {
             position = (float)xpos;
             data = filemanager.ReadGPSstatus(position);
-            ReadCache(position);
-            updateLabels(time,0,0,0,0,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
+            ReadCache(position,false);
+            updateLabels(time, 0, 0, 0, 0, (float)data.Dbuf.PDOP, (float)data.Dbuf.Altitude, (float)data.Dbuf.Longitude, (float)data.Dbuf.Latitude);
             PlotGraph(data);
             CacheData = CacheData2;
         }
@@ -150,11 +159,16 @@ namespace GPSNavigator
             label14.Text = "Position: " + position.ToString();
         }
 
-        public void ReadCache(float position)
+        public void ReadCache(float position, bool firsttime)
         {
-            AsyncCaller asynctask = new AsyncCaller(filemanager.ReadGPSCache);
-            IAsyncResult asyncresult = asynctask.BeginInvoke(position, null, null);
-            CacheData2 = asynctask.EndInvoke(asyncresult);
+            if (firsttime)
+                CacheData2 = filemanager.ReadGPSCache(position);
+            else
+            {
+                AsyncCaller asynctask = new AsyncCaller(filemanager.ReadGPSCache);
+                IAsyncResult asyncresult = asynctask.BeginInvoke(position, null, null);
+                CacheData2 = asynctask.EndInvoke(asyncresult);
+            }
             reading = false;
             returned = true;
         }
@@ -162,7 +176,7 @@ namespace GPSNavigator
         public void PlotGraph(GPSData data)
         {
             System.Windows.Forms.DataVisualization.Charting.Chart tempchart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            int counter = 0,showindex = -1;
+            int counter = 0, showindex = -1;
             for (int j = 0; j < 2; j++)
             {
                 switch (j)
@@ -238,7 +252,7 @@ namespace GPSNavigator
                 chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
                 chart2.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
             }
-            updateLabels(data.Time,VisibleGPS,UsedGPS,VisibleGLONASS,UsedGLONASS,data.PDOP,data.Altitude,data.Longitude,data.Latitude);
+            updateLabels(data.Time, VisibleGPS, UsedGPS, VisibleGLONASS, UsedGLONASS,(float) data.Dbuf.PDOP,(float) data.Dbuf.Altitude,(float) data.Dbuf.Longitude,(float) data.Dbuf.Latitude);
         }
 
 
@@ -275,7 +289,7 @@ namespace GPSNavigator
                 switch (playspeed)
                 {
                     case PlaybackSpeed.NormalSpeed:
-                        IndexCounter+=2;
+                        IndexCounter += 2;
                         break;
                     case PlaybackSpeed.Half:
                         if (SlowCounter++ >= 2)
@@ -309,7 +323,7 @@ namespace GPSNavigator
                 {
                     returned = false;
                     position += filemanager.delta;
-                    ReadCache(position);
+                    ReadCache(position,false);
                     reading = true;
                 }
             }
@@ -413,10 +427,954 @@ namespace GPSNavigator
             comboBox2.Visible = true;
         }
 
+        public void UpdateGraph(GPSData data)
+        {
+            double toAdd = 0;
+            #region typeswitch
+            switch (RealtimeGraphType)
+            {
+                case graphtype.A:
+                    toAdd = data.Dbuf.A;
+                break;
+                case graphtype.Altitude:
+                    toAdd = data.Dbuf.Altitude;
+                break;
+                case graphtype.Altitude_p:
+                    toAdd = data.Dbuf.Altitude_Processed;
+                break;
+                case graphtype.Ax:
+                    toAdd = data.Dbuf.Ax;
+                break;
+                case graphtype.Ay:
+                    toAdd = data.Dbuf.Ay;
+                break;
+                case graphtype.Az:
+                    toAdd = data.Dbuf.Az;
+                break;
+                case graphtype.Latitude:
+                toAdd = data.Dbuf.Latitude;
+                break;
+                case graphtype.Latitude_p:
+                toAdd = data.Dbuf.Latitude_Processed;
+                break;
+                case graphtype.Longitude:
+                toAdd = data.Dbuf.Longitude;
+                break;
+                case graphtype.Longitude_p:
+                toAdd = data.Dbuf.Longitude_Processed;
+                break;
+                case graphtype.PDOP:
+                toAdd = data.Dbuf.PDOP;
+                break;
+                case graphtype.State:
+                toAdd = data.Dbuf.state;
+                break;
+                case graphtype.Temperature:
+                toAdd = data.Dbuf.Temperature;
+                break;
+                case graphtype.UsedStats:
+                toAdd = data.Dbuf.NumOfUsedSats;
+                break;
+                case graphtype.VisibleStats:
+                toAdd = data.Dbuf.NumOfVisibleSats;
+                break;
+                case graphtype.V:
+                toAdd = data.Dbuf.V;
+                break;
+                case graphtype.V_p:
+                toAdd = data.Dbuf.V_Processed;
+                break;
+                case graphtype.Vx:
+                toAdd = data.Dbuf.Vx;
+                break;
+                case graphtype.Vx_p:
+                toAdd = data.Dbuf.Vx_Processed;
+                break;
+                case graphtype.Vy:
+                toAdd = data.Dbuf.Vy;
+                break;
+                case graphtype.Vy_p:
+                toAdd = data.Dbuf.Vy_Processed;
+                break;
+                case graphtype.Vz:
+                toAdd = data.Dbuf.Vz;
+                break;
+                case graphtype.Vz_p:
+                toAdd = data.Dbuf.Vz_Processed;
+                break;
+                case graphtype.X:
+                toAdd = data.Dbuf.X;
+                break;
+                case graphtype.X_p:
+                toAdd = data.Dbuf.X_Processed;
+                break;
+                case graphtype.Y:
+                toAdd = data.Dbuf.Y;
+                break;
+                case graphtype.Y_p:
+                toAdd = data.Dbuf.Y_Processed;
+                break;
+                case graphtype.Z:
+                toAdd = data.Dbuf.Z;
+                break;
+                case graphtype.Z_p:
+                toAdd = data.Dbuf.Z_Processed;
+                break;
+            }
+            #endregion
+            if (c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Length > 180000)
+                ClearGraph();
+            if (data.Time.Year < 3000 && data.Time.Year > 2000)
+            {
+                c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(data.Time.ToOADate());
+                c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
+            }
+        }
         private void MomentDetail_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (realtime)
                 ParentForm.checkBox2.Checked = false;
         }
+
+        private void ToggleGraph()
+        {
+            GraphToggle.BackgroundImage.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            if (!ShowingGraph)
+            {
+                c1Chart1.Visible = true;
+                c1Chart1.BringToFront();
+                this.Height = 720;
+            }
+            else
+            {
+                c1Chart1.SendToBack();
+                c1Chart1.Visible = false;
+                this.Height = 560;
+            }
+            ShowingGraph = !ShowingGraph;
+        }
+
+        private void ToggleControlPanel()
+        {
+            if (!ShowingControlPanel)
+            {
+                ControlPanelButton.Text = "<";
+                this.Width = 1140;
+            }
+            else
+            {
+                ControlPanelButton.Text = ">";
+                this.Width = 820;
+            }
+            ShowingControlPanel = !ShowingControlPanel;
+        }
+
+        private void GraphToggle_Click(object sender, EventArgs e)
+        {
+            ToggleGraph();
+        }
+
+        private void graphDataCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (graphDataCombo.SelectedIndex)
+            {
+                case 0:
+                    RealtimeGraphType = graphtype.X;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.X";
+                    break;
+                case 1:
+                    RealtimeGraphType = graphtype.X_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.X_Processed";
+                    break;
+                case 2:
+                    RealtimeGraphType = graphtype.Y;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Y";
+                    break;
+                case 3:
+                    RealtimeGraphType = graphtype.Y_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Y_Processed";
+                    break;
+                case 4:
+                    RealtimeGraphType = graphtype.Z;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Z";
+                    break;
+                case 5:
+                    RealtimeGraphType = graphtype.Z_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Z_Processed";
+                    break;
+                case 6:
+                    RealtimeGraphType = graphtype.Latitude;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Latitude";
+                    break;
+                case 7:
+                    RealtimeGraphType = graphtype.Latitude_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Latitude_Processed";
+                    break;
+                case 8:
+                    RealtimeGraphType = graphtype.Longitude;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Longitude";
+                    break;
+                case 9:
+                    RealtimeGraphType = graphtype.Longitude_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Longitude_Processed";
+                    break;
+                case 10:
+                    RealtimeGraphType = graphtype.Altitude;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude";
+                    break;
+                case 11:
+                    RealtimeGraphType = graphtype.Altitude_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Altitude_Processed";
+                    break;
+                case 12:
+                    RealtimeGraphType = graphtype.Vx;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Vx";
+                    break;
+                case 13:
+                    RealtimeGraphType = graphtype.Vx_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Vx_Processed";
+                    break;
+                case 14:
+                    RealtimeGraphType = graphtype.Vy;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Vy";
+                    break;
+                case 15:
+                    RealtimeGraphType = graphtype.Vy_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Vy_Processed";
+                    break;
+                case 16:
+                    RealtimeGraphType = graphtype.Vz;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Vz";
+                    break;
+                case 17:
+                    RealtimeGraphType = graphtype.Vz_p;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Vz_Processed";
+                    break;
+                case 18:
+                    RealtimeGraphType = graphtype.Ax;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Ax";
+                    break;
+                case 19:
+                    RealtimeGraphType = graphtype.Ay;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Ay";
+                    break;
+                case 20:
+                    RealtimeGraphType = graphtype.Az;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Az";
+                    break;
+                case 21:
+                    RealtimeGraphType = graphtype.A;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.A";
+                    break;
+                case 22:
+                    RealtimeGraphType = graphtype.PDOP;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.PDOP";
+                    break;
+                case 23:
+                    RealtimeGraphType = graphtype.State;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.State";
+                    break;
+                case 24:
+                    RealtimeGraphType = graphtype.Temperature;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Temperature";
+                    break;
+                case 25:
+                    RealtimeGraphType = graphtype.UsedStats;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.UsedStats";
+                    break;
+                case 26:
+                    RealtimeGraphType = graphtype.VisibleStats;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
+                    break;
+            }
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
+        }
+
+        private void ClearButton_Click(object sender, EventArgs e)
+        {
+            ClearGraph();
+        }
+
+        private void ClearGraph()
+        {
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
+        }
+
+        private void ControlPanelButton_Click(object sender, EventArgs e)
+        {
+            ToggleControlPanel();
+        }
+
+        private void ApplySearch_Click(object sender, EventArgs e)
+        {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.SEARCH_TYPE_CMD;
+                index++;
+
+                //Sat Type
+                int SatType = 0;
+                if (checkEditTypGPS.Checked)
+                    SatType |= 1;
+                if (checkEditTypGLONASS.Checked)
+                    SatType |= 2;
+                if (checkEditTypGalileo.Checked)
+                    SatType |= 4;
+                if (checkEditTypCompass.Checked)
+                    SatType |= 8;
+                Msg[index] = (char)SatType;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                //second command:
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.SAT_NUMBER_CMD;
+                index++;
+
+                //Sat Type
+                Msg[index] = (char)AllSatsMax.Value;// Settings.SatNum; //(char)Convert.ToInt16(radDDLTypAll.Text);
+                index++;
+
+                Msg[index] = (char)GPSMax.Value;//Convert.ToInt16(radDDLTypGPS.Text);
+                index++;
+
+                Msg[index] = (char)GlonassMax.Value;//Convert.ToInt16(radDDLTypGLONASS.Text);
+                index++;
+
+                Msg[index] = (char) GalileoMax.Value;//Convert.ToInt16(radDDLTypGalileo.Text);
+                index++;
+
+                Msg[index] = (char) CompassMax.Value;//Convert.ToInt16(radDDLTypCompass.Text);
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                //second command:
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.POSITIONING_TYPE_CMD;
+                index++;
+
+                //Pos Type
+                Msg[index] = (char)(PositionTypeCombo.SelectedIndex + 1); // .FindStringExact(radDDLPosTyp.Text) + 1);
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                ApplySearch.Enabled = false;
+                for (int i = 0; i < index; i++)
+                {
+                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Application.DoEvents();
+                }
+                ApplySearch.Enabled = true;
+        }
+
+        private void ApplyThreshold_Click(object sender, EventArgs e)
+        {
+            Settings.GPSUseTh = Convert.ToInt16(GPSUseText.Text);
+            Settings.GPSDisTh = Convert.ToInt16(GPSDisText.Text);
+            Settings.GLONASSUseTh = Convert.ToInt16(GLONASSUserText.Text);
+            Settings.GLONASSDisTh = Convert.ToInt16(GLONASSDisText.Text);
+            Settings.PDOPTh = Convert.ToInt16(PDOPText.Text);
+            Settings.RelyDisTh = Convert.ToInt16(RelyText.Text);
+            Settings.SatDisErrTh = Convert.ToInt16(SatDistanceText.Text);
+            char[] Msg = new char[60];
+            byte[] byteMsg = new byte[60];
+            int index = 0;
+
+            //command 1: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.PDOP_THRESHOLD_CMD;
+            index++;
+
+            //PDOP Threshold
+            Msg[index] = (char)(Settings.PDOPTh >> 8);
+            index++;
+            Msg[index] = (char)(Settings.PDOPTh & 0xff);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 2: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.GPS_USE_THRESHOLD_CMD;
+            index++;
+
+            //GPS Use Threshold
+            Msg[index] = (char)(Settings.GPSUseTh * 4);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+
+            //command 3:
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.GLONASS_USE_THRESHOLD_CMD;
+            index++;
+
+            //GLONASS Use Threshold
+            Msg[index] = (char)(Settings.GLONASSUseTh * 4);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+
+            //command 4:
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.GPS_DEASSIGN_THRESHOLD_CMD;
+            index++;
+
+            //GPS Deassign Threshold
+            Msg[index] = (char)(Settings.GPSDisTh * 4);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 5:
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.GLONASS_DEASSIGN_THRESHOLD_CMD;
+            index++;
+
+            //GLONASS Deassign Threshold
+            Msg[index] = (char)(Settings.GLONASSDisTh * 4);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 6:
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.RELIABILITY_DEASSIGN_THRESHOLD_CMD;
+            index++;
+
+            //Reliability Deassign Threshold
+            Msg[index] = (char)(Settings.RelyDisTh);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 7:
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.SAT_DISTANCE_ERROR_THRESHOLD_CMD;
+            index++;
+
+            //Satellite Distance Error Threshold
+            Msg[index] = (char)((Settings.SatDisErrTh * 10) >> 8);
+            index++;
+            Msg[index] = (char)((Settings.SatDisErrTh * 10) & 0xff);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+
+            for (int i = 0; i < index; i++)
+                byteMsg[i] = (byte)Msg[i];
+
+            ApplyThreshold.Enabled = false;
+            for (int i = 0; i < index; i++)
+            {
+                ParentForm.Serial1_Write(byteMsg, i, 1);
+                Application.DoEvents();
+            }
+            ApplyThreshold.Enabled = true;
+        }
+
+        private void ApplyCom_Click(object sender, EventArgs e)
+        {
+            Settings.BaudRate = Convert.ToInt32((string)BaudrateCombo.SelectedItem);
+            Settings.RefreshRate = (int)RefreshRate.Value;
+            char[] Msg = new char[60];
+            byte[] byteMsg = new byte[60];
+            int index = 0;
+
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.SERIAL_SETTING_CMD;
+            index++;
+
+            //Serial num
+            Msg[index] = Convert.ToString(SerialCombo.SelectedIndex + 1)[0];
+            index++;
+
+            //Baud Rate
+            Msg[index] = (char)((Settings.BaudRate >> 16) & 0xff);
+            index++;
+
+            Msg[index] = (char)((Settings.BaudRate >> 8) & 0xff);
+            index++;
+
+            Msg[index] = (char)(Settings.BaudRate & 0xff);
+            index++;
+
+            //Packet Types
+            int PacketType = 0;
+            if (checkEditPktNMEA.Checked)
+                PacketType |= 4;
+            if (checkEditPktBinary.Checked)
+                PacketType |= 1;
+            if (checkEditPktCompact.Checked)
+                PacketType |= 2;
+            if (checkEditPktGPSInfo.Checked)
+                PacketType |= 32;
+            if (checkEditPktGLONASSInfo.Checked)
+                PacketType |= 64;
+            if (checkEditPktGPSRaw.Checked)
+                PacketType |= 8;
+            if (checkEditPktGLONASSRaw.Checked)
+                PacketType |= 16;
+
+            Msg[index] = (char)(PacketType >> 8);
+            index++;
+
+            Msg[index] = (char)(PacketType & 0xff);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+            //Command 2
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.REFRESH_RATE_CMD;
+            index++;
+
+            //Refresh Rate
+            Msg[index] = (char)Settings.RefreshRate;
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            for (int i = 0; i < index; i++)
+                byteMsg[i] = (byte)Msg[i];
+
+            ApplyCom.Enabled = false;
+            for (int i = 0; i < index; i++)
+            {
+                ParentForm.Serial1_Write(byteMsg, i, 1);
+                Application.DoEvents();
+            }
+            ApplyCom.Enabled = true;
+        }
+
+        private void ApplyMisc_Click(object sender, EventArgs e)
+        {
+            char[] Msg = new char[60];
+            byte[] byteMsg = new byte[60];
+            int index = 0;
+
+            //command 1: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.MAX_SPEED_CMD;
+            index++;
+
+            //MAX Speed
+            Msg[index] = (char)(Convert.ToInt16(textEditMaxSpeed.Text) >> 8);
+            index++;
+            Msg[index] = (char)(Convert.ToInt16(textEditMaxSpeed.Text) & 0xff);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 2: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.MAX_ACCELERATION_CMD;
+            index++;
+
+            //MAX Acceleration
+            Msg[index] = (char)((Convert.ToInt16(textEditMaxAcc.Text) * 10) >> 8);
+            index++;
+            Msg[index] = (char)((Convert.ToInt16(textEditMaxAcc.Text) * 10) & 0xff);
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 3: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.MASK_ANGLE_CMD;
+            index++;
+
+            //Mask Angle
+            Msg[index] = (char)(Convert.ToInt32(textEditMaskAngle.Text));
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 4: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.GREEN_SAT_TYP_CMD;
+            index++;
+
+            //Green Satellite Type
+            Msg[index] = (char)GreenSatCombo.SelectedIndex; //(Convert.ToInt16(radDDLGreenType.FindStringExact(radDDLGreenType.Text)));
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 5: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.TROPOSPHORIC_CORRECTION_CMD;
+            index++;
+
+            //Tropospheric Correction
+            Msg[index] = (char)TropoCombo.SelectedIndex;//(Convert.ToInt16(radDDLTropo.FindStringExact(radDDLTropo.Text)));
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 6: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.AUTO_MAX_ANGLE_ATTITUDE_CMD;
+            index++;
+
+            //Automatic Max Angle Attitude
+            Msg[index] = (char)AutoMaxCombo.SelectedIndex;//(Convert.ToInt16(radDDLAutoMaxAngle.FindStringExact(radDDLAutoMaxAngle.Text)));
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            //command 6: 
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.IONOSPHORIC_CORRECTION_CMD;
+            index++;
+
+            //Ionospheric Correction
+            Msg[index] = (char)IonoCombo.SelectedIndex;//(Convert.ToInt16(radDDLIonospheric.FindStringExact(radDDLIonospheric.Text)));
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            for (int i = 0; i < index; i++)
+                byteMsg[i] = (byte)Msg[i];
+
+            ApplyMisc.Enabled = false;
+            for (int i = 0; i < index; i++)
+            {
+                ParentForm.Serial1_Write(byteMsg, i, 1);
+                Application.DoEvents();
+            }
+            ApplyMisc.Enabled = true;
+        }
+
+        private void Deassign_Satellites()
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.DEASSIGN_SATELLITES;
+                index++;
+
+                //PRNs
+                UInt32 Sats = 0;
+                for (int i = 0; i < listBoxGPS.SelectedIndices.Count; i++)
+                    Sats += (UInt32)1 << listBoxGPS.SelectedIndices[i];
+                Msg[index] = (char)((Sats >> 24) & 0xFF);
+                index++;
+                Msg[index] = (char)((Sats >> 16) & 0xFF);
+                index++;
+                Msg[index] = (char)((Sats >> 8) & 0xFF);
+                index++;
+                Msg[index] = (char)((Sats >> 0) & 0xFF);
+                index++;
+
+                Sats = 0;
+                for (int i = 0; i < listBoxGLONASS.SelectedIndices.Count; i++)
+                    Sats += (UInt32)1 << listBoxGLONASS.SelectedIndices[i];
+                Msg[index] = (char)((Sats >> 24) & 0xFF);
+                index++;
+                Msg[index] = (char)((Sats >> 16) & 0xFF);
+                index++;
+                Msg[index] = (char)((Sats >> 8) & 0xFF);
+                index++;
+                Msg[index] = (char)((Sats >> 0) & 0xFF);
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                //ApplyButtonsEnabling(false);
+                for (int i = 0; i < index; i++)
+                {
+                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    //SelectedSerialPort.Write(byteMsg, i, 1);
+                    Application.DoEvents();
+                }
+                //ApplyButtonsEnabling(true);
+            }
+            catch (Exception ex)
+            {
+                //Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
+        }
+
+        private void Deassign_Click(object sender, EventArgs e)
+        {
+            Deassign_Satellites();
+        }
+
+        private void DeassignAll_Click(object sender, EventArgs e)
+        {
+            listBoxGPS.SelectAll();
+            listBoxGLONASS.SelectAll();
+            Deassign_Satellites();
+        }
+
+        private void ClearAll_Click(object sender, EventArgs e)
+        {
+            listBoxGLONASS.UnSelectAll();
+            listBoxGPS.UnSelectAll();
+        }
+
     }
 }
