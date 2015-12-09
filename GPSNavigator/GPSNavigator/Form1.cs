@@ -587,6 +587,7 @@ namespace GPSNavigator
             status = Form1Status.Recording;
             RecordStarttime = DateTime.Now;
             StatusLabel.Text = "Recording";
+            this.Text = "GPS Navigator (Recording)";
             button1.BackgroundImage = GPSNavigator.Properties.Resources.stop;
         }
 
@@ -597,7 +598,6 @@ namespace GPSNavigator
                 if (AutoCancel.Checked)
                     if (++timeoutCounter > MaxTimeout)
                         EndRecording();
-                    //checkBox1.Checked = false;
 
                 var dt = DateTime.Now - RecordStarttime;
                 timeLabel.Text = dt.Hours.ToString("00") + " : " + dt.Minutes.ToString("00") + " : " + dt.Seconds.ToString("00");
@@ -722,7 +722,6 @@ namespace GPSNavigator
 
         public Task<bool> SaveAsync(string path)
         {
-
             return Task.Factory.StartNew(() =>
             {
                 using (z = new ZipFile(path))
@@ -776,9 +775,6 @@ namespace GPSNavigator
             else
             {
                 toolStripProgressBar1.Value = percent;
-                if (percent == 100)
-                    this.Text = "GPS Navigator";
-                saved = true;
             }
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)

@@ -37,6 +37,8 @@ namespace GPSNavigator
         {
             filemanager = manager;
             InitializeComponent();
+            toolStripSplitButton1.Visible = false;
+            this.Text = "MomentDetail (Log)";
             toolStripStatusLabel1.Visible = false;
             ControlPanel.Visible = true;
             ControlPanelButton.Visible = false;
@@ -59,6 +61,8 @@ namespace GPSNavigator
         public MomentDetail(Form1 Parent)
         {
             InitializeComponent();
+            toolStripSplitButton1.Visible = true;
+            this.Text = "MomentDetail (RealTime)";
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
             ParentForm = Parent;
@@ -86,7 +90,6 @@ namespace GPSNavigator
             }
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.Dbuf = data;
-            var t = chart1.Series.Count.ToString();
             PlotGraph(tempgpsdata);
             if (ShowingGraph)
                 UpdateGraph(tempgpsdata);
@@ -336,7 +339,7 @@ namespace GPSNavigator
         {
             if (playing)
             {
-                this.Text = "MomentDetail";
+                this.Text = "MomentDetail (Log)";
                 button1.Text = "Play";
                 playing = false;
             }

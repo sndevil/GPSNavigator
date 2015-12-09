@@ -82,7 +82,7 @@
             this.logger.Name = "logger";
             this.logger.ReadOnly = true;
             this.logger.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logger.Size = new System.Drawing.Size(307, 346);
+            this.logger.Size = new System.Drawing.Size(307, 166);
             this.logger.TabIndex = 0;
             // 
             // opendialog
@@ -157,7 +157,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(180, 445);
+            this.numericUpDown1.Location = new System.Drawing.Point(181, 268);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             20,
             0,
@@ -181,7 +181,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(36, 447);
+            this.label1.Location = new System.Drawing.Point(37, 270);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(138, 13);
             this.label1.TabIndex = 6;
@@ -190,7 +190,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(261, 447);
+            this.label2.Location = new System.Drawing.Point(262, 270);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 7;
@@ -199,7 +199,7 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(15, 418);
+            this.checkBox2.Location = new System.Drawing.Point(16, 241);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(85, 17);
             this.checkBox2.TabIndex = 8;
@@ -216,6 +216,7 @@
             // 
             // serialPorts
             // 
+            this.serialPorts.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.serialPorts.FormattingEnabled = true;
             this.serialPorts.Location = new System.Drawing.Point(12, 35);
             this.serialPorts.Name = "serialPorts";
@@ -235,7 +236,7 @@
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(142, 469);
+            this.numericUpDown2.Location = new System.Drawing.Point(143, 292);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(152, 20);
             this.numericUpDown2.TabIndex = 11;
@@ -249,7 +250,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 471);
+            this.label3.Location = new System.Drawing.Point(13, 294);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(113, 13);
             this.label3.TabIndex = 12;
@@ -287,7 +288,7 @@
             this.StatusLabel,
             this.timeLabel,
             this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 496);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 326);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(331, 22);
             this.statusStrip1.TabIndex = 15;
@@ -326,7 +327,7 @@
             // 
             this.button1.BackgroundImage = global::GPSNavigator.Properties.Resources.record;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(289, 411);
+            this.button1.Location = new System.Drawing.Point(290, 234);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(29, 29);
             this.button1.TabIndex = 13;
@@ -337,7 +338,7 @@
             // 
             this.button2.BackgroundImage = global::GPSNavigator.Properties.Resources.pause;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Location = new System.Drawing.Point(254, 411);
+            this.button2.Location = new System.Drawing.Point(255, 234);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(29, 29);
             this.button2.TabIndex = 2;
@@ -349,7 +350,7 @@
             this.AutoCancel.AutoSize = true;
             this.AutoCancel.Checked = true;
             this.AutoCancel.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.AutoCancel.Location = new System.Drawing.Point(15, 447);
+            this.AutoCancel.Location = new System.Drawing.Point(16, 270);
             this.AutoCancel.Name = "AutoCancel";
             this.AutoCancel.Size = new System.Drawing.Size(15, 14);
             this.AutoCancel.TabIndex = 16;
@@ -359,7 +360,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(331, 518);
+            this.ClientSize = new System.Drawing.Size(331, 348);
             this.Controls.Add(this.AutoCancel);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.comboBox1);
