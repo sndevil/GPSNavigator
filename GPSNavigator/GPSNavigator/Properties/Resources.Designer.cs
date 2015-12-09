@@ -60,9 +60,23 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Cold_Start {
+            get {
+                object obj = ResourceManager.GetObject("Cold_Start", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Down {
             get {
                 object obj = ResourceManager.GetObject("Down", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Hot_Start {
+            get {
+                object obj = ResourceManager.GetObject("Hot_Start", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -91,6 +105,13 @@ namespace GPSNavigator.Properties {
         internal static System.Drawing.Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Warm_Start {
+            get {
+                object obj = ResourceManager.GetObject("Warm_Start", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

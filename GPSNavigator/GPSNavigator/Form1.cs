@@ -10,6 +10,8 @@ using System.IO.Ports;
 using System.Resources;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using GPSNavigator.Source;
 using GPSNavigator.Classes;
 using Ionic.Zip;
@@ -25,6 +27,7 @@ namespace GPSNavigator
         bool gotdata = false;
         bool showdetail = false;
         bool saved = false;
+        public bool extractdone = false;
         Globals vars = new Globals();
         FileStream temp;
         Logger log;
@@ -115,6 +118,9 @@ namespace GPSNavigator
                                 UpdateRealtimeData(dbuf);
                                 DetailRefreshCounter = 0;
                             }
+                            if (dbuf.settingbuffer.SettingReceived)
+                                DetailForm.ChangeSettings(dbuf.settingbuffer);
+
                             if (isRecording)
                             {
                                 //DetailForm.UpdateData(vars);
@@ -518,17 +524,58 @@ namespace GPSNavigator
         {
            // try
             //{
-                Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\", true);
-                using (ZipFile z = ZipFile.Read(opendialog.FileName))
-                {
-                    z.ExtractAll(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
-                }
-                OpenLogFile(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+            string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
+            Directory.Delete(path, true);
+            Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
+            extractdone = false;
+            StatusLabel.Text = "Loading Log";
+            Task<bool> extractor = ExtractAsync(opendialog.FileName);
+
             //}
             //catch
             //{
               //  MessageBox.Show("Close the already open files");
             //}
+        }
+
+        private delegate void DirectoryOpener(string path);
+
+        private void OpenDirectory(string path)
+        {
+            if (this.InvokeRequired)
+            {
+                DirectoryOpener d = new DirectoryOpener(OpenDirectory);
+                this.Invoke(d, new object[] { path });
+            }
+            else
+            {
+
+            }
+        }
+
+        public Task<bool> ExtractAsync(string path)
+        {
+
+            return Task.Factory.StartNew(() =>
+            {
+                using (ZipFile z = ZipFile.Read(path))
+                {
+                    z.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(z_ExtractProgress);
+                    z.ExtractAll(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
+                }
+                extractdone = true;
+                return true;
+            });
+        }
+
+        void z_ExtractProgress(object sender, ExtractProgressEventArgs e)
+        {
+            if (e.EntriesTotal != 0)
+            {
+                float progress = (float)e.EntriesExtracted / e.EntriesTotal;
+                ProgressbarChangeValue((int)(progress * 100));
+            }
+
         }
 
         private void savedialog_FileOk(object sender, CancelEventArgs e)
@@ -557,8 +604,17 @@ namespace GPSNavigator
             }
             if (saved)
             {
-                toolStripProgressBar1.Value = 0;
+                ProgressbarChangeValue(0);
+                status = Form1Status.Connected;
+                StatusLabel.Text = "Connected";
                 saved = false;
+            }
+            if (extractdone)
+            {
+                OpenLogFile(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+                ProgressbarChangeValue(0);
+                StatusLabel.Text = "Connected";
+                extractdone = false;
             }
         }
 
@@ -663,25 +719,31 @@ namespace GPSNavigator
                 }
             }
         }
-        private delegate bool SaverThread();
-        private bool SaveFiles()
+
+        public Task<bool> SaveAsync(string path)
         {
-            try
+
+            return Task.Factory.StartNew(() =>
             {
-                ProgressbarChangeValue(30);
-                using (z = new ZipFile(savedialog.FileName))
+                using (z = new ZipFile(path))
                 {
+                    z.SaveProgress += new EventHandler<SaveProgressEventArgs>(z_SaveProgress);
                     z.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
                     z.CompressionMethod = CompressionMethod.None;
                     z.AddDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
                     z.Save();
                 }
-                ProgressbarChangeValue(100);
+                saved = true;
                 return true;
-            }
-            catch
+            });
+        }
+
+        void z_SaveProgress(object sender, SaveProgressEventArgs e)
+        {
+            if (e.EntriesTotal != 0)
             {
-                return false;
+                float progress = (float)e.EntriesSaved / e.EntriesTotal;
+                ProgressbarChangeValue((int)(progress * 100));
             }
         }
 
@@ -697,10 +759,10 @@ namespace GPSNavigator
             isRecording = false;
             gotdata = false;
             this.Text = "GPS Navigator (Packaging Log Files, Dont Close)";
-            SaverThread asynctask = new SaverThread(SaveFiles);
-            IAsyncResult asyncresult = asynctask.BeginInvoke(null, null);
-            status = Form1Status.Connected;
-            StatusLabel.Text = "Connected";
+
+            saved = false;
+            Task<bool> asyncsaver = SaveAsync(savedialog.FileName);
+            StatusLabel.Text = "Saving";
         }
         private delegate void Progressbar(int percent);
 

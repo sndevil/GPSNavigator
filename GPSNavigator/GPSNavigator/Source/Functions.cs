@@ -271,6 +271,18 @@ namespace GPSNavigator.Source
             return s * m * Math.Pow(2, e - 127);
         }
 
+        public static Int64 unformatFloat(double a)
+        {
+            int sign = (a>=0) ? 0 : 1;
+            int p = (int)Math.Floor(Math.Log(a,2));
+            Int64 result = sign * 256 + p + 127;
+            double m = (sign == 0) ? (a / Math.Pow(2, p)) - 1 : (-a / Math.Pow(2, p)) -1;
+            m *= Math.Pow(2, 23);
+            result <<= 23;
+            result += (int)m;
+            return result;
+        }
+
         public static double BytetoFloat(byte[] array)
         {
             int t = array[3];
@@ -1226,11 +1238,18 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 buffer.V = (Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2)));
-                buffer.BV = Functions.CopyByteWithOffset(BitConverter.GetBytes(buffer.V),4);
+                var unformatted = unformatFloat(buffer.V);
+                for (int i = 0; i < 4; i++)
+                { 
+                    buffer.BV[i] = (byte)((long)(unformatted % 256)); 
+                    unformatted /= 256; 
+                }
+                //buffer.BV = Functions.CopyByteWithOffset(BitConverter.GetBytes(buffer.V),4);
                 buffer.V_Processed = (Math.Sqrt(Math.Pow(buffer.Vx_Processed, 2) + Math.Pow(buffer.Vy_Processed, 2) + Math.Pow(buffer.Vz_Processed, 2)));
                 buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(buffer.V_Processed), 4);
                 buffer.A = (Math.Sqrt(Math.Pow(buffer.Ax, 2) + Math.Pow(buffer.Ay, 2) + Math.Pow(buffer.Az, 2)));
-                buffer.BA = Functions.CopyByteWithOffset(BitConverter.GetBytes(buffer.A), 4);
+                unformatted = unformatFloat(buffer.A);
+                for (int i = 0; i < 4; i++) { buffer.BA[i] = (byte)((int)unformatted % 256); unformatted /= 256; } 
             }
             else
             {
@@ -1846,7 +1865,9 @@ namespace GPSNavigator.Source
                 var temp3 = Math.Sqrt(Math.Pow(buffer.Vx, 2) + Math.Pow(buffer.Vy, 2) + Math.Pow(buffer.Vz, 2));
                 buffer.V = (temp3);
                 buffer.V_Processed = (temp3);
-                buffer.BV = buffer.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(temp3), 4);
+                var unformatted = unformatFloat(temp3);
+                for (int i = 0; i < 4; i++) { buffer.BV[i] = (byte)((int)unformatted % 256); unformatted /= 256; }
+                buffer.BV_Processed = buffer.BV;// = CopyByteWithOffset(BitConverter.GetBytes(temp3), 4);
             }
             else
             {
@@ -2483,11 +2504,17 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 dbuf.V = (Math.Sqrt(Math.Pow(dbuf.Vx, 2) + Math.Pow(dbuf.Vy, 2) + Math.Pow(dbuf.Vz, 2)));
-                dbuf.BV = Functions.CopyByteWithOffset(BitConverter.GetBytes(dbuf.V), 4);
+                var Unformatted = unformatFloat(dbuf.V);
+                for (int i = 0; i < 4; i++) { dbuf.BV[i] = (byte)((int)Unformatted % 256); Unformatted /= 256; }
+                //dbuf.BV = Functions.CopyByteWithOffset(BitConverter.GetBytes(dbuf.V), 4);
                 dbuf.V_Processed = (Math.Sqrt(Math.Pow(dbuf.Vx_Processed, 2) + Math.Pow(dbuf.Vy_Processed, 2) + Math.Pow(dbuf.Vz_Processed, 2)));
-                dbuf.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(dbuf.V_Processed), 4);
+                Unformatted = unformatFloat(dbuf.V_Processed);
+                for (int i = 0; i < 4; i++) { dbuf.BV_Processed[i] = (byte)((int)Unformatted % 256); Unformatted /= 256; }
+                //dbuf.BV_Processed = CopyByteWithOffset(BitConverter.GetBytes(dbuf.V_Processed), 4);
                 dbuf.A = (Math.Sqrt(Math.Pow(dbuf.Ax, 2) + Math.Pow(dbuf.Ay, 2) + Math.Pow(dbuf.Az, 2)));
-                dbuf.BA = Functions.CopyByteWithOffset(BitConverter.GetBytes(dbuf.A), 4);
+                Unformatted = unformatFloat(dbuf.A);
+                for (int i = 0; i < 4; i++) { dbuf.BA[i] = (byte)((int)Unformatted % 256); Unformatted /= 256; }
+                //dbuf.BA = Functions.CopyByteWithOffset(BitConverter.GetBytes(dbuf.A), 4);
             }
             else
             {
@@ -2897,7 +2924,9 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 dbuf.V_Processed = dbuf.V = (Math.Sqrt(Math.Pow(dbuf.Vx, 2) + Math.Pow(dbuf.Vy, 2) + Math.Pow(dbuf.Vz, 2)));
-                dbuf.BV_Processed = dbuf.BV = CopyByteWithOffset(BitConverter.GetBytes(dbuf.V), 4);
+                var Unformatted = unformatFloat(dbuf.V_Processed);
+                for (int i = 0; i < 4; i++) { dbuf.BV_Processed[i] = (byte)((int) Unformatted % 256); Unformatted /= 256; }
+                //dbuf.BV_Processed = dbuf.BV = CopyByteWithOffset(BitConverter.GetBytes(dbuf.V), 4);
                 dbuf.A = double.NaN;
                 dbuf.BA = NaNBytes;
             }

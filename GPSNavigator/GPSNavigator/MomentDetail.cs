@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Threading;
 using GPSNavigator.Classes;
 using GPSNavigator.Source;
 using Infragistics.UltraGauge.Resources;
@@ -69,6 +70,7 @@ namespace GPSNavigator
             chart1.Series[0].XValueType = ChartValueType.String;
             realtime = true;
             HideSecondGraph();
+            PositionTypeCombo.SelectedIndex = 2;
         }
 
         public void UpdateData(Globals vars, SingleDataBuffer data, int ChannelNum)
@@ -651,38 +653,42 @@ namespace GPSNavigator
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.Vz_Processed";
                     break;
                 case 18:
+                    RealtimeGraphType = graphtype.V;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.V";
+                    break;
+                case 19:
                     RealtimeGraphType = graphtype.Ax;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.Ax";
                     break;
-                case 19:
+                case 20:
                     RealtimeGraphType = graphtype.Ay;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.Ay";
                     break;
-                case 20:
+                case 21:
                     RealtimeGraphType = graphtype.Az;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.Az";
                     break;
-                case 21:
+                case 22:
                     RealtimeGraphType = graphtype.A;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.A";
                     break;
-                case 22:
+                case 23:
                     RealtimeGraphType = graphtype.PDOP;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.PDOP";
                     break;
-                case 23:
+                case 24:
                     RealtimeGraphType = graphtype.State;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.State";
                     break;
-                case 24:
+                case 25:
                     RealtimeGraphType = graphtype.Temperature;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.Temperature";
                     break;
-                case 25:
+                case 26:
                     RealtimeGraphType = graphtype.UsedStats;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.UsedStats";
                     break;
-                case 26:
+                case 27:
                     RealtimeGraphType = graphtype.VisibleStats;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
                     break;
@@ -1376,5 +1382,181 @@ namespace GPSNavigator
             listBoxGPS.UnSelectAll();
         }
 
+        private void ReadFlash_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.READ_SETTING_CMD;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void SaveFlash_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.SAVE_SETTING_CMD;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public void ChangeSettings(SettingBuffer buffer)
+        {
+            GPSMax.Value = buffer.GPSNum;
+            GlonassMax.Value = buffer.GLONASSNum;
+            GalileoMax.Value = buffer.GalileoNum;
+            CompassMax.Value = buffer.CompassNum;
+            AllSatsMax.Value = buffer.SatNum;
+
+            PositionTypeCombo.SelectedIndex = buffer.PosType - 1;
+            BaudrateCombo.SelectedIndex = BaudrateCombo.FindStringExact(buffer.BaudRate.ToString());
+           // buffer.PacketType
+            RefreshRate.Value = buffer.RefreshRate;
+            PDOPText.Text = buffer.PDOPTh.ToString();
+            GPSUseText.Text = buffer.GPSUseTh.ToString();
+            GPSDisText.Text = buffer.GPSDisTh.ToString();
+            GLONASSUserText.Text = buffer.GLONASSUseTh.ToString();
+            GLONASSDisText.Text = buffer.GLONASSDisTh.ToString();
+            RelyText.Text = buffer.RelyDisTh.ToString();
+            SatDistanceText.Text = buffer.SatDisErrTh.ToString();
+            textEditMaxSpeed.Text = buffer.MaxSpeed.ToString();
+            textEditMaxAcc.Text = buffer.MaxAcc.ToString();
+            textEditMaskAngle.Text = buffer.MaskAngle.ToString();
+            GreenSatCombo.SelectedIndex = buffer.GreenSatType - 1;
+            TropoCombo.SelectedIndex = buffer.TropoCor - 1;
+            AutoMaxCombo.SelectedIndex = buffer.AutoMaxAngle - 1;
+            IonoCombo.SelectedIndex = buffer.IonoCor - 1;
+
+        }
+
+        private void hotStartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartModule('H');
+        }
+
+        private void warmStartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartModule('W');
+        }
+
+        private void coldStartToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StartModule('C');
+        }
+
+        private void StartModule(char mode)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.START_CMD;
+                index++;
+
+                //Data
+                Msg[index] = mode;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+            StartModule('H');
+        }
     }
 }

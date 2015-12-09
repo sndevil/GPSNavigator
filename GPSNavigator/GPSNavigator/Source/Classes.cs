@@ -535,8 +535,8 @@ namespace GPSNavigator.Classes
                         break;
                     case graphtype.A:
                         stream = A;
-                        maxstream = AMin;
-                        minstream = AMax;
+                        maxstream = AMax;
+                        minstream = AMin;
                         break;
                     case graphtype.V:
                         stream = V;
