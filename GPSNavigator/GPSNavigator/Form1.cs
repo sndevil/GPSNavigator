@@ -73,10 +73,11 @@ namespace GPSNavigator
             timeoutCounter = 0;
             gotdata = true;
             SingleDataBuffer dbuf;
-            while (isPlaying && serialPort1.BytesToRead > ((Serial1State == BinaryProtocolState.readMessage) ? serial1_MsgSize - 3 : 0))
+            try
             {
-                try
+                while (isPlaying && serialPort1.BytesToRead > ((Serial1State == BinaryProtocolState.readMessage) ? serial1_MsgSize - 3 : 0))
                 {
+
                     switch (Serial1State)
                     {
                         case BinaryProtocolState.waitForPacket:
@@ -113,7 +114,7 @@ namespace GPSNavigator
                             {
                                 dbuf.error = false;
                             }
-                            if (showdetail && DetailRefreshCounter++ > RefreshRate-1)
+                            if (showdetail && DetailRefreshCounter++ > RefreshRate - 1)
                             {
                                 UpdateRealtimeData(dbuf);
                                 DetailRefreshCounter = 0;
@@ -249,11 +250,11 @@ namespace GPSNavigator
                             break;
                     }
                 }
-                catch
-                {
-                }
-            }
 
+            }
+            catch
+            {
+            }
         }
 
         public void Serial1_Write(byte[] data,int offset, int count)
@@ -525,12 +526,22 @@ namespace GPSNavigator
            // try
             //{
             string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
-            Directory.Delete(path, true);
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch { }
             Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
             extractdone = false;
             StatusLabel.Text = "Loading Log";
-            Task<bool> extractor = ExtractAsync(opendialog.FileName);
-
+            try
+            {
+                Task<bool> extractor = ExtractAsync(opendialog.FileName);
+            }
+            catch
+            {
+                MessageBox.Show("There was an error opening the file");
+            }
             //}
             //catch
             //{

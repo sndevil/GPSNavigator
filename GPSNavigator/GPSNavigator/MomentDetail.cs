@@ -27,7 +27,7 @@ namespace GPSNavigator
         bool playing = false, reading = false, returned = false, realtime = false, Receiving = false, StartedCounting = false, ShowingGraph = false, ShowingControlPanel = false;
         public bool paused = false;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
-        DateTime StartTime, EndTime;
+        DateTime StartTime, EndTime,previousTime;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
         Form1 ParentForm;// = new Form1();
         SettingBuffer Settings = new SettingBuffer();
@@ -92,7 +92,10 @@ namespace GPSNavigator
             tempgpsdata.Dbuf = data;
             PlotGraph(tempgpsdata);
             if (ShowingGraph)
-                UpdateGraph(tempgpsdata);
+                UpdateGraph(tempgpsdata, false);
+            else
+                UpdateGraph(tempgpsdata, true);
+
         }
 
         public void UpdateData(double xpos, DateTime time)
@@ -161,7 +164,7 @@ namespace GPSNavigator
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = dt.Hour + (double)dt.Minute / 60;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[1].Markers[0].Value = dt.Minute;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[2].Markers[0].Value = dt.Second;
-            label14.Text = "Position: " + position.ToString();
+            //label14.Text = "Position: " + position.ToString();
         }
 
         public void ReadCache(float position, bool firsttime)
@@ -208,13 +211,16 @@ namespace GPSNavigator
                             {
                                 tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[counter].Color = Color.Blue;
-                                tempchart.Series[0].Points[counter].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                                //tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Emboss";
+                                if (i >= 32)
+                                    tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Wedge";
                             }
                             catch
                             {
                                 tempchart.Series[0].Points.AddXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
-                                tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                                if (i >= 32)
+                                    tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].CustomProperties = "DrawingStyle = Wedge";
                             }
                             if (i < 32) VisibleGPS++; else VisibleGLONASS++;
                             counter++;
@@ -225,13 +231,15 @@ namespace GPSNavigator
                             {
                                 tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[counter].Color = Color.Green;
-                                tempchart.Series[0].Points[counter].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                                if (i >= 32)
+                                    tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Wedge";
                             }
                             catch
                             {
                                 tempchart.Series[0].Points.AddXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Green;
-                                tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].BackHatchStyle = (i >= 32) ? ChartHatchStyle.ForwardDiagonal : ChartHatchStyle.None;
+                                if (i >= 32)
+                                    tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].CustomProperties = "DrawingStyle = Wedge";
                             }
                             if (i < 32) VisibleGPS++; else VisibleGLONASS++;
                             if (i < 32) UsedGPS++; else UsedGLONASS++;
@@ -423,16 +431,28 @@ namespace GPSNavigator
             chart2.Visible = false;
             label13.Visible = false;
             comboBox2.Visible = false;
+            if (ShowingGraph)
+            {
+                c1Chart1.Location = new Point(66, 331);
+                c1Chart1.Width = 724;
+                c1Chart1.Height = 338;
+            }
         }
         private void ShowSecondGraph()
         {
             chart2.Visible = true;
             label13.Visible = true;
             label13.BringToFront();
+            if (ShowingGraph)
+            {
+                c1Chart1.Location = new Point(66, 517);
+                c1Chart1.Width = 724;
+                c1Chart1.Height = 154;
+            }
             comboBox2.Visible = true;
         }
 
-        public void UpdateGraph(GPSData data)
+        public void UpdateGraph(GPSData data, bool NAN)
         {
             double toAdd = 0;
             #region typeswitch
@@ -457,82 +477,94 @@ namespace GPSNavigator
                     toAdd = data.Dbuf.Az;
                 break;
                 case graphtype.Latitude:
-                toAdd = data.Dbuf.Latitude;
+                    toAdd = data.Dbuf.Latitude;
                 break;
                 case graphtype.Latitude_p:
-                toAdd = data.Dbuf.Latitude_Processed;
+                    toAdd = data.Dbuf.Latitude_Processed;
                 break;
                 case graphtype.Longitude:
-                toAdd = data.Dbuf.Longitude;
+                    toAdd = data.Dbuf.Longitude;
                 break;
                 case graphtype.Longitude_p:
-                toAdd = data.Dbuf.Longitude_Processed;
+                    toAdd = data.Dbuf.Longitude_Processed;
                 break;
                 case graphtype.PDOP:
-                toAdd = data.Dbuf.PDOP;
+                    toAdd = data.Dbuf.PDOP;
                 break;
                 case graphtype.State:
-                toAdd = data.Dbuf.state;
+                    toAdd = data.Dbuf.state;
                 break;
                 case graphtype.Temperature:
-                toAdd = data.Dbuf.Temperature;
+                    toAdd = data.Dbuf.Temperature;
                 break;
                 case graphtype.UsedStats:
-                toAdd = data.Dbuf.NumOfUsedSats;
+                    toAdd = data.Dbuf.NumOfUsedSats;
                 break;
                 case graphtype.VisibleStats:
-                toAdd = data.Dbuf.NumOfVisibleSats;
+                    toAdd = data.Dbuf.NumOfVisibleSats;
                 break;
                 case graphtype.V:
-                toAdd = data.Dbuf.V;
+                    toAdd = data.Dbuf.V;
                 break;
                 case graphtype.V_p:
-                toAdd = data.Dbuf.V_Processed;
+                    toAdd = data.Dbuf.V_Processed;
                 break;
                 case graphtype.Vx:
-                toAdd = data.Dbuf.Vx;
+                    toAdd = data.Dbuf.Vx;
                 break;
                 case graphtype.Vx_p:
-                toAdd = data.Dbuf.Vx_Processed;
+                    toAdd = data.Dbuf.Vx_Processed;
                 break;
                 case graphtype.Vy:
-                toAdd = data.Dbuf.Vy;
+                    toAdd = data.Dbuf.Vy;
                 break;
                 case graphtype.Vy_p:
-                toAdd = data.Dbuf.Vy_Processed;
+                    toAdd = data.Dbuf.Vy_Processed;
                 break;
                 case graphtype.Vz:
-                toAdd = data.Dbuf.Vz;
+                    toAdd = data.Dbuf.Vz;
                 break;
                 case graphtype.Vz_p:
-                toAdd = data.Dbuf.Vz_Processed;
+                    toAdd = data.Dbuf.Vz_Processed;
                 break;
                 case graphtype.X:
-                toAdd = data.Dbuf.X;
+                    toAdd = data.Dbuf.X;
                 break;
                 case graphtype.X_p:
-                toAdd = data.Dbuf.X_Processed;
+                    toAdd = data.Dbuf.X_Processed;
                 break;
                 case graphtype.Y:
-                toAdd = data.Dbuf.Y;
+                    toAdd = data.Dbuf.Y;
                 break;
                 case graphtype.Y_p:
-                toAdd = data.Dbuf.Y_Processed;
+                    toAdd = data.Dbuf.Y_Processed;
                 break;
                 case graphtype.Z:
-                toAdd = data.Dbuf.Z;
+                    toAdd = data.Dbuf.Z;
                 break;
                 case graphtype.Z_p:
-                toAdd = data.Dbuf.Z_Processed;
+                    toAdd = data.Dbuf.Z_Processed;
+                break;
+                case graphtype.Null:
+                    toAdd = double.NaN;
                 break;
             }
             #endregion
             if (c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Length > 180000)
                 ClearGraph();
             if (data.Time.Year < 3000 && data.Time.Year > 2000)
-            {
-                c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(data.Time.ToOADate());
-                c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
+            {              
+                if (!NAN)
+                {
+                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(data.Time);
+                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
+                    previousTime = data.Time;
+                }
+                else if (previousTime.Year < 3000 && previousTime.Year > 2000)
+                {
+                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(previousTime);
+                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
+                }
             }
         }
         private void MomentDetail_FormClosing(object sender, FormClosingEventArgs e)
@@ -547,12 +579,24 @@ namespace GPSNavigator
             if (!ShowingGraph)
             {
                 c1Chart1.Visible = true;
-                c1Chart1.BringToFront();
+                //c1Chart1.BringToFront();
+                if (!ChartVisibleCheck.Checked)
+                {
+                    c1Chart1.Location = new Point(66, 331);                   
+                    c1Chart1.Width = 724;
+                    c1Chart1.Height = 338;
+                }
+                else
+                {
+                    c1Chart1.Location = new Point(66, 517);
+                    c1Chart1.Width = 724;
+                    c1Chart1.Height = 154;
+                }
                 this.Height = 720;
             }
             else
             {
-                c1Chart1.SendToBack();
+                //c1Chart1.SendToBack();
                 c1Chart1.Visible = false;
                 this.Height = 560;
             }

@@ -77,6 +77,7 @@
             // logger
             // 
             this.logger.AcceptsReturn = true;
+            this.logger.BackColor = System.Drawing.Color.WhiteSmoke;
             this.logger.Location = new System.Drawing.Point(12, 62);
             this.logger.Multiline = true;
             this.logger.Name = "logger";
@@ -96,11 +97,13 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.settingToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.menuStrip1.Size = new System.Drawing.Size(331, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
@@ -157,6 +160,7 @@
             // 
             // numericUpDown1
             // 
+            this.numericUpDown1.BackColor = System.Drawing.SystemColors.Window;
             this.numericUpDown1.Location = new System.Drawing.Point(181, 268);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             20,
@@ -181,7 +185,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(37, 270);
+            this.label1.BackColor = System.Drawing.Color.Gainsboro;
+            this.label1.Location = new System.Drawing.Point(32, 271);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(138, 13);
             this.label1.TabIndex = 6;
@@ -198,13 +203,15 @@
             // 
             // checkBox2
             // 
+            this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(16, 241);
+            this.checkBox2.BackColor = System.Drawing.Color.Gainsboro;
+            this.checkBox2.Location = new System.Drawing.Point(12, 234);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(85, 17);
+            this.checkBox2.Size = new System.Drawing.Size(76, 23);
             this.checkBox2.TabIndex = 8;
             this.checkBox2.Text = "ShowDetails";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.UseVisualStyleBackColor = false;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // serialPort2
@@ -217,6 +224,7 @@
             // serialPorts
             // 
             this.serialPorts.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.serialPorts.BackColor = System.Drawing.SystemColors.Window;
             this.serialPorts.FormattingEnabled = true;
             this.serialPorts.Location = new System.Drawing.Point(12, 35);
             this.serialPorts.Name = "serialPorts";
@@ -226,16 +234,18 @@
             // 
             // openPort
             // 
+            this.openPort.BackColor = System.Drawing.Color.Gainsboro;
             this.openPort.Location = new System.Drawing.Point(248, 35);
             this.openPort.Name = "openPort";
             this.openPort.Size = new System.Drawing.Size(70, 21);
             this.openPort.TabIndex = 10;
             this.openPort.Text = "Open Port";
-            this.openPort.UseVisualStyleBackColor = true;
+            this.openPort.UseVisualStyleBackColor = false;
             this.openPort.Click += new System.EventHandler(this.openPort_Click);
             // 
             // numericUpDown2
             // 
+            this.numericUpDown2.BackColor = System.Drawing.SystemColors.Window;
             this.numericUpDown2.Location = new System.Drawing.Point(143, 292);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(152, 20);
@@ -250,6 +260,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Gainsboro;
             this.label3.Location = new System.Drawing.Point(13, 294);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(113, 13);
@@ -258,6 +269,7 @@
             // 
             // comboBox1
             // 
+            this.comboBox1.BackColor = System.Drawing.SystemColors.Window;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "1200",
@@ -283,14 +295,18 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.AllowMerge = false;
+            this.statusStrip1.BackColor = System.Drawing.Color.LightGray;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.StatusLabel,
             this.timeLabel,
             this.toolStripProgressBar1});
+            this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.statusStrip1.Location = new System.Drawing.Point(0, 326);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(331, 22);
+            this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 15;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -325,41 +341,43 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.Gainsboro;
             this.button1.BackgroundImage = global::GPSNavigator.Properties.Resources.record;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(290, 234);
+            this.button1.Location = new System.Drawing.Point(291, 234);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(29, 29);
             this.button1.TabIndex = 13;
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // button2
             // 
+            this.button2.BackColor = System.Drawing.Color.Gainsboro;
             this.button2.BackgroundImage = global::GPSNavigator.Properties.Resources.pause;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Location = new System.Drawing.Point(255, 234);
+            this.button2.Location = new System.Drawing.Point(256, 234);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(29, 29);
             this.button2.TabIndex = 2;
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // AutoCancel
             // 
             this.AutoCancel.AutoSize = true;
-            this.AutoCancel.Checked = true;
-            this.AutoCancel.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.AutoCancel.BackColor = System.Drawing.Color.Gainsboro;
             this.AutoCancel.Location = new System.Drawing.Point(16, 270);
             this.AutoCancel.Name = "AutoCancel";
             this.AutoCancel.Size = new System.Drawing.Size(15, 14);
             this.AutoCancel.TabIndex = 16;
-            this.AutoCancel.UseVisualStyleBackColor = true;
+            this.AutoCancel.UseVisualStyleBackColor = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(331, 348);
             this.Controls.Add(this.AutoCancel);
             this.Controls.Add(this.statusStrip1);

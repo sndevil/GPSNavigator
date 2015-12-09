@@ -38,6 +38,8 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.MinCheck = new System.Windows.Forms.CheckBox();
+            this.MaxCheck = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol.Properties)).BeginInit();
@@ -150,11 +152,40 @@
             this.label2.TabIndex = 13;
             this.label2.Text = "Minimum:";
             // 
+            // MinCheck
+            // 
+            this.MinCheck.AutoSize = true;
+            this.MinCheck.Checked = true;
+            this.MinCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.MinCheck.Location = new System.Drawing.Point(820, 488);
+            this.MinCheck.Name = "MinCheck";
+            this.MinCheck.Size = new System.Drawing.Size(73, 17);
+            this.MinCheck.TabIndex = 14;
+            this.MinCheck.Text = "Show Min";
+            this.MinCheck.UseVisualStyleBackColor = true;
+            this.MinCheck.CheckedChanged += new System.EventHandler(this.MinCheck_CheckedChanged);
+            // 
+            // MaxCheck
+            // 
+            this.MaxCheck.AutoSize = true;
+            this.MaxCheck.Checked = true;
+            this.MaxCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.MaxCheck.Location = new System.Drawing.Point(899, 488);
+            this.MaxCheck.Name = "MaxCheck";
+            this.MaxCheck.Size = new System.Drawing.Size(76, 17);
+            this.MaxCheck.TabIndex = 15;
+            this.MaxCheck.Text = "Show Max";
+            this.MaxCheck.UseVisualStyleBackColor = true;
+            this.MaxCheck.CheckedChanged += new System.EventHandler(this.MaxCheck_CheckedChanged);
+            // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(994, 517);
+            this.Controls.Add(this.MaxCheck);
+            this.Controls.Add(this.MinCheck);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox2);
@@ -190,5 +221,7 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox MinCheck;
+        private System.Windows.Forms.CheckBox MaxCheck;
     }
 }

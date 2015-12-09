@@ -74,6 +74,13 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Icon GPS_Navigator {
+            get {
+                object obj = ResourceManager.GetObject("GPS_Navigator", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Hot_Start {
             get {
                 object obj = ResourceManager.GetObject("Hot_Start", resourceCulture);

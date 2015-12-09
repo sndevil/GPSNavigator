@@ -25,7 +25,7 @@ namespace GPSNavigator
        // public DataBuffer dbuffer;
         public LogFileManager filemanager;
         public PointStyle ps;
-
+        private GraphData temp;
         public MomentDetail DetailForm;
 
         private graphtype selectedtype = graphtype.X;
@@ -333,10 +333,26 @@ namespace GPSNavigator
                 double[] min = Functions.FindMins(data.min);
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(data.date);
                 Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(data.y);
-                Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.date);//time
-                Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
-                Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.date);//time
-                Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
+                if (MaxCheck.Checked)
+                {
+                    Chart1.ChartGroups[0].ChartData.SeriesList[1].X.CopyDataIn(data.date);//time
+                    Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.CopyDataIn(max);
+                }
+                else
+                {
+                    Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Clear();
+                    Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Clear();
+                }
+                if (MinCheck.Checked)
+                {
+                    Chart1.ChartGroups[0].ChartData.SeriesList[2].X.CopyDataIn(data.date);//time
+                    Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.CopyDataIn(min);
+                }
+                else
+                {
+                    Chart1.ChartGroups[0].ChartData.SeriesList[2].X.Clear();
+                    Chart1.ChartGroups[0].ChartData.SeriesList[2].Y.Clear();
+                }
             }
             else
             {
@@ -495,13 +511,23 @@ namespace GPSNavigator
 
         public void LoadData()
         {
-            var t = filemanager.Readbuffer(selectedtype, fmin, fmax, Globals.Databuffercount);
-            PlotGraph(t);
+            temp = filemanager.Readbuffer(selectedtype, fmin, fmax, Globals.Databuffercount);
+            PlotGraph(temp);
         }
 
         private void Grapher_FormClosed(object sender, FormClosedEventArgs e)
         {
             filemanager.Close();
+        }
+
+        private void MinCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            PlotGraph(temp);
+        }
+
+        private void MaxCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            PlotGraph(temp);
         }
     }
 }
