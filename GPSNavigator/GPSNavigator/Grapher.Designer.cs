@@ -47,6 +47,7 @@
             // 
             // Chart1
             // 
+            this.Chart1.BackColor = System.Drawing.Color.Gainsboro;
             this.Chart1.Location = new System.Drawing.Point(0, 0);
             this.Chart1.Name = "Chart1";
             this.Chart1.PropBag = resources.GetString("Chart1.PropBag");
@@ -195,7 +196,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.Chart1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Grapher";

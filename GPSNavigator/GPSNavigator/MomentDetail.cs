@@ -90,21 +90,34 @@ namespace GPSNavigator
             }
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.Dbuf = data;
-            PlotGraph(tempgpsdata);
-            if (ShowingGraph)
-                UpdateGraph(tempgpsdata, false);
-            else
-                UpdateGraph(tempgpsdata, true);
+            try
+            {
+                PlotGraph(tempgpsdata);
+                if (ShowingGraph)
+                    UpdateGraph(tempgpsdata, false);
+                else
+                    UpdateGraph(tempgpsdata, true);
+                SpeedGauge.Needles[0].Value = (float)data.V;
+            }
+            catch
+            {
+            }
 
         }
 
         public void UpdateData(double xpos, DateTime time)
         {
-            position = (float)xpos;
-            data = filemanager.ReadGPSstatus(position);
-            ReadCache(position,false);
-            updateLabels(time, 0, 0, 0, 0, (float)data.Dbuf.PDOP, (float)data.Dbuf.Altitude, (float)data.Dbuf.Longitude, (float)data.Dbuf.Latitude);
-            PlotGraph(data);
+            try
+            {
+                position = (float)xpos;
+                data = filemanager.ReadGPSstatus(position);
+                ReadCache(position, false);
+                updateLabels(time, 0, 0, 0, 0, (float)data.Dbuf.PDOP, (float)data.Dbuf.Altitude, (float)data.Dbuf.Longitude, (float)data.Dbuf.Latitude);
+                PlotGraph(data);
+            }
+            catch
+            {
+            }
             CacheData = CacheData2;
         }
 
@@ -214,6 +227,8 @@ namespace GPSNavigator
                                 //tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Emboss";
                                 if (i >= 32)
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Wedge";
+                                else
+                                    tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
                             }
                             catch
                             {
@@ -221,6 +236,8 @@ namespace GPSNavigator
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
                                 if (i >= 32)
                                     tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].CustomProperties = "DrawingStyle = Wedge";
+                                else
+                                    tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
                             }
                             if (i < 32) VisibleGPS++; else VisibleGLONASS++;
                             counter++;
@@ -233,6 +250,8 @@ namespace GPSNavigator
                                 tempchart.Series[0].Points[counter].Color = Color.Green;
                                 if (i >= 32)
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Wedge";
+                                else
+                                    tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
                             }
                             catch
                             {
@@ -240,6 +259,8 @@ namespace GPSNavigator
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Green;
                                 if (i >= 32)
                                     tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].CustomProperties = "DrawingStyle = Wedge";
+                                else
+                                    tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
                             }
                             if (i < 32) VisibleGPS++; else VisibleGLONASS++;
                             if (i < 32) UsedGPS++; else UsedGLONASS++;

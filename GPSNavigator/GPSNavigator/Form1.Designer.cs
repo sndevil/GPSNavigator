@@ -40,6 +40,8 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlPanelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serialControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderdialog = new System.Windows.Forms.FolderBrowserDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -57,13 +59,24 @@
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.timeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.ErrorCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.AutoCancel = new System.Windows.Forms.CheckBox();
+            this.radDock1 = new Telerik.WinControls.UI.Docking.RadDock();
+            this.SerialController = new Telerik.WinControls.UI.Docking.ToolWindow();
+            this.toolTabStrip1 = new Telerik.WinControls.UI.Docking.ToolTabStrip();
+            this.documentContainer1 = new Telerik.WinControls.UI.Docking.DocumentContainer();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radDock1)).BeginInit();
+            this.radDock1.SuspendLayout();
+            this.SerialController.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toolTabStrip1)).BeginInit();
+            this.toolTabStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.documentContainer1)).BeginInit();
             this.SuspendLayout();
             // 
             // serialPort1
@@ -78,12 +91,12 @@
             // 
             this.logger.AcceptsReturn = true;
             this.logger.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.logger.Location = new System.Drawing.Point(12, 62);
+            this.logger.Location = new System.Drawing.Point(12, 93);
             this.logger.Multiline = true;
             this.logger.Name = "logger";
             this.logger.ReadOnly = true;
             this.logger.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logger.Size = new System.Drawing.Size(307, 166);
+            this.logger.Size = new System.Drawing.Size(170, 213);
             this.logger.TabIndex = 0;
             // 
             // opendialog
@@ -100,11 +113,12 @@
             this.menuStrip1.BackColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.settingToolStripMenuItem});
+            this.settingToolStripMenuItem,
+            this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.menuStrip1.Size = new System.Drawing.Size(331, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1045, 24);
             this.menuStrip1.TabIndex = 3;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -152,6 +166,21 @@
             this.controlPanelToolStripMenuItem.Text = "&Control Panel";
             this.controlPanelToolStripMenuItem.Click += new System.EventHandler(this.controlPanelToolStripMenuItem_Click);
             // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.serialControllerToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.viewToolStripMenuItem.Text = "&View";
+            // 
+            // serialControllerToolStripMenuItem
+            // 
+            this.serialControllerToolStripMenuItem.Name = "serialControllerToolStripMenuItem";
+            this.serialControllerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.serialControllerToolStripMenuItem.Text = "&Serial Controller";
+            this.serialControllerToolStripMenuItem.Click += new System.EventHandler(this.serialControllerToolStripMenuItem_Click);
+            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -161,7 +190,7 @@
             // numericUpDown1
             // 
             this.numericUpDown1.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDown1.Location = new System.Drawing.Point(181, 268);
+            this.numericUpDown1.Location = new System.Drawing.Point(35, 373);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             20,
             0,
@@ -185,19 +214,19 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Gainsboro;
-            this.label1.Location = new System.Drawing.Point(32, 271);
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
+            this.label1.Location = new System.Drawing.Point(32, 357);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(138, 13);
+            this.label1.Size = new System.Drawing.Size(150, 13);
             this.label1.TabIndex = 6;
             this.label1.Text = "Cancel Recording if Idle for:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(262, 270);
+            this.label2.Location = new System.Drawing.Point(118, 375);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 13);
+            this.label2.Size = new System.Drawing.Size(50, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "Seconds";
             // 
@@ -206,9 +235,9 @@
             this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
             this.checkBox2.AutoSize = true;
             this.checkBox2.BackColor = System.Drawing.Color.Gainsboro;
-            this.checkBox2.Location = new System.Drawing.Point(12, 234);
+            this.checkBox2.Location = new System.Drawing.Point(12, 312);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(76, 23);
+            this.checkBox2.Size = new System.Drawing.Size(81, 23);
             this.checkBox2.TabIndex = 8;
             this.checkBox2.Text = "ShowDetails";
             this.checkBox2.UseVisualStyleBackColor = false;
@@ -226,18 +255,18 @@
             this.serialPorts.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.serialPorts.BackColor = System.Drawing.SystemColors.Window;
             this.serialPorts.FormattingEnabled = true;
-            this.serialPorts.Location = new System.Drawing.Point(12, 35);
+            this.serialPorts.Location = new System.Drawing.Point(12, 12);
             this.serialPorts.Name = "serialPorts";
-            this.serialPorts.Size = new System.Drawing.Size(107, 21);
+            this.serialPorts.Size = new System.Drawing.Size(170, 21);
             this.serialPorts.TabIndex = 9;
             this.serialPorts.SelectedIndexChanged += new System.EventHandler(this.serialPorts_SelectedIndexChanged);
             // 
             // openPort
             // 
             this.openPort.BackColor = System.Drawing.Color.Gainsboro;
-            this.openPort.Location = new System.Drawing.Point(248, 35);
+            this.openPort.Location = new System.Drawing.Point(12, 66);
             this.openPort.Name = "openPort";
-            this.openPort.Size = new System.Drawing.Size(70, 21);
+            this.openPort.Size = new System.Drawing.Size(170, 21);
             this.openPort.TabIndex = 10;
             this.openPort.Text = "Open Port";
             this.openPort.UseVisualStyleBackColor = false;
@@ -246,7 +275,7 @@
             // numericUpDown2
             // 
             this.numericUpDown2.BackColor = System.Drawing.SystemColors.Window;
-            this.numericUpDown2.Location = new System.Drawing.Point(143, 292);
+            this.numericUpDown2.Location = new System.Drawing.Point(16, 425);
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(152, 20);
             this.numericUpDown2.TabIndex = 11;
@@ -260,10 +289,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.BackColor = System.Drawing.Color.Gainsboro;
-            this.label3.Location = new System.Drawing.Point(13, 294);
+            this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
+            this.label3.Location = new System.Drawing.Point(13, 409);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(113, 13);
+            this.label3.Size = new System.Drawing.Size(120, 13);
             this.label3.TabIndex = 12;
             this.label3.Text = "Refresh Rate Counter:";
             // 
@@ -286,9 +315,9 @@
             "230400",
             "460800",
             "921600"});
-            this.comboBox1.Location = new System.Drawing.Point(125, 35);
+            this.comboBox1.Location = new System.Drawing.Point(12, 39);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(114, 21);
+            this.comboBox1.Size = new System.Drawing.Size(170, 21);
             this.comboBox1.TabIndex = 14;
             this.comboBox1.Text = "115200";
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
@@ -301,11 +330,12 @@
             this.toolStripStatusLabel1,
             this.StatusLabel,
             this.timeLabel,
-            this.toolStripProgressBar1});
+            this.toolStripProgressBar1,
+            this.ErrorCount});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 326);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 518);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(331, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1045, 22);
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 15;
             this.statusStrip1.Text = "statusStrip1";
@@ -339,12 +369,20 @@
             this.toolStripProgressBar1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             // 
+            // ErrorCount
+            // 
+            this.ErrorCount.Image = global::GPSNavigator.Properties.Resources.Errors;
+            this.ErrorCount.Name = "ErrorCount";
+            this.ErrorCount.Size = new System.Drawing.Size(29, 17);
+            this.ErrorCount.Text = "0";
+            this.ErrorCount.Click += new System.EventHandler(this.ErrorCount_Click);
+            // 
             // button1
             // 
             this.button1.BackColor = System.Drawing.Color.Gainsboro;
             this.button1.BackgroundImage = global::GPSNavigator.Properties.Resources.record;
             this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(291, 234);
+            this.button1.Location = new System.Drawing.Point(155, 312);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(29, 29);
             this.button1.TabIndex = 13;
@@ -356,7 +394,7 @@
             this.button2.BackColor = System.Drawing.Color.Gainsboro;
             this.button2.BackgroundImage = global::GPSNavigator.Properties.Resources.pause;
             this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Location = new System.Drawing.Point(256, 234);
+            this.button2.Location = new System.Drawing.Point(120, 312);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(29, 29);
             this.button2.TabIndex = 2;
@@ -366,39 +404,108 @@
             // AutoCancel
             // 
             this.AutoCancel.AutoSize = true;
-            this.AutoCancel.BackColor = System.Drawing.Color.Gainsboro;
-            this.AutoCancel.Location = new System.Drawing.Point(16, 270);
+            this.AutoCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
+            this.AutoCancel.Location = new System.Drawing.Point(16, 356);
             this.AutoCancel.Name = "AutoCancel";
             this.AutoCancel.Size = new System.Drawing.Size(15, 14);
             this.AutoCancel.TabIndex = 16;
             this.AutoCancel.UseVisualStyleBackColor = false;
+            // 
+            // radDock1
+            // 
+            this.radDock1.ActiveWindow = this.SerialController;
+            this.radDock1.Controls.Add(this.toolTabStrip1);
+            this.radDock1.Controls.Add(this.documentContainer1);
+            this.radDock1.Cursor = System.Windows.Forms.Cursors.VSplit;
+            this.radDock1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.radDock1.DocumentManager.DocumentInsertOrder = Telerik.WinControls.UI.Docking.DockWindowInsertOrder.InFront;
+            this.radDock1.IsCleanUpTarget = true;
+            this.radDock1.Location = new System.Drawing.Point(0, 24);
+            this.radDock1.MainDocumentContainer = this.documentContainer1;
+            this.radDock1.Name = "radDock1";
+            this.radDock1.Padding = new System.Windows.Forms.Padding(5);
+            // 
+            // 
+            // 
+            this.radDock1.RootElement.MinSize = new System.Drawing.Size(25, 25);
+            this.radDock1.RootElement.Padding = new System.Windows.Forms.Padding(5);
+            this.radDock1.Size = new System.Drawing.Size(1045, 494);
+            this.radDock1.SplitterWidth = 4;
+            this.radDock1.TabIndex = 17;
+            this.radDock1.TabStop = false;
+            this.radDock1.Text = "radDock1";
+            this.radDock1.ThemeName = "ControlDefault";
+            // 
+            // SerialController
+            // 
+            this.SerialController.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SerialController.Caption = null;
+            this.SerialController.Controls.Add(this.serialPorts);
+            this.SerialController.Controls.Add(this.AutoCancel);
+            this.SerialController.Controls.Add(this.logger);
+            this.SerialController.Controls.Add(this.button2);
+            this.SerialController.Controls.Add(this.comboBox1);
+            this.SerialController.Controls.Add(this.numericUpDown1);
+            this.SerialController.Controls.Add(this.button1);
+            this.SerialController.Controls.Add(this.label1);
+            this.SerialController.Controls.Add(this.label3);
+            this.SerialController.Controls.Add(this.label2);
+            this.SerialController.Controls.Add(this.numericUpDown2);
+            this.SerialController.Controls.Add(this.checkBox2);
+            this.SerialController.Controls.Add(this.openPort);
+            this.SerialController.Location = new System.Drawing.Point(1, 24);
+            this.SerialController.Name = "SerialController";
+            this.SerialController.PreviousDockState = Telerik.WinControls.UI.Docking.DockState.Docked;
+            this.SerialController.Size = new System.Drawing.Size(198, 458);
+            this.SerialController.Text = "Serial Controller";
+            // 
+            // toolTabStrip1
+            // 
+            this.toolTabStrip1.Controls.Add(this.SerialController);
+            this.toolTabStrip1.Location = new System.Drawing.Point(5, 5);
+            this.toolTabStrip1.Name = "toolTabStrip1";
+            // 
+            // 
+            // 
+            this.toolTabStrip1.RootElement.MinSize = new System.Drawing.Size(25, 25);
+            this.toolTabStrip1.SelectedIndex = 0;
+            this.toolTabStrip1.Size = new System.Drawing.Size(200, 484);
+            this.toolTabStrip1.TabIndex = 1;
+            this.toolTabStrip1.TabStop = false;
+            this.toolTabStrip1.ThemeName = "ControlDefault";
+            // 
+            // documentContainer1
+            // 
+            this.documentContainer1.Location = new System.Drawing.Point(209, 5);
+            this.documentContainer1.Name = "documentContainer1";
+            this.documentContainer1.Padding = new System.Windows.Forms.Padding(5);
+            // 
+            // 
+            // 
+            this.documentContainer1.RootElement.MinSize = new System.Drawing.Size(25, 25);
+            this.documentContainer1.RootElement.Padding = new System.Windows.Forms.Padding(5);
+            this.documentContainer1.Size = new System.Drawing.Size(831, 484);
+            this.documentContainer1.SizeInfo.SizeMode = Telerik.WinControls.UI.Docking.SplitPanelSizeMode.Fill;
+            this.documentContainer1.SplitterWidth = 4;
+            this.documentContainer1.TabIndex = 0;
+            this.documentContainer1.TabStop = false;
+            this.documentContainer1.ThemeName = "ControlDefault";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(331, 348);
-            this.Controls.Add(this.AutoCancel);
+            this.ClientSize = new System.Drawing.Size(1045, 540);
+            this.Controls.Add(this.radDock1);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.numericUpDown2);
-            this.Controls.Add(this.openPort);
-            this.Controls.Add(this.serialPorts);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.logger);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "GPS Navigator";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -406,6 +513,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radDock1)).EndInit();
+            this.radDock1.ResumeLayout(false);
+            this.SerialController.ResumeLayout(false);
+            this.SerialController.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.toolTabStrip1)).EndInit();
+            this.toolTabStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.documentContainer1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -444,6 +558,13 @@
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem controlPanelToolStripMenuItem;
         private System.Windows.Forms.CheckBox AutoCancel;
+        private Telerik.WinControls.UI.Docking.RadDock radDock1;
+        private Telerik.WinControls.UI.Docking.ToolWindow SerialController;
+        private Telerik.WinControls.UI.Docking.ToolTabStrip toolTabStrip1;
+        private Telerik.WinControls.UI.Docking.DocumentContainer documentContainer1;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem serialControllerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel ErrorCount;
     }
 }
 

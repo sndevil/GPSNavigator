@@ -2180,6 +2180,7 @@ namespace GPSNavigator.Source
 
             if (checksum0 != data[BIN_DUAL_CHANNEL_MSG_SIZE - 3] || checksum1 != data[BIN_DUAL_CHANNEL_MSG_SIZE - 2])
             {
+                throw new Exception("Checksum Error");
                 //Error
             }
             //if (serialNum == 0)
@@ -3234,6 +3235,11 @@ namespace GPSNavigator.Source
             int checksum = calcrc(data, BIN_SETTING_MSG_SIZE - 4);
             checksum0 = (byte)(checksum & 0xFF);
             checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+            if (checksum0 != data[BIN_SETTING_MSG_SIZE - 3] || checksum1 != data[BIN_SETTING_MSG_SIZE - 2])
+            {
+                throw new Exception("Checksum Error");
+            }
 
             int index = 1;      //header
             index++;        //messageType
