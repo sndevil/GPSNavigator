@@ -10,6 +10,7 @@ using GPSNavigator.Classes;
 using GPSNavigator.Source;
 using GPSNavigator;
 using C1.Win.C1Chart;
+using Telerik.WinControls.UI.Docking;
 
 namespace GPSNavigator
 {
@@ -27,6 +28,7 @@ namespace GPSNavigator
         public PointStyle ps;
         private GraphData temp;
         public MomentDetail DetailForm;
+        public Form1 parentForm;
 
         private graphtype selectedtype = graphtype.X;
         private DateTime emptytime = new DateTime();
@@ -35,12 +37,18 @@ namespace GPSNavigator
         private double[] xlist = new double[Globals.Databuffercount];
         private DateTime[] tlist = new DateTime[Globals.Databuffercount];
 
-        public Grapher(LogFileManager Filemanager)
+        public Grapher(LogFileManager Filemanager, Form1 Parent)
         {
+            parentForm = Parent;
             filemanager = Filemanager;
             DetailForm = new MomentDetail(filemanager);
+            DetailForm.Dock = DockStyle.None;
+            DetailForm.TopLevel = false;
             DetailForm.Show();
-            DetailForm.BringToFront();
+            DocumentWindow NewDockWindow = new DocumentWindow("Moment Details (Log)");
+            NewDockWindow.Controls.Add(DetailForm);
+            parentForm.AddDocumentControl(NewDockWindow);
+
             InitializeComponent();
             this.Dock = DockStyle.Fill;
             this.Text = "Grapher ("+Filemanager.filepath+")";

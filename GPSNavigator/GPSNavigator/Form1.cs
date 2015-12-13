@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using GPSNavigator.Source;
 using GPSNavigator.Classes;
 using Ionic.Zip;
+using Telerik.WinControls.UI.Docking;
 
 namespace GPSNavigator
 {
@@ -42,6 +43,7 @@ namespace GPSNavigator
         ControlPanel controlPanel;
         enum Form1Status { Disconnected, Connected, Recording, Saving }
         Form1Status status = Form1Status.Disconnected;
+        string logdir;
         #endregion
 
         public Form1()
@@ -241,7 +243,10 @@ namespace GPSNavigator
                             if (DateTime.Now.Second != serialcounter)
                             {
                                 serialcounter = DateTime.Now.Second;
-                                WriteText(packetcounter.ToString() + " Packet Per Second\r\n 0x" + ByteArrayToString(byt));
+                                if (ascii.Checked)
+                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
+                                else if (hex.Checked)
+                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + ByteArrayToString(byt));
                                 packetcounter = 0;
                             }
                             else
@@ -427,7 +432,10 @@ namespace GPSNavigator
                     if (DateTime.Now.Second != serialcounter)
                     {
                         serialcounter = DateTime.Now.Second;
-                        WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + ByteArrayToString(byt));
+                        if (ascii.Checked)
+                            WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
+                        else if (hex.Checked)
+                            WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + ByteArrayToString(byt));
                         packetcounter = 0;
                     }
                     else
@@ -527,58 +535,68 @@ namespace GPSNavigator
         public void OpenLogFile(string path)
         {
             LogFileManager file = new LogFileManager(path,ref vars);
-            Grapher graphform = new Grapher(file);
+            Grapher graphform = new Grapher(file,this);
             graphform.Dock = DockStyle.Fill;
             graphform.TopLevel = false;
             graphform.Show();
-            Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Grapher");
+            DocumentWindow NewDockWindow = new DocumentWindow("Grapher");
             NewDockWindow.Controls.Add(graphform);
-            radDock1.AddDocument(NewDockWindow);
+            AddDocumentControl(NewDockWindow);
+            //radDock1.AddDocument(NewDockWindow);
             //documentWindow1.Controls.Add(graphform);
             //graphform.Show();
             //graphform.BringToFront();
         }
 
+        public void AddDocumentControl(DocumentWindow toadd)
+        {
+            radDock1.AddDocument(toadd);
+        }
+
         private void opendialog_FileOk(object sender, CancelEventArgs e)
         {
-           // try
-            //{
-            string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
             try
             {
-                Directory.Delete(path, true);
-            }
-            catch { }
-            Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
-            extractdone = false;
-            StatusLabel.Text = "Loading Log";
-            try
-            {
-                Task<bool> extractor = ExtractAsync(opendialog.FileName);
+                string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
+                try
+                {
+                    Directory.Delete(path, true);
+                }
+                catch { }
+                Directory.CreateDirectory(path);
+                extractdone = false;
+                StatusLabel.Text = "Loading Log";
+                try
+                {
+                    Task<bool> extractor = ExtractAsync(opendialog.FileName);
+                    logdir = path;
+                }
+                catch
+                {
+                    MessageBox.Show("There was an error opening the file");
+                }
             }
             catch
             {
-                MessageBox.Show("There was an error opening the file");
-            }
-            //}
-            //catch
-            //{
-              //  MessageBox.Show("Close the already open files");
-            //}
-        }
-
-        private delegate void DirectoryOpener(string path);
-
-        private void OpenDirectory(string path)
-        {
-            if (this.InvokeRequired)
-            {
-                DirectoryOpener d = new DirectoryOpener(OpenDirectory);
-                this.Invoke(d, new object[] { path });
-            }
-            else
-            {
-
+                string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs1\\";
+                try
+                {
+                    Directory.Delete(path, true);
+                }
+                catch { }
+                Directory.CreateDirectory(path);
+                extractdone = false;
+                StatusLabel.Text = "Loading Log";
+                try
+                {
+                    Task<bool> extractor = ExtractAsync(opendialog.FileName);
+                    logdir = path;
+                }
+                catch
+                {
+                    MessageBox.Show("There was an error opening the file");
+                }
+                //  MessageBox.Show("Close the already open files");
             }
         }
 
@@ -589,8 +607,8 @@ namespace GPSNavigator
             {
                 using (ZipFile z = ZipFile.Read(path))
                 {
-                    z.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(z_ExtractProgress);
-                    z.ExtractAll(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
+                    z.ExtractProgress += new EventHandler<ExtractProgressEventArgs>(z_ExtractProgress);                   
+                    z.ExtractAll(logdir);
                 }
                 extractdone = true;
                 return true;
@@ -611,7 +629,14 @@ namespace GPSNavigator
         {
             if (showdetail)
                 DetailForm.Show();
-            log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
+            try
+            {
+                log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
+            }
+            catch
+            {
+                log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs1\\");
+            }
             isRecording = true;
             status = Form1Status.Recording;
             RecordStarttime = DateTime.Now;
@@ -640,7 +665,7 @@ namespace GPSNavigator
             }
             if (extractdone)
             {
-                OpenLogFile(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+                OpenLogFile(logdir);
                 ProgressbarChangeValue(0);
                 StatusLabel.Text = "Connected";
                 extractdone = false;
@@ -659,12 +684,25 @@ namespace GPSNavigator
                 showdetail = true;
                 try
                 {
+                    DetailForm = new MomentDetail(this);
+                    DetailForm.Dock = DockStyle.Left;
+                    DetailForm.TopLevel = false;
                     DetailForm.Show();
+                    Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Moment Detail (RealTime)");
+                    NewDockWindow.Controls.Add(DetailForm);
+                    radDock1.AddDocument(NewDockWindow);
                 }
                 catch
                 {
                     DetailForm = new MomentDetail(this);
+                    DetailForm.Dock = DockStyle.Left;
+                    DetailForm.TopLevel = false;
                     DetailForm.Show();
+                    Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Moment Detail (RealTime)");
+                    NewDockWindow.Controls.Add(DetailForm);
+                    radDock1.AddDocument(NewDockWindow);
+                    //DetailForm = new MomentDetail(this);
+                    //DetailForm.Show();
                 }
             }
             else
@@ -672,7 +710,13 @@ namespace GPSNavigator
                 showdetail = false;
                 try
                 {
+                    //radDock1.
                     DetailForm.Hide();
+                    foreach (DockWindow dw in radDock1.DocumentManager.DocumentArray)
+                    {
+                        if (dw.Text == "Moment Detail (RealTime)")
+                            dw.Close();
+                    }
                 }
                 catch
                 {
@@ -758,7 +802,8 @@ namespace GPSNavigator
                     z.SaveProgress += new EventHandler<SaveProgressEventArgs>(z_SaveProgress);
                     z.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
                     z.CompressionMethod = CompressionMethod.None;
-                    z.AddDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+                    z.AddDirectory(log.Dirpath);
+                    //z.AddDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
                     z.Save();
                 }
                 saved = true;
@@ -833,7 +878,7 @@ namespace GPSNavigator
         }
 
         private void ErrorCount_Click(object sender, EventArgs e)
-        {
+        {          
             ErrorCount.Text = "0";
         }
 

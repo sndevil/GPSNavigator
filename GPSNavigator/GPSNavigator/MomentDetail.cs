@@ -61,6 +61,7 @@ namespace GPSNavigator
         public MomentDetail(Form1 Parent)
         {
             InitializeComponent();
+            ToggleGraph();
             toolStripSplitButton1.Visible = true;
             this.Text = "MomentDetail (RealTime)";
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
@@ -454,8 +455,8 @@ namespace GPSNavigator
             comboBox2.Visible = false;
             if (ShowingGraph)
             {
-                c1Chart1.Location = new Point(66, 331);
-                c1Chart1.Width = 724;
+                c1Chart1.Location = new Point(58, 328);  
+                c1Chart1.Width = 732;
                 c1Chart1.Height = 338;
             }
         }
@@ -466,8 +467,8 @@ namespace GPSNavigator
             label13.BringToFront();
             if (ShowingGraph)
             {
-                c1Chart1.Location = new Point(66, 517);
-                c1Chart1.Width = 724;
+                c1Chart1.Location = new Point(58, 514);
+                c1Chart1.Width = 732;
                 c1Chart1.Height = 154;
             }
             comboBox2.Visible = true;
@@ -603,14 +604,14 @@ namespace GPSNavigator
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
-                    c1Chart1.Location = new Point(66, 331);                   
-                    c1Chart1.Width = 724;
+                    c1Chart1.Location = new Point(58, 328);                   
+                    c1Chart1.Width = 732;
                     c1Chart1.Height = 338;
                 }
                 else
                 {
-                    c1Chart1.Location = new Point(66, 517);
-                    c1Chart1.Width = 724;
+                    c1Chart1.Location = new Point(58, 514);
+                    c1Chart1.Width = 732;
                     c1Chart1.Height = 154;
                 }
                 this.Height = 720;

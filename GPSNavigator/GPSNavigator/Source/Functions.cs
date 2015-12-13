@@ -2029,15 +2029,21 @@ namespace GPSNavigator.Source
             return Debug_text;
         }
 
-        public static void Process_Binary_Message_RawData(byte[] data, int SerialNum,ref BinaryRawDataBuffer rbuffer)
+        public static SingleDataBuffer Process_Binary_Message_RawData(byte[] data, int SerialNum)
         {          
             int index = 0, buffercounter = 0;
             Int64 a;
             byte checksum0 = 0, checksum1 = 0;
+            SingleDataBuffer dbuf = new SingleDataBuffer();
 
             int checksum = calcrc(data, BIN_RAW_DATA_MSG_SIZE - 4);
             checksum0 = (byte)(checksum & 0xFF);
             checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+            if (checksum0 != data[BIN_RAW_DATA_MSG_SIZE - 3] || checksum1 != data[BIN_RAW_DATA_MSG_SIZE - 2])
+            {
+                throw new Exception("Checksum Error");
+            }
 
             index++;    //header
             index++;    //messageType
@@ -2050,92 +2056,94 @@ namespace GPSNavigator.Source
             int nReceiver = data[index];
             index++;
 
+            
             //TOW
             a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-            rbuffer.TOW.Add(a);
-            buffercounter = rbuffer.TOW.Count - 1;
+            dbuf.rawbuffer.TOW.Add(a);
+            buffercounter = dbuf.rawbuffer.TOW.Count - 1;
             index += 4;
 
             //satellite Positions
-            rbuffer.satPos.Add(new CartesianCoordinate[12]);
+            dbuf.rawbuffer.satPos.Add(new CartesianCoordinate[12]);
             for (int j = 0; j < 12; j++)
             {
-                rbuffer.satPos[buffercounter][j] = new CartesianCoordinate();
+                dbuf.rawbuffer.satPos[buffercounter][j] = new CartesianCoordinate();
 
                 a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
-                rbuffer.satPos[buffercounter][j].x = formatDouble(a);
+                dbuf.rawbuffer.satPos[buffercounter][j].x = formatDouble(a);
                 index += 8;
 
                 a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
-                rbuffer.satPos[buffercounter][j].y = formatDouble(a);
+                dbuf.rawbuffer.satPos[buffercounter][j].y = formatDouble(a);
                 index += 8;
 
                 a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
-                rbuffer.satPos[buffercounter][j].z = formatDouble(a);
+                dbuf.rawbuffer.satPos[buffercounter][j].z = formatDouble(a);
                 index += 8;
             }
 
             //PseudoRanges
-            rbuffer.PseudoRanges.Add(new double[12]);
+            dbuf.rawbuffer.PseudoRanges.Add(new double[12]);
             for (int j = 0; j < 12; j++)
             {
                 a = data[index + 7]; for (int i = 6; i >= 0; --i) a = a * 256 + data[index + i];
-                rbuffer.PseudoRanges[buffercounter][j] = formatDouble(a);
+                dbuf.rawbuffer.PseudoRanges[buffercounter][j] = formatDouble(a);
                 index += 8;
             }
 
             //Prn
-            rbuffer.Prn.Add(new int[12]);
+            dbuf.rawbuffer.Prn.Add(new int[12]);
             for (int i = 0; i < 12; i++)
             {
-                rbuffer.Prn[buffercounter][i] = data[index];
+                dbuf.rawbuffer.Prn[buffercounter][i] = data[index];
                 index++;
             }
 
             //dopplers
-            rbuffer.dopplers.Add(new double[12]);
+            dbuf.rawbuffer.dopplers.Add(new double[12]);
             for (int j = 0; j < 12; j++)
             {
                 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-                rbuffer.dopplers[buffercounter][j] = formatFloat(a);
+                dbuf.rawbuffer.dopplers[buffercounter][j] = formatFloat(a);
                 index += 4;
             }
 
             //reliability
-            rbuffer.reliability.Add(new double[12]);
+            dbuf.rawbuffer.reliability.Add(new double[12]);
             for (int j = 0; j < 12; j++)
             {
                 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-                rbuffer.reliability[buffercounter][j] = formatFloat(a);
+                dbuf.rawbuffer.reliability[buffercounter][j] = formatFloat(a);
                 index += 4;
             }
 
             //pAngle
-            rbuffer.pAngle.Add(new double[12][]);
+            dbuf.rawbuffer.pAngle.Add(new double[12][]);
             for (int j = 0; j < 12; j++)
             {
-                rbuffer.pAngle[buffercounter][j] = new double[2];
+                dbuf.rawbuffer.pAngle[buffercounter][j] = new double[2];
                 for (int k = 0; k < 2; k++)
                 {
                     a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-                    rbuffer.pAngle[buffercounter][j][k] = formatFloat(a);
+                    dbuf.rawbuffer.pAngle[buffercounter][j][k] = formatFloat(a);
                     index += 4;
                 }
             }
 
             //snr
-            rbuffer.snr.Add(new double[12][]);
+            dbuf.rawbuffer.snr.Add(new double[12][]);
             for (int j = 0; j < 12; j++)
             {
-                rbuffer.snr[buffercounter][j] = new double[2];
+                dbuf.rawbuffer.snr[buffercounter][j] = new double[2];
                 for (int k = 0; k < 2; k++)
                 {
                     a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-                    rbuffer.snr[buffercounter][j][k] = formatFloat(a);
+                    dbuf.rawbuffer.snr[buffercounter][j][k] = formatFloat(a);
                     index += 4;
                 }
             }
 
+            return dbuf;
             /*rdBuf.counter++;
             if (rdBuf.counter >= Max_buf)
             {
@@ -3566,6 +3574,8 @@ namespace GPSNavigator.Source
                 dbuffer = Functions.Process_Binary_Message_Setting(packet, number);
             else if (key == Functions.BIN_DUAL_CHANNEL)
                 dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+            else if (key == Functions.BIN_RAW_DATA)
+                dbuffer = Functions.Process_Binary_Message_RawData(packet, number);
             else
             {
                 dbuffer.ToString();

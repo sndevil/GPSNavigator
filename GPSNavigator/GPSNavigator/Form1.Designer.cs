@@ -65,8 +65,11 @@
             this.AutoCancel = new System.Windows.Forms.CheckBox();
             this.radDock1 = new Telerik.WinControls.UI.Docking.RadDock();
             this.SerialController = new Telerik.WinControls.UI.Docking.ToolWindow();
+            this.ascii = new System.Windows.Forms.RadioButton();
+            this.FormatLabel = new System.Windows.Forms.Label();
             this.toolTabStrip1 = new Telerik.WinControls.UI.Docking.ToolTabStrip();
             this.documentContainer1 = new Telerik.WinControls.UI.Docking.DocumentContainer();
+            this.hex = new System.Windows.Forms.RadioButton();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -91,12 +94,12 @@
             // 
             this.logger.AcceptsReturn = true;
             this.logger.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.logger.Location = new System.Drawing.Point(12, 93);
+            this.logger.Location = new System.Drawing.Point(12, 118);
             this.logger.Multiline = true;
             this.logger.Name = "logger";
             this.logger.ReadOnly = true;
             this.logger.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.logger.Size = new System.Drawing.Size(170, 213);
+            this.logger.Size = new System.Drawing.Size(170, 188);
             this.logger.TabIndex = 0;
             // 
             // opendialog
@@ -233,11 +236,10 @@
             // checkBox2
             // 
             this.checkBox2.Appearance = System.Windows.Forms.Appearance.Button;
-            this.checkBox2.AutoSize = true;
             this.checkBox2.BackColor = System.Drawing.Color.Gainsboro;
             this.checkBox2.Location = new System.Drawing.Point(12, 312);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(81, 23);
+            this.checkBox2.Size = new System.Drawing.Size(80, 29);
             this.checkBox2.TabIndex = 8;
             this.checkBox2.Text = "ShowDetails";
             this.checkBox2.UseVisualStyleBackColor = false;
@@ -416,7 +418,6 @@
             this.radDock1.ActiveWindow = this.SerialController;
             this.radDock1.Controls.Add(this.toolTabStrip1);
             this.radDock1.Controls.Add(this.documentContainer1);
-            this.radDock1.Cursor = System.Windows.Forms.Cursors.VSplit;
             this.radDock1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.radDock1.DocumentManager.DocumentInsertOrder = Telerik.WinControls.UI.Docking.DockWindowInsertOrder.InFront;
             this.radDock1.IsCleanUpTarget = true;
@@ -440,6 +441,9 @@
             // 
             this.SerialController.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SerialController.Caption = null;
+            this.SerialController.Controls.Add(this.hex);
+            this.SerialController.Controls.Add(this.ascii);
+            this.SerialController.Controls.Add(this.FormatLabel);
             this.SerialController.Controls.Add(this.serialPorts);
             this.SerialController.Controls.Add(this.AutoCancel);
             this.SerialController.Controls.Add(this.logger);
@@ -458,6 +462,27 @@
             this.SerialController.PreviousDockState = Telerik.WinControls.UI.Docking.DockState.Docked;
             this.SerialController.Size = new System.Drawing.Size(198, 458);
             this.SerialController.Text = "Serial Controller";
+            // 
+            // ascii
+            // 
+            this.ascii.AutoSize = true;
+            this.ascii.Checked = true;
+            this.ascii.Location = new System.Drawing.Point(88, 94);
+            this.ascii.Name = "ascii";
+            this.ascii.Size = new System.Drawing.Size(47, 17);
+            this.ascii.TabIndex = 18;
+            this.ascii.TabStop = true;
+            this.ascii.Text = "ascii";
+            this.ascii.UseVisualStyleBackColor = true;
+            // 
+            // FormatLabel
+            // 
+            this.FormatLabel.AutoSize = true;
+            this.FormatLabel.Location = new System.Drawing.Point(9, 95);
+            this.FormatLabel.Name = "FormatLabel";
+            this.FormatLabel.Size = new System.Drawing.Size(78, 13);
+            this.FormatLabel.TabIndex = 17;
+            this.FormatLabel.Text = "Show Format:";
             // 
             // toolTabStrip1
             // 
@@ -490,6 +515,16 @@
             this.documentContainer1.TabIndex = 0;
             this.documentContainer1.TabStop = false;
             this.documentContainer1.ThemeName = "ControlDefault";
+            // 
+            // hex
+            // 
+            this.hex.AutoSize = true;
+            this.hex.Location = new System.Drawing.Point(141, 95);
+            this.hex.Name = "hex";
+            this.hex.Size = new System.Drawing.Size(43, 17);
+            this.hex.TabIndex = 19;
+            this.hex.Text = "hex";
+            this.hex.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -565,6 +600,11 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serialControllerToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel ErrorCount;
+        private System.Windows.Forms.RadioButton asciiRadio;
+        private System.Windows.Forms.RadioButton hexRadio;
+        private System.Windows.Forms.Label FormatLabel;
+        private System.Windows.Forms.RadioButton ascii;
+        private System.Windows.Forms.RadioButton hex;
     }
 }
 

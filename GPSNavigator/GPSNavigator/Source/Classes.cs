@@ -142,6 +142,7 @@ namespace GPSNavigator.Classes
             public List<byte[]> BGPSstat = new List<byte[]>();
             //public byte[] BGPSstat = new byte[12];
             public List<byte[]> BGLONASSstat = new List<byte[]>();
+            public BinaryRawDataBuffer rawbuffer = new BinaryRawDataBuffer();
             //public byte[] BGLONASSstat = new byte[12];
             public byte[] BSatStats = new byte[17];
             public byte[] BNumOfVisibleStats = new byte[4];
@@ -1072,7 +1073,7 @@ namespace GPSNavigator.Classes
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,Time;
             private FileStream Sat;
             private List<FileStream> GPS,Glonass;
-            private string Dirpath;
+            public string Dirpath;
             private long GPSByteCount = 0;
             private bool inited = false;
 
