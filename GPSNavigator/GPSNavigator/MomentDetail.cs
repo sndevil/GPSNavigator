@@ -26,6 +26,7 @@ namespace GPSNavigator
         int IndexCounter = 0, SlowCounter = 0, VisibleGPS, VisibleGLONASS, UsedGPS, UsedGLONASS, Chart1Item, Chart2Item = -1, DataTimeOut = 100;
         bool playing = false, reading = false, returned = false, realtime = false, Receiving = false, StartedCounting = false, ShowingGraph = false, ShowingControlPanel = false;
         public bool paused = false;
+        public int index;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
         DateTime StartTime, EndTime,previousTime;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
@@ -38,11 +39,13 @@ namespace GPSNavigator
             filemanager = manager;
             InitializeComponent();
             toolStripSplitButton1.Visible = false;
-            this.Text = "MomentDetail (Log)";
+            //this.Text = "MomentDetail (Log)";
             toolStripStatusLabel1.Visible = false;
             ControlPanel.Visible = true;
             ControlPanelButton.Visible = false;
             GraphToggle.Visible = false;
+            graphDataCombo.Visible = false;
+            ClearButton.Visible = false;
 
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.String;
@@ -98,7 +101,6 @@ namespace GPSNavigator
                     UpdateGraph(tempgpsdata, false);
                 else
                     UpdateGraph(tempgpsdata, true);
-                SpeedGauge.Needles[0].Value = (float)data.V;
             }
             catch
             {
@@ -113,7 +115,7 @@ namespace GPSNavigator
                 position = (float)xpos;
                 data = filemanager.ReadGPSstatus(position);
                 ReadCache(position, false);
-                updateLabels(time, 0, 0, 0, 0, (float)data.Dbuf.PDOP, (float)data.Dbuf.Altitude, (float)data.Dbuf.Longitude, (float)data.Dbuf.Latitude);
+                updateLabels(time, 0, 0, 0, 0, (float)data.Dbuf.PDOP, (float)data.Dbuf.Altitude, (float)data.Dbuf.Longitude, (float)data.Dbuf.Latitude,(float)data.Dbuf.V);
                 PlotGraph(data);
             }
             catch
@@ -144,7 +146,7 @@ namespace GPSNavigator
             }
         }
 
-        public void updateLabels(DateTime dt, int vgps, int ugps, int vglonass, int uglonass, float PDOP, float Altitude, float Longitude, float Latitude)
+        public void updateLabels(DateTime dt, int vgps, int ugps, int vglonass, int uglonass, float PDOP, float Altitude, float Longitude, float Latitude,float Velocity)
         {
             if (vgps != 0 || ugps != 0 || vglonass != 0 || uglonass != 0)
             {
@@ -172,9 +174,10 @@ namespace GPSNavigator
             LatitudeValue.Text = Latitude.ToString();
             LongitudeValue.Text = Longitude.ToString();
             AltitudeValue.Text = Altitude.ToString();
-
+            velLabel.Text = "Velocity: " + Velocity.ToString("#0.000");
             label12.Text = "Time: " + dt.ToString();
             DateLabel.Label.FormatString = dt.Month.ToString("D2") + "/" + dt.Day.ToString("D2") + "/" + dt.Year.ToString();
+            SpeedGauge.Needles[0].Value = Velocity;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = dt.Hour + (double)dt.Minute / 60;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[1].Markers[0].Value = dt.Minute;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[2].Markers[0].Value = dt.Second;
@@ -287,7 +290,7 @@ namespace GPSNavigator
                 chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
                 chart2.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
             }
-            updateLabels(data.Time, VisibleGPS, UsedGPS, VisibleGLONASS, UsedGLONASS,(float) data.Dbuf.PDOP,(float) data.Dbuf.Altitude,(float) data.Dbuf.Longitude,(float) data.Dbuf.Latitude);
+            updateLabels(data.Time, VisibleGPS, UsedGPS, VisibleGLONASS, UsedGLONASS,(float) data.Dbuf.PDOP,(float) data.Dbuf.Altitude,(float) data.Dbuf.Longitude,(float) data.Dbuf.Latitude,(float)data.Dbuf.V);
         }
 
 

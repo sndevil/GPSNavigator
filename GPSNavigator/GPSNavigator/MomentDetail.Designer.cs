@@ -29,49 +29,49 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea11 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series11 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title11 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            Infragistics.UltraGauge.Resources.EllipseAnnotation ellipseAnnotation6 = new Infragistics.UltraGauge.Resources.EllipseAnnotation();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement56 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement57 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.RadialGauge radialGauge6 = new Infragistics.UltraGauge.Resources.RadialGauge();
-            Infragistics.UltraGauge.Resources.BrushElementGroup brushElementGroup6 = new Infragistics.UltraGauge.Resources.BrushElementGroup();
-            Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement multiStopRadialGradientBrushElement11 = new Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title5 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            Infragistics.UltraGauge.Resources.EllipseAnnotation ellipseAnnotation3 = new Infragistics.UltraGauge.Resources.EllipseAnnotation();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement23 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement24 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.RadialGauge radialGauge3 = new Infragistics.UltraGauge.Resources.RadialGauge();
+            Infragistics.UltraGauge.Resources.BrushElementGroup brushElementGroup3 = new Infragistics.UltraGauge.Resources.BrushElementGroup();
+            Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement multiStopRadialGradientBrushElement5 = new Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MomentDetail));
-            Infragistics.UltraGauge.Resources.ColorStop colorStop46 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop47 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop48 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement58 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement multiStopRadialGradientBrushElement12 = new Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop49 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop50 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop51 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop52 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop53 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.ColorStop colorStop54 = new Infragistics.UltraGauge.Resources.ColorStop();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement59 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.RadialGaugeScale radialGaugeScale16 = new Infragistics.UltraGauge.Resources.RadialGaugeScale();
-            Infragistics.UltraGauge.Resources.NumericAxis numericAxis16 = new Infragistics.UltraGauge.Resources.NumericAxis();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement60 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement61 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.RadialGaugeNeedle radialGaugeNeedle16 = new Infragistics.UltraGauge.Resources.RadialGaugeNeedle();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement62 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement63 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement64 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.RadialGaugeScale radialGaugeScale17 = new Infragistics.UltraGauge.Resources.RadialGaugeScale();
-            Infragistics.UltraGauge.Resources.NumericAxis numericAxis17 = new Infragistics.UltraGauge.Resources.NumericAxis();
-            Infragistics.UltraGauge.Resources.RadialGaugeNeedle radialGaugeNeedle17 = new Infragistics.UltraGauge.Resources.RadialGaugeNeedle();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement65 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            Infragistics.UltraGauge.Resources.RadialGaugeScale radialGaugeScale18 = new Infragistics.UltraGauge.Resources.RadialGaugeScale();
-            Infragistics.UltraGauge.Resources.NumericAxis numericAxis18 = new Infragistics.UltraGauge.Resources.NumericAxis();
-            Infragistics.UltraGauge.Resources.RadialGaugeNeedle radialGaugeNeedle18 = new Infragistics.UltraGauge.Resources.RadialGaugeNeedle();
-            Infragistics.UltraGauge.Resources.SimpleGradientBrushElement simpleGradientBrushElement6 = new Infragistics.UltraGauge.Resources.SimpleGradientBrushElement();
-            Infragistics.UltraGauge.Resources.RadialGradientBrushElement radialGradientBrushElement6 = new Infragistics.UltraGauge.Resources.RadialGradientBrushElement();
-            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement66 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea12 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series12 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title12 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop19 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop20 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop21 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement25 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement multiStopRadialGradientBrushElement6 = new Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop22 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop23 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop24 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop25 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop26 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop27 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement26 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.RadialGaugeScale radialGaugeScale7 = new Infragistics.UltraGauge.Resources.RadialGaugeScale();
+            Infragistics.UltraGauge.Resources.NumericAxis numericAxis7 = new Infragistics.UltraGauge.Resources.NumericAxis();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement27 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement28 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.RadialGaugeNeedle radialGaugeNeedle7 = new Infragistics.UltraGauge.Resources.RadialGaugeNeedle();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement29 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement30 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement31 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.RadialGaugeScale radialGaugeScale8 = new Infragistics.UltraGauge.Resources.RadialGaugeScale();
+            Infragistics.UltraGauge.Resources.NumericAxis numericAxis8 = new Infragistics.UltraGauge.Resources.NumericAxis();
+            Infragistics.UltraGauge.Resources.RadialGaugeNeedle radialGaugeNeedle8 = new Infragistics.UltraGauge.Resources.RadialGaugeNeedle();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement32 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.RadialGaugeScale radialGaugeScale9 = new Infragistics.UltraGauge.Resources.RadialGaugeScale();
+            Infragistics.UltraGauge.Resources.NumericAxis numericAxis9 = new Infragistics.UltraGauge.Resources.NumericAxis();
+            Infragistics.UltraGauge.Resources.RadialGaugeNeedle radialGaugeNeedle9 = new Infragistics.UltraGauge.Resources.RadialGaugeNeedle();
+            Infragistics.UltraGauge.Resources.SimpleGradientBrushElement simpleGradientBrushElement3 = new Infragistics.UltraGauge.Resources.SimpleGradientBrushElement();
+            Infragistics.UltraGauge.Resources.RadialGradientBrushElement radialGradientBrushElement3 = new Infragistics.UltraGauge.Resources.RadialGradientBrushElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement33 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title6 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -212,6 +212,7 @@
             this.arcScaleBackgroundLayerComponent3 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
             this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.gaugeControl1 = new DevExpress.XtraGauges.Win.GaugeControl();
+            this.velLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.ControlPanel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -315,53 +316,53 @@
             this.chart1.BackSecondaryColor = System.Drawing.Color.White;
             this.chart1.BorderSkin.PageColor = System.Drawing.Color.Gainsboro;
             this.chart1.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Raised;
-            chartArea11.Area3DStyle.Enable3D = true;
-            chartArea11.Area3DStyle.PointDepth = 50;
-            chartArea11.Area3DStyle.Rotation = 15;
-            chartArea11.Area3DStyle.WallWidth = 10;
-            chartArea11.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea11.AxisX.IsLabelAutoFit = false;
-            chartArea11.AxisX.LabelAutoFitMinFontSize = 5;
-            chartArea11.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea5.Area3DStyle.Enable3D = true;
+            chartArea5.Area3DStyle.PointDepth = 50;
+            chartArea5.Area3DStyle.Rotation = 15;
+            chartArea5.Area3DStyle.WallWidth = 10;
+            chartArea5.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea5.AxisX.IsLabelAutoFit = false;
+            chartArea5.AxisX.LabelAutoFitMinFontSize = 5;
+            chartArea5.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea11.AxisX.LabelStyle.TruncatedLabels = true;
-            chartArea11.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea11.AxisX2.LabelAutoFitMinFontSize = 5;
-            chartArea11.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea5.AxisX.LabelStyle.TruncatedLabels = true;
+            chartArea5.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea5.AxisX2.LabelAutoFitMinFontSize = 5;
+            chartArea5.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea11.AxisX2.LineColor = System.Drawing.Color.LightGray;
-            chartArea11.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea11.AxisY.Maximum = 100D;
-            chartArea11.AxisY2.LineColor = System.Drawing.Color.LightGray;
-            chartArea11.BorderColor = System.Drawing.Color.DarkGray;
-            chartArea11.InnerPlotPosition.Auto = false;
-            chartArea11.InnerPlotPosition.Height = 75F;
-            chartArea11.InnerPlotPosition.Width = 95F;
-            chartArea11.InnerPlotPosition.X = 5F;
-            chartArea11.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea11);
+            chartArea5.AxisX2.LineColor = System.Drawing.Color.LightGray;
+            chartArea5.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea5.AxisY.Maximum = 100D;
+            chartArea5.AxisY2.LineColor = System.Drawing.Color.LightGray;
+            chartArea5.BorderColor = System.Drawing.Color.DarkGray;
+            chartArea5.InnerPlotPosition.Auto = false;
+            chartArea5.InnerPlotPosition.Height = 75F;
+            chartArea5.InnerPlotPosition.Width = 95F;
+            chartArea5.InnerPlotPosition.X = 5F;
+            chartArea5.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea5);
             this.chart1.Location = new System.Drawing.Point(66, 143);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series11.ChartArea = "ChartArea1";
-            series11.IsValueShownAsLabel = true;
-            series11.Legend = "Legend1";
-            series11.Name = "Series0";
-            series11.SmartLabelStyle.Enabled = false;
-            this.chart1.Series.Add(series11);
+            series5.ChartArea = "ChartArea1";
+            series5.IsValueShownAsLabel = true;
+            series5.Legend = "Legend1";
+            series5.Name = "Series0";
+            series5.SmartLabelStyle.Enabled = false;
+            this.chart1.Series.Add(series5);
             this.chart1.Size = new System.Drawing.Size(724, 190);
             this.chart1.TabIndex = 1;
             this.chart1.Text = "GPS";
-            title11.Name = "Title1";
-            this.chart1.Titles.Add(title11);
+            title5.Name = "Title1";
+            this.chart1.Titles.Add(title5);
             // 
             // label5
             // 
@@ -437,9 +438,9 @@
             // label12
             // 
             this.label12.BackColor = System.Drawing.Color.Transparent;
-            this.label12.Location = new System.Drawing.Point(658, 126);
+            this.label12.Location = new System.Drawing.Point(666, 128);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(156, 15);
+            this.label12.Size = new System.Drawing.Size(141, 15);
             this.label12.TabIndex = 13;
             this.label12.Text = "Time:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -463,139 +464,139 @@
             // 
             // ultraGaugeClock
             // 
-            ellipseAnnotation6.Bounds = new System.Drawing.Rectangle(35, 94, 0, 0);
-            solidFillBrushElement56.Color = System.Drawing.Color.Transparent;
-            ellipseAnnotation6.BrushElements.Add(solidFillBrushElement56);
-            solidFillBrushElement57.Color = System.Drawing.Color.NavajoWhite;
-            ellipseAnnotation6.Label.BrushElements.Add(solidFillBrushElement57);
-            ellipseAnnotation6.Label.FormatString = "06/29/2012";
-            this.ultraGaugeClock.Annotations.Add(ellipseAnnotation6);
+            ellipseAnnotation3.Bounds = new System.Drawing.Rectangle(35, 94, 0, 0);
+            solidFillBrushElement23.Color = System.Drawing.Color.Transparent;
+            ellipseAnnotation3.BrushElements.Add(solidFillBrushElement23);
+            solidFillBrushElement24.Color = System.Drawing.Color.NavajoWhite;
+            ellipseAnnotation3.Label.BrushElements.Add(solidFillBrushElement24);
+            ellipseAnnotation3.Label.FormatString = "06/29/2012";
+            this.ultraGaugeClock.Annotations.Add(ellipseAnnotation3);
             this.ultraGaugeClock.BackColor = System.Drawing.Color.Transparent;
             this.ultraGaugeClock.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            multiStopRadialGradientBrushElement11.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement11.CenterPoint")));
-            colorStop46.Color = System.Drawing.Color.FromArgb(((int)(((byte)(161)))), ((int)(((byte)(161)))), ((int)(((byte)(161)))));
-            colorStop47.Color = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(96)))), ((int)(((byte)(96)))));
-            colorStop47.Stop = 0.4758621F;
-            colorStop48.Color = System.Drawing.Color.FromArgb(((int)(((byte)(89)))), ((int)(((byte)(89)))), ((int)(((byte)(89)))));
-            colorStop48.Stop = 1F;
-            multiStopRadialGradientBrushElement11.ColorStops.Add(colorStop46);
-            multiStopRadialGradientBrushElement11.ColorStops.Add(colorStop47);
-            multiStopRadialGradientBrushElement11.ColorStops.Add(colorStop48);
-            multiStopRadialGradientBrushElement11.FocusScales = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement11.FocusScales")));
-            solidFillBrushElement58.Color = System.Drawing.Color.Gray;
-            solidFillBrushElement58.RelativeBounds = new System.Drawing.Rectangle(4, 4, 93, 93);
-            solidFillBrushElement58.RelativeBoundsMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
-            multiStopRadialGradientBrushElement12.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement12.CenterPoint")));
-            colorStop49.Color = System.Drawing.Color.Transparent;
-            colorStop50.Color = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            colorStop50.Stop = 0.06206897F;
-            colorStop51.Color = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(82)))), ((int)(((byte)(82)))));
-            colorStop51.Stop = 0.07586207F;
-            colorStop52.Color = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            colorStop52.Stop = 0.1448276F;
-            colorStop53.Color = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            colorStop53.Stop = 0.2448276F;
-            colorStop54.Color = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
-            colorStop54.Stop = 1F;
-            multiStopRadialGradientBrushElement12.ColorStops.Add(colorStop49);
-            multiStopRadialGradientBrushElement12.ColorStops.Add(colorStop50);
-            multiStopRadialGradientBrushElement12.ColorStops.Add(colorStop51);
-            multiStopRadialGradientBrushElement12.ColorStops.Add(colorStop52);
-            multiStopRadialGradientBrushElement12.ColorStops.Add(colorStop53);
-            multiStopRadialGradientBrushElement12.ColorStops.Add(colorStop54);
-            multiStopRadialGradientBrushElement12.FocusScales = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement12.FocusScales")));
-            multiStopRadialGradientBrushElement12.RelativeBounds = new System.Drawing.Rectangle(4, 4, 93, 93);
-            multiStopRadialGradientBrushElement12.RelativeBoundsMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
-            brushElementGroup6.BrushElements.Add(multiStopRadialGradientBrushElement11);
-            brushElementGroup6.BrushElements.Add(solidFillBrushElement58);
-            brushElementGroup6.BrushElements.Add(multiStopRadialGradientBrushElement12);
-            radialGauge6.Dial.BrushElements.Add(brushElementGroup6);
-            solidFillBrushElement59.Color = System.Drawing.Color.Silver;
-            radialGauge6.Dial.StrokeElement.BrushElements.Add(solidFillBrushElement59);
-            numericAxis16.EndValue = 12D;
-            radialGaugeScale16.Axes.Add(numericAxis16);
-            radialGaugeScale16.EndAngle = 630D;
-            radialGaugeScale16.Key = "hour";
-            solidFillBrushElement60.Color = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(189)))), ((int)(((byte)(189)))));
-            radialGaugeScale16.Labels.BrushElements.Add(solidFillBrushElement60);
-            radialGaugeScale16.Labels.Extent = 60D;
-            radialGaugeScale16.Labels.Font = new System.Drawing.Font("Trebuchet MS", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            radialGaugeScale16.Labels.Orientation = Infragistics.UltraGauge.Resources.RadialLabelOrientation.Horizontal;
-            radialGaugeScale16.Labels.PostInitial = 1D;
-            radialGaugeScale16.Labels.SpanMaximum = 18D;
-            solidFillBrushElement61.Color = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(189)))), ((int)(((byte)(189)))));
-            radialGaugeScale16.MajorTickmarks.BrushElements.Add(solidFillBrushElement61);
-            radialGaugeScale16.MajorTickmarks.EndExtent = 80D;
-            radialGaugeScale16.MajorTickmarks.EndWidth = 3;
-            radialGaugeScale16.MajorTickmarks.StartExtent = 72D;
-            radialGaugeScale16.MajorTickmarks.StartWidth = 3;
-            solidFillBrushElement62.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(61)))), ((int)(((byte)(22)))));
-            radialGaugeNeedle16.BrushElements.Add(solidFillBrushElement62);
-            radialGaugeNeedle16.EndExtent = 40D;
-            radialGaugeNeedle16.EndWidth = 2D;
-            radialGaugeNeedle16.MidExtent = 0D;
-            radialGaugeNeedle16.MidWidth = 2D;
-            radialGaugeNeedle16.StartWidth = 2D;
-            radialGaugeNeedle16.Value = 1D;
-            radialGaugeNeedle16.WidthMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
-            radialGaugeScale16.Markers.Add(radialGaugeNeedle16);
-            solidFillBrushElement63.Color = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(225)))), ((int)(((byte)(225)))));
-            radialGaugeScale16.MinorTickmarks.BrushElements.Add(solidFillBrushElement63);
-            radialGaugeScale16.MinorTickmarks.EndExtent = 80D;
-            radialGaugeScale16.MinorTickmarks.EndWidth = 1;
-            radialGaugeScale16.MinorTickmarks.Frequency = 0.2D;
-            radialGaugeScale16.MinorTickmarks.StartExtent = 77D;
-            solidFillBrushElement64.Color = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            radialGaugeScale16.MinorTickmarks.StrokeElement.BrushElements.Add(solidFillBrushElement64);
-            radialGaugeScale16.StartAngle = 270D;
-            numericAxis17.EndValue = 60D;
-            radialGaugeScale17.Axes.Add(numericAxis17);
-            radialGaugeScale17.EndAngle = 630D;
-            radialGaugeScale17.Key = "minute";
-            solidFillBrushElement65.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(61)))), ((int)(((byte)(22)))));
-            radialGaugeNeedle17.BrushElements.Add(solidFillBrushElement65);
-            radialGaugeNeedle17.EndExtent = 60D;
-            radialGaugeNeedle17.EndWidth = 2D;
-            radialGaugeNeedle17.MidExtent = 0D;
-            radialGaugeNeedle17.MidWidth = 2D;
-            radialGaugeNeedle17.StartWidth = 2D;
-            radialGaugeNeedle17.Value = 10D;
-            radialGaugeNeedle17.WidthMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
-            radialGaugeScale17.Markers.Add(radialGaugeNeedle17);
-            radialGaugeScale17.StartAngle = 270D;
-            numericAxis18.EndValue = 60D;
-            radialGaugeScale18.Axes.Add(numericAxis18);
-            radialGaugeScale18.EndAngle = 630D;
-            radialGaugeScale18.Key = "second";
-            simpleGradientBrushElement6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            simpleGradientBrushElement6.GradientStyle = Infragistics.UltraGauge.Resources.Gradient.BackwardDiagonal;
-            simpleGradientBrushElement6.StartColor = System.Drawing.Color.Gainsboro;
-            radialGaugeNeedle18.Anchor.BrushElements.Add(simpleGradientBrushElement6);
-            radialGaugeNeedle18.Anchor.Radius = 6D;
-            radialGaugeNeedle18.Anchor.RadiusMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
-            radialGradientBrushElement6.CenterColor = System.Drawing.Color.WhiteSmoke;
-            radialGradientBrushElement6.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("radialGradientBrushElement6.CenterPoint")));
-            radialGradientBrushElement6.FocusScales = ((System.Drawing.PointF)(resources.GetObject("radialGradientBrushElement6.FocusScales")));
-            radialGradientBrushElement6.SurroundColor = System.Drawing.Color.Gray;
-            radialGaugeNeedle18.Anchor.StrokeElement.BrushElements.Add(radialGradientBrushElement6);
-            radialGaugeNeedle18.Anchor.StrokeElement.Thickness = 2D;
-            solidFillBrushElement66.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(61)))), ((int)(((byte)(22)))));
-            radialGaugeNeedle18.BrushElements.Add(solidFillBrushElement66);
-            radialGaugeNeedle18.EndExtent = 70D;
-            radialGaugeNeedle18.EndWidth = 1D;
-            radialGaugeNeedle18.MidExtent = 0D;
-            radialGaugeNeedle18.MidWidth = 1D;
-            radialGaugeNeedle18.StartExtent = -15D;
-            radialGaugeNeedle18.StartWidth = 1D;
-            radialGaugeNeedle18.StrokeElement.Thickness = 0D;
-            radialGaugeNeedle18.Value = 20D;
-            radialGaugeNeedle18.WidthMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
-            radialGaugeScale18.Markers.Add(radialGaugeNeedle18);
-            radialGaugeScale18.StartAngle = 270D;
-            radialGauge6.Scales.Add(radialGaugeScale16);
-            radialGauge6.Scales.Add(radialGaugeScale17);
-            radialGauge6.Scales.Add(radialGaugeScale18);
-            this.ultraGaugeClock.Gauges.Add(radialGauge6);
+            multiStopRadialGradientBrushElement5.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement5.CenterPoint")));
+            colorStop19.Color = System.Drawing.Color.FromArgb(((int)(((byte)(161)))), ((int)(((byte)(161)))), ((int)(((byte)(161)))));
+            colorStop20.Color = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(96)))), ((int)(((byte)(96)))));
+            colorStop20.Stop = 0.4758621F;
+            colorStop21.Color = System.Drawing.Color.FromArgb(((int)(((byte)(89)))), ((int)(((byte)(89)))), ((int)(((byte)(89)))));
+            colorStop21.Stop = 1F;
+            multiStopRadialGradientBrushElement5.ColorStops.Add(colorStop19);
+            multiStopRadialGradientBrushElement5.ColorStops.Add(colorStop20);
+            multiStopRadialGradientBrushElement5.ColorStops.Add(colorStop21);
+            multiStopRadialGradientBrushElement5.FocusScales = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement5.FocusScales")));
+            solidFillBrushElement25.Color = System.Drawing.Color.Gray;
+            solidFillBrushElement25.RelativeBounds = new System.Drawing.Rectangle(4, 4, 93, 93);
+            solidFillBrushElement25.RelativeBoundsMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
+            multiStopRadialGradientBrushElement6.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement6.CenterPoint")));
+            colorStop22.Color = System.Drawing.Color.Transparent;
+            colorStop23.Color = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            colorStop23.Stop = 0.06206897F;
+            colorStop24.Color = System.Drawing.Color.FromArgb(((int)(((byte)(82)))), ((int)(((byte)(82)))), ((int)(((byte)(82)))));
+            colorStop24.Stop = 0.07586207F;
+            colorStop25.Color = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            colorStop25.Stop = 0.1448276F;
+            colorStop26.Color = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            colorStop26.Stop = 0.2448276F;
+            colorStop27.Color = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            colorStop27.Stop = 1F;
+            multiStopRadialGradientBrushElement6.ColorStops.Add(colorStop22);
+            multiStopRadialGradientBrushElement6.ColorStops.Add(colorStop23);
+            multiStopRadialGradientBrushElement6.ColorStops.Add(colorStop24);
+            multiStopRadialGradientBrushElement6.ColorStops.Add(colorStop25);
+            multiStopRadialGradientBrushElement6.ColorStops.Add(colorStop26);
+            multiStopRadialGradientBrushElement6.ColorStops.Add(colorStop27);
+            multiStopRadialGradientBrushElement6.FocusScales = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement6.FocusScales")));
+            multiStopRadialGradientBrushElement6.RelativeBounds = new System.Drawing.Rectangle(4, 4, 93, 93);
+            multiStopRadialGradientBrushElement6.RelativeBoundsMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
+            brushElementGroup3.BrushElements.Add(multiStopRadialGradientBrushElement5);
+            brushElementGroup3.BrushElements.Add(solidFillBrushElement25);
+            brushElementGroup3.BrushElements.Add(multiStopRadialGradientBrushElement6);
+            radialGauge3.Dial.BrushElements.Add(brushElementGroup3);
+            solidFillBrushElement26.Color = System.Drawing.Color.Silver;
+            radialGauge3.Dial.StrokeElement.BrushElements.Add(solidFillBrushElement26);
+            numericAxis7.EndValue = 12D;
+            radialGaugeScale7.Axes.Add(numericAxis7);
+            radialGaugeScale7.EndAngle = 630D;
+            radialGaugeScale7.Key = "hour";
+            solidFillBrushElement27.Color = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(189)))), ((int)(((byte)(189)))));
+            radialGaugeScale7.Labels.BrushElements.Add(solidFillBrushElement27);
+            radialGaugeScale7.Labels.Extent = 60D;
+            radialGaugeScale7.Labels.Font = new System.Drawing.Font("Trebuchet MS", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            radialGaugeScale7.Labels.Orientation = Infragistics.UltraGauge.Resources.RadialLabelOrientation.Horizontal;
+            radialGaugeScale7.Labels.PostInitial = 1D;
+            radialGaugeScale7.Labels.SpanMaximum = 18D;
+            solidFillBrushElement28.Color = System.Drawing.Color.FromArgb(((int)(((byte)(189)))), ((int)(((byte)(189)))), ((int)(((byte)(189)))));
+            radialGaugeScale7.MajorTickmarks.BrushElements.Add(solidFillBrushElement28);
+            radialGaugeScale7.MajorTickmarks.EndExtent = 80D;
+            radialGaugeScale7.MajorTickmarks.EndWidth = 3;
+            radialGaugeScale7.MajorTickmarks.StartExtent = 72D;
+            radialGaugeScale7.MajorTickmarks.StartWidth = 3;
+            solidFillBrushElement29.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(61)))), ((int)(((byte)(22)))));
+            radialGaugeNeedle7.BrushElements.Add(solidFillBrushElement29);
+            radialGaugeNeedle7.EndExtent = 40D;
+            radialGaugeNeedle7.EndWidth = 2D;
+            radialGaugeNeedle7.MidExtent = 0D;
+            radialGaugeNeedle7.MidWidth = 2D;
+            radialGaugeNeedle7.StartWidth = 2D;
+            radialGaugeNeedle7.Value = 1D;
+            radialGaugeNeedle7.WidthMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
+            radialGaugeScale7.Markers.Add(radialGaugeNeedle7);
+            solidFillBrushElement30.Color = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(225)))), ((int)(((byte)(225)))));
+            radialGaugeScale7.MinorTickmarks.BrushElements.Add(solidFillBrushElement30);
+            radialGaugeScale7.MinorTickmarks.EndExtent = 80D;
+            radialGaugeScale7.MinorTickmarks.EndWidth = 1;
+            radialGaugeScale7.MinorTickmarks.Frequency = 0.2D;
+            radialGaugeScale7.MinorTickmarks.StartExtent = 77D;
+            solidFillBrushElement31.Color = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            radialGaugeScale7.MinorTickmarks.StrokeElement.BrushElements.Add(solidFillBrushElement31);
+            radialGaugeScale7.StartAngle = 270D;
+            numericAxis8.EndValue = 60D;
+            radialGaugeScale8.Axes.Add(numericAxis8);
+            radialGaugeScale8.EndAngle = 630D;
+            radialGaugeScale8.Key = "minute";
+            solidFillBrushElement32.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(61)))), ((int)(((byte)(22)))));
+            radialGaugeNeedle8.BrushElements.Add(solidFillBrushElement32);
+            radialGaugeNeedle8.EndExtent = 60D;
+            radialGaugeNeedle8.EndWidth = 2D;
+            radialGaugeNeedle8.MidExtent = 0D;
+            radialGaugeNeedle8.MidWidth = 2D;
+            radialGaugeNeedle8.StartWidth = 2D;
+            radialGaugeNeedle8.Value = 10D;
+            radialGaugeNeedle8.WidthMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
+            radialGaugeScale8.Markers.Add(radialGaugeNeedle8);
+            radialGaugeScale8.StartAngle = 270D;
+            numericAxis9.EndValue = 60D;
+            radialGaugeScale9.Axes.Add(numericAxis9);
+            radialGaugeScale9.EndAngle = 630D;
+            radialGaugeScale9.Key = "second";
+            simpleGradientBrushElement3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            simpleGradientBrushElement3.GradientStyle = Infragistics.UltraGauge.Resources.Gradient.BackwardDiagonal;
+            simpleGradientBrushElement3.StartColor = System.Drawing.Color.Gainsboro;
+            radialGaugeNeedle9.Anchor.BrushElements.Add(simpleGradientBrushElement3);
+            radialGaugeNeedle9.Anchor.Radius = 6D;
+            radialGaugeNeedle9.Anchor.RadiusMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
+            radialGradientBrushElement3.CenterColor = System.Drawing.Color.WhiteSmoke;
+            radialGradientBrushElement3.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("radialGradientBrushElement3.CenterPoint")));
+            radialGradientBrushElement3.FocusScales = ((System.Drawing.PointF)(resources.GetObject("radialGradientBrushElement3.FocusScales")));
+            radialGradientBrushElement3.SurroundColor = System.Drawing.Color.Gray;
+            radialGaugeNeedle9.Anchor.StrokeElement.BrushElements.Add(radialGradientBrushElement3);
+            radialGaugeNeedle9.Anchor.StrokeElement.Thickness = 2D;
+            solidFillBrushElement33.Color = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(61)))), ((int)(((byte)(22)))));
+            radialGaugeNeedle9.BrushElements.Add(solidFillBrushElement33);
+            radialGaugeNeedle9.EndExtent = 70D;
+            radialGaugeNeedle9.EndWidth = 1D;
+            radialGaugeNeedle9.MidExtent = 0D;
+            radialGaugeNeedle9.MidWidth = 1D;
+            radialGaugeNeedle9.StartExtent = -15D;
+            radialGaugeNeedle9.StartWidth = 1D;
+            radialGaugeNeedle9.StrokeElement.Thickness = 0D;
+            radialGaugeNeedle9.Value = 20D;
+            radialGaugeNeedle9.WidthMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
+            radialGaugeScale9.Markers.Add(radialGaugeNeedle9);
+            radialGaugeScale9.StartAngle = 270D;
+            radialGauge3.Scales.Add(radialGaugeScale7);
+            radialGauge3.Scales.Add(radialGaugeScale8);
+            radialGauge3.Scales.Add(radialGaugeScale9);
+            this.ultraGaugeClock.Gauges.Add(radialGauge3);
             this.ultraGaugeClock.Location = new System.Drawing.Point(669, 2);
             this.ultraGaugeClock.Name = "ultraGaugeClock";
             this.ultraGaugeClock.Size = new System.Drawing.Size(132, 127);
@@ -822,7 +823,7 @@
             this.toolStripStatusLabel5,
             this.EndTimeLabel,
             this.toolStripSplitButton1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 658);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 538);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(814, 22);
             this.statusStrip1.TabIndex = 48;
@@ -912,6 +913,7 @@
             // 
             // c1Chart1
             // 
+            this.c1Chart1.BackColor = System.Drawing.Color.Gainsboro;
             this.c1Chart1.Location = new System.Drawing.Point(58, 514);
             this.c1Chart1.Name = "c1Chart1";
             this.c1Chart1.PropBag = resources.GetString("c1Chart1.PropBag");
@@ -1953,7 +1955,6 @@
             this.GraphToggle.BackColor = System.Drawing.Color.Gainsboro;
             this.GraphToggle.BackgroundImage = global::GPSNavigator.Properties.Resources.Down;
             this.GraphToggle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.GraphToggle.Enabled = false;
             this.GraphToggle.ForeColor = System.Drawing.SystemColors.ControlText;
             this.GraphToggle.Location = new System.Drawing.Point(4, 461);
             this.GraphToggle.Name = "GraphToggle";
@@ -1972,53 +1973,53 @@
             this.chart2.BackSecondaryColor = System.Drawing.Color.White;
             this.chart2.BorderSkin.PageColor = System.Drawing.Color.Gainsboro;
             this.chart2.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Raised;
-            chartArea12.Area3DStyle.Enable3D = true;
-            chartArea12.Area3DStyle.PointDepth = 50;
-            chartArea12.Area3DStyle.Rotation = 15;
-            chartArea12.Area3DStyle.WallWidth = 10;
-            chartArea12.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea12.AxisX.IsLabelAutoFit = false;
-            chartArea12.AxisX.LabelAutoFitMinFontSize = 5;
-            chartArea12.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea6.Area3DStyle.Enable3D = true;
+            chartArea6.Area3DStyle.PointDepth = 50;
+            chartArea6.Area3DStyle.Rotation = 15;
+            chartArea6.Area3DStyle.WallWidth = 10;
+            chartArea6.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea6.AxisX.IsLabelAutoFit = false;
+            chartArea6.AxisX.LabelAutoFitMinFontSize = 5;
+            chartArea6.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea12.AxisX.LabelStyle.TruncatedLabels = true;
-            chartArea12.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea12.AxisX2.LabelAutoFitMinFontSize = 5;
-            chartArea12.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea6.AxisX.LabelStyle.TruncatedLabels = true;
+            chartArea6.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea6.AxisX2.LabelAutoFitMinFontSize = 5;
+            chartArea6.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea12.AxisX2.LineColor = System.Drawing.Color.LightGray;
-            chartArea12.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea12.AxisY.Maximum = 100D;
-            chartArea12.AxisY2.LineColor = System.Drawing.Color.LightGray;
-            chartArea12.BorderColor = System.Drawing.Color.DarkGray;
-            chartArea12.InnerPlotPosition.Auto = false;
-            chartArea12.InnerPlotPosition.Height = 75F;
-            chartArea12.InnerPlotPosition.Width = 95F;
-            chartArea12.InnerPlotPosition.X = 5F;
-            chartArea12.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea12);
+            chartArea6.AxisX2.LineColor = System.Drawing.Color.LightGray;
+            chartArea6.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea6.AxisY.Maximum = 100D;
+            chartArea6.AxisY2.LineColor = System.Drawing.Color.LightGray;
+            chartArea6.BorderColor = System.Drawing.Color.DarkGray;
+            chartArea6.InnerPlotPosition.Auto = false;
+            chartArea6.InnerPlotPosition.Height = 75F;
+            chartArea6.InnerPlotPosition.Width = 95F;
+            chartArea6.InnerPlotPosition.X = 5F;
+            chartArea6.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea6);
             this.chart2.Location = new System.Drawing.Point(66, 333);
             this.chart2.Name = "chart2";
             this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series12.ChartArea = "ChartArea1";
-            series12.IsValueShownAsLabel = true;
-            series12.Legend = "Legend1";
-            series12.Name = "Series0";
-            series12.SmartLabelStyle.Enabled = false;
-            this.chart2.Series.Add(series12);
+            series6.ChartArea = "ChartArea1";
+            series6.IsValueShownAsLabel = true;
+            series6.Legend = "Legend1";
+            series6.Name = "Series0";
+            series6.SmartLabelStyle.Enabled = false;
+            this.chart2.Series.Add(series6);
             this.chart2.Size = new System.Drawing.Size(724, 190);
             this.chart2.TabIndex = 77;
             this.chart2.Text = "GPS";
-            title12.Name = "Title1";
-            this.chart2.Titles.Add(title12);
+            title6.Name = "Title1";
+            this.chart2.Titles.Add(title6);
             // 
             // arcScaleComponent2
             // 
@@ -2166,7 +2167,7 @@
             this.SpeedGauge.BackgroundLayers.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent[] {
             this.arcScaleBackgroundLayerComponent3,
             this.arcScaleBackgroundLayerComponent4});
-            this.SpeedGauge.Bounds = new System.Drawing.Rectangle(2, 1, 135, 136);
+            this.SpeedGauge.Bounds = new System.Drawing.Rectangle(3, 3, 132, 136);
             this.SpeedGauge.Name = "SpeedGauge";
             this.SpeedGauge.Needles.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent[] {
             this.arcScaleNeedleComponent2});
@@ -2181,17 +2182,27 @@
             this.gaugeControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.gaugeControl1.Gauges.AddRange(new DevExpress.XtraGauges.Base.IGauge[] {
             this.SpeedGauge});
-            this.gaugeControl1.Location = new System.Drawing.Point(540, -7);
+            this.gaugeControl1.Location = new System.Drawing.Point(538, -8);
             this.gaugeControl1.Name = "gaugeControl1";
-            this.gaugeControl1.Size = new System.Drawing.Size(136, 138);
+            this.gaugeControl1.Size = new System.Drawing.Size(135, 139);
             this.gaugeControl1.TabIndex = 56;
+            // 
+            // velLabel
+            // 
+            this.velLabel.Location = new System.Drawing.Point(538, 127);
+            this.velLabel.Name = "velLabel";
+            this.velLabel.Size = new System.Drawing.Size(135, 16);
+            this.velLabel.TabIndex = 78;
+            this.velLabel.Text = "Velocity:";
+            this.velLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MomentDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(814, 680);
+            this.ClientSize = new System.Drawing.Size(814, 560);
+            this.Controls.Add(this.velLabel);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.gaugeControl1);
             this.Controls.Add(this.groupControl2);
@@ -2446,5 +2457,6 @@
         private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent arcScaleBackgroundLayerComponent3;
         private DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge SpeedGauge;
         private DevExpress.XtraGauges.Win.GaugeControl gaugeControl1;
+        private System.Windows.Forms.Label velLabel;
     }
 }

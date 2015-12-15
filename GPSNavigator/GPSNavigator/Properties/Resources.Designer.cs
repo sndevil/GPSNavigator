@@ -116,6 +116,13 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap refresh_256 {
+            get {
+                object obj = ResourceManager.GetObject("refresh_256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);

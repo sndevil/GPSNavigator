@@ -3597,18 +3597,20 @@ namespace GPSNavigator.Source
             double[] output = new double[Globals.Databuffercount];
             float dt = (float)input.Count / 100;
             float dto = (float)output.Length / 100;
-            for (int i = 1; i <= 100; i++)
+            for (int i = 0; i < 100; i++)
             {
-                var firstdata = ((int)(i * dt) - 1);
-                var rmax = input[(firstdata >= 0)? firstdata : 0];
-                for (int j = 1; j <= (int)dt; j++)
-                    if (rmax == double.NaN && input[(int)(i * dt) - j] != double.NaN)
-                        rmax = input[(int)(i * dt) - j];
-                    else if (input[(int)(i * dt) - j] > rmax && input[(int)(i*dt) - j] != double.NaN)
-                        rmax = input[(int)(i * dt) - j];
-                for (int j = 1; j <= (int)(dto); j++)
-                    output[(int)(i * dto) - j] = rmax;
+                var firstdata = (int)(i * dt);
+                var rmax = input[firstdata];
+                for (int j = 1; j < (int)dt; j++)
+                    if (input[(int)(i * dt) + j] != double.NaN)
+                        if (rmax == double.NaN)
+                            rmax = input[(int)(i * dt) + j];
+                        else if (input[(int)(i * dt) + j] > rmax)
+                            rmax = input[(int)(i * dt) + j];
+                for (int j = 0; j < (int)dto; j++)
+                    output[(int)(i * dto) + j] = rmax;
             }
+
             return output;
         }
 
@@ -3617,17 +3619,18 @@ namespace GPSNavigator.Source
             double[] output = new double[Globals.Databuffercount];
             float dt = (float)input.Count / 100;
             float dto = (float)output.Length / 100;
-            for (int i = 1; i <= 100; i++)
+            for (int i = 0; i < 100; i++)
             {
-                var firstdata = ((int)(i * dt) - 1);
-                var rmin = input[(firstdata >= 0) ? firstdata : 0];
-                for (int j = 1; j <= (int)dt; j++)
-                    if (rmin == double.NaN && input[(int)(i * dt) - j] != double.NaN)
-                        rmin = input[(int)(i * dt) - j];
-                    else if (input[(int)(i * dt) - j] < rmin && input[(int)(i * dt) - j] != double.NaN)
-                        rmin = input[(int)(i * dt) - j];
-                for (int j = 1; j <= (int)(dto); j++)
-                    output[(int)(i * dto) - j] = rmin;
+                var firstdata = (int)(i * dt);
+                var rmin = input[firstdata];
+                for (int j = 1; j < (int)dt; j++)
+                    if (input[(int)(i*dt) + j] != double.NaN)
+                        if (rmin == double.NaN)
+                            rmin = input[(int)(i * dt) + j];
+                        else if (input[(int)(i * dt) + j] < rmin)
+                            rmin = input[(int)(i * dt) + j];
+                for (int j = 0; j < (int)(dto); j++)
+                    output[(int)(i * dto) + j] = rmin;
             }
             return output;
         }

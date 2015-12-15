@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows;
 using GPSNavigator.Classes;
 using GPSNavigator.Source;
 using GPSNavigator;
@@ -16,7 +17,7 @@ namespace GPSNavigator
 {
     public partial class Grapher : Form
     {
-        public int min = 0, max = 1000;
+        public int min = 0, max = 1000,index;
         public long offset, bufferlength;
         public float zoom = 0.01f,fmin = 0.0f, fmax = 1f,zoommin,zoommax;
         public double xpos = 0.0;
@@ -37,21 +38,18 @@ namespace GPSNavigator
         private double[] xlist = new double[Globals.Databuffercount];
         private DateTime[] tlist = new DateTime[Globals.Databuffercount];
 
-        public Grapher(LogFileManager Filemanager, Form1 Parent)
+        public Grapher(LogFileManager Filemanager, Form1 Parent,int Index,string OriginalPath)
         {
             parentForm = Parent;
             filemanager = Filemanager;
-            DetailForm = new MomentDetail(filemanager);
-            DetailForm.Dock = DockStyle.None;
-            DetailForm.TopLevel = false;
-            DetailForm.Show();
-            DocumentWindow NewDockWindow = new DocumentWindow("Moment Details (Log)");
-            NewDockWindow.Controls.Add(DetailForm);
-            parentForm.AddDocumentControl(NewDockWindow);
-
+            index = Index;
             InitializeComponent();
+
+            CreateDetailForm();
             this.Dock = DockStyle.Fill;
-            this.Text = "Grapher ("+Filemanager.filepath+")";
+            label5.Parent = FileAdressLabel.Parent = Chart1;
+            FileAdressLabel.BackColor = Color.Transparent;
+            FileAdressLabel.Text = OriginalPath;
             Chart1.MouseDown += new MouseEventHandler(Chart1_MouseDown);
             Chart1.MouseUp += new MouseEventHandler(Chart1_MouseUp);
             Chart1.MouseMove += new MouseEventHandler(Chart1_MouseMove);
@@ -64,13 +62,27 @@ namespace GPSNavigator
             rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
         }
 
+        void CreateDetailForm()
+        {
+            DetailForm = new MomentDetail(filemanager);
+            DetailForm.Dock = DockStyle.None;
+            DetailForm.TopLevel = false;
+            DetailForm.Show();
+            DocumentWindow NewDockWindow = new DocumentWindow("Moment Details (Log) " + index.ToString());
+            NewDockWindow.AutoScroll = true;
+            NewDockWindow.Controls.Add(DetailForm);
+            parentForm.AddDocumentControl(NewDockWindow);
+            //DetailForm.index = parentForm.radDock1.DocumentManager.DocumentArray.Length;
+            parentForm.detaillist.Add(DetailForm);
+        }
+
         void Chart1_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == System.Windows.Forms.MouseButtons.Left && mousedown)
             {
                 mousedown = false;
                 zoommax = (float)xpos;
-                if (Math.Abs(zoommax - zoommin) > 0.00001f)
+                if (Math.Abs(zoommax - zoommin) > 0.0001f)
                 {
                     if (zoommax < zoommin)
                     {
@@ -83,6 +95,12 @@ namespace GPSNavigator
                         fmin = zoommin;
                     }
                     LoadData();
+                    if (Control.ModifierKeys == Keys.Alt)
+                        for (int i = 0; i < parentForm.radDock1.DocumentManager.DocumentArray.Length; i++)
+                        {
+                            if (parentForm.radDock1.DocumentManager.DocumentArray[i].Text == "Moment Details (Log) " + index.ToString())
+                                parentForm.radDock1.ActivateWindow(parentForm.radDock1.DocumentManager.DocumentArray[i]);
+                        }
                 }
             }
         }
@@ -154,6 +172,21 @@ namespace GPSNavigator
                 UserchangedRanges = false;
                 textBox1.Text = fmax.ToString();
                 rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange((int)(fmin*1000), (int)(fmax*1000));
+                var found = false;
+                if (Control.ModifierKeys == Keys.Alt)
+                {
+                    for (int i = 0; i < parentForm.radDock1.DocumentManager.DocumentArray.Length; i++)
+                    {
+                        if (parentForm.radDock1.DocumentManager.DocumentArray[i].Text == "Moment Details (Log) " + index.ToString())
+                        {
+                            parentForm.radDock1.ActivateWindow(parentForm.radDock1.DocumentManager.DocumentArray[i]);
+                            found = true;
+                        }
+                    }
+                    if (!found)
+                        CreateDetailForm();
+                }
+
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Right)
             {
@@ -232,99 +265,6 @@ namespace GPSNavigator
             ps.SeriesIndex = -1;
             ps.Label = "trackingBall";
         }
-
-        //Legacy
-        /*
-        public void PlotGraph()
-        {
-            int counter=0;
-            float i = fmin/7000f;
-            double temp = 0;
-            var dt = delta / 7000f;
-            for (counter = 0; counter < Globals.Databuffercount; counter++)
-            {
-                if (counter >= dbuffer.X.Count)
-                {
-                    for (int j = counter; j < Globals.Databuffercount; j++)
-                    {
-                        ylist[j] = temp;
-                        xlist[j] = (double)i;
-                        i += dt;
-                    }
-                    break;
-                }
-                var index = dbuffer.statcounter[counter];
-                if (index != -1)
-                {
-                    switch (selectedtype)
-                    {
-                        case graphtype.X:
-                            temp = dbuffer.X[index];
-                            break;
-                        case graphtype.Y:
-                            temp = dbuffer.Y[index];
-                            break;
-                        case graphtype.Z:
-                            temp = dbuffer.Z[index];
-                            break;
-                        case graphtype.Vx:
-                            temp = dbuffer.Vx[index];
-                            break;
-                        case graphtype.Vy:
-                            temp = dbuffer.Vy[index];
-                            break;
-                        case graphtype.Vz:
-                            temp = dbuffer.Vz[index];
-                            break;
-                        case graphtype.Ax:
-                            temp = dbuffer.Ax[index];
-                            break;
-                        case graphtype.Ay:
-                            temp = dbuffer.Ay[index];
-                            break;
-                        case graphtype.Az:
-                            temp = dbuffer.Az[index];
-                            break;
-                        case graphtype.Latitude:
-                            temp = dbuffer.Latitude[index];
-                            break;
-                        case graphtype.Longitude:
-                            temp = dbuffer.Longitude[index];
-                            break;
-                        case graphtype.Altitude:
-                            temp = dbuffer.Altitude[index];
-                            break;
-                        case graphtype.PDOP:
-                            temp = dbuffer.PDOP[index];
-                            break;
-                        case graphtype.State:
-                            temp = dbuffer.state[index];
-                            break;
-                        case graphtype.Temperature:
-                            temp = dbuffer.Temperature[index];
-                            break;
-                        case graphtype.UsedStats:
-                            temp = dbuffer.NumOfUsedSats[index];
-                            break;
-                        case graphtype.VisibleStats:
-                            temp = dbuffer.NumOfVisibleSats[index];
-                            break;
-                    }
-                }
-                
-                ylist[counter] = temp;
-                xlist[counter] = (double)i;
-                i += dt;
-            }
-           // if (counter < 1000)
-            //{
-            //    ylist[counter] = 0;
-             //   xlist[counter] = max;
-           // }
-            Chart1.ChartGroups[0].ChartData.SeriesList[0].X.CopyDataIn(xlist);
-            Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.CopyDataIn(ylist);
-        }
-        */
 
         public void PlotGraph(GraphData data)
         {
@@ -527,6 +467,7 @@ namespace GPSNavigator
         private void Grapher_FormClosed(object sender, FormClosedEventArgs e)
         {
             filemanager.Close();
+            parentForm.folderManager.removefolder(filemanager.filepath);
         }
 
         private void MinCheck_CheckedChanged(object sender, EventArgs e)

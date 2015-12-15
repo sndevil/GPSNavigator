@@ -28,27 +28,32 @@ namespace GPSNavigator
         bool gotdata = false;
         bool showdetail = false;
         bool saved = false;
-        public bool extractdone = false;
+        bool appclosing = false;
+        public bool extractdone = false,justclosed = false;
         Globals vars = new Globals();
+        public List<Grapher> grapherlist = new List<Grapher>();
+        public List<MomentDetail> detaillist = new List<MomentDetail>();
         FileStream temp;
         Logger log;
         DateTime RecordStarttime;
         int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0,Demanding_Size = 1, serial1_MsgSize=-1,RefreshRate = 50;
         MomentDetail DetailForm;
         ExtremumHandler exthandler = new ExtremumHandler();
-        string message = "";
+        string message = "" , RecentlyRemoved = "";
         byte[] byt = new byte[150];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
         ZipFile z;
         ControlPanel controlPanel;
         enum Form1Status { Disconnected, Connected, Recording, Saving }
         Form1Status status = Form1Status.Disconnected;
+        public FolderManager folderManager;
         string logdir;
         #endregion
 
         public Form1()
         {
             InitializeComponent();
+            folderManager = new FolderManager(AppDomain.CurrentDomain.BaseDirectory+"Logs\\");
             DetailForm = new MomentDetail(this);
             controlPanel = new ControlPanel(this);
             ToggleDetailForm();
@@ -64,6 +69,7 @@ namespace GPSNavigator
 
         void RefreshSerial()
         {
+            serialPorts.Items.Clear();
             foreach (string s in SerialPort.GetPortNames())
             {
                 serialPorts.Items.Add(s);
@@ -77,7 +83,7 @@ namespace GPSNavigator
             SingleDataBuffer dbuf;
             try
             {
-                while (isPlaying && serialPort1.BytesToRead > ((Serial1State == BinaryProtocolState.readMessage) ? serial1_MsgSize - 3 : 0))
+                while (isPlaying && serialPort1.BytesToRead > ((Serial1State == BinaryProtocolState.readMessage) ? serial1_MsgSize - 3 : 0) && !appclosing)
                 {
 
                     switch (Serial1State)
@@ -480,7 +486,7 @@ namespace GPSNavigator
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            serialPort1.Close();
+            //serialPort1.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -520,7 +526,7 @@ namespace GPSNavigator
             isPlaying = false;
             button2.Text = "Play";
             this.Text = "GPS Navigator";
-            serialPort1.Close();
+            //serialPort1.Close();
             this.Close();
             Application.Exit();
         }
@@ -535,11 +541,28 @@ namespace GPSNavigator
         public void OpenLogFile(string path)
         {
             LogFileManager file = new LogFileManager(path,ref vars);
-            Grapher graphform = new Grapher(file,this);
-            graphform.Dock = DockStyle.Fill;
+            Grapher graphform;
+            if (folderManager.readytouse.Count > 0)
+            {
+                folderManager.readytouse.Sort();
+                graphform = new Grapher(file, this, folderManager.readytouse[0],opendialog.FileName);
+            }
+            else
+                graphform = new Grapher(file, this, grapherlist.Count,opendialog.FileName);     
+            //graphform.Dock = DockStyle.Fill;
+            graphform.Dock = DockStyle.None;
             graphform.TopLevel = false;
             graphform.Show();
-            DocumentWindow NewDockWindow = new DocumentWindow("Grapher");
+            //graphform.index = grapherlist.Count;
+            if (folderManager.readytouse.Count > 0)
+            {
+                grapherlist[folderManager.readytouse[0]] = graphform;
+                folderManager.readytouse.RemoveAt(0);
+            }
+            else
+                grapherlist.Add(graphform);
+            DocumentWindow NewDockWindow = new DocumentWindow("Grapher " + graphform.index.ToString());
+            NewDockWindow.AutoScroll = true;
             NewDockWindow.Controls.Add(graphform);
             AddDocumentControl(NewDockWindow);
             //radDock1.AddDocument(NewDockWindow);
@@ -555,9 +578,7 @@ namespace GPSNavigator
 
         private void opendialog_FileOk(object sender, CancelEventArgs e)
         {
-            try
-            {
-                string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
+                string path = folderManager.addfolder(); //  AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
                 try
                 {
                     Directory.Delete(path, true);
@@ -568,36 +589,13 @@ namespace GPSNavigator
                 StatusLabel.Text = "Loading Log";
                 try
                 {
-                    Task<bool> extractor = ExtractAsync(opendialog.FileName);
                     logdir = path;
+                    Task<bool> extractor = ExtractAsync(opendialog.FileName);
                 }
                 catch
                 {
                     MessageBox.Show("There was an error opening the file");
                 }
-            }
-            catch
-            {
-                string path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs1\\";
-                try
-                {
-                    Directory.Delete(path, true);
-                }
-                catch { }
-                Directory.CreateDirectory(path);
-                extractdone = false;
-                StatusLabel.Text = "Loading Log";
-                try
-                {
-                    Task<bool> extractor = ExtractAsync(opendialog.FileName);
-                    logdir = path;
-                }
-                catch
-                {
-                    MessageBox.Show("There was an error opening the file");
-                }
-                //  MessageBox.Show("Close the already open files");
-            }
         }
 
         public Task<bool> ExtractAsync(string path)
@@ -629,14 +627,8 @@ namespace GPSNavigator
         {
             if (showdetail)
                 DetailForm.Show();
-            try
-            {
-                log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\");
-            }
-            catch
-            {
-                log = new Logger(AppDomain.CurrentDomain.BaseDirectory + "\\Logs1\\");
-            }
+            var path = folderManager.findrecordfolder();
+            log = new Logger(path);
             isRecording = true;
             status = Form1Status.Recording;
             RecordStarttime = DateTime.Now;
@@ -682,28 +674,14 @@ namespace GPSNavigator
             if (checkBox2.Checked)
             {
                 showdetail = true;
-                try
-                {
-                    DetailForm = new MomentDetail(this);
-                    DetailForm.Dock = DockStyle.Left;
-                    DetailForm.TopLevel = false;
-                    DetailForm.Show();
-                    Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Moment Detail (RealTime)");
-                    NewDockWindow.Controls.Add(DetailForm);
-                    radDock1.AddDocument(NewDockWindow);
-                }
-                catch
-                {
-                    DetailForm = new MomentDetail(this);
-                    DetailForm.Dock = DockStyle.Left;
-                    DetailForm.TopLevel = false;
-                    DetailForm.Show();
-                    Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Moment Detail (RealTime)");
-                    NewDockWindow.Controls.Add(DetailForm);
-                    radDock1.AddDocument(NewDockWindow);
-                    //DetailForm = new MomentDetail(this);
-                    //DetailForm.Show();
-                }
+                DetailForm = new MomentDetail(this);
+                DetailForm.Dock = DockStyle.Left;
+                DetailForm.TopLevel = false;
+                DetailForm.Show();
+                Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Moment Detail (RealTime)");
+                NewDockWindow.AutoScroll = true;
+                NewDockWindow.Controls.Add(DetailForm);
+                radDock1.AddDocument(NewDockWindow);
             }
             else
             {
@@ -803,9 +781,9 @@ namespace GPSNavigator
                     z.CompressionLevel = Ionic.Zlib.CompressionLevel.BestSpeed;
                     z.CompressionMethod = CompressionMethod.None;
                     z.AddDirectory(log.Dirpath);
-                    //z.AddDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
                     z.Save();
                 }
+                Directory.Delete(log.Dirpath,true);
                 saved = true;
                 return true;
             });
@@ -880,6 +858,72 @@ namespace GPSNavigator
         private void ErrorCount_Click(object sender, EventArgs e)
         {          
             ErrorCount.Text = "0";
+        }
+
+        private void radDock1_DockWindowClosed(object sender, DockWindowEventArgs e)
+        {
+            //var t = radDock1.DocumentManager.ActiveDocument.AccessibleName;
+        }
+
+        private void radDock1_DockWindowClosing(object sender, DockWindowCancelEventArgs e)
+        {
+            //try
+            //{
+            if (!justclosed)
+            {
+                char[] chararray = radDock1.DocumentManager.ActiveDocument.Text.ToCharArray();
+                var s = new string(chararray, 8, chararray.Length - 8);
+                int k = -1;
+                for (int j = 0; j < radDock1.DocumentManager.DocumentArray.Length; j++)
+                {
+                    if (radDock1.DocumentManager.DocumentArray[j].Text.Contains("Moment Details (Log) " + s))
+                    {
+                        k = j;
+                        break;
+                    }
+                    if (radDock1.DocumentManager.DocumentArray[j].Text.Contains("Moment Detail (RealTime)"))
+                    {
+                        checkBox2.Checked = false;
+                        break;
+                    }
+                }
+                if (k > -1)
+                {
+                    int i = int.Parse(s);
+                    grapherlist[i].filemanager.Close();
+                    radDock1.DocumentManager.DocumentArray[k].Close();
+                    folderManager.removefolder(grapherlist[i].filemanager.filepath);
+                    if (grapherlist.Count == i + 1)
+                    {
+                        Directory.Delete(grapherlist[i].filemanager.filepath, true);
+                        grapherlist.RemoveAt(i);
+                        detaillist.RemoveAt(i);
+                    }
+                    else
+                        folderManager.readytouse.Add(i);
+                    justclosed = true;
+                }
+            }
+            else
+                justclosed = false;
+
+           // }
+           // catch
+           // {
+
+           // }
+            // filemanager.Close();
+           // parentForm.folderManager.removefolder(filemanager.filepath);
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            appclosing = true;
+        }
+
+        private void refreshButton_Click(object sender, EventArgs e)
+        {
+            RefreshSerial();
         }
 
     }

@@ -65,11 +65,13 @@
             this.AutoCancel = new System.Windows.Forms.CheckBox();
             this.radDock1 = new Telerik.WinControls.UI.Docking.RadDock();
             this.SerialController = new Telerik.WinControls.UI.Docking.ToolWindow();
+            this.refreshButton = new System.Windows.Forms.Button();
+            this.hex = new System.Windows.Forms.RadioButton();
             this.ascii = new System.Windows.Forms.RadioButton();
             this.FormatLabel = new System.Windows.Forms.Label();
             this.toolTabStrip1 = new Telerik.WinControls.UI.Docking.ToolTabStrip();
             this.documentContainer1 = new Telerik.WinControls.UI.Docking.DocumentContainer();
-            this.hex = new System.Windows.Forms.RadioButton();
+            this.radThemeManager1 = new Telerik.WinControls.RadThemeManager();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -259,7 +261,7 @@
             this.serialPorts.FormattingEnabled = true;
             this.serialPorts.Location = new System.Drawing.Point(12, 12);
             this.serialPorts.Name = "serialPorts";
-            this.serialPorts.Size = new System.Drawing.Size(170, 21);
+            this.serialPorts.Size = new System.Drawing.Size(139, 21);
             this.serialPorts.TabIndex = 9;
             this.serialPorts.SelectedIndexChanged += new System.EventHandler(this.serialPorts_SelectedIndexChanged);
             // 
@@ -436,11 +438,17 @@
             this.radDock1.TabStop = false;
             this.radDock1.Text = "radDock1";
             this.radDock1.ThemeName = "ControlDefault";
+            this.radDock1.DockWindowClosing += new Telerik.WinControls.UI.Docking.DockWindowCancelEventHandler(this.radDock1_DockWindowClosing);
+            this.radDock1.DockWindowClosed += new Telerik.WinControls.UI.Docking.DockWindowEventHandler(this.radDock1_DockWindowClosed);
+            ((Telerik.WinControls.Primitives.FillPrimitive)(this.radDock1.GetChildAt(0).GetChildAt(0))).BackColor2 = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(160)))), ((int)(((byte)(198)))));
+            ((Telerik.WinControls.Primitives.FillPrimitive)(this.radDock1.GetChildAt(0).GetChildAt(0))).BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(193)))), ((int)(((byte)(210)))), ((int)(((byte)(232)))));
+            ((Telerik.WinControls.Primitives.FillPrimitive)(this.radDock1.GetChildAt(0).GetChildAt(0))).SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
             // 
             // SerialController
             // 
             this.SerialController.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SerialController.Caption = null;
+            this.SerialController.Controls.Add(this.refreshButton);
             this.SerialController.Controls.Add(this.hex);
             this.SerialController.Controls.Add(this.ascii);
             this.SerialController.Controls.Add(this.FormatLabel);
@@ -462,6 +470,27 @@
             this.SerialController.PreviousDockState = Telerik.WinControls.UI.Docking.DockState.Docked;
             this.SerialController.Size = new System.Drawing.Size(198, 458);
             this.SerialController.Text = "Serial Controller";
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.BackgroundImage = global::GPSNavigator.Properties.Resources.refresh_256;
+            this.refreshButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.refreshButton.Location = new System.Drawing.Point(157, 9);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(25, 25);
+            this.refreshButton.TabIndex = 20;
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
+            // 
+            // hex
+            // 
+            this.hex.AutoSize = true;
+            this.hex.Location = new System.Drawing.Point(141, 95);
+            this.hex.Name = "hex";
+            this.hex.Size = new System.Drawing.Size(43, 17);
+            this.hex.TabIndex = 19;
+            this.hex.Text = "hex";
+            this.hex.UseVisualStyleBackColor = true;
             // 
             // ascii
             // 
@@ -516,16 +545,6 @@
             this.documentContainer1.TabStop = false;
             this.documentContainer1.ThemeName = "ControlDefault";
             // 
-            // hex
-            // 
-            this.hex.AutoSize = true;
-            this.hex.Location = new System.Drawing.Point(141, 95);
-            this.hex.Name = "hex";
-            this.hex.Size = new System.Drawing.Size(43, 17);
-            this.hex.TabIndex = 19;
-            this.hex.Text = "hex";
-            this.hex.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -541,6 +560,7 @@
             this.Name = "Form1";
             this.Text = "GPS Navigator";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -593,7 +613,6 @@
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem controlPanelToolStripMenuItem;
         private System.Windows.Forms.CheckBox AutoCancel;
-        private Telerik.WinControls.UI.Docking.RadDock radDock1;
         private Telerik.WinControls.UI.Docking.ToolWindow SerialController;
         private Telerik.WinControls.UI.Docking.ToolTabStrip toolTabStrip1;
         private Telerik.WinControls.UI.Docking.DocumentContainer documentContainer1;
@@ -605,6 +624,9 @@
         private System.Windows.Forms.Label FormatLabel;
         private System.Windows.Forms.RadioButton ascii;
         private System.Windows.Forms.RadioButton hex;
+        public Telerik.WinControls.UI.Docking.RadDock radDock1;
+        private System.Windows.Forms.Button refreshButton;
+        private Telerik.WinControls.RadThemeManager radThemeManager1;
     }
 }
 

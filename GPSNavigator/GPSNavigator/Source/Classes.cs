@@ -552,7 +552,7 @@ namespace GPSNavigator.Classes
                 }
                 #endregion
                 GraphData tempgraphdata = new GraphData(gpoints);
-
+                float extoffset = 400f / (float)stream.Length;
                 if (stream.Length > 0)
                 {
                     stream.Position = Functions.QuantizePosition(fstart * stream.Length);
@@ -661,7 +661,7 @@ namespace GPSNavigator.Classes
                 timestream.Position = Functions.QuantizePosition6bit(pos * timestream.Length);
 
 
-                Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = Functions.QuantizePosition(pos * PDOP.Length);
+                Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = V.Position = Functions.QuantizePosition(pos * PDOP.Length);
                 byte[] stats,time;
                 for (int counter = 0; counter < 100; counter++)
                 {
@@ -800,6 +800,8 @@ namespace GPSNavigator.Classes
                     tempdata.Dbuf.Latitude = (float)Functions.BytetoFloat(stats);
                     Longitude.Read(stats, 0, 4);
                     tempdata.Dbuf.Longitude = (float)Functions.BytetoFloat(stats);
+                    V.Read(stats, 0, 4);
+                    tempdata.Dbuf.V = (float)Functions.BytetoFloat(stats);
 
 
                     templist.Add(tempdata);
@@ -815,7 +817,7 @@ namespace GPSNavigator.Classes
                 Sat.Position = Functions.QuantizePosition17bit(pos * Sat.Length);
                 timestream.Position = Functions.QuantizePosition6bit(pos * timestream.Length);
 
-                Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = Functions.QuantizePosition(pos * PDOP.Length);
+                Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = V.Position = Functions.QuantizePosition(pos * PDOP.Length);
 
                // UsedStats.Position = Functions.QuantizePosition(pos * UsedStats.Length);
                // VisibleStats.Position = Functions.QuantizePosition(pos * VisibleStats.Length);
@@ -957,6 +959,9 @@ namespace GPSNavigator.Classes
                 tempdata.Dbuf.Latitude = (float)Functions.BytetoFloat(stats);
                 Longitude.Read(stats, 0, 4);
                 tempdata.Dbuf.Longitude = (float)Functions.BytetoFloat(stats);
+                V.Read(stats, 0, 4);
+                tempdata.Dbuf.V = (float)Functions.BytetoFloat(stats);
+
 
                 return tempdata;
             }
@@ -1322,6 +1327,61 @@ namespace GPSNavigator.Classes
                 PDOPMax.Close();
                 PDOPMin.Close();
             }
+        }
+
+        public class FolderManager
+        {
+            public string rootDir;
+            public List<string> used;
+            public List<int> readytouse;
+
+            public FolderManager(string root)
+            {
+                rootDir = root;
+                used = new List<string>();
+                readytouse = new List<int>();
+            }
+
+            public string addfolder()
+            {
+                string s;
+                if (readytouse.Count > 0)
+                {
+                    readytouse.Sort();
+                    s = rootDir + "temp" + readytouse[0];
+                }
+                else
+                    s = rootDir + "temp" + used.Count.ToString();
+                addfolder(s);
+                return s;
+            }
+
+            public void addfolder(string toadd)
+            {
+                used.Add(toadd);
+            }
+
+            public void removefolder(string toremove)
+            {
+                for (int i = 0; i < used.Count; i++)
+                    if (used[i] == (toremove))
+                        used.RemoveAt(i);
+            }
+
+            public string findrecordfolder()
+            {
+                int counter = 0;
+                string output = rootDir + "rec" + counter.ToString()+"\\";
+                while(true)
+                {
+                    if (!Directory.Exists(output))
+                        break;
+                    counter++;
+                    output = rootDir + "rec" + counter.ToString()+"\\";
+                }
+                return output;
+            }
+
         }
 
 

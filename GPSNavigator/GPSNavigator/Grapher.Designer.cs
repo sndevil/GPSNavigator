@@ -40,6 +40,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.MinCheck = new System.Windows.Forms.CheckBox();
             this.MaxCheck = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.FileAdressLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol.Properties)).BeginInit();
@@ -94,9 +96,10 @@
             // 
             // label3
             // 
-            this.label3.Location = new System.Drawing.Point(446, 391);
+            this.label3.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.label3.Location = new System.Drawing.Point(731, 388);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(110, 13);
+            this.label3.Size = new System.Drawing.Size(142, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "X";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -104,6 +107,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.label4.Location = new System.Drawing.Point(33, 28);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(14, 13);
@@ -179,12 +183,34 @@
             this.MaxCheck.UseVisualStyleBackColor = true;
             this.MaxCheck.CheckedChanged += new System.EventHandler(this.MaxCheck_CheckedChanged);
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.Transparent;
+            this.label5.Location = new System.Drawing.Point(6, 415);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(691, 13);
+            this.label5.TabIndex = 16;
+            this.label5.Text = "Click : Zoom In          Right Click : Zoom Out          Click (Hold) + Drag : Zo" +
+                "om In To the selected Region          Alt + Click : Open In Moment Detail";
+            // 
+            // FileAdressLabel
+            // 
+            this.FileAdressLabel.BackColor = System.Drawing.Color.Transparent;
+            this.FileAdressLabel.Location = new System.Drawing.Point(24, 6);
+            this.FileAdressLabel.Name = "FileAdressLabel";
+            this.FileAdressLabel.Size = new System.Drawing.Size(951, 19);
+            this.FileAdressLabel.TabIndex = 17;
+            this.FileAdressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(994, 517);
+            this.Controls.Add(this.FileAdressLabel);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.MaxCheck);
             this.Controls.Add(this.MinCheck);
             this.Controls.Add(this.label2);
@@ -224,5 +250,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox MinCheck;
         private System.Windows.Forms.CheckBox MaxCheck;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label FileAdressLabel;
     }
 }
