@@ -114,6 +114,9 @@ namespace GPSNavigator.Classes
             public byte[] BA = new byte[4], BAMax = new byte[4], BAMin = new byte[4];
             public double PDOP;
             public byte[] BPDOP = new byte[4], BPDOPMax = new byte[4], BPDOPMin = new byte[4];
+            public double HDOP;
+            public double VDOP;
+            public double TDOP;
             public double Altitude_Processed;
             public byte[] BAltitude_Processed = new byte[4];
             public double Latitude_Processed;
@@ -584,6 +587,8 @@ namespace GPSNavigator.Classes
                                 t = Functions.BytetoFloat(byt);
                             else
                                 t = Functions.BytetoFloatOther(byt);
+                            if (type == graphtype.PDOP)
+                                t = Math.Ceiling(t * 100) / 100;
                             pos += db;
                             stream.Position = Functions.QuantizePosition(pos);
                         }

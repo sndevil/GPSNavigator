@@ -213,6 +213,12 @@
             this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.gaugeControl1 = new DevExpress.XtraGauges.Win.GaugeControl();
             this.velLabel = new System.Windows.Forms.Label();
+            this.HDOPLabel = new System.Windows.Forms.Label();
+            this.VDOPLabel = new System.Windows.Forms.Label();
+            this.TDOPLabel = new System.Windows.Forms.Label();
+            this.HDOPValue = new System.Windows.Forms.Label();
+            this.VDOPValue = new System.Windows.Forms.Label();
+            this.TDOPValue = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.ControlPanel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -403,11 +409,10 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label9.Location = new System.Drawing.Point(82, 146);
+            this.label9.BackColor = System.Drawing.Color.Gainsboro;
+            this.label9.Location = new System.Drawing.Point(86, 152);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(114, 15);
+            this.label9.Size = new System.Drawing.Size(112, 13);
             this.label9.TabIndex = 10;
             this.label9.Text = "Antenna 1 SNR Value";
             // 
@@ -415,22 +420,24 @@
             // 
             this.label10.BackColor = System.Drawing.Color.Blue;
             this.label10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label10.Location = new System.Drawing.Point(434, 315);
+            this.label10.Location = new System.Drawing.Point(4, 145);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(92, 18);
+            this.label10.Size = new System.Drawing.Size(58, 18);
             this.label10.TabIndex = 11;
-            this.label10.Text = "Visible Sat";
+            this.label10.Text = "Ready Sat";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label11
             // 
             this.label11.BackColor = System.Drawing.Color.Green;
             this.label11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label11.Location = new System.Drawing.Point(434, 333);
+            this.label11.Location = new System.Drawing.Point(4, 163);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(92, 18);
+            this.label11.Size = new System.Drawing.Size(58, 18);
             this.label11.TabIndex = 12;
             this.label11.Text = "Used Sat";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -684,7 +691,7 @@
             this.ControlPanel.Controls.Add(this.NextFrame);
             this.ControlPanel.Controls.Add(this.PreviousFrame);
             this.ControlPanel.Controls.Add(this.button1);
-            this.ControlPanel.Location = new System.Drawing.Point(4, 2);
+            this.ControlPanel.Location = new System.Drawing.Point(4, 0);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Size = new System.Drawing.Size(207, 137);
             this.ControlPanel.TabIndex = 40;
@@ -774,18 +781,18 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label13.Location = new System.Drawing.Point(82, 336);
+            this.label13.BackColor = System.Drawing.Color.Gainsboro;
+            this.label13.Location = new System.Drawing.Point(86, 342);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(99, 15);
+            this.label13.Size = new System.Drawing.Size(97, 13);
             this.label13.TabIndex = 42;
             this.label13.Text = "No Antenna Found";
             // 
             // comboBox1
             // 
+            this.comboBox1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(622, 143);
+            this.comboBox1.Location = new System.Drawing.Point(615, 152);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(158, 21);
             this.comboBox1.TabIndex = 45;
@@ -793,8 +800,9 @@
             // 
             // comboBox2
             // 
+            this.comboBox2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(622, 333);
+            this.comboBox2.Location = new System.Drawing.Point(615, 342);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(158, 21);
             this.comboBox2.TabIndex = 46;
@@ -923,6 +931,7 @@
             // 
             // graphDataCombo
             // 
+            this.graphDataCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.graphDataCombo.FormattingEnabled = true;
             this.graphDataCombo.Items.AddRange(new object[] {
             "X",
@@ -955,9 +964,10 @@
             "VisibleStats"});
             this.graphDataCombo.Location = new System.Drawing.Point(4, 545);
             this.graphDataCombo.Name = "graphDataCombo";
-            this.graphDataCombo.Size = new System.Drawing.Size(67, 21);
+            this.graphDataCombo.Size = new System.Drawing.Size(58, 20);
             this.graphDataCombo.TabIndex = 51;
             this.graphDataCombo.Text = "X";
+            this.graphDataCombo.Visible = false;
             this.graphDataCombo.SelectedIndexChanged += new System.EventHandler(this.graphDataCombo_SelectedIndexChanged);
             // 
             // ClearButton
@@ -965,10 +975,11 @@
             this.ClearButton.BackColor = System.Drawing.Color.Gainsboro;
             this.ClearButton.Location = new System.Drawing.Point(4, 572);
             this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(67, 23);
+            this.ClearButton.Size = new System.Drawing.Size(58, 23);
             this.ClearButton.TabIndex = 52;
             this.ClearButton.Text = "Clear";
             this.ClearButton.UseVisualStyleBackColor = false;
+            this.ClearButton.Visible = false;
             this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
             // 
             // ControlPanelButton
@@ -1956,9 +1967,9 @@
             this.GraphToggle.BackgroundImage = global::GPSNavigator.Properties.Resources.Down;
             this.GraphToggle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.GraphToggle.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GraphToggle.Location = new System.Drawing.Point(4, 461);
+            this.GraphToggle.Location = new System.Drawing.Point(4, 482);
             this.GraphToggle.Name = "GraphToggle";
-            this.GraphToggle.Size = new System.Drawing.Size(54, 37);
+            this.GraphToggle.Size = new System.Drawing.Size(58, 37);
             this.GraphToggle.TabIndex = 49;
             this.GraphToggle.Text = "Graph";
             this.GraphToggle.UseVisualStyleBackColor = false;
@@ -2196,12 +2207,73 @@
             this.velLabel.Text = "Velocity:";
             this.velLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // HDOPLabel
+            // 
+            this.HDOPLabel.AutoSize = true;
+            this.HDOPLabel.Location = new System.Drawing.Point(40, 14);
+            this.HDOPLabel.Name = "HDOPLabel";
+            this.HDOPLabel.Size = new System.Drawing.Size(41, 13);
+            this.HDOPLabel.TabIndex = 79;
+            this.HDOPLabel.Text = "HDOP:";
+            // 
+            // VDOPLabel
+            // 
+            this.VDOPLabel.AutoSize = true;
+            this.VDOPLabel.Location = new System.Drawing.Point(40, 38);
+            this.VDOPLabel.Name = "VDOPLabel";
+            this.VDOPLabel.Size = new System.Drawing.Size(40, 13);
+            this.VDOPLabel.TabIndex = 80;
+            this.VDOPLabel.Text = "VDOP:";
+            // 
+            // TDOPLabel
+            // 
+            this.TDOPLabel.AutoSize = true;
+            this.TDOPLabel.Location = new System.Drawing.Point(40, 62);
+            this.TDOPLabel.Name = "TDOPLabel";
+            this.TDOPLabel.Size = new System.Drawing.Size(40, 13);
+            this.TDOPLabel.TabIndex = 81;
+            this.TDOPLabel.Text = "TDOP:";
+            // 
+            // HDOPValue
+            // 
+            this.HDOPValue.AutoSize = true;
+            this.HDOPValue.Location = new System.Drawing.Point(96, 14);
+            this.HDOPValue.Name = "HDOPValue";
+            this.HDOPValue.Size = new System.Drawing.Size(13, 13);
+            this.HDOPValue.TabIndex = 82;
+            this.HDOPValue.Text = "0";
+            // 
+            // VDOPValue
+            // 
+            this.VDOPValue.AutoSize = true;
+            this.VDOPValue.Location = new System.Drawing.Point(96, 38);
+            this.VDOPValue.Name = "VDOPValue";
+            this.VDOPValue.Size = new System.Drawing.Size(13, 13);
+            this.VDOPValue.TabIndex = 83;
+            this.VDOPValue.Text = "0";
+            // 
+            // TDOPValue
+            // 
+            this.TDOPValue.AutoSize = true;
+            this.TDOPValue.Location = new System.Drawing.Point(96, 62);
+            this.TDOPValue.Name = "TDOPValue";
+            this.TDOPValue.Size = new System.Drawing.Size(13, 13);
+            this.TDOPValue.TabIndex = 84;
+            this.TDOPValue.Text = "0";
+            // 
             // MomentDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(814, 560);
+            this.Controls.Add(this.ControlPanel);
+            this.Controls.Add(this.TDOPValue);
+            this.Controls.Add(this.VDOPValue);
+            this.Controls.Add(this.HDOPValue);
+            this.Controls.Add(this.TDOPLabel);
+            this.Controls.Add(this.VDOPLabel);
+            this.Controls.Add(this.HDOPLabel);
             this.Controls.Add(this.velLabel);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.gaugeControl1);
@@ -2221,7 +2293,6 @@
             this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.label13);
-            this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.PDOPValue);
             this.Controls.Add(this.PDOPLabel);
             this.Controls.Add(this.AltitudeValue);
@@ -2458,5 +2529,11 @@
         private DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge SpeedGauge;
         private DevExpress.XtraGauges.Win.GaugeControl gaugeControl1;
         private System.Windows.Forms.Label velLabel;
+        private System.Windows.Forms.Label HDOPLabel;
+        private System.Windows.Forms.Label VDOPLabel;
+        private System.Windows.Forms.Label TDOPLabel;
+        private System.Windows.Forms.Label HDOPValue;
+        private System.Windows.Forms.Label VDOPValue;
+        private System.Windows.Forms.Label TDOPValue;
     }
 }

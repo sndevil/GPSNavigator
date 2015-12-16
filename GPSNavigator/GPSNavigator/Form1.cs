@@ -653,6 +653,7 @@ namespace GPSNavigator
                 ProgressbarChangeValue(0);
                 status = Form1Status.Connected;
                 StatusLabel.Text = "Connected";
+                this.Text = "GPS Navigator";
                 saved = false;
             }
             if (extractdone)
@@ -661,6 +662,10 @@ namespace GPSNavigator
                 ProgressbarChangeValue(0);
                 StatusLabel.Text = "Connected";
                 extractdone = false;
+            }
+            if (grapherlist.Count > radDock1.DocumentManager.DocumentArray.Length / 2)
+            {
+
             }
         }
 
@@ -872,36 +877,38 @@ namespace GPSNavigator
             if (!justclosed)
             {
                 char[] chararray = radDock1.DocumentManager.ActiveDocument.Text.ToCharArray();
-                var s = new string(chararray, 8, chararray.Length - 8);
-                int k = -1;
-                for (int j = 0; j < radDock1.DocumentManager.DocumentArray.Length; j++)
+                if (radDock1.DocumentManager.ActiveDocument.Text == "Moment Detail (RealTime)")
                 {
-                    if (radDock1.DocumentManager.DocumentArray[j].Text.Contains("Moment Details (Log) " + s))
-                    {
-                        k = j;
-                        break;
-                    }
-                    if (radDock1.DocumentManager.DocumentArray[j].Text.Contains("Moment Detail (RealTime)"))
-                    {
-                        checkBox2.Checked = false;
-                        break;
-                    }
+                    checkBox2.Checked = false;
                 }
-                if (k > -1)
+                else
                 {
-                    int i = int.Parse(s);
-                    grapherlist[i].filemanager.Close();
-                    radDock1.DocumentManager.DocumentArray[k].Close();
-                    folderManager.removefolder(grapherlist[i].filemanager.filepath);
-                    if (grapherlist.Count == i + 1)
+                    var s = new string(chararray, 8, chararray.Length - 8);
+                    int k = -1;
+                    for (int j = 0; j < radDock1.DocumentManager.DocumentArray.Length; j++)
                     {
-                        Directory.Delete(grapherlist[i].filemanager.filepath, true);
-                        grapherlist.RemoveAt(i);
-                        detaillist.RemoveAt(i);
+                        if (radDock1.DocumentManager.DocumentArray[j].Text.Contains("Moment Details (Log) " + s))
+                        {
+                            k = j;
+                            break;
+                        }
                     }
-                    else
-                        folderManager.readytouse.Add(i);
-                    justclosed = true;
+                    if (k > -1)
+                    {
+                        int i = int.Parse(s);
+                        grapherlist[i].filemanager.Close();
+                        radDock1.DocumentManager.DocumentArray[k].Close();
+                        folderManager.removefolder(grapherlist[i].filemanager.filepath);
+                        if (grapherlist.Count == i + 1)
+                        {
+                            Directory.Delete(grapherlist[i].filemanager.filepath, true);
+                            grapherlist.RemoveAt(i);
+                            detaillist.RemoveAt(i);
+                        }
+                        else
+                            folderManager.readytouse.Add(i);
+                        justclosed = true;
+                    }
                 }
             }
             else
@@ -924,6 +931,12 @@ namespace GPSNavigator
         private void refreshButton_Click(object sender, EventArgs e)
         {
             RefreshSerial();
+        }
+
+        private void aboutProgramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            About aboutform = new About();
+            aboutform.ShowDialog();
         }
 
     }

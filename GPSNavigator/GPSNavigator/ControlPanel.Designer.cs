@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ControlPanel));
             this.groupControl6 = new DevExpress.XtraEditors.GroupControl();
             this.AutoMaxCombo = new System.Windows.Forms.ComboBox();
             this.IonoCombo = new System.Windows.Forms.ComboBox();
@@ -1137,6 +1138,7 @@
             this.Controls.Add(this.groupControl1);
             this.Controls.Add(this.groupControl3);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ControlPanel";
             this.Text = "ControlPanel";
             ((System.ComponentModel.ISupportInitialize)(this.groupControl6)).EndInit();

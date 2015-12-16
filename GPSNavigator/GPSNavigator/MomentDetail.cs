@@ -64,7 +64,7 @@ namespace GPSNavigator
         public MomentDetail(Form1 Parent)
         {
             InitializeComponent();
-            ToggleGraph();
+            //ToggleGraph();
             toolStripSplitButton1.Visible = true;
             this.Text = "MomentDetail (RealTime)";
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
@@ -115,7 +115,7 @@ namespace GPSNavigator
                 position = (float)xpos;
                 data = filemanager.ReadGPSstatus(position);
                 ReadCache(position, false);
-                updateLabels(time, 0, 0, 0, 0, (float)data.Dbuf.PDOP, (float)data.Dbuf.Altitude, (float)data.Dbuf.Longitude, (float)data.Dbuf.Latitude,(float)data.Dbuf.V);
+                updateLabels(time, 0, 0, 0, 0, data);
                 PlotGraph(data);
             }
             catch
@@ -146,7 +146,7 @@ namespace GPSNavigator
             }
         }
 
-        public void updateLabels(DateTime dt, int vgps, int ugps, int vglonass, int uglonass, float PDOP, float Altitude, float Longitude, float Latitude,float Velocity)
+        public void updateLabels(DateTime dt, int vgps, int ugps, int vglonass, int uglonass, GPSData data)// float PDOP, float Altitude, float Longitude, float Latitude,float Velocity)
         {
             if (vgps != 0 || ugps != 0 || vglonass != 0 || uglonass != 0)
             {
@@ -170,14 +170,21 @@ namespace GPSNavigator
 
 
 
-            PDOPValue.Text = PDOP.ToString();
-            LatitudeValue.Text = Latitude.ToString();
-            LongitudeValue.Text = Longitude.ToString();
-            AltitudeValue.Text = Altitude.ToString();
-            velLabel.Text = "Velocity: " + Velocity.ToString("#0.000");
+            PDOPValue.Text = data.Dbuf.PDOP.ToString("#0.00");
+            try
+            {
+                HDOPValue.Text = data.Dbuf.HDOP.ToString();
+                TDOPValue.Text = data.Dbuf.TDOP.ToString();
+                VDOPValue.Text = data.Dbuf.VDOP.ToString();
+            }
+            catch { }
+            LatitudeValue.Text = data.Dbuf.Latitude.ToString("#0.000000");
+            LongitudeValue.Text = data.Dbuf.Longitude.ToString("#0.000000");
+            AltitudeValue.Text = data.Dbuf.Altitude.ToString("#0.00");
+            velLabel.Text = "Velocity: " + data.Dbuf.V.ToString("#0.000");
             label12.Text = "Time: " + dt.ToString();
             DateLabel.Label.FormatString = dt.Month.ToString("D2") + "/" + dt.Day.ToString("D2") + "/" + dt.Year.ToString();
-            SpeedGauge.Needles[0].Value = Velocity;
+            SpeedGauge.Needles[0].Value = (float)data.Dbuf.V;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = dt.Hour + (double)dt.Minute / 60;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[1].Markers[0].Value = dt.Minute;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[2].Markers[0].Value = dt.Second;
@@ -290,7 +297,7 @@ namespace GPSNavigator
                 chart1.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
                 chart2.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
             }
-            updateLabels(data.Time, VisibleGPS, UsedGPS, VisibleGLONASS, UsedGLONASS,(float) data.Dbuf.PDOP,(float) data.Dbuf.Altitude,(float) data.Dbuf.Longitude,(float) data.Dbuf.Latitude,(float)data.Dbuf.V);
+            updateLabels(data.Time, VisibleGPS, UsedGPS, VisibleGLONASS, UsedGLONASS,data);
         }
 
 
@@ -458,7 +465,7 @@ namespace GPSNavigator
             comboBox2.Visible = false;
             if (ShowingGraph)
             {
-                c1Chart1.Location = new Point(58, 328);  
+                c1Chart1.Location = new Point(58, 312);  
                 c1Chart1.Width = 732;
                 c1Chart1.Height = 338;
             }
@@ -470,7 +477,7 @@ namespace GPSNavigator
             label13.BringToFront();
             if (ShowingGraph)
             {
-                c1Chart1.Location = new Point(58, 514);
+                c1Chart1.Location = new Point(58, 498);
                 c1Chart1.Width = 732;
                 c1Chart1.Height = 154;
             }
@@ -604,16 +611,18 @@ namespace GPSNavigator
             if (!ShowingGraph)
             {
                 c1Chart1.Visible = true;
+                graphDataCombo.Visible = true;
+                ClearButton.Visible = true;
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
-                    c1Chart1.Location = new Point(58, 328);                   
+                    c1Chart1.Location = new Point(58, 312);                   
                     c1Chart1.Width = 732;
                     c1Chart1.Height = 338;
                 }
                 else
                 {
-                    c1Chart1.Location = new Point(58, 514);
+                    c1Chart1.Location = new Point(58, 498);
                     c1Chart1.Width = 732;
                     c1Chart1.Height = 154;
                 }
@@ -623,6 +632,8 @@ namespace GPSNavigator
             {
                 //c1Chart1.SendToBack();
                 c1Chart1.Visible = false;
+                graphDataCombo.Visible = false;
+                ClearButton.Visible = false;
                 this.Height = 560;
             }
             ShowingGraph = !ShowingGraph;
