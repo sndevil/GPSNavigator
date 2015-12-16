@@ -26,26 +26,25 @@ namespace GPSNavigator
         bool isRecording = false;
         bool isPlaying = true;
         bool gotdata = false;
-        bool showdetail = false;
+        bool showdetail = false , showsky = false;
         bool saved = false;
         bool appclosing = false;
         public bool extractdone = false,justclosed = false;
         Globals vars = new Globals();
         public List<Grapher> grapherlist = new List<Grapher>();
         public List<MomentDetail> detaillist = new List<MomentDetail>();
-        FileStream temp;
         Logger log;
         DateTime RecordStarttime;
-        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0,Demanding_Size = 1, serial1_MsgSize=-1,RefreshRate = 50;
+        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0,serial1_MsgSize=-1,RefreshRate = 50;
         MomentDetail DetailForm;
+        Skyview SkyView;
         ExtremumHandler exthandler = new ExtremumHandler();
-        string message = "" , RecentlyRemoved = "";
         byte[] byt = new byte[150];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
         ZipFile z;
         ControlPanel controlPanel;
         enum Form1Status { Disconnected, Connected, Recording, Saving }
-        Form1Status status = Form1Status.Disconnected;
+        //Form1Status status = Form1Status.Disconnected;
         public FolderManager folderManager;
         string logdir;
         #endregion
@@ -56,12 +55,13 @@ namespace GPSNavigator
             folderManager = new FolderManager(AppDomain.CurrentDomain.BaseDirectory+"Logs\\");
             DetailForm = new MomentDetail(this);
             controlPanel = new ControlPanel(this);
+            SkyView = new Skyview(vars);
             ToggleDetailForm();
             RefreshSerial();
             serialPorts.SelectedIndex = 0;
             if (OpenPort())
             {
-                status = Form1Status.Connected;
+                //status = Form1Status.Connected;
                 StatusLabel.Text = "Connected";
                 openPort.Text = "Close Port";
             }
@@ -81,8 +81,8 @@ namespace GPSNavigator
             timeoutCounter = 0;
             gotdata = true;
             SingleDataBuffer dbuf;
-            try
-            {
+            //try
+            //{
                 while (isPlaying && serialPort1.BytesToRead > ((Serial1State == BinaryProtocolState.readMessage) ? serial1_MsgSize - 3 : 0) && !appclosing)
                 {
 
@@ -118,11 +118,16 @@ namespace GPSNavigator
                             serialPort1.Read(byt, 2, serial1_MsgSize - 2);
                             try
                             {
-                                dbuf = Functions.handle_packet(byt, ref vars, 1);
-                                if (showdetail && DetailRefreshCounter++ > RefreshRate - 1)
+                                dbuf = Functions.handle_packet(byt, ref vars, 0);
+                                if (DetailRefreshCounter++ > RefreshRate - 1)
                                 {
-                                    UpdateRealtimeData(dbuf);
-                                    DetailRefreshCounter = 0;
+                                    if (showdetail)
+                                    {
+                                        UpdateRealtimeData(dbuf);
+                                        DetailRefreshCounter = 0;
+                                    }
+                                    if (showsky)
+                                        SkyUpdater(); // SkyView.UpdateView(vars);
                                 }
                                 if (dbuf.settingbuffer.SettingReceived)
                                     DetailForm.ChangeSettings(dbuf.settingbuffer);
@@ -241,7 +246,7 @@ namespace GPSNavigator
                                     log.Writebuffer(dbuf);
                                 }
                             }
-                            catch (Exception exc)
+                            catch
                             {
                                 ErrorCount.Text = (int.Parse(ErrorCount.Text) + 1).ToString();
                             }
@@ -265,10 +270,10 @@ namespace GPSNavigator
                     }
                 }
 
-            }
-            catch
-            {
-            }
+            //}
+            //catch
+            //{
+            //}
         }
 
         public static string ByteArrayToString(byte[] ba)
@@ -458,16 +463,36 @@ namespace GPSNavigator
 
         private void WriteText(string text)
         {
-            if (this.logger.InvokeRequired)
+            try
             {
-                SetTextCallback d = new SetTextCallback(WriteText);
-                this.Invoke(d, new object[] { text });
+                if (this.logger.InvokeRequired)
+                {
+                    SetTextCallback d = new SetTextCallback(WriteText);
+                    this.Invoke(d, new object[] { text });
+                }
+                else
+                {
+                    this.logger.Text = text;
+                }
+            }
+            catch { }
+        }
+
+        delegate void SkyViewUpdater();
+
+        private void SkyUpdater()
+        {
+            if (this.SkyView.InvokeRequired)
+            {
+                SkyViewUpdater d = new SkyViewUpdater(SkyUpdater);
+                this.Invoke(d);
             }
             else
             {
-                this.logger.Text = text;
+                SkyView.UpdateView(vars);
             }
         }
+
 
         delegate void ShowRealtime(SingleDataBuffer databuffer);
 
@@ -565,10 +590,6 @@ namespace GPSNavigator
             NewDockWindow.AutoScroll = true;
             NewDockWindow.Controls.Add(graphform);
             AddDocumentControl(NewDockWindow);
-            //radDock1.AddDocument(NewDockWindow);
-            //documentWindow1.Controls.Add(graphform);
-            //graphform.Show();
-            //graphform.BringToFront();
         }
 
         public void AddDocumentControl(DocumentWindow toadd)
@@ -630,7 +651,7 @@ namespace GPSNavigator
             var path = folderManager.findrecordfolder();
             log = new Logger(path);
             isRecording = true;
-            status = Form1Status.Recording;
+            //status = Form1Status.Recording;
             RecordStarttime = DateTime.Now;
             StatusLabel.Text = "Recording";
             this.Text = "GPS Navigator (Recording)";
@@ -651,7 +672,7 @@ namespace GPSNavigator
             if (saved)
             {
                 ProgressbarChangeValue(0);
-                status = Form1Status.Connected;
+                //status = Form1Status.Connected;
                 StatusLabel.Text = "Connected";
                 this.Text = "GPS Navigator";
                 saved = false;
@@ -662,10 +683,6 @@ namespace GPSNavigator
                 ProgressbarChangeValue(0);
                 StatusLabel.Text = "Connected";
                 extractdone = false;
-            }
-            if (grapherlist.Count > radDock1.DocumentManager.DocumentArray.Length / 2)
-            {
-
             }
         }
 
@@ -721,7 +738,7 @@ namespace GPSNavigator
             {
                 if (OpenPort())
                 {
-                    status = Form1Status.Connected;
+                    //status = Form1Status.Connected;
                     StatusLabel.Text = "Connected";
                     openPort.Text = "Close Port";
                 }
@@ -749,7 +766,7 @@ namespace GPSNavigator
         {
             serialPort1.Close();
             openPort.Text = "Open Port";
-            status = Form1Status.Disconnected;
+            //status = Form1Status.Disconnected;
             StatusLabel.Text = "Disconnected";
         }
 
@@ -805,7 +822,7 @@ namespace GPSNavigator
 
         private void EndRecording()
         {
-            status = Form1Status.Saving;
+            //status = Form1Status.Saving;
             StatusLabel.Text = "Saving";
             log.CloseFiles();
             try { File.Delete(savedialog.FileName); }
@@ -881,6 +898,11 @@ namespace GPSNavigator
                 {
                     checkBox2.Checked = false;
                 }
+                else if (radDock1.DocumentManager.ActiveDocument.Text == "SkyView")
+                {
+                    SkyView.Hide();
+                    showsky = false;
+                }
                 else
                 {
                     var s = new string(chararray, 8, chararray.Length - 8);
@@ -937,6 +959,19 @@ namespace GPSNavigator
         {
             About aboutform = new About();
             aboutform.ShowDialog();
+        }
+
+        private void skyViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SkyView = new Skyview(vars);
+            SkyView.Dock = DockStyle.None;
+            SkyView.TopLevel = false;
+            SkyView.Show();
+            showsky = true;
+            Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("SkyView");
+            NewDockWindow.AutoScroll = false;
+            NewDockWindow.Controls.Add(SkyView);
+            radDock1.AddDocument(NewDockWindow);
         }
 
     }

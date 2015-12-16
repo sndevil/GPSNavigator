@@ -14,14 +14,14 @@ namespace GPSNavigator
 {
     public partial class ControlPanel : Form
     {
-        public Form1 ParentForm;
+        public Form1 Parentform;
         public SettingBuffer Settings;
 
         public ControlPanel(Form1 Parent)
         {
             InitializeComponent();
             FirstUserInit();
-            ParentForm = Parent;
+            Parentform = Parent;
         }
 
         public void FirstUserInit()
@@ -147,7 +147,7 @@ namespace GPSNavigator
                 ApplySearch.Enabled = false;
                 for (int i = 0; i < index; i++)
                 {
-                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Parentform.Serial1_Write(byteMsg, i, 1);
                     //SelectedSerialPort.Write(byteMsg, i, 1);
                     Thread.Sleep(20);
                     Application.DoEvents();
@@ -349,7 +349,7 @@ namespace GPSNavigator
             ApplyThreshold.Enabled = false;
             for (int i = 0; i < index; i++)
             {
-                ParentForm.Serial1_Write(byteMsg, i, 1);
+                Parentform.Serial1_Write(byteMsg, i, 1);
                 Thread.Sleep(20);
                 Application.DoEvents();
             }
@@ -448,7 +448,7 @@ namespace GPSNavigator
             ApplyCom.Enabled = false;
             for (int i = 0; i < index; i++)
             {
-                ParentForm.Serial1_Write(byteMsg, i,1);              
+                Parentform.Serial1_Write(byteMsg, i,1);              
                 Thread.Sleep(20);
                 Application.DoEvents();
             }
@@ -633,7 +633,7 @@ namespace GPSNavigator
             ApplyMisc.Enabled = false;
             for (int i = 0; i < index; i++)
             {
-                ParentForm.Serial1_Write(byteMsg, i, 1);               
+                Parentform.Serial1_Write(byteMsg, i, 1);               
                 Thread.Sleep(20);
                 Application.DoEvents();
             }
@@ -697,14 +697,14 @@ namespace GPSNavigator
                 //ApplyButtonsEnabling(false);
                 for (int i = 0; i < index; i++)
                 {
-                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Parentform.Serial1_Write(byteMsg, i, 1);
                     //SelectedSerialPort.Write(byteMsg, i, 1);
                     Thread.Sleep(20);
                     Application.DoEvents();
                 }
                 //ApplyButtonsEnabling(true);
             }
-            catch (Exception ex)
+            catch
             {
                 //Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
             }

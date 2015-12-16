@@ -24,8 +24,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.5.%2a</ApplicationVersion>
+    <SuiteName>GPS</SuiteName>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -166,6 +168,12 @@
     <Compile Include="MomentDetail.Designer.cs">
       <DependentUpon>MomentDetail.cs</DependentUpon>
     </Compile>
+    <Compile Include="Skyview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Skyview.Designer.cs">
+      <DependentUpon>Skyview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Source\Globals.cs" />
     <Compile Include="Grapher.cs">
       <SubType>Form</SubType>
@@ -209,6 +217,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Skyview.resx">
+      <DependentUpon>Skyview.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="GPSNavigator_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
@@ -243,11 +254,23 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PublishFile Include="DevExpress.XtraNavBar.v12.1">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GPS Navigator.ico" />
     <Content Include="Resources\Errors.png" />
     <None Include="Resources\refresh_256.png" />
+    <None Include="Resources\satellite.PNG" />
     <Content Include="Resources\Warm Start.png" />
     <None Include="Resources\videoplay512.gif" />
     <None Include="Resources\pause.png" />
@@ -258,6 +281,14 @@
     <Content Include="Resources\Cold Start.png" />
     <Content Include="Resources\Hot Start.png" />
     <Content Include="Resources\record-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <FileAssociation Include=".GLP">
+      <Visible>False</Visible>
+      <Description>GPS Navigator Log</Description>
+      <Progid>1</Progid>
+      <DefaultIcon>Resources\GPS Navigator.ico</DefaultIcon>
+    </FileAssociation>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

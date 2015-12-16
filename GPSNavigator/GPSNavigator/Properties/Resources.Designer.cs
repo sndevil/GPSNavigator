@@ -123,6 +123,13 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap satellite {
+            get {
+                object obj = ResourceManager.GetObject("satellite", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);

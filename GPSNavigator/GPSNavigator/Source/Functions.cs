@@ -463,7 +463,7 @@ namespace GPSNavigator.Source
             buffer.ChannelCounter = 1;
             buffer.BSatStats[16] = (byte)1;
             var tempsat = new List<Satellite[]>();
-            if (GPS.Count < 1)
+            if (GPS.Count < 1 || GLONASS.Count < 1)
             {
                 for (int i = 0; i < 2; i++)
                 {
@@ -472,9 +472,9 @@ namespace GPSNavigator.Source
                     {
                         tempsat[i][j] = new Satellite();
                     }
-                    if (i % 2 == 0)
+                    if (i % 2 == 0 && GPS.Count < 1)
                         GPS.Add(tempsat[i]);
-                    else
+                    else if (GLONASS.Count < 1)
                         GLONASS.Add(tempsat[i]);
                 }
             }
@@ -985,7 +985,7 @@ namespace GPSNavigator.Source
             index += 4;
 
             // DOP
-            double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
+            double GDOP = 0;
             buffer.PDOP = 0;
 
             if (state == 1)
@@ -1413,18 +1413,29 @@ namespace GPSNavigator.Source
 
         }
 
-        public static void Process_Binary_Message_SupplementGPS(byte[] data, int SerialNum,Satellite[] GPS)
+        public static void Process_Binary_Message_SupplementGPS(byte[] data, int SerialNum,ref List<Satellite[]> GPS)
         {
 
+            var tempsat = new List<Satellite[]>();
+            if (GPS.Count < 1)
+            {
+                    tempsat.Add(new Satellite[32]);
+                    for (int j = 0; j < 32; j++)
+                    {
+                        tempsat[0][j] = new Satellite();
+                    }
+                    GPS.Add(tempsat[0]);
+            }
+
+            int id = (SerialNum == 0) ? 0 : 1;
             int checksum = calcrc(data, BIN_GPS_SUPPLEMENT_MSG_SIZE - 4);
             byte checksum0 = (byte)(checksum & 0xFF);
             byte checksum1 = (byte)((checksum >> 8) & 0xFF);
 
-          /*  if (checksum0 != data[BIN_GPS_SUPPLEMENT_MSG_SIZE - 3] || checksum1 != data[BIN_GPS_SUPPLEMENT_MSG_SIZE - 2])
+            if (checksum0 != data[BIN_GPS_SUPPLEMENT_MSG_SIZE - 3] || checksum1 != data[BIN_GPS_SUPPLEMENT_MSG_SIZE - 2])
             {
-                Show_Error("CheckSum Error", "Recieved checksum is incorrect");
-                return;
-            }*/
+                throw new Exception("Checksum Error");
+            }
 
            /* if (SerialNum == 0)
                 DataReceiveTimeOut = 0;
@@ -1445,23 +1456,85 @@ namespace GPSNavigator.Source
 
             for (int i = 0; i < 32; i++)
             {
-                GPS[i].Azimuth = Azimuth_OutOfRange;
-                GPS[i].Elevation = Elevation_OutOfRange;
+                GPS[id][i].Azimuth = Azimuth_OutOfRange;
+                GPS[id][i].Elevation = Elevation_OutOfRange;
             }
 
             for (int i = 0; i < 12; i++)
                 if (PRNs[i] != 255)
                 {
-                    GPS[PRNs[i]].Elevation = data[i + index];
-                    if (GPS[PRNs[i]].Elevation > 127)
-                        GPS[PRNs[i]].Elevation -= 256;
-                    GPS[PRNs[i]].Azimuth = data[i * 2 + (index + 12)] + data[i * 2 + 1 + (index + 12)] * 256;
-                    if (GPS[PRNs[i]].Azimuth > 32767)
-                        GPS[PRNs[i]].Azimuth -= 32768;
+                    GPS[id][PRNs[i]].Elevation = data[i + index];
+                    if (GPS[id][PRNs[i]].Elevation > 127)
+                        GPS[id][PRNs[i]].Elevation -= 256;
+                    GPS[id][PRNs[i]].Azimuth = data[i * 2 + (index + 12)] + data[i * 2 + 1 + (index + 12)] * 256;
+                    if (GPS[id][PRNs[i]].Azimuth > 32767)
+                        GPS[id][PRNs[i]].Azimuth -= 32768;
                 }
 
             index += 24;
         }
+
+        public static void Process_Binary_Message_SupplementGLONASS(byte[] data, int SerialNum,ref List<Satellite[]> GLONASS)
+        {
+
+            var tempsat = new List<Satellite[]>();
+            if (GLONASS.Count < 1)
+            {
+                tempsat.Add(new Satellite[32]);
+                for (int j = 0; j < 32; j++)
+                {
+                    tempsat[0][j] = new Satellite();
+                }
+                GLONASS.Add(tempsat[0]);
+            }
+            int id = (SerialNum == 0) ? 0 : 1;
+
+            int checksum = calcrc(data, BIN_GLONASS_SUPPLEMENT_MSG_SIZE - 4);
+            byte checksum0 = (byte)(checksum & 0xFF);
+            byte checksum1 = (byte)((checksum >> 8) & 0xFF);
+
+            if (checksum0 != data[BIN_GLONASS_SUPPLEMENT_MSG_SIZE - 3] || checksum1 != data[BIN_GLONASS_SUPPLEMENT_MSG_SIZE - 2])
+            {
+                throw new Exception("Checksum Error");
+            }
+
+            int index = 1;  //header
+
+            int messageType = data[index];
+            index++;
+
+            // State
+            int state = data[index];
+            index++;
+
+            // Reserved
+            index++;
+
+            // PRNs
+            byte[] PRNs = new byte[12];
+            for (int i = 0; i < 12; i++)
+                PRNs[i] = data[i + index];
+            index += 12;
+
+            for (int i = 0; i < 28; i++)
+            {
+                GLONASS[id][i].Azimuth = Azimuth_OutOfRange;
+                GLONASS[id][i].Elevation = Elevation_OutOfRange;
+            }
+
+            for (int i = 0; i < 12; i++)
+                if (PRNs[i] != 255)
+                {
+                    GLONASS[id][PRNs[i]].Elevation = data[i + index];
+                    if (GLONASS[id][PRNs[i]].Elevation > 127)
+                        GLONASS[id][PRNs[i]].Elevation -= 256;
+                    GLONASS[id][PRNs[i]].Azimuth = data[i * 2 + (index + 12)] + data[i * 2 + 1 + (index + 12)] * 256;
+                    if (GLONASS[id][PRNs[i]].Azimuth > 32767)
+                        GLONASS[id][PRNs[i]].Azimuth -= 32768;
+                }
+            index += 24;
+        }
+
 
         public static string Process_Binary_Message_Debug(byte[] data)
         {
@@ -1489,11 +1562,12 @@ namespace GPSNavigator.Source
             checksum0 = (byte)(checksum & 0xFF);
             checksum1 = (byte)((checksum >> 8) & 0xFF);
 
-            if (checksum0 != data[BIN_RAW_DATA_MSG_SIZE - 3] || checksum1 != data[BIN_RAW_DATA_MSG_SIZE - 2])
-            {
-                throw new Exception("Checksum Error");
-            }
+            //if (checksum0 != data[BIN_RAW_DATA_MSG_SIZE - 3] || checksum1 != data[BIN_RAW_DATA_MSG_SIZE - 2])
+            //{
+            //   throw new Exception("Checksum Error");
+            //}
 
+            dbuf.rawbuffer.RawReceived = true;
             index++;    //header
             index++;    //messageType
             index++;    // State
@@ -2078,7 +2152,6 @@ namespace GPSNavigator.Source
             index += 4;
 
             // DOP
-            double TDOP = 0, HDOP = 0, VDOP = 0;
             dbuf.PDOP = 0;
 
             if (state == 1)
@@ -2404,7 +2477,6 @@ namespace GPSNavigator.Source
             }
 
             // DOP
-            double GDOP = 0, TDOP = 0, HDOP = 0, VDOP = 0;
             if (state == 1)
             {
                 dbuf.BPDOP[3] = data[index + 3];
@@ -2778,7 +2850,7 @@ namespace GPSNavigator.Source
             index += 4;
 
             double x = 0, y = 0, z = 0;
-            GEOpoint point;
+            //GEOpoint point;
 
             //x
             a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
@@ -2868,13 +2940,17 @@ namespace GPSNavigator.Source
             else if (key == Functions.BIN_FULL_PLUS)
                 dbuffer = Functions.Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
             else if (key == Functions.BIN_COMPACT)
-                dbuffer = Functions.Process_Binary_Message_Compact_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+                dbuffer = Functions.Process_Binary_Message_Compact(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
             else if (key == Functions.BIN_SETTING)
                 dbuffer = Functions.Process_Binary_Message_Setting(packet, number);
             else if (key == Functions.BIN_DUAL_CHANNEL)
                 dbuffer = Functions.Process_Binary_Message_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
             else if (key == Functions.BIN_RAW_DATA)
                 dbuffer = Functions.Process_Binary_Message_RawData(packet, number);
+            else if (key == Functions.BIN_GPS_SUPPLEMENT)
+                Functions.Process_Binary_Message_SupplementGPS(packet, number, ref vars.GPSlist);
+            else if (key == Functions.BIN_GLONASS_SUPPLEMENT)
+                Functions.Process_Binary_Message_SupplementGLONASS(packet, number, ref vars.GLONASSlist);
             else
             {
                 dbuffer.ToString();

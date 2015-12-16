@@ -30,7 +30,7 @@ namespace GPSNavigator
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
         DateTime StartTime, EndTime,previousTime;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
-        Form1 ParentForm;// = new Form1();
+        Form1 Parentform;// = new Form1();
         SettingBuffer Settings = new SettingBuffer();
         graphtype RealtimeGraphType = graphtype.X;
 
@@ -69,7 +69,7 @@ namespace GPSNavigator
             this.Text = "MomentDetail (RealTime)";
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
-            ParentForm = Parent;
+            Parentform = Parent;
             toolStripStatusLabel1.Visible = true;
             ControlPanel.Visible = false;
             ControlPanelButton.Visible = true;
@@ -602,7 +602,7 @@ namespace GPSNavigator
         private void MomentDetail_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (realtime)
-                ParentForm.checkBox2.Checked = false;
+                Parentform.checkBox2.Checked = false;
         }
 
         private void ToggleGraph()
@@ -899,7 +899,7 @@ namespace GPSNavigator
                 ApplySearch.Enabled = false;
                 for (int i = 0; i < index; i++)
                 {
-                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Parentform.Serial1_Write(byteMsg, i, 1);
                     Application.DoEvents();
                 }
                 ApplySearch.Enabled = true;
@@ -1092,7 +1092,7 @@ namespace GPSNavigator
             ApplyThreshold.Enabled = false;
             for (int i = 0; i < index; i++)
             {
-                ParentForm.Serial1_Write(byteMsg, i, 1);
+                Parentform.Serial1_Write(byteMsg, i, 1);
                 Application.DoEvents();
             }
             ApplyThreshold.Enabled = true;
@@ -1189,7 +1189,7 @@ namespace GPSNavigator
             ApplyCom.Enabled = false;
             for (int i = 0; i < index; i++)
             {
-                ParentForm.Serial1_Write(byteMsg, i, 1);
+                Parentform.Serial1_Write(byteMsg, i, 1);
                 Application.DoEvents();
             }
             ApplyCom.Enabled = true;
@@ -1372,7 +1372,7 @@ namespace GPSNavigator
             ApplyMisc.Enabled = false;
             for (int i = 0; i < index; i++)
             {
-                ParentForm.Serial1_Write(byteMsg, i, 1);
+                Parentform.Serial1_Write(byteMsg, i, 1);
                 Application.DoEvents();
             }
             ApplyMisc.Enabled = true;
@@ -1435,13 +1435,13 @@ namespace GPSNavigator
                 //ApplyButtonsEnabling(false);
                 for (int i = 0; i < index; i++)
                 {
-                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Parentform.Serial1_Write(byteMsg, i, 1);
                     //SelectedSerialPort.Write(byteMsg, i, 1);
                     Application.DoEvents();
                 }
                 //ApplyButtonsEnabling(true);
             }
-            catch (Exception ex)
+            catch
             {
                 //Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
             }
@@ -1496,12 +1496,12 @@ namespace GPSNavigator
 
                 for (int i = 0; i < index; i++)
                 {
-                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Parentform.Serial1_Write(byteMsg, i, 1);
                     Thread.Sleep(20);
                     Application.DoEvents();
                 }
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
@@ -1537,12 +1537,12 @@ namespace GPSNavigator
 
                 for (int i = 0; i < index; i++)
                 {
-                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Parentform.Serial1_Write(byteMsg, i, 1);
                     Thread.Sleep(20);
                     Application.DoEvents();
                 }
             }
-            catch (Exception ex)
+            catch
             {
             }
         }
@@ -1626,12 +1626,12 @@ namespace GPSNavigator
 
                 for (int i = 0; i < index; i++)
                 {
-                    ParentForm.Serial1_Write(byteMsg, i, 1);
+                    Parentform.Serial1_Write(byteMsg, i, 1);
                     Thread.Sleep(20);
                     Application.DoEvents();
                 }
             }
-            catch (Exception ex)
+            catch
             {
 
             }

@@ -217,6 +217,7 @@ namespace GPSNavigator.Classes
             public List<double[]> satPos_X = new List<double[]>();
             public int counter = 0;
             public int overLoad = 0;
+            public bool RawReceived = false;
         }
 
         public class AttitudeInformation
@@ -329,7 +330,6 @@ namespace GPSNavigator.Classes
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
             private List<FileStream> GPS = new List<FileStream>();
             private List<FileStream> Glonass = new List<FileStream>();
-            private Globals vars;
 
             public LogFileManager(string path,ref Globals variables)
             {
@@ -977,11 +977,6 @@ namespace GPSNavigator.Classes
                 delta = (float)1200 / GPS[0].Length;
             }
 
-            public void ClearBuffer()
-            {
-                vars.buffer = new DataBuffer();
-            }
-
             public List<double> ReadSingleBuffer()
             {
                 List<double> sbuffer = new List<double>();
@@ -1085,7 +1080,6 @@ namespace GPSNavigator.Classes
             private List<FileStream> GPS,Glonass;
             public string Dirpath;
             private long GPSByteCount = 0;
-            private bool inited = false;
 
             public Logger(string DirPath)
             {

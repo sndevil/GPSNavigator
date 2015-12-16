@@ -43,6 +43,7 @@
             this.controlPanelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serialControllerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.skyViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutProgramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderdialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -178,7 +179,8 @@
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.serialControllerToolStripMenuItem});
+            this.serialControllerToolStripMenuItem,
+            this.skyViewToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
             this.viewToolStripMenuItem.Text = "&View";
@@ -186,9 +188,16 @@
             // serialControllerToolStripMenuItem
             // 
             this.serialControllerToolStripMenuItem.Name = "serialControllerToolStripMenuItem";
-            this.serialControllerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.serialControllerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.serialControllerToolStripMenuItem.Text = "&Serial Controller";
             this.serialControllerToolStripMenuItem.Click += new System.EventHandler(this.serialControllerToolStripMenuItem_Click);
+            // 
+            // skyViewToolStripMenuItem
+            // 
+            this.skyViewToolStripMenuItem.Name = "skyViewToolStripMenuItem";
+            this.skyViewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.skyViewToolStripMenuItem.Text = "Sky View";
+            this.skyViewToolStripMenuItem.Click += new System.EventHandler(this.skyViewToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -201,7 +210,7 @@
             // aboutProgramToolStripMenuItem
             // 
             this.aboutProgramToolStripMenuItem.Name = "aboutProgramToolStripMenuItem";
-            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.aboutProgramToolStripMenuItem.Text = "About Program";
             this.aboutProgramToolStripMenuItem.Click += new System.EventHandler(this.aboutProgramToolStripMenuItem_Click);
             // 
@@ -639,8 +648,6 @@
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serialControllerToolStripMenuItem;
         private System.Windows.Forms.ToolStripStatusLabel ErrorCount;
-        private System.Windows.Forms.RadioButton asciiRadio;
-        private System.Windows.Forms.RadioButton hexRadio;
         private System.Windows.Forms.Label FormatLabel;
         private System.Windows.Forms.RadioButton ascii;
         private System.Windows.Forms.RadioButton hex;
@@ -649,6 +656,7 @@
         private Telerik.WinControls.RadThemeManager radThemeManager1;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutProgramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem skyViewToolStripMenuItem;
     }
 }
 
