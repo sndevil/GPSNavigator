@@ -156,6 +156,12 @@
     <Compile Include="About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddLicense.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddLicense.Designer.cs">
+      <DependentUpon>AddLicense.cs</DependentUpon>
+    </Compile>
     <Compile Include="ControlPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -193,6 +199,9 @@
     <Compile Include="Source\Functions.cs" />
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddLicense.resx">
+      <DependentUpon>AddLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>

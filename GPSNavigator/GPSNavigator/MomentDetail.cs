@@ -234,21 +234,32 @@ namespace GPSNavigator
                             try
                             {
                                 tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
-                                tempchart.Series[0].Points[counter].Color = Color.Blue;
+                                //tempchart.Series[0].Points[counter].Color = Color.Blu;
                                 //tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Emboss";
                                 if (i >= 32)
+                                {
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Wedge";
+                                    tempchart.Series[0].Points[counter].Color = Color.DodgerBlue;
+                                }
                                 else
+                                {
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
+                                    tempchart.Series[0].Points[counter].Color = Color.Blue;
+                                }
                             }
                             catch
                             {
                                 tempchart.Series[0].Points.AddXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
-                                tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
                                 if (i >= 32)
+                                {
                                     tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].CustomProperties = "DrawingStyle = Wedge";
+                                    tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.DodgerBlue;
+                                }
                                 else
+                                {
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
+                                    tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Blue;
+                                }
                             }
                             if (i < 32) VisibleGPS++; else VisibleGLONASS++;
                             counter++;
@@ -258,20 +269,31 @@ namespace GPSNavigator
                             try
                             {
                                 tempchart.Series[0].Points[counter].SetValueXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
-                                tempchart.Series[0].Points[counter].Color = Color.Green;
                                 if (i >= 32)
+                                {
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Wedge";
+                                    tempchart.Series[0].Points[counter].Color = Color.LawnGreen;
+                                }
                                 else
+                                {
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
+                                    tempchart.Series[0].Points[counter].Color = Color.Green;
+                                }
                             }
                             catch
                             {
                                 tempchart.Series[0].Points.AddXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), tempsat[i].SNR);
                                 tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].Color = Color.Green;
                                 if (i >= 32)
+                                {
                                     tempchart.Series[0].Points[tempchart.Series[0].Points.Count - 1].CustomProperties = "DrawingStyle = Wedge";
+                                    tempchart.Series[0].Points[counter].Color = Color.LawnGreen;
+                                }
                                 else
+                                {
                                     tempchart.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
+                                    tempchart.Series[0].Points[counter].Color = Color.Green;
+                                }
                             }
                             if (i < 32) VisibleGPS++; else VisibleGLONASS++;
                             if (i < 32) UsedGPS++; else UsedGLONASS++;

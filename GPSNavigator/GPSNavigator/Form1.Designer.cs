@@ -188,14 +188,14 @@
             // serialControllerToolStripMenuItem
             // 
             this.serialControllerToolStripMenuItem.Name = "serialControllerToolStripMenuItem";
-            this.serialControllerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.serialControllerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.serialControllerToolStripMenuItem.Text = "&Serial Controller";
             this.serialControllerToolStripMenuItem.Click += new System.EventHandler(this.serialControllerToolStripMenuItem_Click);
             // 
             // skyViewToolStripMenuItem
             // 
             this.skyViewToolStripMenuItem.Name = "skyViewToolStripMenuItem";
-            this.skyViewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.skyViewToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.skyViewToolStripMenuItem.Text = "Sky View";
             this.skyViewToolStripMenuItem.Click += new System.EventHandler(this.skyViewToolStripMenuItem_Click);
             // 

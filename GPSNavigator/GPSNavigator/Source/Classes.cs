@@ -977,26 +977,6 @@ namespace GPSNavigator.Classes
                 delta = (float)1200 / GPS[0].Length;
             }
 
-            public List<double> ReadSingleBuffer()
-            {
-                List<double> sbuffer = new List<double>();
-                stream.Position = 0;
-                byte[] tempbuffer = new byte[4];
-                while (true)
-                {
-                    if (stream.Position + 4 > stream.Length)
-                        break;
-
-                    stream.Read(tempbuffer, 0, 4);
-                    int t = tempbuffer[3];
-                    for (int i = 2; i >= 0; --i)
-                        t = t * 256 + tempbuffer[i];
-                    var t2 = Functions.formatFloat(t);
-                    sbuffer.Add(t2);
-                }
-
-                return sbuffer;
-            }
 
             public void Close()
             {

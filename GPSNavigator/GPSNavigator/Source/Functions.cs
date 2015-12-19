@@ -327,47 +327,6 @@ namespace GPSNavigator.Source
             return (DOP - 197.625) * 20;
         }
 
-        public static void Process_Packet(string Data,List<string> field)             //Process Received Data
-        {
-            //Calculate Checksum
-            if (Checksum_validity(Data) != true)
-            {
-                //("CheckSum Error", "Recieved checksum is incorrect");
-                return;
-            }
-
-            //DataReceiveTimeOut = 0;
-
-            Calculate_NMEA_fields(Data,field);
-
-            string Sentence = field[0].Substring(3, 3);
-
-
-           
-            //Process Sentences
-            /*switch (Sentence)
-            {
-                case "GGA":                 //Global positioning system fix data
-                    Process_GGA_Message();
-                    break;
-                case "GSA":                 //GPS DOP and Active Satellites
-                    Process_GSA_Message();
-                    break;
-                case "GSV":                 //GPS Satellites in View
-                    Process_GSV_Message();
-                    break;
-                case "SV1":                 //GPS Antenna 1 (only for dual GPS)
-                    Process_SV1_Message();
-                    break;
-                case "SV2":                 //GPS Antenna 2 (only for dual GPS)
-                    Process_SV2_Message();
-                    break;
-                case "RMC":                 //Recommended Minimum data
-                    Process_RMC_Message();
-                    break;
-            }*/
-        }
-
         private static int Calculate_Checksum(string Data)
         {
             int Checksum = 0;
@@ -1030,7 +989,6 @@ namespace GPSNavigator.Source
              */
         }
 
-        //Check Single Channel Compact
         public static SingleDataBuffer Process_Binary_Message_Compact(byte[] data, int SerialNum, ref List<Satellite[]> GPS,ref List<Satellite[]> GLONASS, ref DateTime PTime)
         {
             SingleDataBuffer buffer = new SingleDataBuffer();
@@ -1534,7 +1492,6 @@ namespace GPSNavigator.Source
                 }
             index += 24;
         }
-
 
         public static string Process_Binary_Message_Debug(byte[] data)
         {

@@ -106,6 +106,9 @@
             this.listBoxLicenceProperties = new DevExpress.XtraEditors.ListBoxControl();
             this.listBoxLicence = new DevExpress.XtraEditors.ListBoxControl();
             this.labelControl29 = new DevExpress.XtraEditors.LabelControl();
+            this.ReadLicenseButton = new System.Windows.Forms.Button();
+            this.AddLicenceButton = new System.Windows.Forms.Button();
+            this.RemoveLicenseButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl6)).BeginInit();
             this.groupControl6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.textEditMaskAngle.Properties)).BeginInit();
@@ -1083,7 +1086,10 @@
             this.groupControl3.Appearance.Options.UseBackColor = true;
             this.groupControl3.AppearanceCaption.Options.UseTextOptions = true;
             this.groupControl3.AppearanceCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.groupControl3.Controls.Add(this.RemoveLicenseButton);
+            this.groupControl3.Controls.Add(this.AddLicenceButton);
             this.groupControl3.Controls.Add(this.labelControl28);
+            this.groupControl3.Controls.Add(this.ReadLicenseButton);
             this.groupControl3.Controls.Add(this.listBoxLicenceProperties);
             this.groupControl3.Controls.Add(this.listBoxLicence);
             this.groupControl3.Controls.Add(this.labelControl29);
@@ -1125,11 +1131,44 @@
             this.labelControl29.TabIndex = 46;
             this.labelControl29.Text = "Licences:";
             // 
+            // ReadLicenseButton
+            // 
+            this.ReadLicenseButton.BackColor = System.Drawing.Color.Gainsboro;
+            this.ReadLicenseButton.Location = new System.Drawing.Point(67, 235);
+            this.ReadLicenseButton.Name = "ReadLicenseButton";
+            this.ReadLicenseButton.Size = new System.Drawing.Size(90, 25);
+            this.ReadLicenseButton.TabIndex = 69;
+            this.ReadLicenseButton.Text = "Read";
+            this.ReadLicenseButton.UseVisualStyleBackColor = false;
+            this.ReadLicenseButton.Click += new System.EventHandler(this.ReadLicenseButton_Click);
+            // 
+            // AddLicenceButton
+            // 
+            this.AddLicenceButton.BackColor = System.Drawing.Color.Gainsboro;
+            this.AddLicenceButton.Location = new System.Drawing.Point(163, 235);
+            this.AddLicenceButton.Name = "AddLicenceButton";
+            this.AddLicenceButton.Size = new System.Drawing.Size(90, 25);
+            this.AddLicenceButton.TabIndex = 70;
+            this.AddLicenceButton.Text = "Add";
+            this.AddLicenceButton.UseVisualStyleBackColor = false;
+            this.AddLicenceButton.Click += new System.EventHandler(this.AddLicenceButton_Click);
+            // 
+            // RemoveLicenseButton
+            // 
+            this.RemoveLicenseButton.BackColor = System.Drawing.Color.Gainsboro;
+            this.RemoveLicenseButton.Location = new System.Drawing.Point(259, 235);
+            this.RemoveLicenseButton.Name = "RemoveLicenseButton";
+            this.RemoveLicenseButton.Size = new System.Drawing.Size(90, 25);
+            this.RemoveLicenseButton.TabIndex = 71;
+            this.RemoveLicenseButton.Text = "Remove";
+            this.RemoveLicenseButton.UseVisualStyleBackColor = false;
+            this.RemoveLicenseButton.Click += new System.EventHandler(this.RemoveLicenseButton_Click);
+            // 
             // ControlPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(965, 578);
             this.Controls.Add(this.groupControl6);
             this.Controls.Add(this.groupControl5);
@@ -1137,7 +1176,7 @@
             this.Controls.Add(this.groupControl2);
             this.Controls.Add(this.groupControl1);
             this.Controls.Add(this.groupControl3);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ControlPanel";
             this.Text = "ControlPanel";
@@ -1273,5 +1312,8 @@
         private System.Windows.Forms.Button ClearAll;
         private System.Windows.Forms.Button DeassignAll;
         private System.Windows.Forms.Button Deassign;
+        private System.Windows.Forms.Button RemoveLicenseButton;
+        private System.Windows.Forms.Button AddLicenceButton;
+        private System.Windows.Forms.Button ReadLicenseButton;
     }
 }

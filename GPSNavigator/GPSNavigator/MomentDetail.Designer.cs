@@ -962,7 +962,7 @@
             "Temperature",
             "UsedStats",
             "VisibleStats"});
-            this.graphDataCombo.Location = new System.Drawing.Point(4, 545);
+            this.graphDataCombo.Location = new System.Drawing.Point(4, 487);
             this.graphDataCombo.Name = "graphDataCombo";
             this.graphDataCombo.Size = new System.Drawing.Size(58, 20);
             this.graphDataCombo.TabIndex = 51;
@@ -973,7 +973,7 @@
             // ClearButton
             // 
             this.ClearButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClearButton.Location = new System.Drawing.Point(4, 572);
+            this.ClearButton.Location = new System.Drawing.Point(4, 513);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(58, 23);
             this.ClearButton.TabIndex = 52;
@@ -1967,7 +1967,7 @@
             this.GraphToggle.BackgroundImage = global::GPSNavigator.Properties.Resources.Down;
             this.GraphToggle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.GraphToggle.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GraphToggle.Location = new System.Drawing.Point(4, 482);
+            this.GraphToggle.Location = new System.Drawing.Point(4, 445);
             this.GraphToggle.Name = "GraphToggle";
             this.GraphToggle.Size = new System.Drawing.Size(58, 37);
             this.GraphToggle.TabIndex = 49;

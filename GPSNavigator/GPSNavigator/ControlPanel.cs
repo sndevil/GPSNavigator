@@ -727,5 +727,144 @@ namespace GPSNavigator
             listBoxGLONASS.UnSelectAll();
             listBoxGPS.UnSelectAll();
         }
+
+        private void ResetListBoxLicenseProperties()
+        {
+            listBoxLicenceProperties.Items.Clear();
+            listBoxLicenceProperties.Items.Add("Max Speed:");
+            listBoxLicenceProperties.Items.Add("Max Acceleration:");
+            listBoxLicenceProperties.Items.Add("Max Height:");
+            listBoxLicenceProperties.Items.Add("Max Refresh Rate:");
+            listBoxLicenceProperties.Items.Add("Satellite Type:");
+            listBoxLicenceProperties.Items.Add("Number of RF Inputs:");
+            listBoxLicenceProperties.Items.Add("Raw Data:");
+            listBoxLicenceProperties.Items.Add("Unlimited:");
+        }
+
+        private void ReadLicenseButton_Click(object sender, EventArgs e)
+        {
+            listBoxLicence.Items.Clear();
+            ResetListBoxLicenseProperties();
+
+            char[] Msg = new char[60];
+            byte[] byteMsg = new byte[60];
+            int index = 0;
+
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.READ_LICENCE_CMD;
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            for (int i = 0; i < index; i++)
+                byteMsg[i] = (byte)Msg[i];
+
+            for (int i = 0; i < index; i++)
+            {
+                Parentform.Serial1_Write(byteMsg, i, 1);
+                Thread.Sleep(20);
+                Application.DoEvents();
+            }
+        }
+
+        private void AddLicenceButton_Click(object sender, EventArgs e)
+        {
+            AddLicense Licenseform = new AddLicense();
+            if (Licenseform.ShowDialog() == DialogResult.OK)
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.ADD_LICENCE_CMD;
+                index++;
+
+                for (int i = 0; i < 16; i++)
+                {
+                    string s = Licenseform.LicenseText.Text.Substring(i * 2, 2);
+                    Msg[index] = (char)(Convert.ToInt32(s, 16));
+                    index++;
+                }
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+        }
+
+        private void RemoveLicenseButton_Click(object sender, EventArgs e)
+        {
+
+            char[] Msg = new char[60];
+            byte[] byteMsg = new byte[60];
+            int index = 0;
+
+            //Header
+            Msg[index] = Functions.MSG_Header[0];
+            index++;
+            Msg[index] = Functions.MSG_Header[1];
+            index++;
+            Msg[index] = Functions.MSG_Header[2];
+            index++;
+            Msg[index] = Functions.MSG_Header[3];
+            index++;
+
+            //CMD
+            Msg[index] = Functions.REMOVE_LICENCE_CMD;
+            index++;
+
+            char licenseNum = (char)(listBoxLicence.SelectedIndex + 1);
+            Msg[index] = licenseNum;
+            index++;
+
+            //CRC
+            Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+            index++;
+
+            for (int i = 0; i < index; i++)
+                byteMsg[i] = (byte)Msg[i];
+
+            for (int i = 0; i < index; i++)
+            {
+                Parentform.Serial1_Write(byteMsg, i, 1);
+                Thread.Sleep(20);
+                Application.DoEvents();
+            }
+
+            listBoxLicence.Items.Remove(listBoxLicence.SelectedItem);
+        }
     }
 }

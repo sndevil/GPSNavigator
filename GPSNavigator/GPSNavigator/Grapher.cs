@@ -65,7 +65,7 @@ namespace GPSNavigator
         void CreateDetailForm()
         {
             DetailForm = new MomentDetail(filemanager);
-            DetailForm.Dock = DockStyle.None;
+            DetailForm.Dock = DockStyle.Left;
             DetailForm.TopLevel = false;
             DetailForm.Show();
             DocumentWindow NewDockWindow = new DocumentWindow("Moment Details (Log) " + index.ToString());

@@ -4,7 +4,7 @@
   <description asmv2:iconFile="Resources\GPS Navigator.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="GPSNavigator" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <assemblyIdentity name="GPSNavigator" version="1.1.0.0" language="neutral" processorArchitecture="x86" />
     <commandLine file="GPSNavigator.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -595,14 +595,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GPSNavigator.exe" size="724992">
-      <assemblyIdentity name="GPSNavigator" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GPSNavigator.exe" size="728576">
+      <assemblyIdentity name="GPSNavigator" version="1.1.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>CyEVrepVrn3os70CH2saNyLgUng=</dsig:DigestValue>
+        <dsig:DigestValue>7W7cpAGPWAZtTAwOURtiy7HtMdc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
