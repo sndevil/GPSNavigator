@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using GPSNavigator.Classes;
 using GPSNavigator.Source;
 using Infragistics.UltraGauge.Resources;
@@ -24,7 +25,7 @@ namespace GPSNavigator
         LogFileManager filemanager;
         float position;
         int IndexCounter = 0, SlowCounter = 0, VisibleGPS, VisibleGLONASS, UsedGPS, UsedGLONASS, Chart1Item, Chart2Item = -1, DataTimeOut = 100;
-        bool playing = false, reading = false, returned = false, realtime = false, Receiving = false, StartedCounting = false, ShowingGraph = false, ShowingControlPanel = false;
+        bool playing = false, reading = false, returned = false, realtime = false, Receiving = false, StartedCounting = false, ShowingGraph = false, ShowingControlPanel = false, juststarted = true;
         public bool paused = false;
         public int index;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
@@ -32,6 +33,7 @@ namespace GPSNavigator
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
         Form1 Parentform;// = new Form1();
         SettingBuffer Settings = new SettingBuffer();
+        Task<bool> updater;
         graphtype RealtimeGraphType = graphtype.X;
 
         public MomentDetail(LogFileManager manager)
@@ -97,15 +99,27 @@ namespace GPSNavigator
             try
             {
                 PlotGraph(tempgpsdata);
+            }
+            catch
+            {
+            }
+        }
+
+        public void UpdateRealtimeGraph(Globals vars, SingleDataBuffer data, int ChannelNum)
+        {
+            Receiving = true;
+            DataTimeOut = 100;
+            var tempgpsdata = new GPSData();
+            tempgpsdata.Time = vars.PacketTime;
+            tempgpsdata.Dbuf = data;
+            try
+            {
                 if (ShowingGraph)
                     UpdateGraph(tempgpsdata, false);
                 else
                     UpdateGraph(tempgpsdata, true);
             }
-            catch
-            {
-            }
-
+            catch { }
         }
 
         public void UpdateData(double xpos, DateTime time)
@@ -508,119 +522,137 @@ namespace GPSNavigator
 
         public void UpdateGraph(GPSData data, bool NAN)
         {
-            double toAdd = 0;
-            #region typeswitch
-            switch (RealtimeGraphType)
+            if (juststarted)
             {
-                case graphtype.A:
-                    toAdd = data.Dbuf.A;
-                break;
-                case graphtype.Altitude:
-                    toAdd = data.Dbuf.Altitude;
-                break;
-                case graphtype.Altitude_p:
-                    toAdd = data.Dbuf.Altitude_Processed;
-                break;
-                case graphtype.Ax:
-                    toAdd = data.Dbuf.Ax;
-                break;
-                case graphtype.Ay:
-                    toAdd = data.Dbuf.Ay;
-                break;
-                case graphtype.Az:
-                    toAdd = data.Dbuf.Az;
-                break;
-                case graphtype.Latitude:
-                    toAdd = data.Dbuf.Latitude;
-                break;
-                case graphtype.Latitude_p:
-                    toAdd = data.Dbuf.Latitude_Processed;
-                break;
-                case graphtype.Longitude:
-                    toAdd = data.Dbuf.Longitude;
-                break;
-                case graphtype.Longitude_p:
-                    toAdd = data.Dbuf.Longitude_Processed;
-                break;
-                case graphtype.PDOP:
-                    toAdd = data.Dbuf.PDOP;
-                break;
-                case graphtype.State:
-                    toAdd = data.Dbuf.state;
-                break;
-                case graphtype.Temperature:
-                    toAdd = data.Dbuf.Temperature;
-                break;
-                case graphtype.UsedStats:
-                    toAdd = data.Dbuf.NumOfUsedSats;
-                break;
-                case graphtype.VisibleStats:
-                    toAdd = data.Dbuf.NumOfVisibleSats;
-                break;
-                case graphtype.V:
-                    toAdd = data.Dbuf.V;
-                break;
-                case graphtype.V_p:
-                    toAdd = data.Dbuf.V_Processed;
-                break;
-                case graphtype.Vx:
-                    toAdd = data.Dbuf.Vx;
-                break;
-                case graphtype.Vx_p:
-                    toAdd = data.Dbuf.Vx_Processed;
-                break;
-                case graphtype.Vy:
-                    toAdd = data.Dbuf.Vy;
-                break;
-                case graphtype.Vy_p:
-                    toAdd = data.Dbuf.Vy_Processed;
-                break;
-                case graphtype.Vz:
-                    toAdd = data.Dbuf.Vz;
-                break;
-                case graphtype.Vz_p:
-                    toAdd = data.Dbuf.Vz_Processed;
-                break;
-                case graphtype.X:
-                    toAdd = data.Dbuf.X;
-                break;
-                case graphtype.X_p:
-                    toAdd = data.Dbuf.X_Processed;
-                break;
-                case graphtype.Y:
-                    toAdd = data.Dbuf.Y;
-                break;
-                case graphtype.Y_p:
-                    toAdd = data.Dbuf.Y_Processed;
-                break;
-                case graphtype.Z:
-                    toAdd = data.Dbuf.Z;
-                break;
-                case graphtype.Z_p:
-                    toAdd = data.Dbuf.Z_Processed;
-                break;
-                case graphtype.Null:
-                    toAdd = double.NaN;
-                break;
+                updater = UpdateGraphAsync(data, NAN);
+                juststarted = false;
             }
-            #endregion
-            if (c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Length > 180000)
-                ClearGraph();
-            if (data.Time.Year < 3000 && data.Time.Year > 2000)
-            {              
-                if (!NAN)
-                {
-                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(data.Time);
-                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
-                    previousTime = data.Time;
-                }
-                else if (previousTime.Year < 3000 && previousTime.Year > 2000)
-                {
-                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(previousTime);
-                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
-                }
-            }
+            else if (updater.IsCompleted)
+                updater = UpdateGraphAsync(data, NAN);
+              
         }
+
+        public Task<bool> UpdateGraphAsync(GPSData data, bool NAN)
+        {
+
+            return Task.Factory.StartNew(() =>
+            {
+                double toAdd = 0;
+                #region typeswitch
+                switch (RealtimeGraphType)
+                {
+                    case graphtype.A:
+                        toAdd = data.Dbuf.A;
+                        break;
+                    case graphtype.Altitude:
+                        toAdd = data.Dbuf.Altitude;
+                        break;
+                    case graphtype.Altitude_p:
+                        toAdd = data.Dbuf.Altitude_Processed;
+                        break;
+                    case graphtype.Ax:
+                        toAdd = data.Dbuf.Ax;
+                        break;
+                    case graphtype.Ay:
+                        toAdd = data.Dbuf.Ay;
+                        break;
+                    case graphtype.Az:
+                        toAdd = data.Dbuf.Az;
+                        break;
+                    case graphtype.Latitude:
+                        toAdd = data.Dbuf.Latitude;
+                        break;
+                    case graphtype.Latitude_p:
+                        toAdd = data.Dbuf.Latitude_Processed;
+                        break;
+                    case graphtype.Longitude:
+                        toAdd = data.Dbuf.Longitude;
+                        break;
+                    case graphtype.Longitude_p:
+                        toAdd = data.Dbuf.Longitude_Processed;
+                        break;
+                    case graphtype.PDOP:
+                        toAdd = data.Dbuf.PDOP;
+                        break;
+                    case graphtype.State:
+                        toAdd = data.Dbuf.state;
+                        break;
+                    case graphtype.Temperature:
+                        toAdd = data.Dbuf.Temperature;
+                        break;
+                    case graphtype.UsedStats:
+                        toAdd = data.Dbuf.NumOfUsedSats;
+                        break;
+                    case graphtype.VisibleStats:
+                        toAdd = data.Dbuf.NumOfVisibleSats;
+                        break;
+                    case graphtype.V:
+                        toAdd = data.Dbuf.V;
+                        break;
+                    case graphtype.V_p:
+                        toAdd = data.Dbuf.V_Processed;
+                        break;
+                    case graphtype.Vx:
+                        toAdd = data.Dbuf.Vx;
+                        break;
+                    case graphtype.Vx_p:
+                        toAdd = data.Dbuf.Vx_Processed;
+                        break;
+                    case graphtype.Vy:
+                        toAdd = data.Dbuf.Vy;
+                        break;
+                    case graphtype.Vy_p:
+                        toAdd = data.Dbuf.Vy_Processed;
+                        break;
+                    case graphtype.Vz:
+                        toAdd = data.Dbuf.Vz;
+                        break;
+                    case graphtype.Vz_p:
+                        toAdd = data.Dbuf.Vz_Processed;
+                        break;
+                    case graphtype.X:
+                        toAdd = data.Dbuf.X;
+                        break;
+                    case graphtype.X_p:
+                        toAdd = data.Dbuf.X_Processed;
+                        break;
+                    case graphtype.Y:
+                        toAdd = data.Dbuf.Y;
+                        break;
+                    case graphtype.Y_p:
+                        toAdd = data.Dbuf.Y_Processed;
+                        break;
+                    case graphtype.Z:
+                        toAdd = data.Dbuf.Z;
+                        break;
+                    case graphtype.Z_p:
+                        toAdd = data.Dbuf.Z_Processed;
+                        break;
+                    case graphtype.Null:
+                        toAdd = double.NaN;
+                        break;
+                }
+                #endregion
+                if (c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Length > 180000)
+                    ClearGraph();
+                if (data.Time.Year < 3000 && data.Time.Year > 2000)
+                {
+                    if (!NAN)
+                    {
+                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(data.Time);
+                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
+                        previousTime = data.Time;
+                    }
+                    else if (previousTime.Year < 3000 && previousTime.Year > 2000)
+                    {
+                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(previousTime);
+                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
+                    }
+                }
+                return true;
+            });
+        }
+
         private void MomentDetail_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (realtime)

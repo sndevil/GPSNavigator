@@ -35,7 +35,7 @@ namespace GPSNavigator
         public List<MomentDetail> detaillist = new List<MomentDetail>();
         Logger log;
         DateTime RecordStarttime;
-        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0,serial1_MsgSize=-1,RefreshRate = 50;
+        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0,serial1_MsgSize=-1,RefreshRate = 50;
         MomentDetail DetailForm;
         Skyview SkyView;
         ExtremumHandler exthandler = new ExtremumHandler();
@@ -127,6 +127,15 @@ namespace GPSNavigator
                                 if (showsky)
                                     SkyUpdater(); // SkyView.UpdateView(vars);
                             }
+                            if (GraphRefreshCounter++ > GraphRefreshrate.Value - 1)
+                            {
+                                if (showdetail)
+                                {
+                                    UpdateRealtimeGraph(dbuf);
+                                    GraphRefreshCounter = 0;
+                                }
+                            }
+
                             if (dbuf.settingbuffer.SettingReceived)
                                 DetailForm.ChangeSettings(dbuf.settingbuffer);
 
@@ -500,6 +509,18 @@ namespace GPSNavigator
             {
                 DetailForm.UpdateData(vars,databuffer,0);
             }
+        }
+
+        private void UpdateRealtimeGraph(SingleDataBuffer databuffer)
+        {
+            if (DetailForm.InvokeRequired)
+            {
+                ShowRealtime d = new ShowRealtime(UpdateRealtimeGraph);
+                this.Invoke(d, new object[] { databuffer });
+            }
+            else
+                DetailForm.UpdateRealtimeGraph(vars, databuffer, 0);
+
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

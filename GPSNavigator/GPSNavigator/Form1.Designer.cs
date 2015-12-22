@@ -76,6 +76,8 @@
             this.toolTabStrip1 = new Telerik.WinControls.UI.Docking.ToolTabStrip();
             this.documentContainer1 = new Telerik.WinControls.UI.Docking.DocumentContainer();
             this.radThemeManager1 = new Telerik.WinControls.RadThemeManager();
+            this.label4 = new System.Windows.Forms.Label();
+            this.GraphRefreshrate = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -86,6 +88,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.toolTabStrip1)).BeginInit();
             this.toolTabStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.documentContainer1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphRefreshrate)).BeginInit();
             this.SuspendLayout();
             // 
             // serialPort1
@@ -307,7 +310,17 @@
             // numericUpDown2
             // 
             this.numericUpDown2.BackColor = System.Drawing.SystemColors.Window;
+            this.numericUpDown2.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.numericUpDown2.Location = new System.Drawing.Point(16, 425);
+            this.numericUpDown2.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.numericUpDown2.Name = "numericUpDown2";
             this.numericUpDown2.Size = new System.Drawing.Size(152, 20);
             this.numericUpDown2.TabIndex = 11;
@@ -324,9 +337,9 @@
             this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
             this.label3.Location = new System.Drawing.Point(13, 409);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(120, 13);
+            this.label3.Size = new System.Drawing.Size(144, 13);
             this.label3.TabIndex = 12;
-            this.label3.Text = "Refresh Rate Counter:";
+            this.label3.Text = "SNR Refresh Rate Counter:";
             // 
             // comboBox1
             // 
@@ -365,7 +378,7 @@
             this.toolStripProgressBar1,
             this.ErrorCount});
             this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
-            this.statusStrip1.Location = new System.Drawing.Point(0, 518);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 586);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(1045, 22);
             this.statusStrip1.SizingGrip = false;
@@ -460,7 +473,7 @@
             // 
             this.radDock1.RootElement.MinSize = new System.Drawing.Size(25, 25);
             this.radDock1.RootElement.Padding = new System.Windows.Forms.Padding(5);
-            this.radDock1.Size = new System.Drawing.Size(1045, 494);
+            this.radDock1.Size = new System.Drawing.Size(1045, 562);
             this.radDock1.SplitterWidth = 4;
             this.radDock1.TabIndex = 17;
             this.radDock1.TabStop = false;
@@ -477,6 +490,8 @@
             // 
             this.SerialController.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SerialController.Caption = null;
+            this.SerialController.Controls.Add(this.GraphRefreshrate);
+            this.SerialController.Controls.Add(this.label4);
             this.SerialController.Controls.Add(this.refreshButton);
             this.SerialController.Controls.Add(this.hex);
             this.SerialController.Controls.Add(this.ascii);
@@ -497,7 +512,7 @@
             this.SerialController.Location = new System.Drawing.Point(1, 24);
             this.SerialController.Name = "SerialController";
             this.SerialController.PreviousDockState = Telerik.WinControls.UI.Docking.DockState.Docked;
-            this.SerialController.Size = new System.Drawing.Size(198, 458);
+            this.SerialController.Size = new System.Drawing.Size(198, 526);
             this.SerialController.Text = "Serial Controller";
             // 
             // refreshButton
@@ -552,7 +567,7 @@
             // 
             this.toolTabStrip1.RootElement.MinSize = new System.Drawing.Size(25, 25);
             this.toolTabStrip1.SelectedIndex = 0;
-            this.toolTabStrip1.Size = new System.Drawing.Size(200, 484);
+            this.toolTabStrip1.Size = new System.Drawing.Size(200, 552);
             this.toolTabStrip1.TabIndex = 1;
             this.toolTabStrip1.TabStop = false;
             this.toolTabStrip1.ThemeName = "ControlDefault";
@@ -567,19 +582,51 @@
             // 
             this.documentContainer1.RootElement.MinSize = new System.Drawing.Size(25, 25);
             this.documentContainer1.RootElement.Padding = new System.Windows.Forms.Padding(5);
-            this.documentContainer1.Size = new System.Drawing.Size(831, 484);
+            this.documentContainer1.Size = new System.Drawing.Size(831, 552);
             this.documentContainer1.SizeInfo.SizeMode = Telerik.WinControls.UI.Docking.SplitPanelSizeMode.Fill;
             this.documentContainer1.SplitterWidth = 4;
             this.documentContainer1.TabIndex = 0;
             this.documentContainer1.TabStop = false;
             this.documentContainer1.ThemeName = "ControlDefault";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
+            this.label4.Location = new System.Drawing.Point(13, 458);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(155, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Graph Refresh Rate Counter:";
+            // 
+            // GraphRefreshrate
+            // 
+            this.GraphRefreshrate.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.GraphRefreshrate.Location = new System.Drawing.Point(16, 474);
+            this.GraphRefreshrate.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.GraphRefreshrate.Name = "GraphRefreshrate";
+            this.GraphRefreshrate.Size = new System.Drawing.Size(152, 20);
+            this.GraphRefreshrate.TabIndex = 22;
+            this.GraphRefreshrate.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(1045, 540);
+            this.ClientSize = new System.Drawing.Size(1045, 608);
             this.Controls.Add(this.radDock1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -604,6 +651,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.toolTabStrip1)).EndInit();
             this.toolTabStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.documentContainer1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphRefreshrate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -657,6 +705,8 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutProgramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem skyViewToolStripMenuItem;
+        private System.Windows.Forms.NumericUpDown GraphRefreshrate;
+        private System.Windows.Forms.Label label4;
     }
 }
 
