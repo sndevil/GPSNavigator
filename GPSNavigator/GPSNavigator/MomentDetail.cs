@@ -81,6 +81,7 @@ namespace GPSNavigator
             realtime = true;
             HideSecondGraph();
             PositionTypeCombo.SelectedIndex = 2;
+            GraphTooltip.SetToolTip(c1Chart1, "Shift+Click = Scroll, CTRL+Click = Scale, ALT+Click = Zoom, RightClick = Options");
         }
 
         public void UpdateData(Globals vars, SingleDataBuffer data, int ChannelNum)
@@ -667,6 +668,7 @@ namespace GPSNavigator
                 c1Chart1.Visible = true;
                 graphDataCombo.Visible = true;
                 ClearButton.Visible = true;
+                ResetZoom.Visible = true;
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
@@ -688,6 +690,7 @@ namespace GPSNavigator
                 c1Chart1.Visible = false;
                 graphDataCombo.Visible = false;
                 ClearButton.Visible = false;
+                ResetZoom.Visible = false;
                 this.Height = 560;
             }
             ShowingGraph = !ShowingGraph;
@@ -1694,6 +1697,77 @@ namespace GPSNavigator
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
             StartModule('H');
+        }
+
+        private void ResetZoom_Click(object sender, EventArgs e)
+        {
+            c1Chart1.ChartArea.AxisX.AutoMax = true;
+            c1Chart1.ChartArea.AxisX.AutoMin = true;
+            c1Chart1.ChartArea.AxisY.AutoMax = true;
+            c1Chart1.ChartArea.AxisY.AutoMin = true;
+        }
+
+        private void c1Chart1_MouseClick(object sender, MouseEventArgs e)
+        {
+            var t = System.Windows.Forms.Cursor.Position;
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                GraphOptions.Show(t);
+        }
+
+        private void GraphOptions_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            GraphOptions.Close(ToolStripDropDownCloseReason.ItemClicked);
+            switch (e.ClickedItem.Text)
+            {
+                case "Save To Image":
+                    ImageSaveDialog.Filter = "Jpeg File (*.jpeg)|*.jpeg|Bitmap File (*.bmp)|*.bmp|PNG File (*.png)|*.PNG";
+                    ImageSaveDialog.ShowDialog();
+                    //c1Chart1.SaveImage(System.Drawing.Imaging.ImageFormat.
+                    break;
+                case "Export Chart Data":
+                    DataExporter.Filter = "GPS Navigator Graph Data (*.ggd)|*.ggd";
+                    DataExporter.ShowDialog();
+                    break;
+                case "Import Chart Data":
+                    DataImporter.Filter = "GPS Navigator Graph Data (*.ggd)|*.ggd";
+                    DataImporter.ShowDialog();
+                    break;
+
+            }
+        }
+
+        private void ImageSaveDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            switch (ImageSaveDialog.FilterIndex)
+            {
+                case 1:
+                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    break;
+                case 2:
+                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                    break;
+                case 3:
+                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    break;
+            }
+            //c1Chart1.SaveImage(ImageSaveDialog.FileName, ImageSaveDialog.ex
+        }
+
+        private void DataExporter_FileOk(object sender, CancelEventArgs e)
+        {
+            c1Chart1.SaveChartToFile(DataExporter.FileName);
+        }
+
+        private void DataImporter_FileOk(object sender, CancelEventArgs e)
+        {
+            try
+            {
+                c1Chart1.LoadChartFromFile(DataImporter.FileName);
+            }
+            catch
+            {
+                throw new Exception("Couldnt load file");
+            }
         }
     }
 }
