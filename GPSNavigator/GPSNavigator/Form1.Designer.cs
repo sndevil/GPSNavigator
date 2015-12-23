@@ -38,6 +38,7 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.programSelectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlPanelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,6 +70,8 @@
             this.AutoCancel = new System.Windows.Forms.CheckBox();
             this.radDock1 = new Telerik.WinControls.UI.Docking.RadDock();
             this.SerialController = new Telerik.WinControls.UI.Docking.ToolWindow();
+            this.GraphRefreshrate = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.refreshButton = new System.Windows.Forms.Button();
             this.hex = new System.Windows.Forms.RadioButton();
             this.ascii = new System.Windows.Forms.RadioButton();
@@ -76,8 +79,6 @@
             this.toolTabStrip1 = new Telerik.WinControls.UI.Docking.ToolTabStrip();
             this.documentContainer1 = new Telerik.WinControls.UI.Docking.DocumentContainer();
             this.radThemeManager1 = new Telerik.WinControls.RadThemeManager();
-            this.label4 = new System.Windows.Forms.Label();
-            this.GraphRefreshrate = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -85,10 +86,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.radDock1)).BeginInit();
             this.radDock1.SuspendLayout();
             this.SerialController.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphRefreshrate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.toolTabStrip1)).BeginInit();
             this.toolTabStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.documentContainer1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GraphRefreshrate)).BeginInit();
             this.SuspendLayout();
             // 
             // serialPort1
@@ -140,6 +141,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openLogToolStripMenuItem,
             this.toolStripMenuItem1,
+            this.programSelectionToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
@@ -148,19 +150,26 @@
             // openLogToolStripMenuItem
             // 
             this.openLogToolStripMenuItem.Name = "openLogToolStripMenuItem";
-            this.openLogToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.openLogToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.openLogToolStripMenuItem.Text = "Open Log";
             this.openLogToolStripMenuItem.Click += new System.EventHandler(this.openLogToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(117, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(157, 6);
+            // 
+            // programSelectionToolStripMenuItem
+            // 
+            this.programSelectionToolStripMenuItem.Name = "programSelectionToolStripMenuItem";
+            this.programSelectionToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.programSelectionToolStripMenuItem.Text = "&Program Selection";
+            this.programSelectionToolStripMenuItem.Click += new System.EventHandler(this.programSelectionToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -515,6 +524,38 @@
             this.SerialController.Size = new System.Drawing.Size(198, 526);
             this.SerialController.Text = "Serial Controller";
             // 
+            // GraphRefreshrate
+            // 
+            this.GraphRefreshrate.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.GraphRefreshrate.Location = new System.Drawing.Point(16, 474);
+            this.GraphRefreshrate.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.GraphRefreshrate.Name = "GraphRefreshrate";
+            this.GraphRefreshrate.Size = new System.Drawing.Size(152, 20);
+            this.GraphRefreshrate.TabIndex = 22;
+            this.GraphRefreshrate.Value = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
+            this.label4.Location = new System.Drawing.Point(13, 458);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(155, 13);
+            this.label4.TabIndex = 21;
+            this.label4.Text = "Graph Refresh Rate Counter:";
+            // 
             // refreshButton
             // 
             this.refreshButton.BackgroundImage = global::GPSNavigator.Properties.Resources.refresh_256;
@@ -589,38 +630,6 @@
             this.documentContainer1.TabStop = false;
             this.documentContainer1.ThemeName = "ControlDefault";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
-            this.label4.Location = new System.Drawing.Point(13, 458);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(155, 13);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "Graph Refresh Rate Counter:";
-            // 
-            // GraphRefreshrate
-            // 
-            this.GraphRefreshrate.Increment = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.GraphRefreshrate.Location = new System.Drawing.Point(16, 474);
-            this.GraphRefreshrate.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.GraphRefreshrate.Name = "GraphRefreshrate";
-            this.GraphRefreshrate.Size = new System.Drawing.Size(152, 20);
-            this.GraphRefreshrate.TabIndex = 22;
-            this.GraphRefreshrate.Value = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -648,10 +657,10 @@
             this.radDock1.ResumeLayout(false);
             this.SerialController.ResumeLayout(false);
             this.SerialController.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GraphRefreshrate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.toolTabStrip1)).EndInit();
             this.toolTabStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.documentContainer1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GraphRefreshrate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -707,6 +716,7 @@
         private System.Windows.Forms.ToolStripMenuItem skyViewToolStripMenuItem;
         private System.Windows.Forms.NumericUpDown GraphRefreshrate;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem programSelectionToolStripMenuItem;
     }
 }
 

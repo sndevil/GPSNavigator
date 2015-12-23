@@ -154,4 +154,70 @@
   <data name="satellite" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\satellite.PNG;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="AirSpeedIndicator_Background1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AirSpeedIndicator_Background1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="AirSpeedNeedle1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\AirSpeedNeedle1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Altimeter_Background1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Altimeter_Background1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Bandeau_Dérouleur1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bandeau_Dérouleur1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Compass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\compass-logo-hi.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NingboRT_Exit_Logo.svg.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GPS" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\brand.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HeadingIndicator_Aircraft1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HeadingIndicator_Aircraft1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HeadingIndicator_Background1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HeadingIndicator_Background1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="HeadingWeel1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HeadingWeel1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Horizon_Background1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Horizon_Background1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Horizon_GroundSky1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Horizon_GroundSky1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Indicator_Background1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Indicator_Background1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LongNeedleAltimeter1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LongNeedleAltimeter1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Maquette_Avion1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Maquette_Avion1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="SmallNeedleAltimeter1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SmallNeedleAltimeter1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TurnCoordinatorAircraft1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TurnCoordinatorAircraft1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TurnCoordinatorBall1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TurnCoordinatorBall1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TurnCoordinatorMarks1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TurnCoordinatorMarks1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="TurnCoordinator_Background1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\TurnCoordinator_Background1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="VerticalSpeedIndicator_Background1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VerticalSpeedIndicator_Background1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="VerticalSpeedNeedle1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VerticalSpeedNeedle1.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

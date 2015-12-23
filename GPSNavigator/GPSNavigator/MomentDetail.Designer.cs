@@ -222,12 +222,13 @@
             this.ResetZoom = new System.Windows.Forms.Button();
             this.GraphOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SaveToImage = new System.Windows.Forms.ToolStripMenuItem();
-            this.ImageSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.ExportData = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportData = new System.Windows.Forms.ToolStripMenuItem();
+            this.ImageSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.DataExporter = new System.Windows.Forms.SaveFileDialog();
             this.DataImporter = new System.Windows.Forms.OpenFileDialog();
             this.GraphTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.ControlPanel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -2289,33 +2290,35 @@
             // 
             this.GraphOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SaveToImage,
+            this.toolStripSeparator1,
             this.ExportData,
             this.ImportData});
             this.GraphOptions.Name = "GraphOptions";
-            this.GraphOptions.Size = new System.Drawing.Size(163, 70);
+            this.GraphOptions.ShowImageMargin = false;
+            this.GraphOptions.Size = new System.Drawing.Size(138, 98);
             this.GraphOptions.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.GraphOptions_ItemClicked);
             // 
             // SaveToImage
             // 
             this.SaveToImage.Name = "SaveToImage";
-            this.SaveToImage.Size = new System.Drawing.Size(162, 22);
+            this.SaveToImage.Size = new System.Drawing.Size(137, 22);
             this.SaveToImage.Text = "Save To Image";
-            // 
-            // ImageSaveDialog
-            // 
-            this.ImageSaveDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.ImageSaveDialog_FileOk);
             // 
             // ExportData
             // 
             this.ExportData.Name = "ExportData";
-            this.ExportData.Size = new System.Drawing.Size(162, 22);
+            this.ExportData.Size = new System.Drawing.Size(137, 22);
             this.ExportData.Text = "Export Chart Data";
             // 
             // ImportData
             // 
             this.ImportData.Name = "ImportData";
-            this.ImportData.Size = new System.Drawing.Size(162, 22);
+            this.ImportData.Size = new System.Drawing.Size(137, 22);
             this.ImportData.Text = "Import Chart Data";
+            // 
+            // ImageSaveDialog
+            // 
+            this.ImageSaveDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.ImageSaveDialog_FileOk);
             // 
             // DataExporter
             // 
@@ -2324,6 +2327,11 @@
             // DataImporter
             // 
             this.DataImporter.FileOk += new System.ComponentModel.CancelEventHandler(this.DataImporter_FileOk);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(134, 6);
             // 
             // MomentDetail
             // 
@@ -2610,5 +2618,6 @@
         private System.Windows.Forms.SaveFileDialog DataExporter;
         private System.Windows.Forms.OpenFileDialog DataImporter;
         private System.Windows.Forms.ToolTip GraphTooltip;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

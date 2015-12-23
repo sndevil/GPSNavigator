@@ -479,5 +479,66 @@ namespace GPSNavigator
         {
             PlotGraph(temp);
         }
+
+        private void SaveImage_Click(object sender, EventArgs e)
+        {
+            ImageSaveDialog.Filter = "Jpeg File (*.jpeg)|*.jpeg|Bitmap File (*.bmp)|*.bmp|PNG File (*.png)|*.PNG";
+            ImageSaveDialog.ShowDialog();
+        }
+
+        private void ExportData_Click(object sender, EventArgs e)
+        {
+            DataExportDialog.Filter = "GPS Navigator Graph Data (*.ggd)|*.ggd";
+            DataExportDialog.ShowDialog();
+        }
+
+        private void ImportData_Click(object sender, EventArgs e)
+        {
+            DataImportDialog.Filter = "GPS Navigator Graph Data (*.ggd)|*.ggd";
+            DataImportDialog.ShowDialog();
+        }
+
+        private void ImageSaveDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            try
+            {
+                switch (ImageSaveDialog.FilterIndex)
+                {
+                    case 1:
+                        Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        break;
+                    case 2:
+                        Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                        break;
+                    case 3:
+                        Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        break;
+                }
+            }
+            catch
+            {
+                throw new Exception("Couldnt Save Image");
+            }
+        }
+
+        private void DataExportDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            Chart1.SaveChartToFile(DataExportDialog.FileName);
+        }
+
+        private void DataImportDialog_FileOk(object sender, CancelEventArgs e)
+        {
+            try
+            {
+                Chart1.LoadChartFromFile(DataImportDialog.FileName);
+            }
+            catch
+            {
+                throw new Exception("Couldnt Open File");
+            }
+
+        }
+
+
     }
 }

@@ -42,6 +42,12 @@
             this.MaxCheck = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.FileAdressLabel = new System.Windows.Forms.Label();
+            this.SaveImage = new System.Windows.Forms.Button();
+            this.ExportData = new System.Windows.Forms.Button();
+            this.ImportData = new System.Windows.Forms.Button();
+            this.ImageSaveDialog = new System.Windows.Forms.SaveFileDialog();
+            this.DataImportDialog = new System.Windows.Forms.OpenFileDialog();
+            this.DataExportDialog = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.Chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.rangecontrol.Properties)).BeginInit();
@@ -203,12 +209,57 @@
             this.FileAdressLabel.TabIndex = 17;
             this.FileAdressLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // SaveImage
+            // 
+            this.SaveImage.Location = new System.Drawing.Point(211, 483);
+            this.SaveImage.Name = "SaveImage";
+            this.SaveImage.Size = new System.Drawing.Size(130, 23);
+            this.SaveImage.TabIndex = 18;
+            this.SaveImage.Text = "Save Graph Image";
+            this.SaveImage.UseVisualStyleBackColor = true;
+            this.SaveImage.Click += new System.EventHandler(this.SaveImage_Click);
+            // 
+            // ExportData
+            // 
+            this.ExportData.Location = new System.Drawing.Point(347, 483);
+            this.ExportData.Name = "ExportData";
+            this.ExportData.Size = new System.Drawing.Size(130, 23);
+            this.ExportData.TabIndex = 19;
+            this.ExportData.Text = "Export Graph Data";
+            this.ExportData.UseVisualStyleBackColor = true;
+            this.ExportData.Click += new System.EventHandler(this.ExportData_Click);
+            // 
+            // ImportData
+            // 
+            this.ImportData.Location = new System.Drawing.Point(483, 483);
+            this.ImportData.Name = "ImportData";
+            this.ImportData.Size = new System.Drawing.Size(130, 23);
+            this.ImportData.TabIndex = 20;
+            this.ImportData.Text = "Import Graph Data";
+            this.ImportData.UseVisualStyleBackColor = true;
+            this.ImportData.Click += new System.EventHandler(this.ImportData_Click);
+            // 
+            // ImageSaveDialog
+            // 
+            this.ImageSaveDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.ImageSaveDialog_FileOk);
+            // 
+            // DataImportDialog
+            // 
+            this.DataImportDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.DataImportDialog_FileOk);
+            // 
+            // DataExportDialog
+            // 
+            this.DataExportDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.DataExportDialog_FileOk);
+            // 
             // Grapher
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(994, 517);
+            this.Controls.Add(this.ImportData);
+            this.Controls.Add(this.ExportData);
+            this.Controls.Add(this.SaveImage);
             this.Controls.Add(this.FileAdressLabel);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.MaxCheck);
@@ -252,5 +303,11 @@
         private System.Windows.Forms.CheckBox MaxCheck;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label FileAdressLabel;
+        private System.Windows.Forms.Button SaveImage;
+        private System.Windows.Forms.Button ExportData;
+        private System.Windows.Forms.Button ImportData;
+        private System.Windows.Forms.SaveFileDialog ImageSaveDialog;
+        private System.Windows.Forms.OpenFileDialog DataImportDialog;
+        private System.Windows.Forms.SaveFileDialog DataExportDialog;
     }
 }

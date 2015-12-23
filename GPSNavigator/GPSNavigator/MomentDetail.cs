@@ -1705,6 +1705,7 @@ namespace GPSNavigator
             c1Chart1.ChartArea.AxisX.AutoMin = true;
             c1Chart1.ChartArea.AxisY.AutoMax = true;
             c1Chart1.ChartArea.AxisY.AutoMin = true;
+            GraphTooltip.SetToolTip(c1Chart1, "Shift+Click = Scroll, CTRL+Click = Scale, ALT+Click = Zoom, RightClick = Options");
         }
 
         private void c1Chart1_MouseClick(object sender, MouseEventArgs e)
@@ -1722,7 +1723,6 @@ namespace GPSNavigator
                 case "Save To Image":
                     ImageSaveDialog.Filter = "Jpeg File (*.jpeg)|*.jpeg|Bitmap File (*.bmp)|*.bmp|PNG File (*.png)|*.PNG";
                     ImageSaveDialog.ShowDialog();
-                    //c1Chart1.SaveImage(System.Drawing.Imaging.ImageFormat.
                     break;
                 case "Export Chart Data":
                     DataExporter.Filter = "GPS Navigator Graph Data (*.ggd)|*.ggd";

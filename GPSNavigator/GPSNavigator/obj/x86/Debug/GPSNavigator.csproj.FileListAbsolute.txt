@@ -89,3 +89,8 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\GPSNav
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.exe.manifest
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.application
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\GPSNavigator.exe.config
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.AddLicense.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.Skyview.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.StartupForm.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.NorthDetail.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.Avionics.AvionicsInstrumentsControlsRessources.resources

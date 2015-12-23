@@ -150,6 +150,7 @@ namespace GPSNavigator.Classes
             public byte[] BSatStats = new byte[17];
             public byte[] BNumOfVisibleStats = new byte[4];
             public SettingBuffer settingbuffer = new SettingBuffer();
+            public AttitudeInformation AttitudeBuffer = new AttitudeInformation();
             public double state;
             public byte Bstate;
             public DateTime datetime;
@@ -165,7 +166,7 @@ namespace GPSNavigator.Classes
             public bool SettingReceived = false;
 
         }
-        //public enum PositioningType { GPS, GLONASS, Both }
+
         public class ExtremumHandler
         {
             public double AltitudeMax, AltitudeMin;
@@ -222,15 +223,19 @@ namespace GPSNavigator.Classes
 
         public class AttitudeInformation
         {
-            public List<double> Azimuth = new List<double>();
-            public List<double> Elevation = new List<double>();
-            public List<double> X= new List<double>();
-            public List<double> Y = new List<double>();
-            public List<double> Z = new List<double>();
-            public List<double> Distance = new List<double>();
-            public List<DateTime> datetime = new List<DateTime>();
+            public double Azimuth;
+            public double Elevation;
+            public double X;
+            public double Y;
+            public double Z;
+            public double Distance;
+            public DateTime datetime;
+            public int Ambiguity;
+            public int AttitudeState = 0;
             public int counter = 0;
         }
+
+        public enum AppModes { GPS, NorthFinder };
 
         public enum BinaryProtocolState
         {

@@ -60,9 +60,44 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap AirSpeedIndicator_Background1 {
+            get {
+                object obj = ResourceManager.GetObject("AirSpeedIndicator_Background1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap AirSpeedNeedle1 {
+            get {
+                object obj = ResourceManager.GetObject("AirSpeedNeedle1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Altimeter_Background1 {
+            get {
+                object obj = ResourceManager.GetObject("Altimeter_Background1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Bandeau_Dérouleur1 {
+            get {
+                object obj = ResourceManager.GetObject("Bandeau_Dérouleur1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Cold_Start {
             get {
                 object obj = ResourceManager.GetObject("Cold_Start", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Compass {
+            get {
+                object obj = ResourceManager.GetObject("Compass", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -81,6 +116,20 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Exit {
+            get {
+                object obj = ResourceManager.GetObject("Exit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap GPS {
+            get {
+                object obj = ResourceManager.GetObject("GPS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Icon GPS_Navigator {
             get {
                 object obj = ResourceManager.GetObject("GPS_Navigator", resourceCulture);
@@ -88,9 +137,65 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap HeadingIndicator_Aircraft1 {
+            get {
+                object obj = ResourceManager.GetObject("HeadingIndicator_Aircraft1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap HeadingIndicator_Background1 {
+            get {
+                object obj = ResourceManager.GetObject("HeadingIndicator_Background1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap HeadingWeel1 {
+            get {
+                object obj = ResourceManager.GetObject("HeadingWeel1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Horizon_Background1 {
+            get {
+                object obj = ResourceManager.GetObject("Horizon_Background1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Horizon_GroundSky1 {
+            get {
+                object obj = ResourceManager.GetObject("Horizon_GroundSky1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Hot_Start {
             get {
                 object obj = ResourceManager.GetObject("Hot_Start", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Indicator_Background1 {
+            get {
+                object obj = ResourceManager.GetObject("Indicator_Background1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap LongNeedleAltimeter1 {
+            get {
+                object obj = ResourceManager.GetObject("LongNeedleAltimeter1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Maquette_Avion1 {
+            get {
+                object obj = ResourceManager.GetObject("Maquette_Avion1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -130,9 +235,58 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap SmallNeedleAltimeter1 {
+            get {
+                object obj = ResourceManager.GetObject("SmallNeedleAltimeter1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap stop {
             get {
                 object obj = ResourceManager.GetObject("stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap TurnCoordinator_Background1 {
+            get {
+                object obj = ResourceManager.GetObject("TurnCoordinator_Background1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap TurnCoordinatorAircraft1 {
+            get {
+                object obj = ResourceManager.GetObject("TurnCoordinatorAircraft1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap TurnCoordinatorBall1 {
+            get {
+                object obj = ResourceManager.GetObject("TurnCoordinatorBall1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap TurnCoordinatorMarks1 {
+            get {
+                object obj = ResourceManager.GetObject("TurnCoordinatorMarks1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap VerticalSpeedIndicator_Background1 {
+            get {
+                object obj = ResourceManager.GetObject("VerticalSpeedIndicator_Background1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap VerticalSpeedNeedle1 {
+            get {
+                object obj = ResourceManager.GetObject("VerticalSpeedNeedle1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

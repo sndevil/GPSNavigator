@@ -237,6 +237,56 @@ namespace GPSNavigator.Source
             return calculatedPosition;
         }
 
+        public static GEOpoint Calculate_LatLongAlt_From_XYZ(double x, double y, double z)
+        {
+            GEOpoint result = new GEOpoint();
+
+            result.Longitude = Math.Atan2(y, x);
+            double ex2 = (2 - (1 / 298.257223563)) * (1 / 298.257223563) / ((1 - (1 / 298.257223563)) * (1 - (1 / 298.257223563)));
+            double c = 6378137 * Math.Sqrt(1 + ex2);
+            result.Latitude = Math.Atan(z / ((Math.Sqrt(x * x + y * y) * (1 - (2 - (1 / 298.257223563))) * (1 / 298.257223563))));
+
+            result.Altitude = 0.1;
+            double oldh = 0, N;
+            int iterations = 0;
+            while (Math.Abs(result.Altitude - oldh) > 1e-12)
+            {
+                oldh = result.Altitude;
+                N = c / Math.Sqrt(1 + ex2 * Math.Pow(Math.Cos(result.Latitude), 2));
+                result.Latitude = Math.Atan(z / ((Math.Sqrt(x * x + y * y) * (1 - (2 - (1 / 298.257223563)) * (1 / 298.257223563) * N / (N + result.Altitude)))));
+                result.Altitude = Math.Sqrt(x * x + y * y) / Math.Cos(result.Latitude) - N;
+
+                iterations = iterations + 1;
+                if (iterations > 100)
+                    break;
+            }
+
+            result.Latitude = result.Latitude * (180 / Math.PI);
+            result.Longitude = result.Longitude * (180 / Math.PI);
+
+            return result;
+        }
+
+        public static XYZpoint Calculate_XYZ_From_LatLongAlt(double latitude, double longitude, double altitude)
+        {
+            XYZpoint result = new XYZpoint();
+
+            double b = latitude;
+            b = b * Math.PI / 180;
+            double l = longitude;
+            l = l * Math.PI / 180;
+
+            double ex2 = ((2 - 1 / 298.257223563) / 298.257223563) / Math.Pow((1 - 1 / 298.257223563), 2);
+            double c = 6378137 * Math.Sqrt(1 + ex2);
+            double N = c / Math.Sqrt(1 + ex2 * Math.Pow(Math.Cos(b), 2));
+
+            result.x = (N + altitude) * Math.Cos(b) * Math.Cos(l);
+            result.y = (N + altitude) * Math.Cos(b) * Math.Sin(l);
+            result.z = (Math.Pow((1 - 1 / 298.257223563), 2) * N + altitude) * Math.Sin(b);
+
+            return result;
+        }
+
         private static int calcrc(byte[] data, int count)
         {
             int crc = 0, i;
@@ -1754,7 +1804,7 @@ namespace GPSNavigator.Source
                 }
                 else
                     for (int j = 0; j < GLONASS.Count; j++)
-                        GLONASS[SatIndex][i].Signal_Status = 0;       //not visible
+                        GLONASS[j][i].Signal_Status = 0;       //not visible
                 a >>= 1;
             }
             index += 4;
@@ -2743,67 +2793,50 @@ namespace GPSNavigator.Source
             return dbuf;
         }
 
-        public static void Process_Binary_Message_Attitude_Info(byte[] data, int serialNum,ref DataBuffer databuffer,ref AttitudeInformation attitudeInfoDataBuf)
+        public static SingleDataBuffer Process_Binary_Message_Attitude_Info(byte[] data, int serialNum)
         {
+            SingleDataBuffer dbuf = new SingleDataBuffer();
             byte checksum0 = 0, checksum1 = 0;
 
             int statcounter = -1;
             int checksum = calcrc(data, BIN_ATTITUDE_INFO_MSG_SIZE - 4);
             checksum0 = (byte)(checksum & 0xFF);
             checksum1 = (byte)((checksum >> 8) & 0xFF);
-
+            if (checksum0 != data[BIN_ATTITUDE_INFO_MSG_SIZE - 3] || checksum1 != data[BIN_ATTITUDE_INFO_MSG_SIZE - 2])
+            {
+                throw new Exception("Checksum Error");                
+            }
 
             int index = 1;      //header
             index++;        //messageType
 
             int state = data[index];
+            
             if (state == 1)
             {
-                databuffer.statcounter.Add(databuffer.X.Count);
-                statcounter = databuffer.X.Count;
+                dbuf.statcounter = 1;
+                statcounter = 1;
             }
             else
-                databuffer.statcounter.Add(-1);
+                dbuf.statcounter = -1;
             index++;
 
             var attitudeState = data[index];
             index++;        //Attitude Determination State;
-            /*if (attitudeStateControlUpdate)
-            {
-                switch (attitudeState)
-                {
-                    case 0:
-                        radLabelState.Text = "Wait for Minimum Required Satellites";
-                        radLabelState.ForeColor = Color.Yellow;
-                        break;
-                    case 1:
-                        radLabelState.Text = "Wait for More Satellites";
-                        radLabelState.ForeColor = Color.Yellow;
-                        break;
-                    case 2:
-                        radLabelState.Text = "Ambiguity Resolution";
-                        radLabelState.ForeColor = Color.Yellow;
-                        break;
-                    case 3:
-                        radLabelState.Text = "Real Time Process";
-                        radLabelState.ForeColor = Color.GreenYellow;
-                        break;
-                }
+            dbuf.AttitudeBuffer.AttitudeState = attitudeState;
 
-                attitudeStateControlUpdate = false;
-            }
-            */
             // Azimuth (yaw)
             Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-            attitudeInfoDataBuf.Azimuth.Add(formatFloat(a));
-            var buffercounter = attitudeInfoDataBuf.Azimuth.Count - 1;
+            dbuf.AttitudeBuffer.Azimuth = formatFloat(a);
+            //var buffercounter = attitudeInfoDataBuf.Azimuth.Count - 1;
             index += 4;
 
             index += 4;     //roll
 
             // Elevation (pitch)
             a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-            attitudeInfoDataBuf.Elevation.Add(formatFloat(a));
+            dbuf.AttitudeBuffer.Elevation = formatFloat(a);
+            //attitudeInfoDataBuf.Elevation.Add(formatFloat(a));
             index += 4;
 
             double x = 0, y = 0, z = 0;
@@ -2814,7 +2847,8 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 x = formatFloat(a);
-                attitudeInfoDataBuf.X.Add(x);
+                dbuf.AttitudeBuffer.X = x;
+                //attitudeInfoDataBuf.X.Add(x);
             }
             index += 4;
 
@@ -2823,7 +2857,8 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 y = formatFloat(a);
-                attitudeInfoDataBuf.Y.Add(y);
+                dbuf.AttitudeBuffer.Y = y;
+                //attitudeInfoDataBuf.Y.Add(y);
             }
             index += 4;
 
@@ -2832,7 +2867,8 @@ namespace GPSNavigator.Source
             if (state == 1)
             {
                 z = formatFloat(a);
-                attitudeInfoDataBuf.Z.Add(z);
+                dbuf.AttitudeBuffer.Z = z;
+                //attitudeInfoDataBuf.Z.Add(z);
             }
             index += 4;
 
@@ -2847,20 +2883,24 @@ namespace GPSNavigator.Source
 
             a = data[index] + data[index + 1] * 256;
             int ambiguity = (int)a;
+            dbuf.AttitudeBuffer.Ambiguity = ambiguity;
             index += 2;
 
             DateTime DatetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
             DatetimeUTC = DatetimeUTC.AddDays(WeekNumber * 7);
             DatetimeUTC = DatetimeUTC.AddMilliseconds(TOW);
 
-            attitudeInfoDataBuf.datetime.Add(DatetimeUTC);
+            dbuf.datetime = DatetimeUTC;
+
+            //attitudeInfoDataBuf.datetime.Add(DatetimeUTC);
 
             if (state == 1)
             {
 
                 //Distance
-                double distance = Math.Sqrt(Math.Pow(attitudeInfoDataBuf.X[statcounter], 2) + Math.Pow(attitudeInfoDataBuf.Y[statcounter], 2) + Math.Pow(attitudeInfoDataBuf.Z[statcounter], 2));
-                attitudeInfoDataBuf.Distance[statcounter] = distance;
+                double distance = Math.Sqrt(Math.Pow(dbuf.AttitudeBuffer.X, 2) + Math.Pow(dbuf.AttitudeBuffer.Y, 2) + Math.Pow(dbuf.AttitudeBuffer.Z, 2));
+                dbuf.AttitudeBuffer.Distance = distance;
+                //attitudeInfoDataBuf.Distance[statcounter] = distance;
             }
             else
             {
@@ -2870,22 +2910,15 @@ namespace GPSNavigator.Source
                     AmbiguityControlUpdate = false;
                 }*/
 
-                if (attitudeInfoDataBuf.counter == 0)
-                    return;
+                //if (attitudeInfoDataBuf.counter == 0)
+                //    return;
 
-                //////    No need for this codes as List is replaced with arrays
-                /*
-                attitudeInfoDataBuf.datetime[buffercounter] = attitudeInfoDataBuf.datetime[buffercounter - 1].AddMilliseconds(1);
-
-                attitudeInfoDataBuf.Azimuth[buffercounter] = double.NaN;
-                attitudeInfoDataBuf.Distance[buffercounter] = double.NaN;
-                attitudeInfoDataBuf.Elevation[buffercounter] = double.NaN;
-                attitudeInfoDataBuf.X[buffercounter] = double.NaN;
-                attitudeInfoDataBuf.Y[buffercounter] = double.NaN;
-                attitudeInfoDataBuf.Z[buffercounter] = double.NaN;*/
             }
 
-            attitudeInfoDataBuf.counter++;
+            dbuf.AttitudeBuffer.counter++;
+            //attitudeInfoDataBuf.counter++;
+
+            return dbuf;
         }
 
         public static SingleDataBuffer handle_packet(byte[] packet,ref Globals vars, int number)
@@ -2908,6 +2941,8 @@ namespace GPSNavigator.Source
                 Functions.Process_Binary_Message_SupplementGPS(packet, number, ref vars.GPSlist);
             else if (key == Functions.BIN_GLONASS_SUPPLEMENT)
                 Functions.Process_Binary_Message_SupplementGLONASS(packet, number, ref vars.GLONASSlist);
+            else if (key == Functions.BIN_ATTITUDE_INFO)
+                dbuffer = Functions.Process_Binary_Message_Attitude_Info(packet, number);
             else
             {
                 dbuffer.ToString();

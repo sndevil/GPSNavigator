@@ -162,11 +162,27 @@
     <Compile Include="AddLicense.Designer.cs">
       <DependentUpon>AddLicense.cs</DependentUpon>
     </Compile>
+    <Compile Include="Avionics\AttitudeIndicatorInstrumentControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Avionics\AvionicsInstrumentsControlsRessources.Designer.cs" />
+    <Compile Include="Avionics\HeadingIndicatorInstrumentControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Avionics\InstrumentControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ControlPanel.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ControlPanel.Designer.cs">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NorthDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NorthDetail.Designer.cs">
+      <DependentUpon>NorthDetail.cs</DependentUpon>
     </Compile>
     <Compile Include="MomentDetail.cs">
       <SubType>Form</SubType>
@@ -197,14 +213,24 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Functions.cs" />
+    <Compile Include="StartupForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartupForm.Designer.cs">
+      <DependentUpon>StartupForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AddLicense.resx">
       <DependentUpon>AddLicense.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Avionics\AvionicsInstrumentsControlsRessources.resx" />
     <EmbeddedResource Include="ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NorthDetail.resx">
+      <DependentUpon>NorthDetail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -228,6 +254,9 @@
     </Compile>
     <EmbeddedResource Include="Skyview.resx">
       <DependentUpon>Skyview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StartupForm.resx">
+      <DependentUpon>StartupForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="GPSNavigator_TemporaryKey.pfx" />
@@ -277,9 +306,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GPS Navigator.ico" />
+    <None Include="Resources\brand.gif" />
+    <None Include="Resources\compass-logo-hi.png" />
+    <None Include="Resources\AirSpeedIndicator_Background1.bmp" />
+    <None Include="Resources\AirSpeedNeedle1.bmp" />
+    <None Include="Resources\Altimeter_Background1.bmp" />
+    <None Include="Resources\Bandeau_Dérouleur1.bmp" />
     <Content Include="Resources\Errors.png" />
     <None Include="Resources\refresh_256.png" />
     <None Include="Resources\satellite.PNG" />
+    <None Include="Resources\NingboRT_Exit_Logo.svg.png" />
+    <None Include="Resources\HeadingIndicator_Aircraft1.bmp" />
+    <None Include="Resources\HeadingIndicator_Background1.bmp" />
+    <None Include="Resources\HeadingWeel1.bmp" />
+    <None Include="Resources\Horizon_Background1.bmp" />
+    <None Include="Resources\Horizon_GroundSky1.bmp" />
+    <None Include="Resources\Indicator_Background1.bmp" />
+    <None Include="Resources\LongNeedleAltimeter1.bmp" />
+    <None Include="Resources\Maquette_Avion1.bmp" />
+    <None Include="Resources\SmallNeedleAltimeter1.bmp" />
+    <None Include="Resources\TurnCoordinator_Background1.bmp" />
+    <None Include="Resources\TurnCoordinatorAircraft1.bmp" />
+    <None Include="Resources\TurnCoordinatorBall1.bmp" />
+    <None Include="Resources\TurnCoordinatorMarks1.bmp" />
+    <None Include="Resources\VerticalSpeedIndicator_Background1.bmp" />
+    <None Include="Resources\VerticalSpeedNeedle1.bmp" />
     <Content Include="Resources\Warm Start.png" />
     <None Include="Resources\videoplay512.gif" />
     <None Include="Resources\pause.png" />
@@ -299,6 +350,7 @@
       <DefaultIcon>Resources\GPS Navigator.ico</DefaultIcon>
     </FileAssociation>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
