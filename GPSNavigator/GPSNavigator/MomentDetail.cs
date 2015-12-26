@@ -35,6 +35,7 @@ namespace GPSNavigator
         SettingBuffer Settings = new SettingBuffer();
         Task<bool> updater;
         graphtype RealtimeGraphType = graphtype.X;
+        optionfor clickeditem;
 
         public MomentDetail(LogFileManager manager)
         {
@@ -1712,7 +1713,10 @@ namespace GPSNavigator
         {
             var t = System.Windows.Forms.Cursor.Position;
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                clickeditem = optionfor.graph;
                 GraphOptions.Show(t);
+            }
         }
 
         private void GraphOptions_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -1741,13 +1745,49 @@ namespace GPSNavigator
             switch (ImageSaveDialog.FilterIndex)
             {
                 case 1:
-                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    switch (clickeditem)
+                    {
+                        case optionfor.chart1:
+                            chart1.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Jpeg);
+                            break;
+                        case optionfor.chart2:
+                            chart2.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Jpeg);
+                            break;
+                        case optionfor.graph:
+                            c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            break;
+                    }
+
                     break;
                 case 2:
-                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                    switch (clickeditem)
+                    {
+                        case optionfor.chart1:
+                            chart1.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Bmp);
+                            break;
+                        case optionfor.chart2:
+                            chart2.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Bmp);
+                            break;
+                        case optionfor.graph:
+                            c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                            break;
+                    }
+
                     break;
                 case 3:
-                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    switch (clickeditem)
+                    {
+                        case optionfor.chart1:
+                            chart1.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Png);
+                            break;
+                        case optionfor.chart2:
+                            chart2.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Png);
+                            break;
+                        case optionfor.graph:
+                            c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                            break;
+                    }
+
                     break;
             }
             //c1Chart1.SaveImage(ImageSaveDialog.FileName, ImageSaveDialog.ex
@@ -1755,18 +1795,61 @@ namespace GPSNavigator
 
         private void DataExporter_FileOk(object sender, CancelEventArgs e)
         {
-            c1Chart1.SaveChartToFile(DataExporter.FileName);
+            switch (clickeditem)
+            {
+                case optionfor.chart1:
+                    chart1.Serializer.Save(DataExporter.FileName);
+                    break;
+                case optionfor.chart2:
+                    chart2.Serializer.Save(DataExporter.FileName);
+                    break;
+                case optionfor.graph:
+                    c1Chart1.SaveChartToFile(DataExporter.FileName);
+                    break;
+            }
+
         }
 
         private void DataImporter_FileOk(object sender, CancelEventArgs e)
         {
             try
             {
-                c1Chart1.LoadChartFromFile(DataImporter.FileName);
+                switch (clickeditem)
+                {
+                    case optionfor.chart1:
+                        chart1.Serializer.Load(DataImporter.FileName);
+                        break;
+                    case optionfor.chart2:
+                        chart2.Serializer.Load(DataImporter.FileName);
+                        break;
+                    case optionfor.graph:
+                        c1Chart1.LoadChartFromFile(DataImporter.FileName);
+                        break;
+                }
             }
             catch
             {
                 throw new Exception("Couldnt load file");
+            }
+        }
+
+        private void chart1_MouseClick(object sender, MouseEventArgs e)
+        {
+            var t = System.Windows.Forms.Cursor.Position;
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                clickeditem = optionfor.chart1;
+                GraphOptions.Show(t);
+            }
+        }
+
+        private void chart2_MouseClick(object sender, MouseEventArgs e)
+        {
+            var t = System.Windows.Forms.Cursor.Position;
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                clickeditem = optionfor.chart2;
+                GraphOptions.Show(t);
             }
         }
     }

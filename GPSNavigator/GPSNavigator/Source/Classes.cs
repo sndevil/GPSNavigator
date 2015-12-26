@@ -243,8 +243,10 @@ namespace GPSNavigator.Classes
             waitForMessageType,
             readMessage
         };
-        public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats,Null };
+        public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats,Azimuth,Elevation,Null };
         public enum PlaybackSpeed { NormalSpeed, Double, Quadrople, Half, Quarter };
+        public enum optionfor { chart1, chart2, graph };
+
         public class GEOpoint
         {
             public double Latitude;

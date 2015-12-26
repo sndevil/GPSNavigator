@@ -42,6 +42,7 @@ namespace GPSNavigator
         ExtremumHandler exthandler = new ExtremumHandler();
         byte[] byt = new byte[150];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
+        AttitudeInformation attitudebuffer = new AttitudeInformation();
         ZipFile z;
         ControlPanel controlPanel;
         enum Form1Status { Disconnected, Connected, Recording, Saving }
@@ -50,6 +51,7 @@ namespace GPSNavigator
         string logdir, BaseText;
         AppModes Appmode;
         StartupForm Parentform;
+        SingleDataBuffer previousdata = new SingleDataBuffer();
         #endregion
 
         public Form1(StartupForm Parent,AppModes Mode)
@@ -135,6 +137,16 @@ namespace GPSNavigator
                             try
                             {
                                 dbuf = Functions.handle_packet(byt, ref vars, 0);
+                                if (dbuf.AttitudeBuffer.counter != 0)
+                                {
+                                    attitudebuffer = dbuf.AttitudeBuffer;
+                                    dbuf = previousdata;
+                                }
+                                else
+                                {
+                                    dbuf.AttitudeBuffer = attitudebuffer;
+                                    previousdata = dbuf;
+                                }
                                 if (DetailRefreshCounter++ > RefreshRate - 1)
                                 {
                                     if (showdetail)
@@ -157,7 +169,7 @@ namespace GPSNavigator
                                 if (dbuf.settingbuffer.SettingReceived)
                                     DetailForm.ChangeSettings(dbuf.settingbuffer);
 
-                                if (isRecording)
+                                if (isRecording && dbuf.AttitudeBuffer.counter == 0)
                                 {
                                     //DetailForm.UpdateData(vars);
                                     #region Extremum_Ifs
@@ -267,7 +279,6 @@ namespace GPSNavigator
                                         exthandler.ExtremeCounter++;
                                     }
                                     #endregion
-
                                     log.Writebuffer(dbuf);
                                 }
                             }
@@ -591,14 +602,20 @@ namespace GPSNavigator
                 isPlaying = false;
                 button2.BackgroundImage = GPSNavigator.Properties.Resources.play;
                 //button2.Text = "Play";
-                DetailForm.paused = true;
+                if (Appmode == AppModes.GPS)
+                    DetailForm.paused = true;
+                else if (Appmode == AppModes.NorthFinder)
+                    NorthDetailForm.paused = true;
                 this.Text = "GPS Navigator";
             }
             else
             {
                 isPlaying = true;
                 button2.BackgroundImage = GPSNavigator.Properties.Resources.pause;
-                DetailForm.paused = false;
+                if (Appmode == AppModes.GPS)
+                    DetailForm.paused = false;
+                else if (Appmode == AppModes.NorthFinder)
+                    NorthDetailForm.paused = false;
                 if (isRecording)
                     this.Text = "GPS Navigator (Recording)";
                 else
@@ -714,7 +731,10 @@ namespace GPSNavigator
         private void savedialog_FileOk(object sender, CancelEventArgs e)
         {
             if (showdetail)
-                DetailForm.Show();
+                if (Appmode == AppModes.GPS)
+                    DetailForm.Show();
+                else
+                    NorthDetailForm.Show();
             var path = folderManager.findrecordfolder();
             log = new Logger(path);
             isRecording = true;
@@ -1075,8 +1095,7 @@ namespace GPSNavigator
         {
             appclosing = true;
             ClosePort();
-            Parentform.Show();
-            this.Close();
+            Parentform.ShowStartup();
         }
 
     }

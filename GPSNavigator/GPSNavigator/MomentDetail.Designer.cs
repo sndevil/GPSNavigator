@@ -222,13 +222,13 @@
             this.ResetZoom = new System.Windows.Forms.Button();
             this.GraphOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SaveToImage = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.ExportData = new System.Windows.Forms.ToolStripMenuItem();
             this.ImportData = new System.Windows.Forms.ToolStripMenuItem();
             this.ImageSaveDialog = new System.Windows.Forms.SaveFileDialog();
             this.DataExporter = new System.Windows.Forms.SaveFileDialog();
             this.DataImporter = new System.Windows.Forms.OpenFileDialog();
             this.GraphTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.ControlPanel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -379,6 +379,7 @@
             this.chart1.Text = "GPS";
             title1.Name = "Title1";
             this.chart1.Titles.Add(title1);
+            this.chart1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseClick);
             // 
             // label5
             // 
@@ -2043,6 +2044,7 @@
             this.chart2.Text = "GPS";
             title2.Name = "Title1";
             this.chart2.Titles.Add(title2);
+            this.chart2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart2_MouseClick);
             // 
             // arcScaleComponent2
             // 
@@ -2304,6 +2306,11 @@
             this.SaveToImage.Size = new System.Drawing.Size(137, 22);
             this.SaveToImage.Text = "Save To Image";
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(134, 6);
+            // 
             // ExportData
             // 
             this.ExportData.Name = "ExportData";
@@ -2327,11 +2334,6 @@
             // DataImporter
             // 
             this.DataImporter.FileOk += new System.ComponentModel.CancelEventHandler(this.DataImporter_FileOk);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(134, 6);
             // 
             // MomentDetail
             // 

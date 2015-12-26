@@ -2146,6 +2146,10 @@ namespace GPSNavigator.Source
             //UTC Offset
             index += 2;
 
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            int localTOW = (int)a;
+            index += 4;
+
             var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
             datetimeUTC = datetimeUTC.AddDays(weekNumber * 7);
             datetimeUTC = datetimeUTC.AddMilliseconds(TOW);

@@ -30,5 +30,11 @@ namespace GPSNavigator
             GPS.Show();
             this.Hide();
         }
+
+        public void ShowStartup()
+        {
+            GPS.Hide();
+            this.Show();
+        }
     }
 }

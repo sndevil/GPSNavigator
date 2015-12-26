@@ -28,7 +28,7 @@ namespace GPSNavigator
         int IndexCounter = 0, SlowCounter = 0, VisibleGPS, VisibleGLONASS, UsedGPS, UsedGLONASS, Chart1Item, Chart2Item = -1, DataTimeOut = 100;
         double Xp = 0, Yp = 0, Zp = 0, AltP = 0, LatP = 0, LonP = 0;
         bool playing = false, reading = false, returned = false, realtime = false, Receiving = false, StartedCounting = false, ShowingGraph = false, ShowingControlPanel = false, juststarted = true;
-        public bool paused = false;
+        public bool paused = false,notshowdata = false;
         public int index;
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
         DateTime StartTime, EndTime,previousTime;
@@ -37,8 +37,7 @@ namespace GPSNavigator
         SettingBuffer Settings = new SettingBuffer();
         Task<bool> updater;
         graphtype RealtimeGraphType = graphtype.X;
-
-        
+        optionfor clickeditem;
 
         public NorthDetail(LogFileManager manager)
         {
@@ -99,43 +98,40 @@ namespace GPSNavigator
                 tempgpsdata.Glonass.Add(vars.GLONASSlist[i]);
                 UpdateComboBoxes(vars.GPSlist.Count);
             }
-            if (data.AttitudeBuffer.counter > 0)
+
+            switch (data.AttitudeBuffer.AttitudeState)
             {
-                switch (data.AttitudeBuffer.AttitudeState)
-                {
-                    case 0:
-                        StatLabel.Text = "State: Wait for Minimum Required Satellites";
-                        StatLabel.ForeColor = Color.Yellow;
-                        AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
-                        break;
-                    case 1:
-                        StatLabel.Text = "State: Wait for More Satellites";
-                        StatLabel.ForeColor = Color.Yellow;
-                        AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
-                        break;
-                    case 2:
-                        StatLabel.Text = "State: Ambiguity Resolution";
-                        StatLabel.ForeColor = Color.Yellow;
-                        AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
-                        break;
-                    case 3:
-                        StatLabel.Text = "State: Real Time Process";
-                        StatLabel.ForeColor = Color.GreenYellow;
-                        AmbiguityLabel.Text = "Remaining ambiguity: 0";
-                        break;
-                }
+                case 0:
+                    StatLabel.Text = "State: Wait for Minimum Required Satellites";
+                    StatLabel.ForeColor = Color.Yellow;
+                    AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
+                    break;
+                case 1:
+                    StatLabel.Text = "State: Wait for More Satellites";
+                    StatLabel.ForeColor = Color.Yellow;
+                    AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
+                    break;
+                case 2:
+                    StatLabel.Text = "State: Ambiguity Resolution";
+                    StatLabel.ForeColor = Color.Yellow;
+                    AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
+                    break;
+                case 3:
+                    StatLabel.Text = "State: Real Time Process";
+                    StatLabel.ForeColor = Color.GreenYellow;
+                    AmbiguityLabel.Text = "Remaining ambiguity: 0";
+                    break;
             }
-            else
-            {
+
                 Xp = data.X_Processed;
                 Yp = data.Y_Processed;
                 Zp = data.Z_Processed;
                 AltP = data.Altitude_Processed;
                 LonP = data.Longitude_Processed;
                 LatP = data.Latitude_Processed;
-            }
             if (data.AttitudeBuffer.AttitudeState == 3)                 //Real Time Process
             {
+                notshowdata = true;
                 headingIndicator1.SetHeadingIndicatorParameters((int)data.AttitudeBuffer.Azimuth);// attitudeInfoDataBuf.Azimuth[attitudeInfoDataBuf.counter]);
                 AzimuthLabel.Text = "Azimuth = " + data.AttitudeBuffer.Azimuth.ToString("F2");
 
@@ -143,58 +139,55 @@ namespace GPSNavigator
                 attitudeIndicator1.SetAttitudeIndicatorParameters(data.AttitudeBuffer.Elevation, 0);//attitudeInfoDataBuf.Elevation[attitudeInfoDataBuf.counter], 0);
                 ElevationLabel.Text = "Elevtaion = " + data.AttitudeBuffer.Elevation.ToString("F2");
 
-                if (data.AttitudeBuffer.counter > 0)
+
+                double X = data.AttitudeBuffer.X + Xp;
+                double Y = data.AttitudeBuffer.Y + Yp;
+                double Z = data.AttitudeBuffer.Z + Zp;
+
+                var point = Functions.Calculate_LatLongAlt_From_XYZ(X, Y, Z);
+
+                if (absoluteRadio.Checked)// tileItemLatLong2.Elements[4].Text != "Relative")
                 {
-                    double X = data.AttitudeBuffer.X + Xp;
-                    double Y = data.AttitudeBuffer.Y + Yp;
-                    double Z = data.AttitudeBuffer.Z + Zp;
+                    LatitudeValue.Text = point.Latitude.ToString("#0.000000");
+                    LongitudeValue.Text = point.Longitude.ToString("#0.000000");
+                    AltitudeValue.Text = point.Altitude.ToString("#0.00");
+                    //Update_Latitude_Labels(tileItemLatLong2, point.Latitude);
+                    //Update_Longitude_Labels(tileItemLatLong2, point.Longitude);
+                    //Show_Altitude(tileItemLatLong2, point.Altitude);
+                }
+                else
+                {
+                    XYZpoint res1 = Functions.Calculate_XYZ_From_LatLongAlt(LatP, point.Longitude, point.Altitude);
+                    XYZpoint res = new XYZpoint();
+                    res.x = Xp - res1.x;
+                    res.y = Yp - res1.y;
+                    res.z = Zp - res1.z;
+                    double d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
+                    LatitudeValue.Text = d.ToString("F3") + "m";
 
-                    var point = Functions.Calculate_LatLongAlt_From_XYZ(X, Y, Z);
+                    res1 = Functions.Calculate_XYZ_From_LatLongAlt(point.Latitude, LonP, point.Altitude);
+                    res = new XYZpoint();
+                    res.x = Xp - res1.x;
+                    res.y = Yp - res1.y;
+                    res.z = Zp - res1.z;
+                    d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
+                    LongitudeValue.Text = d.ToString("F3") + "m";
 
-                    if (absoluteRadio.Checked)// tileItemLatLong2.Elements[4].Text != "Relative")
-                    {
-                        LatitudeValue.Text = point.Latitude.ToString();
-                        LongitudeValue.Text = point.Longitude.ToString();
-                        AltitudeValue.Text = point.Altitude.ToString();
-                        //Update_Latitude_Labels(tileItemLatLong2, point.Latitude);
-                        //Update_Longitude_Labels(tileItemLatLong2, point.Longitude);
-                        //Show_Altitude(tileItemLatLong2, point.Altitude);
-                    }
-                    else
-                    {
-                        XYZpoint res1 = Functions.Calculate_XYZ_From_LatLongAlt(LatP, point.Longitude, point.Altitude);
-                        XYZpoint res = new XYZpoint();
-                        res.x = Xp - res1.x;
-                        res.y = Yp - res1.y;
-                        res.z = Zp - res1.z;
-                        double d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
-                        LatitudeValue.Text = d.ToString("F3") + "m";
-
-                        res1 = Functions.Calculate_XYZ_From_LatLongAlt(point.Latitude, LonP, point.Altitude);
-                        res = new XYZpoint();
-                        res.x = Xp - res1.x;
-                        res.y = Yp - res1.y;
-                        res.z = Zp - res1.z;
-                        d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
-                        LongitudeValue.Text = d.ToString("F3") + "m";
-
-                        d = AltP - point.Altitude;
-                        AltitudeValue.Text = d.ToString("F3") + "m";
-                    }
+                    d = AltP - point.Altitude;
+                    AltitudeValue.Text = d.ToString("F3") + "m";
                 }
 
                 //Distance
                 //((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Markers[0].Value = distance;
                 //radLabelDistance.Text = "Distance = " + distance.ToString("F3");
             }
-            else { }
+            else { notshowdata = false; }
                 //clear_NorthFinder_Components();
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.Dbuf = data;
             try
             {
-                if (data.AttitudeBuffer.counter == 0)
-                    PlotGraph(tempgpsdata);
+                PlotGraph(tempgpsdata);
             }
             catch
             {
@@ -288,9 +281,12 @@ namespace GPSNavigator
                 VDOPValue.Text = data.Dbuf.VDOP.ToString();
             }
             catch { }
-            LatitudeValue.Text = data.Dbuf.Latitude.ToString("#0.000000");
-            LongitudeValue.Text = data.Dbuf.Longitude.ToString("#0.000000");
-            AltitudeValue.Text = data.Dbuf.Altitude.ToString("#0.00");
+            if (!notshowdata)
+            {
+                LatitudeValue.Text = data.Dbuf.Latitude.ToString("#0.000000");
+                LongitudeValue.Text = data.Dbuf.Longitude.ToString("#0.000000");
+                AltitudeValue.Text = data.Dbuf.Altitude.ToString("#0.00");
+            }
             velLabel.Text = "Velocity: " + data.Dbuf.V.ToString("#0.000");
             label12.Text = "Time: " + dt.ToString();
             DateLabel.Label.FormatString = dt.Month.ToString("D2") + "/" + dt.Day.ToString("D2") + "/" + dt.Year.ToString();
@@ -727,6 +723,12 @@ namespace GPSNavigator
                     case graphtype.Null:
                         toAdd = double.NaN;
                         break;
+                    case graphtype.Azimuth:
+                        toAdd = data.Dbuf.AttitudeBuffer.Azimuth;
+                        break;
+                    case graphtype.Elevation:
+                        toAdd = data.Dbuf.AttitudeBuffer.Elevation;
+                        break;
                 }
                 #endregion
                 if (c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Length > 180000)
@@ -908,22 +910,30 @@ namespace GPSNavigator
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.A";
                     break;
                 case 23:
+                    RealtimeGraphType = graphtype.Azimuth;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Azimuth";
+                    break;
+                case 24:
+                    RealtimeGraphType = graphtype.Elevation;
+                    c1Chart1.ChartArea.Axes[1].Text = "Buffer.Elevation";
+                    break;
+                case 25:
                     RealtimeGraphType = graphtype.PDOP;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.PDOP";
                     break;
-                case 24:
+                case 26:
                     RealtimeGraphType = graphtype.State;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.State";
                     break;
-                case 25:
+                case 27:
                     RealtimeGraphType = graphtype.Temperature;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.Temperature";
                     break;
-                case 26:
+                case 28:
                     RealtimeGraphType = graphtype.UsedStats;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.UsedStats";
                     break;
-                case 27:
+                case 29:
                     RealtimeGraphType = graphtype.VisibleStats;
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
                     break;
@@ -1807,7 +1817,10 @@ namespace GPSNavigator
         {
             var t = System.Windows.Forms.Cursor.Position;
             if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                clickeditem = optionfor.graph;
                 GraphOptions.Show(t);
+            }
         }
 
         private void GraphOptions_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
@@ -1836,13 +1849,48 @@ namespace GPSNavigator
             switch (ImageSaveDialog.FilterIndex)
             {
                 case 1:
-                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    switch (clickeditem)
+                    {
+                        case optionfor.chart1:
+                            chart1.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Jpeg);
+                            break;
+                        case optionfor.chart2:
+                            chart2.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Jpeg);
+                            break;
+                        case optionfor.graph:
+                            c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                            break;
+                    }
+
                     break;
                 case 2:
-                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                    switch (clickeditem)
+                    {
+                        case optionfor.chart1:
+                            chart1.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Bmp);
+                            break;
+                        case optionfor.chart2:
+                            chart2.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Bmp);
+                            break;
+                        case optionfor.graph:
+                            c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                            break;
+                    }
+
                     break;
                 case 3:
-                    c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    switch (clickeditem)
+                    {
+                        case optionfor.chart1:
+                            chart1.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Png);
+                            break;
+                        case optionfor.chart2:
+                            chart2.SaveImage(ImageSaveDialog.FileName, ChartImageFormat.Png);
+                            break;
+                        case optionfor.graph:
+                            c1Chart1.SaveImage(ImageSaveDialog.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                            break;
+                    }
                     break;
             }
             //c1Chart1.SaveImage(ImageSaveDialog.FileName, ImageSaveDialog.ex
@@ -1850,18 +1898,66 @@ namespace GPSNavigator
 
         private void DataExporter_FileOk(object sender, CancelEventArgs e)
         {
-            c1Chart1.SaveChartToFile(DataExporter.FileName);
+            switch (clickeditem)
+            {
+                case optionfor.chart1:
+                    chart1.Serializer.Save(DataExporter.FileName);
+                    break;
+                case optionfor.chart2:
+                    chart2.Serializer.Save(DataExporter.FileName);
+                    break;
+                case optionfor.graph:
+                    c1Chart1.SaveChartToFile(DataExporter.FileName);
+                    break;
+            }
         }
 
         private void DataImporter_FileOk(object sender, CancelEventArgs e)
         {
             try
             {
-                c1Chart1.LoadChartFromFile(DataImporter.FileName);
+                switch (clickeditem)
+                {
+                    case optionfor.chart1:
+                        chart1.Serializer.Load(DataImporter.FileName);
+                        break;
+                    case optionfor.chart2:
+                        chart2.Serializer.Load(DataImporter.FileName);
+                        break;
+                    case optionfor.graph:
+                        c1Chart1.LoadChartFromFile(DataImporter.FileName);
+                        break;
+                }
+
             }
             catch
             {
                 throw new Exception("Couldnt load file");
+            }
+        }
+
+        private void SaveToImage_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chart1_MouseClick(object sender, MouseEventArgs e)
+        {
+            var t = System.Windows.Forms.Cursor.Position;
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                clickeditem = optionfor.chart1;
+                GraphOptions.Show(t);
+            }
+        }
+
+        private void chart2_MouseClick(object sender, MouseEventArgs e)
+        {
+            var t = System.Windows.Forms.Cursor.Position;
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                clickeditem = optionfor.chart2;
+                GraphOptions.Show(t);
             }
         }
     }

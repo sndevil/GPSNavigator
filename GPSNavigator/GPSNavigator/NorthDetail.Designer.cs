@@ -377,6 +377,7 @@
             this.chart1.Text = "GPS";
             title1.Name = "Title1";
             this.chart1.Titles.Add(title1);
+            this.chart1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseClick);
             // 
             // label5
             // 
@@ -968,6 +969,8 @@
             "Ay",
             "Az",
             "A",
+            "Azimuth",
+            "Elevation",
             "PDOP",
             "State",
             "Temperature",
@@ -2041,6 +2044,7 @@
             this.chart2.Text = "GPS";
             title2.Name = "Title1";
             this.chart2.Titles.Add(title2);
+            this.chart2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart2_MouseClick);
             // 
             // circularGauge1
             // 
@@ -2217,6 +2221,7 @@
             this.SaveToImage.Name = "SaveToImage";
             this.SaveToImage.Size = new System.Drawing.Size(137, 22);
             this.SaveToImage.Text = "Save To Image";
+            this.SaveToImage.Click += new System.EventHandler(this.SaveToImage_Click);
             // 
             // toolStripSeparator1
             // 
@@ -2259,7 +2264,7 @@
             // AzimuthLabel
             // 
             this.AzimuthLabel.AutoSize = true;
-            this.AzimuthLabel.Location = new System.Drawing.Point(453, 129);
+            this.AzimuthLabel.Location = new System.Drawing.Point(414, 129);
             this.AzimuthLabel.Name = "AzimuthLabel";
             this.AzimuthLabel.Size = new System.Drawing.Size(47, 13);
             this.AzimuthLabel.TabIndex = 96;
@@ -2268,7 +2273,7 @@
             // ElevationLabel
             // 
             this.ElevationLabel.AutoSize = true;
-            this.ElevationLabel.Location = new System.Drawing.Point(327, 129);
+            this.ElevationLabel.Location = new System.Drawing.Point(294, 129);
             this.ElevationLabel.Name = "ElevationLabel";
             this.ElevationLabel.Size = new System.Drawing.Size(54, 13);
             this.ElevationLabel.TabIndex = 97;
@@ -2342,8 +2347,8 @@
             this.ClientSize = new System.Drawing.Size(814, 715);
             this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.AmbiguityLabel);
-            this.Controls.Add(this.ElevationLabel);
             this.Controls.Add(this.absoluteRadio);
+            this.Controls.Add(this.ElevationLabel);
             this.Controls.Add(this.relativeRadio);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -2353,8 +2358,8 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.AzimuthLabel);
             this.Controls.Add(this.ResetZoom);
+            this.Controls.Add(this.AzimuthLabel);
             this.Controls.Add(this.TDOPValue);
             this.Controls.Add(this.StatLabel);
             this.Controls.Add(this.VDOPValue);
