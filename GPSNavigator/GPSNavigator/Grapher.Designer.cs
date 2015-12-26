@@ -65,35 +65,6 @@
             // comboBox1
             // 
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "X",
-            "X_Processed",
-            "Y",
-            "Y_Processed",
-            "Z",
-            "Z_Processed",
-            "Latitude",
-            "Latitude_Processed",
-            "Longitude",
-            "Longitude_Processed",
-            "Altitude",
-            "Altitude_Processed",
-            "Vx",
-            "Vx_Processed",
-            "Vy",
-            "Vy_Processed",
-            "Vz",
-            "Vz_Processed",
-            "V",
-            "Ax",
-            "Ay",
-            "Az",
-            "A",
-            "PDOP",
-            "State",
-            "Temperature",
-            "UsedStats",
-            "VisibleStats"});
             this.comboBox1.Location = new System.Drawing.Point(820, 448);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(162, 21);

@@ -29,6 +29,7 @@ namespace GPSNavigator
         public PointStyle ps;
         private GraphData temp;
         public MomentDetail DetailForm;
+        public NorthDetail NorthDetailForm;
         public Form1 parentForm;
 
         private graphtype selectedtype = graphtype.X;
@@ -38,12 +39,16 @@ namespace GPSNavigator
         private double[] xlist = new double[Globals.Databuffercount];
         private DateTime[] tlist = new DateTime[Globals.Databuffercount];
 
-        public Grapher(LogFileManager Filemanager, Form1 Parent,int Index,string OriginalPath)
+        public AppModes Logtype;
+
+        public Grapher(LogFileManager Filemanager, Form1 Parent,int Index,string OriginalPath, AppModes Mode)
         {
+            Logtype = Mode;
             parentForm = Parent;
             filemanager = Filemanager;
             index = Index;
             InitializeComponent();
+            InitializeCombobox();
 
             CreateDetailForm();
             this.Dock = DockStyle.Fill;
@@ -62,18 +67,72 @@ namespace GPSNavigator
             rangecontrol.Value = new DevExpress.XtraEditors.Repository.TrackBarRange(0, 1000);
         }
 
+        public void InitializeCombobox()
+        {
+            this.comboBox1.Items.AddRange(new object[] {
+            "X",
+            "X_Processed",
+            "Y",
+            "Y_Processed",
+            "Z",
+            "Z_Processed",
+            "Latitude",
+            "Latitude_Processed",
+            "Longitude",
+            "Longitude_Processed",
+            "Altitude",
+            "Altitude_Processed",
+            "Vx",
+            "Vx_Processed",
+            "Vy",
+            "Vy_Processed",
+            "Vz",
+            "Vz_Processed",
+            "V",
+            "Ax",
+            "Ay",
+            "Az",
+            "A",
+            "PDOP",
+            "State",
+            "Temperature",
+            "UsedStats",
+            "VisibleStats"});
+            if (Logtype == AppModes.NorthFinder)
+            {
+                this.comboBox1.Items.AddRange(new object[] { "Azimuth", "Elevation", "Distance" });
+            }
+        }
+
         void CreateDetailForm()
         {
-            DetailForm = new MomentDetail(filemanager);
-            DetailForm.Dock = DockStyle.Left;
-            DetailForm.TopLevel = false;
-            DetailForm.Show();
-            DocumentWindow NewDockWindow = new DocumentWindow("Moment Details (Log) " + index.ToString());
-            NewDockWindow.AutoScroll = true;
-            NewDockWindow.Controls.Add(DetailForm);
-            parentForm.AddDocumentControl(NewDockWindow);
-            //DetailForm.index = parentForm.radDock1.DocumentManager.DocumentArray.Length;
-            parentForm.detaillist.Add(DetailForm);
+            DocumentWindow NewDockWindow;
+            switch (Logtype)
+            {
+                case AppModes.GPS:
+                    DetailForm = new MomentDetail(filemanager);
+                    DetailForm.Dock = DockStyle.Left;
+                    DetailForm.TopLevel = false;
+                    DetailForm.Show();
+                    NewDockWindow = new DocumentWindow("Moment Details (Log) " + index.ToString());
+                    NewDockWindow.AutoScroll = true;
+                    NewDockWindow.Controls.Add(DetailForm);
+                    parentForm.AddDocumentControl(NewDockWindow);
+                    parentForm.detaillist.Add(DetailForm);
+                    break;
+                case AppModes.NorthFinder:
+                    NorthDetailForm = new NorthDetail(filemanager);
+                    NorthDetailForm.Dock = DockStyle.Left;
+                    NorthDetailForm.TopLevel = false;
+                    NorthDetailForm.Show();
+                    NewDockWindow = new DocumentWindow("Moment Details (Log) " + index.ToString());
+                    NewDockWindow.AutoScroll = true;
+                    NewDockWindow.Controls.Add(NorthDetailForm);
+                    parentForm.AddDocumentControl(NewDockWindow);
+                    parentForm.northDetailList.Add(NorthDetailForm);
+                    break;
+            }
+
         }
 
         void Chart1_MouseUp(object sender, MouseEventArgs e)
@@ -166,7 +225,10 @@ namespace GPSNavigator
                 if (fmin < 0f)
                     fmin = 0f;
                 fmax = fmin + 0.01f;
-                DetailForm.UpdateData(xpos,tlist[ps.PointIndex]);
+                if (Logtype == AppModes.GPS)
+                    DetailForm.UpdateData(xpos, tlist[ps.PointIndex]);
+                else if (Logtype == AppModes.NorthFinder)
+                    NorthDetailForm.UpdateData(xpos, tlist[ps.PointIndex]);
                 UserchangedRanges = false;
                 textBox2.Text = fmin.ToString();
                 UserchangedRanges = false;
@@ -453,6 +515,18 @@ namespace GPSNavigator
                 case 27:
                     selectedtype = graphtype.VisibleStats;
                     Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
+                    break;
+                case 28:
+                    selectedtype = graphtype.Azimuth;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Azimuth";
+                    break;
+                case 29:
+                    selectedtype = graphtype.Elevation;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Elevation";
+                    break;
+                case 30:
+                    selectedtype = graphtype.Distance;
+                    Chart1.ChartArea.Axes[1].Text = "Buffer.Distance";
                     break;
             }
             LoadData();

@@ -2811,6 +2811,8 @@ namespace GPSNavigator.Source
                 throw new Exception("Checksum Error");                
             }
 
+            dbuf.AttitudeBuffer.isNorthfinder = true;
+
             int index = 1;      //header
             index++;        //messageType
 
@@ -2830,7 +2832,8 @@ namespace GPSNavigator.Source
             dbuf.AttitudeBuffer.AttitudeState = attitudeState;
 
             // Azimuth (yaw)
-            Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            dbuf.AttitudeBuffer.BAzimuth[3] = data[index + 3];
+            Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.AttitudeBuffer.BAzimuth[i] = data[index + i]; }
             dbuf.AttitudeBuffer.Azimuth = formatFloat(a);
             //var buffercounter = attitudeInfoDataBuf.Azimuth.Count - 1;
             index += 4;
@@ -2838,7 +2841,8 @@ namespace GPSNavigator.Source
             index += 4;     //roll
 
             // Elevation (pitch)
-            a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
+            dbuf.AttitudeBuffer.BElevation[3] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.AttitudeBuffer.BElevation[i] = data[index + i]; }
             dbuf.AttitudeBuffer.Elevation = formatFloat(a);
             //attitudeInfoDataBuf.Elevation.Add(formatFloat(a));
             index += 4;
@@ -2904,6 +2908,9 @@ namespace GPSNavigator.Source
                 //Distance
                 double distance = Math.Sqrt(Math.Pow(dbuf.AttitudeBuffer.X, 2) + Math.Pow(dbuf.AttitudeBuffer.Y, 2) + Math.Pow(dbuf.AttitudeBuffer.Z, 2));
                 dbuf.AttitudeBuffer.Distance = distance;
+                var unformatted = unformatFloat(distance);
+                for (int i = 0; i < 4; i++) { dbuf.AttitudeBuffer.BDistance[i] = (byte)((int)unformatted % 256); unformatted /= 256; }
+
                 //attitudeInfoDataBuf.Distance[statcounter] = distance;
             }
             else

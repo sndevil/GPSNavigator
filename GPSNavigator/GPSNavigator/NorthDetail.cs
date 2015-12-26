@@ -123,65 +123,14 @@ namespace GPSNavigator
                     break;
             }
 
-                Xp = data.X_Processed;
-                Yp = data.Y_Processed;
-                Zp = data.Z_Processed;
-                AltP = data.Altitude_Processed;
-                LonP = data.Longitude_Processed;
-                LatP = data.Latitude_Processed;
-            if (data.AttitudeBuffer.AttitudeState == 3)                 //Real Time Process
-            {
-                notshowdata = true;
-                headingIndicator1.SetHeadingIndicatorParameters((int)data.AttitudeBuffer.Azimuth);// attitudeInfoDataBuf.Azimuth[attitudeInfoDataBuf.counter]);
-                AzimuthLabel.Text = "Azimuth = " + data.AttitudeBuffer.Azimuth.ToString("F2");
-
-                //Elevtaion
-                attitudeIndicator1.SetAttitudeIndicatorParameters(data.AttitudeBuffer.Elevation, 0);//attitudeInfoDataBuf.Elevation[attitudeInfoDataBuf.counter], 0);
-                ElevationLabel.Text = "Elevtaion = " + data.AttitudeBuffer.Elevation.ToString("F2");
-
-
-                double X = data.AttitudeBuffer.X + Xp;
-                double Y = data.AttitudeBuffer.Y + Yp;
-                double Z = data.AttitudeBuffer.Z + Zp;
-
-                var point = Functions.Calculate_LatLongAlt_From_XYZ(X, Y, Z);
-
-                if (absoluteRadio.Checked)// tileItemLatLong2.Elements[4].Text != "Relative")
-                {
-                    LatitudeValue.Text = point.Latitude.ToString("#0.000000");
-                    LongitudeValue.Text = point.Longitude.ToString("#0.000000");
-                    AltitudeValue.Text = point.Altitude.ToString("#0.00");
-                    //Update_Latitude_Labels(tileItemLatLong2, point.Latitude);
-                    //Update_Longitude_Labels(tileItemLatLong2, point.Longitude);
-                    //Show_Altitude(tileItemLatLong2, point.Altitude);
-                }
-                else
-                {
-                    XYZpoint res1 = Functions.Calculate_XYZ_From_LatLongAlt(LatP, point.Longitude, point.Altitude);
-                    XYZpoint res = new XYZpoint();
-                    res.x = Xp - res1.x;
-                    res.y = Yp - res1.y;
-                    res.z = Zp - res1.z;
-                    double d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
-                    LatitudeValue.Text = d.ToString("F3") + "m";
-
-                    res1 = Functions.Calculate_XYZ_From_LatLongAlt(point.Latitude, LonP, point.Altitude);
-                    res = new XYZpoint();
-                    res.x = Xp - res1.x;
-                    res.y = Yp - res1.y;
-                    res.z = Zp - res1.z;
-                    d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
-                    LongitudeValue.Text = d.ToString("F3") + "m";
-
-                    d = AltP - point.Altitude;
-                    AltitudeValue.Text = d.ToString("F3") + "m";
-                }
-
-                //Distance
-                //((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Markers[0].Value = distance;
-                //radLabelDistance.Text = "Distance = " + distance.ToString("F3");
-            }
-            else { notshowdata = false; }
+            Xp = data.X_Processed;
+            Yp = data.Y_Processed;
+            Zp = data.Z_Processed;
+            AltP = data.Altitude_Processed;
+            LonP = data.Longitude_Processed;
+            LatP = data.Latitude_Processed;
+            UpdateNorthfinderLabels(data);
+                
                 //clear_NorthFinder_Components();
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.Dbuf = data;
@@ -192,6 +141,75 @@ namespace GPSNavigator
             catch
             {
             }
+        }
+
+        public void UpdateNorthfinderLabels(SingleDataBuffer data)
+        {
+            //if (data.state == 1)
+            //{
+                if (data.AttitudeBuffer.AttitudeState == 3)                 //Real Time Process
+                {
+                    notshowdata = true;
+                    headingIndicator1.SetHeadingIndicatorParameters((int)data.AttitudeBuffer.Azimuth);// attitudeInfoDataBuf.Azimuth[attitudeInfoDataBuf.counter]);
+                    AzimuthLabel.Text = "Azimuth = " + data.AttitudeBuffer.Azimuth.ToString("F2");
+
+                    //Elevtaion
+                    attitudeIndicator1.SetAttitudeIndicatorParameters(data.AttitudeBuffer.Elevation, 0);//attitudeInfoDataBuf.Elevation[attitudeInfoDataBuf.counter], 0);
+                    ElevationLabel.Text = "Elevtaion = " + data.AttitudeBuffer.Elevation.ToString("F2");
+
+
+                    double X = data.AttitudeBuffer.X + Xp;
+                    double Y = data.AttitudeBuffer.Y + Yp;
+                    double Z = data.AttitudeBuffer.Z + Zp;
+
+                    var point = Functions.Calculate_LatLongAlt_From_XYZ(X, Y, Z);
+
+                    if (absoluteRadio.Checked)// tileItemLatLong2.Elements[4].Text != "Relative")
+                    {
+                        LatitudeValue.Text = point.Latitude.ToString("#0.000000");
+                        LongitudeValue.Text = point.Longitude.ToString("#0.000000");
+                        AltitudeValue.Text = point.Altitude.ToString("#0.00");
+                        //Update_Latitude_Labels(tileItemLatLong2, point.Latitude);
+                        //Update_Longitude_Labels(tileItemLatLong2, point.Longitude);
+                        //Show_Altitude(tileItemLatLong2, point.Altitude);
+                    }
+                    else
+                    {
+                        XYZpoint res1 = Functions.Calculate_XYZ_From_LatLongAlt(LatP, point.Longitude, point.Altitude);
+                        XYZpoint res = new XYZpoint();
+                        res.x = Xp - res1.x;
+                        res.y = Yp - res1.y;
+                        res.z = Zp - res1.z;
+                        double d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
+                        LatitudeValue.Text = d.ToString("F3") + "m";
+
+                        res1 = Functions.Calculate_XYZ_From_LatLongAlt(point.Latitude, LonP, point.Altitude);
+                        res = new XYZpoint();
+                        res.x = Xp - res1.x;
+                        res.y = Yp - res1.y;
+                        res.z = Zp - res1.z;
+                        d = Math.Sqrt(Math.Pow(res.x, 2) + Math.Pow(res.y, 2) + Math.Pow(res.z, 2));
+                        LongitudeValue.Text = d.ToString("F3") + "m";
+
+                        d = AltP - point.Altitude;
+                        AltitudeValue.Text = d.ToString("F3") + "m";
+                    }
+
+                    //Distance
+                    ((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Markers[0].Value = data.AttitudeBuffer.Distance;
+                    distanceLabel.Text = "Distance : " + data.AttitudeBuffer.Distance.ToString("F3");
+                }
+                else { notshowdata = false; }
+                if (playing)
+                {
+                    headingIndicator1.SetHeadingIndicatorParameters((int)data.AttitudeBuffer.Azimuth);
+                    AzimuthLabel.Text = "Azimuth = " + data.AttitudeBuffer.Azimuth.ToString("F2");
+                    attitudeIndicator1.SetAttitudeIndicatorParameters(data.AttitudeBuffer.Elevation, 0);
+                    ElevationLabel.Text = "Elevation = " + data.AttitudeBuffer.Elevation.ToString("F2");
+                    ((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Markers[0].Value = data.AttitudeBuffer.Distance;
+                    distanceLabel.Text = "Distance : " + data.AttitudeBuffer.Distance.ToString("F3");
+                }
+            //}
         }
 
         public void UpdateRealtimeGraph(Globals vars, SingleDataBuffer data, int ChannelNum)
@@ -263,6 +281,7 @@ namespace GPSNavigator
                 StartedCounting = true;
                 StartTime = DateTime.Now;
                 StartTimeLabel.Text = StartTime.ToLongTimeString();
+                EndTimeLabel.Text = "";
             }
             else if (StartedCounting && (ugps + uglonass) > 3)
             {
@@ -288,7 +307,7 @@ namespace GPSNavigator
                 AltitudeValue.Text = data.Dbuf.Altitude.ToString("#0.00");
             }
             velLabel.Text = "Velocity: " + data.Dbuf.V.ToString("#0.000");
-            label12.Text = "Time: " + dt.ToString();
+            label12.Text = "Time: " + dt.ToLongTimeString();
             DateLabel.Label.FormatString = dt.Month.ToString("D2") + "/" + dt.Day.ToString("D2") + "/" + dt.Year.ToString();
             SpeedGauge.Needles[0].Value = (float)data.Dbuf.V;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = dt.Hour + (double)dt.Minute / 60;
@@ -458,6 +477,7 @@ namespace GPSNavigator
                 }
                 var toplot = CacheData[(IndexCounter < 100) ? IndexCounter : 99];
                 PlotGraph(toplot);
+                UpdateNorthfinderLabels(toplot.Dbuf);
                 UpdateComboBoxes(toplot.GPS.Count);
                 switch (playspeed)
                 {
@@ -1958,6 +1978,125 @@ namespace GPSNavigator
             {
                 clickeditem = optionfor.chart2;
                 GraphOptions.Show(t);
+            }
+        }
+
+        private void applyButton_Click(object sender, EventArgs e)
+        {
+            double TH = Convert.ToDouble(textEditDistanceTH.Text);
+            ((NumericAxis)((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Axis).StartValue = Convert.ToDouble(textEditDistance.Text) - TH;
+            ((NumericAxis)((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Axis).EndValue = Convert.ToDouble(textEditDistance.Text) + TH;
+            ((NumericAxis)((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Axis).TickmarkInterval = TH * 2 / 100.0;
+
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.ATTITUDE_INFO_CMD;
+                index++;
+
+                //Distance
+                int d = (int)(Double.Parse(textEditDistance.Text) * 1000);
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+
+                //Tol
+                d = (int)(Double.Parse(textEditDistanceTH.Text) * 1000);
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+      
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }             
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
+        }
+
+        private void saveToFlashButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.SAVE_SETTING_CMD;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
             }
         }
     }

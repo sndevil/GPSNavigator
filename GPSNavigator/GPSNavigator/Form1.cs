@@ -33,6 +33,7 @@ namespace GPSNavigator
         Globals vars = new Globals();
         public List<Grapher> grapherlist = new List<Grapher>();
         public List<MomentDetail> detaillist = new List<MomentDetail>();
+        public List<NorthDetail> northDetailList = new List<NorthDetail>();
         Logger log;
         DateTime RecordStarttime;
         int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0,serial1_MsgSize=-1,RefreshRate = 50;
@@ -169,7 +170,7 @@ namespace GPSNavigator
                                 if (dbuf.settingbuffer.SettingReceived)
                                     DetailForm.ChangeSettings(dbuf.settingbuffer);
 
-                                if (isRecording && dbuf.AttitudeBuffer.counter == 0)
+                                if (isRecording)
                                 {
                                     //DetailForm.UpdateData(vars);
                                     #region Extremum_Ifs
@@ -210,7 +211,13 @@ namespace GPSNavigator
                                             dbuf.BLatitudeMin = exthandler.BLatitudeMin;
                                             dbuf.BLongitudeMax = exthandler.BLongitudeMax;
                                             dbuf.BLongitudeMin = exthandler.BLongitudeMin;
-                                            exthandler.ExtremumStarted = false;
+                                            dbuf.AttitudeBuffer.BAzimuthMax = exthandler.BAzimuthMax;
+                                            dbuf.AttitudeBuffer.BAzimuthMin = exthandler.BAzimuthMin;
+                                            dbuf.AttitudeBuffer.BElevationMax = exthandler.BElevationMax;
+                                            dbuf.AttitudeBuffer.BElevationMin = exthandler.BElevationMin;
+                                            dbuf.AttitudeBuffer.BDistanceMax = exthandler.BDistanceMax;
+                                            dbuf.AttitudeBuffer.BDistanceMin = exthandler.BDistanceMin;
+                                            exthandler.ExtremumStarted = false; 
                                         }
                                         if (dbuf.A > exthandler.AMax) { exthandler.AMax = dbuf.A; exthandler.BAMax = dbuf.BA; }
                                         if (dbuf.A < exthandler.Amin) { exthandler.Amin = dbuf.A; exthandler.BAmin = dbuf.BA; }
@@ -242,6 +249,12 @@ namespace GPSNavigator
                                         if (dbuf.Z < exthandler.ZMin) { exthandler.ZMin = dbuf.Z; exthandler.BZMin = dbuf.BZ; }
                                         if (dbuf.PDOP > exthandler.PDOPMax) { exthandler.PDOPMax = dbuf.PDOP; exthandler.BPDOPMax = dbuf.BPDOP; }
                                         if (dbuf.PDOP < exthandler.PDOPMin) { exthandler.PDOPMin = dbuf.PDOP; exthandler.BPDOPMin = dbuf.BPDOP; }
+                                        if (dbuf.AttitudeBuffer.Azimuth > exthandler.AzimuthMax) { exthandler.AzimuthMax = dbuf.AttitudeBuffer.Azimuth; exthandler.BAzimuthMax = dbuf.AttitudeBuffer.BAzimuth; }
+                                        if (dbuf.AttitudeBuffer.Azimuth < exthandler.AzimuthMin) { exthandler.AzimuthMin = dbuf.AttitudeBuffer.Azimuth; exthandler.BAzimuthMin = dbuf.AttitudeBuffer.BAzimuth; }
+                                        if (dbuf.AttitudeBuffer.Elevation > exthandler.ElevationMax) { exthandler.ElevationMax = dbuf.AttitudeBuffer.Elevation; exthandler.BElevationMax = dbuf.AttitudeBuffer.BElevation; }
+                                        if (dbuf.AttitudeBuffer.Elevation < exthandler.ElevationMin) { exthandler.ElevationMin = dbuf.AttitudeBuffer.Elevation; exthandler.BElevationMin = dbuf.AttitudeBuffer.BElevation; }
+                                        if (dbuf.AttitudeBuffer.Distance > exthandler.DistanceMax) { exthandler.DistanceMax = dbuf.AttitudeBuffer.Distance; exthandler.BDistanceMax = dbuf.AttitudeBuffer.BDistance; }
+                                        if (dbuf.AttitudeBuffer.Distance < exthandler.DistanceMin) { exthandler.DistanceMin = dbuf.AttitudeBuffer.Distance; exthandler.BDistanceMin = dbuf.AttitudeBuffer.BDistance; }
                                     }
                                     else
                                     {
@@ -276,6 +289,12 @@ namespace GPSNavigator
                                         exthandler.BYMax = exthandler.BYMin = dbuf.BY;
                                         exthandler.ZMax = exthandler.ZMin = dbuf.Z;
                                         exthandler.BZMax = exthandler.BZMin = dbuf.BZ;
+                                        exthandler.AzimuthMax = exthandler.AzimuthMin = dbuf.AttitudeBuffer.Azimuth;
+                                        exthandler.BAzimuthMax = exthandler.BAzimuthMin = dbuf.AttitudeBuffer.BAzimuth;
+                                        exthandler.ElevationMax = exthandler.ElevationMin = dbuf.AttitudeBuffer.Elevation;
+                                        exthandler.BElevationMax = exthandler.BElevationMin = dbuf.AttitudeBuffer.BElevation;
+                                        exthandler.DistanceMax = exthandler.DistanceMin = dbuf.AttitudeBuffer.Distance;
+                                        exthandler.BDistanceMax = exthandler.BDistanceMin = dbuf.AttitudeBuffer.BDistance;
                                         exthandler.ExtremeCounter++;
                                     }
                                     #endregion
@@ -643,21 +662,29 @@ namespace GPSNavigator
         private void openLogToolStripMenuItem_Click(object sender, EventArgs e)
         {
             opendialog.FileName = "";
-            opendialog.Filter = "LogPackage File (*.GLP)|*.GLP|All Files|*.*";
+            switch (Appmode)
+            {
+                case AppModes.GPS:
+                    opendialog.Filter = "GPS LogPackage File (*.GLP)|*.GLP|All Files|*.*";
+                    break;
+                case AppModes.NorthFinder:
+                    opendialog.Filter = "Northfinder LogPackage File (*.NLP)|*.NLP|All Files|*.*";
+                    break;
+            }
             opendialog.ShowDialog();
         }
 
         public void OpenLogFile(string path)
         {
-            LogFileManager file = new LogFileManager(path,ref vars);
+            LogFileManager file = new LogFileManager(path,ref vars,Appmode);
             Grapher graphform;
             if (folderManager.readytouse.Count > 0)
             {
                 folderManager.readytouse.Sort();
-                graphform = new Grapher(file, this, folderManager.readytouse[0],opendialog.FileName);
+                graphform = new Grapher(file, this, folderManager.readytouse[0],opendialog.FileName,Appmode);
             }
             else
-                graphform = new Grapher(file, this, grapherlist.Count,opendialog.FileName);     
+                graphform = new Grapher(file, this, grapherlist.Count,opendialog.FileName,Appmode);     
             //graphform.Dock = DockStyle.Fill;
             graphform.Dock = DockStyle.None;
             graphform.TopLevel = false;
@@ -736,7 +763,10 @@ namespace GPSNavigator
                 else
                     NorthDetailForm.Show();
             var path = folderManager.findrecordfolder();
-            log = new Logger(path);
+            Logtype type = Logtype.GPS;
+            if (Appmode == AppModes.NorthFinder)
+                type = Logtype.Northfinder;
+            log = new Logger(path,type);
             isRecording = true;
             //status = Form1Status.Recording;
             RecordStarttime = DateTime.Now;
@@ -890,7 +920,15 @@ namespace GPSNavigator
             if (!isRecording)
             {
                 savedialog.FileName = "";
-                savedialog.Filter = "LogPackage File (*.GLP)|*.GLP";
+                switch (Appmode)
+                {
+                    case AppModes.GPS:
+                        savedialog.Filter = "GPS LogPackage File (*.GLP)|*.GLP";
+                        break;
+                    case AppModes.NorthFinder:
+                        savedialog.Filter = "Northfinder LogPackage File (*.NLP)|*.NLP";
+                        break;
+                }
                 savedialog.ShowDialog();
             }
             else

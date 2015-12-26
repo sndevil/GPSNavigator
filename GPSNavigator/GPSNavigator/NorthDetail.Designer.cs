@@ -72,6 +72,24 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            Infragistics.UltraGauge.Resources.LinearGauge linearGauge1 = new Infragistics.UltraGauge.Resources.LinearGauge();
+            Infragistics.UltraGauge.Resources.BrushElementGroup brushElementGroup2 = new Infragistics.UltraGauge.Resources.BrushElementGroup();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement12 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement multiStopRadialGradientBrushElement3 = new Infragistics.UltraGauge.Resources.MultiStopRadialGradientBrushElement();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop10 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop11 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.ColorStop colorStop12 = new Infragistics.UltraGauge.Resources.ColorStop();
+            Infragistics.UltraGauge.Resources.LinearGaugeScale linearGaugeScale1 = new Infragistics.UltraGauge.Resources.LinearGaugeScale();
+            Infragistics.UltraGauge.Resources.NumericAxis numericAxis4 = new Infragistics.UltraGauge.Resources.NumericAxis();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement13 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement14 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.SimpleGradientBrushElement simpleGradientBrushElement2 = new Infragistics.UltraGauge.Resources.SimpleGradientBrushElement();
+            Infragistics.UltraGauge.Resources.LinearGaugeNeedle linearGaugeNeedle1 = new Infragistics.UltraGauge.Resources.LinearGaugeNeedle();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement15 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.SimpleGradientBrushElement simpleGradientBrushElement3 = new Infragistics.UltraGauge.Resources.SimpleGradientBrushElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement16 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
+            Infragistics.UltraGauge.Resources.StrokeElement strokeElement1 = new Infragistics.UltraGauge.Resources.StrokeElement();
+            Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement17 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -229,6 +247,25 @@
             this.relativeRadio = new System.Windows.Forms.RadioButton();
             this.absoluteRadio = new System.Windows.Forms.RadioButton();
             this.AmbiguityLabel = new System.Windows.Forms.Label();
+            this.ultraGaugeDistance = new Infragistics.Win.UltraWinGauge.UltraGauge();
+            this.radLabel11 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel10 = new Telerik.WinControls.UI.RadLabel();
+            this.radLabel1 = new Telerik.WinControls.UI.RadLabel();
+            this.checkEditAzimuth = new DevExpress.XtraEditors.CheckEdit();
+            this.labelControl30 = new DevExpress.XtraEditors.LabelControl();
+            this.textEditAzimuthTH = new DevExpress.XtraEditors.TextEdit();
+            this.textEditAzimuth = new DevExpress.XtraEditors.TextEdit();
+            this.checkEditElevation = new DevExpress.XtraEditors.CheckEdit();
+            this.labelControl26 = new DevExpress.XtraEditors.LabelControl();
+            this.textEditElevationTH = new DevExpress.XtraEditors.TextEdit();
+            this.textEditElevation = new DevExpress.XtraEditors.TextEdit();
+            this.checkEditDistance = new DevExpress.XtraEditors.CheckEdit();
+            this.labelControl34 = new DevExpress.XtraEditors.LabelControl();
+            this.textEditDistanceTH = new DevExpress.XtraEditors.TextEdit();
+            this.textEditDistance = new DevExpress.XtraEditors.TextEdit();
+            this.applyButton = new System.Windows.Forms.Button();
+            this.saveToFlashButton = new System.Windows.Forms.Button();
+            this.distanceLabel = new System.Windows.Forms.Label();
             this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.headingIndicator1 = new GPS.HeadingIndicatorInstrumentControl();
             this.attitudeIndicator1 = new GPS.AttitudeIndicatorInstrumentControl();
@@ -283,6 +320,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).BeginInit();
             this.GraphOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEditAzimuth.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAzimuthTH.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAzimuth.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEditElevation.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditElevationTH.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditElevation.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEditDistance.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditDistanceTH.Properties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.SuspendLayout();
             // 
@@ -621,7 +670,7 @@
             // LatitudeLabel
             // 
             this.LatitudeLabel.AutoSize = true;
-            this.LatitudeLabel.Location = new System.Drawing.Point(135, 14);
+            this.LatitudeLabel.Location = new System.Drawing.Point(107, 14);
             this.LatitudeLabel.Name = "LatitudeLabel";
             this.LatitudeLabel.Size = new System.Drawing.Size(48, 13);
             this.LatitudeLabel.TabIndex = 32;
@@ -630,7 +679,7 @@
             // LatitudeValue
             // 
             this.LatitudeValue.AutoSize = true;
-            this.LatitudeValue.Location = new System.Drawing.Point(198, 14);
+            this.LatitudeValue.Location = new System.Drawing.Point(170, 14);
             this.LatitudeValue.Name = "LatitudeValue";
             this.LatitudeValue.Size = new System.Drawing.Size(13, 13);
             this.LatitudeValue.TabIndex = 33;
@@ -639,7 +688,7 @@
             // LongitudeLabel
             // 
             this.LongitudeLabel.AutoSize = true;
-            this.LongitudeLabel.Location = new System.Drawing.Point(135, 38);
+            this.LongitudeLabel.Location = new System.Drawing.Point(107, 38);
             this.LongitudeLabel.Name = "LongitudeLabel";
             this.LongitudeLabel.Size = new System.Drawing.Size(57, 13);
             this.LongitudeLabel.TabIndex = 34;
@@ -648,7 +697,7 @@
             // LongitudeValue
             // 
             this.LongitudeValue.AutoSize = true;
-            this.LongitudeValue.Location = new System.Drawing.Point(198, 38);
+            this.LongitudeValue.Location = new System.Drawing.Point(170, 38);
             this.LongitudeValue.Name = "LongitudeValue";
             this.LongitudeValue.Size = new System.Drawing.Size(13, 13);
             this.LongitudeValue.TabIndex = 35;
@@ -657,7 +706,7 @@
             // AltitudeLabel
             // 
             this.AltitudeLabel.AutoSize = true;
-            this.AltitudeLabel.Location = new System.Drawing.Point(135, 62);
+            this.AltitudeLabel.Location = new System.Drawing.Point(107, 62);
             this.AltitudeLabel.Name = "AltitudeLabel";
             this.AltitudeLabel.Size = new System.Drawing.Size(45, 13);
             this.AltitudeLabel.TabIndex = 36;
@@ -666,7 +715,7 @@
             // AltitudeValue
             // 
             this.AltitudeValue.AutoSize = true;
-            this.AltitudeValue.Location = new System.Drawing.Point(198, 62);
+            this.AltitudeValue.Location = new System.Drawing.Point(170, 62);
             this.AltitudeValue.Name = "AltitudeValue";
             this.AltitudeValue.Size = new System.Drawing.Size(13, 13);
             this.AltitudeValue.TabIndex = 37;
@@ -842,7 +891,7 @@
             this.toolStripSplitButton1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 693);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(814, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(815, 22);
             this.statusStrip1.TabIndex = 48;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -933,7 +982,7 @@
             this.c1Chart1.BackColor = System.Drawing.Color.Gainsboro;
             this.c1Chart1.Interaction.Appearance = C1.Win.C1Chart.InteractionAppearance.FillSelectionArea;
             this.c1Chart1.Interaction.Enabled = true;
-            this.c1Chart1.Location = new System.Drawing.Point(58, 514);
+            this.c1Chart1.Location = new System.Drawing.Point(61, 514);
             this.c1Chart1.Name = "c1Chart1";
             this.c1Chart1.PropBag = resources.GetString("c1Chart1.PropBag");
             this.c1Chart1.Size = new System.Drawing.Size(732, 154);
@@ -976,9 +1025,9 @@
             "Temperature",
             "UsedStats",
             "VisibleStats"});
-            this.graphDataCombo.Location = new System.Drawing.Point(4, 487);
+            this.graphDataCombo.Location = new System.Drawing.Point(3, 513);
             this.graphDataCombo.Name = "graphDataCombo";
-            this.graphDataCombo.Size = new System.Drawing.Size(58, 20);
+            this.graphDataCombo.Size = new System.Drawing.Size(65, 20);
             this.graphDataCombo.TabIndex = 51;
             this.graphDataCombo.Text = "X";
             this.graphDataCombo.Visible = false;
@@ -987,9 +1036,9 @@
             // ClearButton
             // 
             this.ClearButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClearButton.Location = new System.Drawing.Point(4, 513);
+            this.ClearButton.Location = new System.Drawing.Point(3, 539);
             this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(58, 23);
+            this.ClearButton.Size = new System.Drawing.Size(65, 23);
             this.ClearButton.TabIndex = 52;
             this.ClearButton.Text = "Clear";
             this.ClearButton.UseVisualStyleBackColor = false;
@@ -2195,9 +2244,9 @@
             // 
             this.ResetZoom.BackColor = System.Drawing.Color.Gainsboro;
             this.ResetZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ResetZoom.Location = new System.Drawing.Point(4, 542);
+            this.ResetZoom.Location = new System.Drawing.Point(3, 568);
             this.ResetZoom.Name = "ResetZoom";
-            this.ResetZoom.Size = new System.Drawing.Size(58, 23);
+            this.ResetZoom.Size = new System.Drawing.Size(65, 23);
             this.ResetZoom.TabIndex = 85;
             this.ResetZoom.Text = "Reset Zoom";
             this.ResetZoom.UseVisualStyleBackColor = false;
@@ -2257,33 +2306,32 @@
             this.StatLabel.AutoSize = true;
             this.StatLabel.Location = new System.Drawing.Point(22, 107);
             this.StatLabel.Name = "StatLabel";
-            this.StatLabel.Size = new System.Drawing.Size(33, 13);
+            this.StatLabel.Size = new System.Drawing.Size(0, 13);
             this.StatLabel.TabIndex = 86;
-            this.StatLabel.Text = "North";
             // 
             // AzimuthLabel
             // 
-            this.AzimuthLabel.AutoSize = true;
-            this.AzimuthLabel.Location = new System.Drawing.Point(414, 129);
+            this.AzimuthLabel.Location = new System.Drawing.Point(417, 129);
             this.AzimuthLabel.Name = "AzimuthLabel";
-            this.AzimuthLabel.Size = new System.Drawing.Size(47, 13);
+            this.AzimuthLabel.Size = new System.Drawing.Size(115, 13);
             this.AzimuthLabel.TabIndex = 96;
             this.AzimuthLabel.Text = "Azimuth:";
+            this.AzimuthLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ElevationLabel
             // 
-            this.ElevationLabel.AutoSize = true;
-            this.ElevationLabel.Location = new System.Drawing.Point(294, 129);
+            this.ElevationLabel.Location = new System.Drawing.Point(297, 129);
             this.ElevationLabel.Name = "ElevationLabel";
-            this.ElevationLabel.Size = new System.Drawing.Size(54, 13);
+            this.ElevationLabel.Size = new System.Drawing.Size(114, 13);
             this.ElevationLabel.TabIndex = 97;
             this.ElevationLabel.Text = "Elevation:";
+            this.ElevationLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // relativeRadio
             // 
             this.relativeRadio.AutoSize = true;
             this.relativeRadio.Checked = true;
-            this.relativeRadio.Location = new System.Drawing.Point(128, 85);
+            this.relativeRadio.Location = new System.Drawing.Point(100, 85);
             this.relativeRadio.Name = "relativeRadio";
             this.relativeRadio.Size = new System.Drawing.Size(64, 17);
             this.relativeRadio.TabIndex = 98;
@@ -2294,7 +2342,7 @@
             // absoluteRadio
             // 
             this.absoluteRadio.AutoSize = true;
-            this.absoluteRadio.Location = new System.Drawing.Point(198, 85);
+            this.absoluteRadio.Location = new System.Drawing.Point(170, 85);
             this.absoluteRadio.Name = "absoluteRadio";
             this.absoluteRadio.Size = new System.Drawing.Size(66, 17);
             this.absoluteRadio.TabIndex = 99;
@@ -2306,9 +2354,271 @@
             this.AmbiguityLabel.AutoSize = true;
             this.AmbiguityLabel.Location = new System.Drawing.Point(22, 127);
             this.AmbiguityLabel.Name = "AmbiguityLabel";
-            this.AmbiguityLabel.Size = new System.Drawing.Size(41, 13);
+            this.AmbiguityLabel.Size = new System.Drawing.Size(0, 13);
             this.AmbiguityLabel.TabIndex = 100;
-            this.AmbiguityLabel.Text = "label14";
+            // 
+            // ultraGaugeDistance
+            // 
+            this.ultraGaugeDistance.BackColor = System.Drawing.Color.Transparent;
+            solidFillBrushElement12.Color = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(51)))));
+            multiStopRadialGradientBrushElement3.CenterPoint = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement3.CenterPoint")));
+            colorStop10.Color = System.Drawing.Color.Transparent;
+            colorStop11.Color = System.Drawing.Color.Transparent;
+            colorStop11.Stop = 0.1968912F;
+            colorStop12.Color = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            colorStop12.Stop = 1F;
+            multiStopRadialGradientBrushElement3.ColorStops.Add(colorStop10);
+            multiStopRadialGradientBrushElement3.ColorStops.Add(colorStop11);
+            multiStopRadialGradientBrushElement3.ColorStops.Add(colorStop12);
+            multiStopRadialGradientBrushElement3.FocusScales = ((System.Drawing.PointF)(resources.GetObject("multiStopRadialGradientBrushElement3.FocusScales")));
+            multiStopRadialGradientBrushElement3.RelativeBounds = new System.Drawing.Rectangle(-5, -30, 80, 80);
+            multiStopRadialGradientBrushElement3.RelativeBoundsMeasure = Infragistics.UltraGauge.Resources.Measure.Percent;
+            brushElementGroup2.BrushElements.Add(solidFillBrushElement12);
+            brushElementGroup2.BrushElements.Add(multiStopRadialGradientBrushElement3);
+            linearGauge1.BrushElements.Add(brushElementGroup2);
+            linearGauge1.CornerExtent = 3D;
+            linearGauge1.Orientation = Infragistics.UltraGauge.Resources.LinearOrientation.Vertical;
+            numericAxis4.EndValue = 3.4D;
+            numericAxis4.StartValue = 2.6D;
+            numericAxis4.TickmarkInterval = 0.008D;
+            linearGaugeScale1.Axes.Add(numericAxis4);
+            linearGaugeScale1.BrushElements.Add(solidFillBrushElement13);
+            linearGaugeScale1.EndExtent = 90D;
+            linearGaugeScale1.InnerExtent = 70D;
+            solidFillBrushElement14.Color = System.Drawing.Color.Silver;
+            linearGaugeScale1.Labels.BrushElements.Add(solidFillBrushElement14);
+            linearGaugeScale1.Labels.Extent = 31D;
+            linearGaugeScale1.Labels.Font = new System.Drawing.Font("Trebuchet MS", 12F, System.Drawing.FontStyle.Bold);
+            linearGaugeScale1.Labels.FormatString = "<DATA_VALUE:0.0>";
+            linearGaugeScale1.Labels.Frequency = 50D;
+            simpleGradientBrushElement2.EndColor = System.Drawing.Color.Gray;
+            simpleGradientBrushElement2.StartColor = System.Drawing.Color.LightGray;
+            linearGaugeScale1.MajorTickmarks.BrushElements.Add(simpleGradientBrushElement2);
+            linearGaugeScale1.MajorTickmarks.EndExtent = 60D;
+            linearGaugeScale1.MajorTickmarks.EndWidth = 2;
+            linearGaugeScale1.MajorTickmarks.Frequency = 50D;
+            linearGaugeScale1.MajorTickmarks.StartExtent = 80D;
+            linearGaugeScale1.MajorTickmarks.StartWidth = 2;
+            solidFillBrushElement15.Color = System.Drawing.Color.Black;
+            linearGaugeNeedle1.BrushElements.Add(solidFillBrushElement15);
+            linearGaugeNeedle1.EndExtent = 98D;
+            linearGaugeNeedle1.EndWidth = 3D;
+            linearGaugeNeedle1.MidExtent = 80D;
+            linearGaugeNeedle1.MidWidth = 3D;
+            linearGaugeNeedle1.Precision = 0D;
+            linearGaugeNeedle1.StartExtent = 75D;
+            linearGaugeNeedle1.StartWidth = 0D;
+            simpleGradientBrushElement3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(129)))), ((int)(((byte)(169)))));
+            simpleGradientBrushElement3.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(183)))), ((int)(((byte)(226)))));
+            linearGaugeNeedle1.StrokeElement.BrushElements.Add(simpleGradientBrushElement3);
+            linearGaugeNeedle1.StrokeElement.Thickness = 2D;
+            linearGaugeNeedle1.Value = 0D;
+            linearGaugeScale1.Markers.Add(linearGaugeNeedle1);
+            solidFillBrushElement16.Color = System.Drawing.Color.FromArgb(((int)(((byte)(135)))), ((int)(((byte)(135)))), ((int)(((byte)(135)))));
+            linearGaugeScale1.MinorTickmarks.BrushElements.Add(solidFillBrushElement16);
+            linearGaugeScale1.MinorTickmarks.EndExtent = 73D;
+            linearGaugeScale1.MinorTickmarks.EndWidth = 2;
+            linearGaugeScale1.MinorTickmarks.Frequency = 12.5D;
+            linearGaugeScale1.MinorTickmarks.StartExtent = 68D;
+            linearGaugeScale1.MinorTickmarks.StartWidth = 2;
+            linearGaugeScale1.OuterExtent = 90D;
+            linearGaugeScale1.StartExtent = 10D;
+            linearGauge1.Scales.Add(linearGaugeScale1);
+            strokeElement1.BrushElements.Add(solidFillBrushElement17);
+            strokeElement1.Thickness = 10D;
+            linearGauge1.StrokeElement = strokeElement1;
+            this.ultraGaugeDistance.Gauges.Add(linearGauge1);
+            this.ultraGaugeDistance.Location = new System.Drawing.Point(238, 6);
+            this.ultraGaugeDistance.Name = "ultraGaugeDistance";
+            this.ultraGaugeDistance.Size = new System.Drawing.Size(53, 117);
+            this.ultraGaugeDistance.TabIndex = 101;
+            // 
+            // radLabel11
+            // 
+            this.radLabel11.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radLabel11.Location = new System.Drawing.Point(991, 563);
+            this.radLabel11.Name = "radLabel11";
+            // 
+            // 
+            // 
+            this.radLabel11.RootElement.AutoSize = true;
+            this.radLabel11.Size = new System.Drawing.Size(27, 18);
+            this.radLabel11.TabIndex = 127;
+            this.radLabel11.Text = "Deg";
+            // 
+            // radLabel10
+            // 
+            this.radLabel10.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radLabel10.Location = new System.Drawing.Point(991, 541);
+            this.radLabel10.Name = "radLabel10";
+            // 
+            // 
+            // 
+            this.radLabel10.RootElement.AutoSize = true;
+            this.radLabel10.Size = new System.Drawing.Size(27, 18);
+            this.radLabel10.TabIndex = 126;
+            this.radLabel10.Text = "Deg";
+            // 
+            // radLabel1
+            // 
+            this.radLabel1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radLabel1.Location = new System.Drawing.Point(991, 517);
+            this.radLabel1.Name = "radLabel1";
+            // 
+            // 
+            // 
+            this.radLabel1.RootElement.AutoSize = true;
+            this.radLabel1.Size = new System.Drawing.Size(16, 18);
+            this.radLabel1.TabIndex = 125;
+            this.radLabel1.Text = "m";
+            // 
+            // checkEditAzimuth
+            // 
+            this.checkEditAzimuth.Enabled = false;
+            this.checkEditAzimuth.Location = new System.Drawing.Point(818, 563);
+            this.checkEditAzimuth.Margin = new System.Windows.Forms.Padding(2);
+            this.checkEditAzimuth.Name = "checkEditAzimuth";
+            this.checkEditAzimuth.Properties.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.checkEditAzimuth.Properties.Appearance.Options.UseForeColor = true;
+            this.checkEditAzimuth.Properties.Caption = "Azimuth:";
+            this.checkEditAzimuth.Properties.LookAndFeel.UseDefaultLookAndFeel = false;
+            this.checkEditAzimuth.Size = new System.Drawing.Size(80, 19);
+            this.checkEditAzimuth.TabIndex = 124;
+            // 
+            // labelControl30
+            // 
+            this.labelControl30.Appearance.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.labelControl30.Location = new System.Drawing.Point(941, 566);
+            this.labelControl30.Name = "labelControl30";
+            this.labelControl30.Size = new System.Drawing.Size(8, 13);
+            this.labelControl30.TabIndex = 123;
+            this.labelControl30.Text = "±";
+            // 
+            // textEditAzimuthTH
+            // 
+            this.textEditAzimuthTH.EditValue = "30";
+            this.textEditAzimuthTH.Enabled = false;
+            this.textEditAzimuthTH.Location = new System.Drawing.Point(955, 563);
+            this.textEditAzimuthTH.Name = "textEditAzimuthTH";
+            this.textEditAzimuthTH.Size = new System.Drawing.Size(35, 20);
+            this.textEditAzimuthTH.TabIndex = 122;
+            // 
+            // textEditAzimuth
+            // 
+            this.textEditAzimuth.EditValue = "20";
+            this.textEditAzimuth.Enabled = false;
+            this.textEditAzimuth.Location = new System.Drawing.Point(900, 563);
+            this.textEditAzimuth.Name = "textEditAzimuth";
+            this.textEditAzimuth.Size = new System.Drawing.Size(35, 20);
+            this.textEditAzimuth.TabIndex = 121;
+            // 
+            // checkEditElevation
+            // 
+            this.checkEditElevation.Enabled = false;
+            this.checkEditElevation.Location = new System.Drawing.Point(818, 540);
+            this.checkEditElevation.Margin = new System.Windows.Forms.Padding(2);
+            this.checkEditElevation.Name = "checkEditElevation";
+            this.checkEditElevation.Properties.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.checkEditElevation.Properties.Appearance.Options.UseForeColor = true;
+            this.checkEditElevation.Properties.Caption = "Elevation:";
+            this.checkEditElevation.Properties.LookAndFeel.UseDefaultLookAndFeel = false;
+            this.checkEditElevation.Size = new System.Drawing.Size(80, 19);
+            this.checkEditElevation.TabIndex = 120;
+            // 
+            // labelControl26
+            // 
+            this.labelControl26.Appearance.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.labelControl26.Location = new System.Drawing.Point(941, 543);
+            this.labelControl26.Name = "labelControl26";
+            this.labelControl26.Size = new System.Drawing.Size(8, 13);
+            this.labelControl26.TabIndex = 119;
+            this.labelControl26.Text = "±";
+            // 
+            // textEditElevationTH
+            // 
+            this.textEditElevationTH.EditValue = "90";
+            this.textEditElevationTH.Enabled = false;
+            this.textEditElevationTH.Location = new System.Drawing.Point(955, 540);
+            this.textEditElevationTH.Name = "textEditElevationTH";
+            this.textEditElevationTH.Size = new System.Drawing.Size(35, 20);
+            this.textEditElevationTH.TabIndex = 118;
+            // 
+            // textEditElevation
+            // 
+            this.textEditElevation.EditValue = "0";
+            this.textEditElevation.Enabled = false;
+            this.textEditElevation.Location = new System.Drawing.Point(900, 540);
+            this.textEditElevation.Name = "textEditElevation";
+            this.textEditElevation.Size = new System.Drawing.Size(35, 20);
+            this.textEditElevation.TabIndex = 117;
+            // 
+            // checkEditDistance
+            // 
+            this.checkEditDistance.EditValue = true;
+            this.checkEditDistance.Location = new System.Drawing.Point(818, 517);
+            this.checkEditDistance.Margin = new System.Windows.Forms.Padding(2);
+            this.checkEditDistance.Name = "checkEditDistance";
+            this.checkEditDistance.Properties.Appearance.ForeColor = System.Drawing.Color.Black;
+            this.checkEditDistance.Properties.Appearance.Options.UseForeColor = true;
+            this.checkEditDistance.Properties.Caption = "Distance:";
+            this.checkEditDistance.Properties.LookAndFeel.UseDefaultLookAndFeel = false;
+            this.checkEditDistance.Size = new System.Drawing.Size(80, 19);
+            this.checkEditDistance.TabIndex = 115;
+            // 
+            // labelControl34
+            // 
+            this.labelControl34.Appearance.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.labelControl34.Location = new System.Drawing.Point(941, 520);
+            this.labelControl34.Name = "labelControl34";
+            this.labelControl34.Size = new System.Drawing.Size(8, 13);
+            this.labelControl34.TabIndex = 114;
+            this.labelControl34.Text = "±";
+            // 
+            // textEditDistanceTH
+            // 
+            this.textEditDistanceTH.EditValue = "0.4";
+            this.textEditDistanceTH.Location = new System.Drawing.Point(955, 517);
+            this.textEditDistanceTH.Name = "textEditDistanceTH";
+            this.textEditDistanceTH.Size = new System.Drawing.Size(35, 20);
+            this.textEditDistanceTH.TabIndex = 113;
+            // 
+            // textEditDistance
+            // 
+            this.textEditDistance.EditValue = "3.00";
+            this.textEditDistance.Location = new System.Drawing.Point(900, 517);
+            this.textEditDistance.Name = "textEditDistance";
+            this.textEditDistance.Size = new System.Drawing.Size(35, 20);
+            this.textEditDistance.TabIndex = 112;
+            // 
+            // applyButton
+            // 
+            this.applyButton.BackColor = System.Drawing.Color.Gainsboro;
+            this.applyButton.Location = new System.Drawing.Point(1035, 517);
+            this.applyButton.Name = "applyButton";
+            this.applyButton.Size = new System.Drawing.Size(85, 30);
+            this.applyButton.TabIndex = 0;
+            this.applyButton.Text = "Apply";
+            this.applyButton.UseVisualStyleBackColor = false;
+            this.applyButton.Click += new System.EventHandler(this.applyButton_Click);
+            // 
+            // saveToFlashButton
+            // 
+            this.saveToFlashButton.BackColor = System.Drawing.Color.Gainsboro;
+            this.saveToFlashButton.Location = new System.Drawing.Point(1035, 553);
+            this.saveToFlashButton.Name = "saveToFlashButton";
+            this.saveToFlashButton.Size = new System.Drawing.Size(85, 30);
+            this.saveToFlashButton.TabIndex = 1;
+            this.saveToFlashButton.Text = "Save To Flash";
+            this.saveToFlashButton.UseVisualStyleBackColor = false;
+            this.saveToFlashButton.Click += new System.EventHandler(this.saveToFlashButton_Click);
+            // 
+            // distanceLabel
+            // 
+            this.distanceLabel.Location = new System.Drawing.Point(203, 129);
+            this.distanceLabel.Name = "distanceLabel";
+            this.distanceLabel.Size = new System.Drawing.Size(107, 13);
+            this.distanceLabel.TabIndex = 128;
+            this.distanceLabel.Text = "Distance:";
             // 
             // SpeedGauge
             // 
@@ -2344,13 +2654,31 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(814, 715);
+            this.ClientSize = new System.Drawing.Size(815, 715);
+            this.Controls.Add(this.applyButton);
+            this.Controls.Add(this.saveToFlashButton);
+            this.Controls.Add(this.radLabel11);
+            this.Controls.Add(this.radLabel10);
+            this.Controls.Add(this.radLabel1);
+            this.Controls.Add(this.checkEditAzimuth);
+            this.Controls.Add(this.labelControl30);
+            this.Controls.Add(this.textEditAzimuthTH);
+            this.Controls.Add(this.textEditAzimuth);
+            this.Controls.Add(this.checkEditElevation);
+            this.Controls.Add(this.labelControl26);
+            this.Controls.Add(this.textEditElevationTH);
+            this.Controls.Add(this.textEditElevation);
+            this.Controls.Add(this.checkEditDistance);
+            this.Controls.Add(this.labelControl34);
+            this.Controls.Add(this.textEditDistanceTH);
+            this.Controls.Add(this.textEditDistance);
+            this.Controls.Add(this.ultraGaugeDistance);
             this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.AmbiguityLabel);
             this.Controls.Add(this.absoluteRadio);
-            this.Controls.Add(this.ElevationLabel);
             this.Controls.Add(this.relativeRadio);
             this.Controls.Add(this.label8);
+            this.Controls.Add(this.ElevationLabel);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
@@ -2359,8 +2687,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ResetZoom);
-            this.Controls.Add(this.AzimuthLabel);
             this.Controls.Add(this.TDOPValue);
+            this.Controls.Add(this.AzimuthLabel);
             this.Controls.Add(this.StatLabel);
             this.Controls.Add(this.VDOPValue);
             this.Controls.Add(this.HDOPValue);
@@ -2401,6 +2729,7 @@
             this.Controls.Add(this.c1Chart1);
             this.Controls.Add(this.headingIndicator1);
             this.Controls.Add(this.attitudeIndicator1);
+            this.Controls.Add(this.distanceLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "NorthDetail";
             this.Text = "MomentDetail";
@@ -2463,6 +2792,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).EndInit();
             this.GraphOptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.radLabel1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEditAzimuth.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAzimuthTH.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditAzimuth.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEditElevation.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditElevationTH.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditElevation.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkEditDistance.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditDistanceTH.Properties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -2636,5 +2977,24 @@
         private System.Windows.Forms.RadioButton relativeRadio;
         private System.Windows.Forms.RadioButton absoluteRadio;
         private System.Windows.Forms.Label AmbiguityLabel;
+        private Infragistics.Win.UltraWinGauge.UltraGauge ultraGaugeDistance;
+        private Telerik.WinControls.UI.RadLabel radLabel11;
+        private Telerik.WinControls.UI.RadLabel radLabel10;
+        private Telerik.WinControls.UI.RadLabel radLabel1;
+        private DevExpress.XtraEditors.CheckEdit checkEditAzimuth;
+        private DevExpress.XtraEditors.LabelControl labelControl30;
+        private DevExpress.XtraEditors.TextEdit textEditAzimuthTH;
+        private DevExpress.XtraEditors.TextEdit textEditAzimuth;
+        private DevExpress.XtraEditors.CheckEdit checkEditElevation;
+        private DevExpress.XtraEditors.LabelControl labelControl26;
+        private DevExpress.XtraEditors.TextEdit textEditElevationTH;
+        private DevExpress.XtraEditors.TextEdit textEditElevation;
+        private DevExpress.XtraEditors.CheckEdit checkEditDistance;
+        private DevExpress.XtraEditors.LabelControl labelControl34;
+        private DevExpress.XtraEditors.TextEdit textEditDistanceTH;
+        private DevExpress.XtraEditors.TextEdit textEditDistance;
+        private System.Windows.Forms.Button applyButton;
+        private System.Windows.Forms.Button saveToFlashButton;
+        private System.Windows.Forms.Label distanceLabel;
     }
 }

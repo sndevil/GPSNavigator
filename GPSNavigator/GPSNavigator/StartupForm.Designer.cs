@@ -32,6 +32,8 @@
             this.GPSButton = new System.Windows.Forms.Button();
             this.NorthFinderButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
+            this.NorthfinderLabel = new System.Windows.Forms.Label();
+            this.ExitLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // GPSButton
@@ -70,12 +72,36 @@
             this.ExitButton.UseVisualStyleBackColor = false;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
+            // NorthfinderLabel
+            // 
+            this.NorthfinderLabel.AutoSize = true;
+            this.NorthfinderLabel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.NorthfinderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.NorthfinderLabel.Location = new System.Drawing.Point(277, 143);
+            this.NorthfinderLabel.Name = "NorthfinderLabel";
+            this.NorthfinderLabel.Size = new System.Drawing.Size(56, 12);
+            this.NorthfinderLabel.TabIndex = 3;
+            this.NorthfinderLabel.Text = "North Finder";
+            // 
+            // ExitLabel
+            // 
+            this.ExitLabel.AutoSize = true;
+            this.ExitLabel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ExitLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ExitLabel.Location = new System.Drawing.Point(458, 388);
+            this.ExitLabel.Name = "ExitLabel";
+            this.ExitLabel.Size = new System.Drawing.Size(41, 24);
+            this.ExitLabel.TabIndex = 4;
+            this.ExitLabel.Text = "Exit";
+            // 
             // StartupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(520, 437);
+            this.Controls.Add(this.ExitLabel);
+            this.Controls.Add(this.NorthfinderLabel);
             this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.NorthFinderButton);
             this.Controls.Add(this.GPSButton);
@@ -83,6 +109,7 @@
             this.Name = "StartupForm";
             this.Text = "Choose Desired Program";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -91,5 +118,7 @@
         private System.Windows.Forms.Button GPSButton;
         private System.Windows.Forms.Button NorthFinderButton;
         private System.Windows.Forms.Button ExitButton;
+        private System.Windows.Forms.Label NorthfinderLabel;
+        private System.Windows.Forms.Label ExitLabel;
     }
 }

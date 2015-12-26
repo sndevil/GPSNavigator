@@ -199,6 +199,12 @@ namespace GPSNavigator.Classes
             public byte[] BAMax, BAmin;
             public double PDOPMax,PDOPMin;
             public byte[] BPDOPMax, BPDOPMin;
+            public double AzimuthMax, AzimuthMin;
+            public byte[] BAzimuthMax, BAzimuthMin;
+            public double ElevationMax, ElevationMin;
+            public byte[] BElevationMax, BElevationMin;
+            public double DistanceMax, DistanceMin;
+            public byte[] BDistanceMax, BDistanceMin;
             public bool ExtremumStarted = false;
             public int ExtremeCounter = 0;
         }
@@ -224,15 +230,19 @@ namespace GPSNavigator.Classes
         public class AttitudeInformation
         {
             public double Azimuth;
+            public byte[] BAzimuth = new byte[4], BAzimuthMax = new byte[4], BAzimuthMin = new byte[4];
             public double Elevation;
+            public byte[] BElevation = new byte[4], BElevationMax = new byte[4], BElevationMin = new byte[4];
             public double X;
             public double Y;
             public double Z;
             public double Distance;
+            public byte[] BDistance = new byte[4], BDistanceMax = new byte[4], BDistanceMin = new byte[4];
             public DateTime datetime;
             public int Ambiguity;
             public int AttitudeState = 0;
             public int counter = 0;
+            public bool isNorthfinder = false;
         }
 
         public enum AppModes { GPS, NorthFinder };
@@ -243,9 +253,10 @@ namespace GPSNavigator.Classes
             waitForMessageType,
             readMessage
         };
-        public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats,Azimuth,Elevation,Null };
+        public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats,Azimuth,Elevation,Distance,Null };
         public enum PlaybackSpeed { NormalSpeed, Double, Quadrople, Half, Quarter };
         public enum optionfor { chart1, chart2, graph };
+        public enum Logtype { GPS, Northfinder };
 
         public class GEOpoint
         {
@@ -329,17 +340,20 @@ namespace GPSNavigator.Classes
             public long StartTick, EndTick, Duration;
             public string filepath;
             public bool inited = false;
+            public AppModes LogType;
 
             private FileStream stream,maxstream,minstream,timestream;
             private FileStream Vx, Vy, Vz, Ax, Ay, Az, X, Y, Z, Altitude, Latitude, Longitude, PDOP, state, Temperature, UsedStats, VisibleStats, V, A;
             private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p,Sat;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin, VMax, VMin, AMax, AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
+            private FileStream Azimuth, Elevation, Distance, AzimuthMax, AzimuthMin, ElevationMax, ElevationMin, DistanceMax, DistanceMin;
             private List<FileStream> GPS = new List<FileStream>();
             private List<FileStream> Glonass = new List<FileStream>();
 
-            public LogFileManager(string path,ref Globals variables)
+            public LogFileManager(string path,ref Globals variables,AppModes type)
             {
+                LogType = type;
                 try
                 {
                     filepath = path;
@@ -405,6 +419,18 @@ namespace GPSNavigator.Classes
                     VisibleStats = new FileStream(path + "\\VisibleStats.glf", FileMode.Open, FileAccess.Read);
                     timestream = new FileStream(path + "\\Time.glf", FileMode.Open, FileAccess.Read);
                     Sat = new FileStream(path + "\\Sat.glf", FileMode.Open, FileAccess.Read);
+                    if (LogType == AppModes.NorthFinder)
+                    {
+                        Azimuth = new FileStream(path + "\\Azimuth.glf", FileMode.Open, FileAccess.Read);
+                        AzimuthMax = new FileStream(path + "\\AzimuthMax.glf", FileMode.Open, FileAccess.Read);
+                        AzimuthMin = new FileStream(path + "\\AzimuthMin.glf", FileMode.Open, FileAccess.Read);
+                        Elevation = new FileStream(path + "\\Elevation.glf", FileMode.Open, FileAccess.Read);
+                        ElevationMax = new FileStream(path + "\\ElevationMax.glf", FileMode.Open, FileAccess.Read);
+                        ElevationMin = new FileStream(path + "\\ElevationMin.glf", FileMode.Open, FileAccess.Read);
+                        Distance = new FileStream(path + "\\Distance.glf", FileMode.Open, FileAccess.Read);
+                        DistanceMax = new FileStream(path + "\\DistanceMax.glf", FileMode.Open, FileAccess.Read);
+                        DistanceMin = new FileStream(path + "\\DistanceMin.glf", FileMode.Open, FileAccess.Read);
+                    }
                     #endregion
                 }
                 catch
@@ -559,6 +585,21 @@ namespace GPSNavigator.Classes
                         maxstream = VMax;
                         minstream = VMin;
                         break;
+                    case graphtype.Azimuth:
+                        stream = Azimuth;
+                        maxstream = AzimuthMax;
+                        minstream = AzimuthMin;
+                        break;
+                    case graphtype.Elevation:
+                        stream = Elevation;
+                        maxstream = ElevationMax;
+                        minstream = ElevationMin;
+                        break;
+                    case graphtype.Distance:
+                        stream = Distance;
+                        maxstream = DistanceMax;
+                        minstream = DistanceMin;
+                        break;
                 }
                 #endregion
                 GraphData tempgraphdata = new GraphData(gpoints);
@@ -674,6 +715,10 @@ namespace GPSNavigator.Classes
 
 
                 Latitude.Position = Longitude.Position = Altitude.Position = PDOP.Position = V.Position = Functions.QuantizePosition(pos * PDOP.Length);
+                if (LogType == AppModes.NorthFinder)
+                {
+                    Azimuth.Position = Elevation.Position = Distance.Position = Latitude.Position;
+                }
                 byte[] stats,time;
                 for (int counter = 0; counter < 100; counter++)
                 {
@@ -814,8 +859,15 @@ namespace GPSNavigator.Classes
                     tempdata.Dbuf.Longitude = (float)Functions.BytetoFloat(stats);
                     V.Read(stats, 0, 4);
                     tempdata.Dbuf.V = (float)Functions.BytetoFloat(stats);
-
-
+                    if (LogType == AppModes.NorthFinder)
+                    {
+                        Azimuth.Read(stats, 0, 4);
+                        tempdata.Dbuf.AttitudeBuffer.Azimuth = (float)Functions.BytetoFloat(stats);
+                        Elevation.Read(stats, 0, 4);
+                        tempdata.Dbuf.AttitudeBuffer.Elevation = (float)Functions.BytetoFloat(stats);
+                        Distance.Read(stats, 0, 4);
+                        tempdata.Dbuf.AttitudeBuffer.Distance = (float)Functions.BytetoFloat(stats);
+                    }
                     templist.Add(tempdata);
                 }
 
@@ -1064,12 +1116,15 @@ namespace GPSNavigator.Classes
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin,VMax,VMin,AMax,AMin;
             private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,Time;
             private FileStream Sat;
+            private FileStream Azimuth, Elevation, Distance,AzimuthMax,AzimuthMin,ElevationMax,ElevationMin,DistanceMax,DistanceMin;
             private List<FileStream> GPS,Glonass;
             public string Dirpath;
             private long GPSByteCount = 0;
+            public Logtype LoggingType;
 
-            public Logger(string DirPath)
+            public Logger(string DirPath, Logtype type)
             {
+                LoggingType = type;
                 GPS = new List<FileStream>();
                 Glonass = new List<FileStream>();
                 Dirpath = DirPath;
@@ -1135,6 +1190,18 @@ namespace GPSNavigator.Classes
                 VisibleStats = new FileStream(DirPath + "VisibleStats.glf", FileMode.Create, FileAccess.Write);
                 Time = new FileStream(DirPath + "Time.glf", FileMode.Create, FileAccess.Write);
                 Sat = new FileStream(DirPath + "Sat.glf", FileMode.Create, FileAccess.Write);
+                if (type == Logtype.Northfinder)
+                {
+                    Azimuth = new FileStream(Dirpath + "Azimuth.glf", FileMode.Create, FileAccess.Write);
+                    AzimuthMax = new FileStream(Dirpath + "AzimuthMax.glf", FileMode.Create, FileAccess.Write);
+                    AzimuthMin = new FileStream(Dirpath + "AzimuthMin.glf", FileMode.Create, FileAccess.Write);
+                    Elevation = new FileStream(Dirpath + "Elevation.glf", FileMode.Create, FileAccess.Write);
+                    ElevationMax = new FileStream(Dirpath + "ElevationMax.glf", FileMode.Create, FileAccess.Write);
+                    ElevationMin = new FileStream(Dirpath + "ElevationMin.glf", FileMode.Create, FileAccess.Write);
+                    Distance = new FileStream(Dirpath + "Distance.glf", FileMode.Create, FileAccess.Write);
+                    DistanceMax = new FileStream(Dirpath + "DistanceMax.glf", FileMode.Create, FileAccess.Write);
+                    DistanceMin = new FileStream(Dirpath + "DistanceMin.glf", FileMode.Create, FileAccess.Write);
+                }
             }
 
             public void initSats(int count)
@@ -1203,6 +1270,12 @@ namespace GPSNavigator.Classes
                         GPSByteCount++;
                     }
                     Sat.Write(buffer.BSatStats, 0, 17);
+                    if (LoggingType == Logtype.Northfinder)
+                    {
+                        Azimuth.Write(buffer.AttitudeBuffer.BAzimuth, 0, 4);
+                        Elevation.Write(buffer.AttitudeBuffer.BElevation, 0, 4);
+                        Distance.Write(buffer.AttitudeBuffer.BDistance, 0, 4);
+                    }
                     if (buffer.WriteExtreme)
                     {
                         buffer.WriteExtreme = false;
@@ -1236,6 +1309,15 @@ namespace GPSNavigator.Classes
                         LongitudeMin.Write(buffer.BLongitudeMin, 0, 4);
                         PDOPMax.Write(buffer.BPDOPMax, 0, 4);
                         PDOPMin.Write(buffer.BPDOPMin, 0, 4);
+                        if (LoggingType == Logtype.Northfinder)
+                        {
+                            AzimuthMax.Write(buffer.AttitudeBuffer.BAzimuthMax, 0, 4);
+                            AzimuthMin.Write(buffer.AttitudeBuffer.BAzimuthMin, 0, 4);
+                            ElevationMax.Write(buffer.AttitudeBuffer.BElevationMax, 0, 4);
+                            ElevationMin.Write(buffer.AttitudeBuffer.BElevationMin, 0, 4);
+                            DistanceMax.Write(buffer.AttitudeBuffer.BDistanceMax, 0, 4);
+                            DistanceMin.Write(buffer.AttitudeBuffer.BDistanceMin, 0, 4);
+                        }
                     }
                 }
                 catch
@@ -1312,6 +1394,12 @@ namespace GPSNavigator.Classes
                 LatitudeMax.Close();
                 PDOPMax.Close();
                 PDOPMin.Close();
+                if (LoggingType == Logtype.Northfinder)
+                {
+                    Azimuth.Close(); AzimuthMax.Close(); AzimuthMin.Close();
+                    Elevation.Close(); ElevationMax.Close(); ElevationMin.Close();
+                    Distance.Close(); DistanceMax.Close(); DistanceMin.Close();
+                }
             }
         }
 

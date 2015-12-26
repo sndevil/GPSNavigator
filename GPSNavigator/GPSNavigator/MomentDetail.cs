@@ -176,6 +176,7 @@ namespace GPSNavigator
                 StartedCounting = true;
                 StartTime = DateTime.Now;
                 StartTimeLabel.Text = StartTime.ToLongTimeString();
+                EndTimeLabel.Text = "";
             }
             else if (StartedCounting && (ugps + uglonass) > 3)
             {
@@ -198,7 +199,7 @@ namespace GPSNavigator
             LongitudeValue.Text = data.Dbuf.Longitude.ToString("#0.000000");
             AltitudeValue.Text = data.Dbuf.Altitude.ToString("#0.00");
             velLabel.Text = "Velocity: " + data.Dbuf.V.ToString("#0.000");
-            label12.Text = "Time: " + dt.ToString();
+            label12.Text = "Time: " + dt.ToLongTimeString();
             DateLabel.Label.FormatString = dt.Month.ToString("D2") + "/" + dt.Day.ToString("D2") + "/" + dt.Year.ToString();
             SpeedGauge.Needles[0].Value = (float)data.Dbuf.V;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = dt.Hour + (double)dt.Minute / 60;
