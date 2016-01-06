@@ -211,6 +211,8 @@ namespace GPSNavigator
                                             dbuf.BLatitudeMin = exthandler.BLatitudeMin;
                                             dbuf.BLongitudeMax = exthandler.BLongitudeMax;
                                             dbuf.BLongitudeMin = exthandler.BLongitudeMin;
+                                            dbuf.BStateMax = exthandler.BStateMax;
+                                            dbuf.BStateMin = exthandler.BStateMin;
                                             dbuf.AttitudeBuffer.BAzimuthMax = exthandler.BAzimuthMax;
                                             dbuf.AttitudeBuffer.BAzimuthMin = exthandler.BAzimuthMin;
                                             dbuf.AttitudeBuffer.BElevationMax = exthandler.BElevationMax;
@@ -255,6 +257,8 @@ namespace GPSNavigator
                                         if (dbuf.AttitudeBuffer.Elevation < exthandler.ElevationMin) { exthandler.ElevationMin = dbuf.AttitudeBuffer.Elevation; exthandler.BElevationMin = dbuf.AttitudeBuffer.BElevation; }
                                         if (dbuf.AttitudeBuffer.Distance > exthandler.DistanceMax) { exthandler.DistanceMax = dbuf.AttitudeBuffer.Distance; exthandler.BDistanceMax = dbuf.AttitudeBuffer.BDistance; }
                                         if (dbuf.AttitudeBuffer.Distance < exthandler.DistanceMin) { exthandler.DistanceMin = dbuf.AttitudeBuffer.Distance; exthandler.BDistanceMin = dbuf.AttitudeBuffer.BDistance; }
+                                        if (dbuf.state > exthandler.StateMax) { exthandler.StateMax = dbuf.state; exthandler.BStateMax = (byte)dbuf.state; }
+                                        if (dbuf.state < exthandler.StateMin) { exthandler.StateMin = dbuf.state; exthandler.BStateMin = (byte)dbuf.state; }
                                     }
                                     else
                                     {
@@ -289,6 +293,8 @@ namespace GPSNavigator
                                         exthandler.BYMax = exthandler.BYMin = dbuf.BY;
                                         exthandler.ZMax = exthandler.ZMin = dbuf.Z;
                                         exthandler.BZMax = exthandler.BZMin = dbuf.BZ;
+                                        exthandler.StateMax = exthandler.StateMin = dbuf.state;
+                                        exthandler.BStateMax = exthandler.BStateMin = dbuf.Bstate;
                                         exthandler.AzimuthMax = exthandler.AzimuthMin = dbuf.AttitudeBuffer.Azimuth;
                                         exthandler.BAzimuthMax = exthandler.BAzimuthMin = dbuf.AttitudeBuffer.BAzimuth;
                                         exthandler.ElevationMax = exthandler.ElevationMin = dbuf.AttitudeBuffer.Elevation;
@@ -827,7 +833,7 @@ namespace GPSNavigator
                         break;
                     case AppModes.NorthFinder:
                         NorthDetailForm = new NorthDetail(this);
-                        NorthDetailForm.Dock = DockStyle.Left;
+                        NorthDetailForm.Dock = DockStyle.None;
                         NorthDetailForm.TopLevel = false;
                         NorthDetailForm.Show();
                         NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");

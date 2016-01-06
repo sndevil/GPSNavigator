@@ -2802,7 +2802,6 @@ namespace GPSNavigator.Source
             SingleDataBuffer dbuf = new SingleDataBuffer();
             byte checksum0 = 0, checksum1 = 0;
 
-            int statcounter = -1;
             int checksum = calcrc(data, BIN_ATTITUDE_INFO_MSG_SIZE - 4);
             checksum0 = (byte)(checksum & 0xFF);
             checksum1 = (byte)((checksum >> 8) & 0xFF);
@@ -2819,10 +2818,7 @@ namespace GPSNavigator.Source
             int state = data[index];
             
             if (state == 1)
-            {
                 dbuf.statcounter = 1;
-                statcounter = 1;
-            }
             else
                 dbuf.statcounter = -1;
             index++;

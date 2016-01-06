@@ -47,6 +47,8 @@ namespace GPSNavigator
             //this.Text = "MomentDetail (Log)";
             toolStripStatusLabel1.Visible = false;
             ControlPanel.Visible = true;
+            absoluteRadio.Visible = false;
+            relativeRadio.Visible = false;
             ControlPanelButton.Visible = false;
             GraphToggle.Visible = false;
             graphDataCombo.Visible = false;
@@ -82,7 +84,7 @@ namespace GPSNavigator
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
             chart1.Series[0].XValueType = ChartValueType.String;
             realtime = true;
-            HideSecondGraph();
+            //HideSecondGraph();
             PositionTypeCombo.SelectedIndex = 2;
             GraphTooltip.SetToolTip(c1Chart1, "Shift+Click = Scroll, CTRL+Click = Scale, ALT+Click = Zoom, RightClick = Options");
         }
@@ -102,12 +104,12 @@ namespace GPSNavigator
             switch (data.AttitudeBuffer.AttitudeState)
             {
                 case 0:
-                    StatLabel.Text = "State: Wait for Minimum Required Satellites";
+                    StatLabel.Text = "State: Waiting for Minimum Required Satellites";
                     StatLabel.ForeColor = Color.Yellow;
                     AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
                     break;
                 case 1:
-                    StatLabel.Text = "State: Wait for More Satellites";
+                    StatLabel.Text = "State: Waiting for More Satellites";
                     StatLabel.ForeColor = Color.Yellow;
                     AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
                     break;
@@ -117,7 +119,7 @@ namespace GPSNavigator
                     AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
                     break;
                 case 3:
-                    StatLabel.Text = "State: Real Time Process";
+                    StatLabel.Text = "State: Realtime Process";
                     StatLabel.ForeColor = Color.GreenYellow;
                     AmbiguityLabel.Text = "Remaining ambiguity: 0";
                     break;
@@ -197,7 +199,7 @@ namespace GPSNavigator
 
                     //Distance
                     ((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Markers[0].Value = data.AttitudeBuffer.Distance;
-                    distanceLabel.Text = "Distance : " + data.AttitudeBuffer.Distance.ToString("F3");
+                    distanceLabel.Text = "Distance : " + data.AttitudeBuffer.Distance.ToString("F2");
                 }
                 else { notshowdata = false; }
                 if (playing)
@@ -207,7 +209,7 @@ namespace GPSNavigator
                     attitudeIndicator1.SetAttitudeIndicatorParameters(data.AttitudeBuffer.Elevation, 0);
                     ElevationLabel.Text = "Elevation = " + data.AttitudeBuffer.Elevation.ToString("F2");
                     ((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Markers[0].Value = data.AttitudeBuffer.Distance;
-                    distanceLabel.Text = "Distance : " + data.AttitudeBuffer.Distance.ToString("F3");
+                    distanceLabel.Text = "Distance : " + data.AttitudeBuffer.Distance.ToString("F2");
                 }
             //}
         }
@@ -324,7 +326,15 @@ namespace GPSNavigator
             {
                 AsyncCaller asynctask = new AsyncCaller(filemanager.ReadGPSCache);
                 IAsyncResult asyncresult = asynctask.BeginInvoke(position, null, null);
-                CacheData2 = asynctask.EndInvoke(asyncresult);
+                //if (asyncresult.IsCompleted)
+                try
+                {
+                    CacheData2 = asynctask.EndInvoke(asyncresult);
+                }
+                catch
+                {
+                    throw new Exception("Cache Read Error");
+                }
             }
             reading = false;
             returned = true;
@@ -613,7 +623,7 @@ namespace GPSNavigator
             comboBox2.Visible = false;
             if (ShowingGraph)
             {
-                c1Chart1.Location = new Point(58, 312);  
+                c1Chart1.Location = new Point(131, 331);
                 c1Chart1.Width = 732;
                 c1Chart1.Height = 338;
             }
@@ -625,9 +635,9 @@ namespace GPSNavigator
             label13.BringToFront();
             if (ShowingGraph)
             {
-                c1Chart1.Location = new Point(58, 498);
+                c1Chart1.Location = new Point(131, 520);
                 c1Chart1.Width = 732;
-                c1Chart1.Height = 154;
+                c1Chart1.Height = 200;
             }
             comboBox2.Visible = true;
         }
@@ -789,15 +799,15 @@ namespace GPSNavigator
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
-                    c1Chart1.Location = new Point(58, 312);                   
+                    c1Chart1.Location = new Point(131, 331);                   
                     c1Chart1.Width = 732;
                     c1Chart1.Height = 338;
                 }
                 else
                 {
-                    c1Chart1.Location = new Point(58, 498);
+                    c1Chart1.Location = new Point(131, 520);
                     c1Chart1.Width = 732;
-                    c1Chart1.Height = 154;
+                    c1Chart1.Height = 200;
                 }
                 this.Height = 720;
             }
@@ -808,7 +818,7 @@ namespace GPSNavigator
                 graphDataCombo.Visible = false;
                 ClearButton.Visible = false;
                 ResetZoom.Visible = false;
-                this.Height = 560;
+                this.Height = 615;
             }
             ShowingGraph = !ShowingGraph;
         }
@@ -818,12 +828,12 @@ namespace GPSNavigator
             if (!ShowingControlPanel)
             {
                 ControlPanelButton.Text = "<";
-                this.Width = 1140;
+                this.Width = 1220;
             }
             else
             {
                 ControlPanelButton.Text = ">";
-                this.Width = 820;
+                this.Width = 895;
             }
             ShowingControlPanel = !ShowingControlPanel;
         }

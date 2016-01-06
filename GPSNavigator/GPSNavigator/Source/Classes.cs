@@ -152,7 +152,7 @@ namespace GPSNavigator.Classes
             public SettingBuffer settingbuffer = new SettingBuffer();
             public AttitudeInformation AttitudeBuffer = new AttitudeInformation();
             public double state;
-            public byte Bstate;
+            public byte Bstate,BStateMax,BStateMin;
             public DateTime datetime;
             public byte[] Bdatetime = new byte[6];
             public int statcounter,ChannelCounter = 0;
@@ -205,6 +205,8 @@ namespace GPSNavigator.Classes
             public byte[] BElevationMax, BElevationMin;
             public double DistanceMax, DistanceMin;
             public byte[] BDistanceMax, BDistanceMin;
+            public double StateMax, StateMin;
+            public byte BStateMax, BStateMin;
             public bool ExtremumStarted = false;
             public int ExtremeCounter = 0;
         }
@@ -339,14 +341,14 @@ namespace GPSNavigator.Classes
             public DateTime StartTime, EndTime;
             public long StartTick, EndTick, Duration;
             public string filepath;
-            public bool inited = false;
+            public bool inited = false,hasStateExt = true;
             public AppModes LogType;
 
             private FileStream stream,maxstream,minstream,timestream;
             private FileStream Vx, Vy, Vz, Ax, Ay, Az, X, Y, Z, Altitude, Latitude, Longitude, PDOP, state, Temperature, UsedStats, VisibleStats, V, A;
             private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p,Sat;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin, VMax, VMin, AMax, AMin;
-            private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin;
+            private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,StateMin,StateMax;
             private FileStream Azimuth, Elevation, Distance, AzimuthMax, AzimuthMin, ElevationMax, ElevationMin, DistanceMax, DistanceMin;
             private List<FileStream> GPS = new List<FileStream>();
             private List<FileStream> Glonass = new List<FileStream>();
@@ -414,6 +416,15 @@ namespace GPSNavigator.Classes
                     PDOPMax = new FileStream(path + "\\PDOPMax.glf", FileMode.Open, FileAccess.Read);
                     PDOPMin = new FileStream(path + "\\PDOPMin.glf", FileMode.Open, FileAccess.Read);
                     state = new FileStream(path + "\\state.glf", FileMode.Open, FileAccess.Read);
+                    try
+                    {
+                        StateMax = new FileStream(path + "\\StateMax.glf", FileMode.Open, FileAccess.Read);
+                        StateMin = new FileStream(path + "\\StateMin.glf", FileMode.Open, FileAccess.Read);
+                    }
+                    catch
+                    {
+                        hasStateExt = false;
+                    }
                     Temperature = new FileStream(path + "\\Temperature.glf", FileMode.Open, FileAccess.Read);
                     UsedStats = new FileStream(path + "\\UsedStats.glf", FileMode.Open, FileAccess.Read);
                     VisibleStats = new FileStream(path + "\\VisibleStats.glf", FileMode.Open, FileAccess.Read);
@@ -496,7 +507,13 @@ namespace GPSNavigator.Classes
                         break;
                     case graphtype.State:
                         stream = state;
-                        maxstream = minstream = state;
+                        if (hasStateExt)
+                        {
+                            maxstream = StateMax;
+                            minstream = StateMin;
+                        }
+                        else
+                            maxstream = minstream = state;
                         break;
                     case graphtype.Temperature:
                         stream = Temperature;
@@ -607,7 +624,7 @@ namespace GPSNavigator.Classes
                 if (stream.Length > 0)
                 {
                     stream.Position = Functions.QuantizePosition(fstart * stream.Length);
-                    maxstream.Position = minstream.Position = Functions.QuantizePosition(fstart * minstream.Length);
+                    maxstream.Position = minstream.Position = (type != graphtype.State) ? Functions.QuantizePosition(fstart * minstream.Length) : (long)(fstart * minstream.Length);
                     timestream.Position = Functions.QuantizePosition6bit(fstart * timestream.Length);
 
                     var db = (float)((fend - fstart) * stream.Length / gpoints);
@@ -688,12 +705,22 @@ namespace GPSNavigator.Classes
                             tempgraphdata.min.Add(0);
                             break;
                         }
-                        maxstream.Read(byt, 0, 4);
-                        var tempmax = Functions.BytetoFloat(byt);
-                        tempgraphdata.max.Add(tempmax);
-                        minstream.Read(byt, 0, 4);
-                        var tempmin = Functions.BytetoFloat(byt);
-                        tempgraphdata.min.Add(tempmin);
+                        if (type != graphtype.State)
+                        {
+                            maxstream.Read(byt, 0, 4);
+                            var tempmax = Functions.BytetoFloat(byt);
+                            tempgraphdata.max.Add(tempmax);
+                            minstream.Read(byt, 0, 4);
+                            var tempmin = Functions.BytetoFloat(byt);
+                            tempgraphdata.min.Add(tempmin);
+                        }
+                        else
+                        {
+                            var tempmax = (double)maxstream.ReadByte();
+                            tempgraphdata.max.Add(tempmax);
+                            var tempmin = (double)minstream.ReadByte();
+                            tempgraphdata.min.Add(tempmin);
+                        }
                         float Percent = (float)maxstream.Position / (float)maxstream.Length;
                         if (Percent >= fend || Percent >= 1f)
                             extflag = -1;
@@ -1114,7 +1141,7 @@ namespace GPSNavigator.Classes
             private FileStream Vx,Vy,Vz,Ax,Ay,Az,X,Y,Z,Altitude,Latitude,Longitude,PDOP,state,Temperature,UsedStats,VisibleStats,V,A;
             private FileStream Vx_p, Vy_p, Vz_p, X_p, Y_p, Z_p, Altitude_p, Latitude_p, Longitude_p, V_p;
             private FileStream VxMax, VxMin, VyMax, VyMin, VzMax, VzMin, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin, XMax, XMin, YMax, YMin, ZMax, ZMin,VMax,VMin,AMax,AMin;
-            private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,Time;
+            private FileStream AltitudeMax, AltitudeMin, LatitudeMax, LatitudeMin, LongitudeMax, LongitudeMin, PDOPMax, PDOPMin,Time,StateMax,StateMin;
             private FileStream Sat;
             private FileStream Azimuth, Elevation, Distance,AzimuthMax,AzimuthMin,ElevationMax,ElevationMin,DistanceMax,DistanceMin;
             private List<FileStream> GPS,Glonass;
@@ -1190,6 +1217,8 @@ namespace GPSNavigator.Classes
                 VisibleStats = new FileStream(DirPath + "VisibleStats.glf", FileMode.Create, FileAccess.Write);
                 Time = new FileStream(DirPath + "Time.glf", FileMode.Create, FileAccess.Write);
                 Sat = new FileStream(DirPath + "Sat.glf", FileMode.Create, FileAccess.Write);
+                StateMax = new FileStream(Dirpath + "StateMax.glf", FileMode.Create, FileAccess.Write);
+                StateMin = new FileStream(Dirpath + "StateMin.glf", FileMode.Create, FileAccess.Write);
                 if (type == Logtype.Northfinder)
                 {
                     Azimuth = new FileStream(Dirpath + "Azimuth.glf", FileMode.Create, FileAccess.Write);
@@ -1309,6 +1338,8 @@ namespace GPSNavigator.Classes
                         LongitudeMin.Write(buffer.BLongitudeMin, 0, 4);
                         PDOPMax.Write(buffer.BPDOPMax, 0, 4);
                         PDOPMin.Write(buffer.BPDOPMin, 0, 4);
+                        StateMax.WriteByte(buffer.BStateMax);
+                        StateMin.WriteByte(buffer.BStateMin);
                         if (LoggingType == Logtype.Northfinder)
                         {
                             AzimuthMax.Write(buffer.AttitudeBuffer.BAzimuthMax, 0, 4);
@@ -1358,9 +1389,11 @@ namespace GPSNavigator.Classes
                 Longitude_p.Close();
                 PDOP.Close();
                 state.Close();
+                StateMax.Close();
+                StateMin.Close();
                 Temperature.Close();
                 UsedStats.Close();
-                VisibleStats.Close();
+                VisibleStats.Close();               
                 foreach (FileStream f in GPS) f.Close();
                 foreach (FileStream f in Glonass) f.Close();                
                 Sat.Close();

@@ -266,6 +266,7 @@
             this.applyButton = new System.Windows.Forms.Button();
             this.saveToFlashButton = new System.Windows.Forms.Button();
             this.distanceLabel = new System.Windows.Forms.Label();
+            this.DetailPanel = new System.Windows.Forms.Panel();
             this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.headingIndicator1 = new GPS.HeadingIndicatorInstrumentControl();
             this.attitudeIndicator1 = new GPS.AttitudeIndicatorInstrumentControl();
@@ -332,22 +333,23 @@
             ((System.ComponentModel.ISupportInitialize)(this.checkEditDistance.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistanceTH.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).BeginInit();
+            this.DetailPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 186);
+            this.label1.Location = new System.Drawing.Point(4, 193);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 26);
+            this.label1.Size = new System.Drawing.Size(65, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Visible\r\nGPS:";
+            this.label1.Text = "Visible GPS:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(42, 194);
+            this.label2.Location = new System.Drawing.Point(99, 193);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(13, 13);
             this.label2.TabIndex = 1;
@@ -356,16 +358,16 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(4, 215);
+            this.label3.Location = new System.Drawing.Point(4, 219);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 26);
+            this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Used\r\nGPS:";
+            this.label3.Text = "Used GPS:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(42, 219);
+            this.label4.Location = new System.Drawing.Point(99, 219);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(13, 13);
             this.label4.TabIndex = 3;
@@ -412,7 +414,7 @@
             chartArea1.InnerPlotPosition.X = 5F;
             chartArea1.Name = "ChartArea1";
             this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.Location = new System.Drawing.Point(66, 143);
+            this.chart1.Location = new System.Drawing.Point(136, 143);
             this.chart1.Name = "chart1";
             this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
             series1.ChartArea = "ChartArea1";
@@ -433,14 +435,14 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(4, 246);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(61, 26);
+            this.label5.Size = new System.Drawing.Size(94, 13);
             this.label5.TabIndex = 6;
-            this.label5.Text = "Visible\r\nGLONASS:";
+            this.label5.Text = "Visible GLONASS:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(42, 246);
+            this.label6.Location = new System.Drawing.Point(99, 246);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(13, 13);
             this.label6.TabIndex = 7;
@@ -449,16 +451,16 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 280);
+            this.label7.Location = new System.Drawing.Point(4, 270);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(61, 26);
+            this.label7.Size = new System.Drawing.Size(89, 13);
             this.label7.TabIndex = 8;
-            this.label7.Text = "Used\r\nGLONASS:";
+            this.label7.Text = "Used GLONASS:";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(42, 280);
+            this.label8.Location = new System.Drawing.Point(99, 270);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(13, 13);
             this.label8.TabIndex = 9;
@@ -468,7 +470,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.BackColor = System.Drawing.Color.Gainsboro;
-            this.label9.Location = new System.Drawing.Point(86, 152);
+            this.label9.Location = new System.Drawing.Point(156, 152);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(112, 13);
             this.label9.TabIndex = 10;
@@ -478,11 +480,11 @@
             // 
             this.label10.BackColor = System.Drawing.Color.Blue;
             this.label10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label10.Location = new System.Drawing.Point(4, 145);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(58, 18);
+            this.label10.Size = new System.Drawing.Size(108, 18);
             this.label10.TabIndex = 11;
             this.label10.Text = "Ready Sat";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -491,11 +493,11 @@
             // 
             this.label11.BackColor = System.Drawing.Color.Green;
             this.label11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label11.Location = new System.Drawing.Point(4, 163);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(58, 18);
+            this.label11.Size = new System.Drawing.Size(108, 18);
             this.label11.TabIndex = 12;
             this.label11.Text = "Used Sat";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -503,7 +505,7 @@
             // label12
             // 
             this.label12.BackColor = System.Drawing.Color.Transparent;
-            this.label12.Location = new System.Drawing.Point(666, 128);
+            this.label12.Location = new System.Drawing.Point(736, 128);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(141, 15);
             this.label12.TabIndex = 13;
@@ -662,7 +664,7 @@
             radialGauge1.Scales.Add(radialGaugeScale2);
             radialGauge1.Scales.Add(radialGaugeScale3);
             this.ultraGaugeClock.Gauges.Add(radialGauge1);
-            this.ultraGaugeClock.Location = new System.Drawing.Point(669, 2);
+            this.ultraGaugeClock.Location = new System.Drawing.Point(739, 2);
             this.ultraGaugeClock.Name = "ultraGaugeClock";
             this.ultraGaugeClock.Size = new System.Drawing.Size(132, 127);
             this.ultraGaugeClock.TabIndex = 31;
@@ -670,7 +672,7 @@
             // LatitudeLabel
             // 
             this.LatitudeLabel.AutoSize = true;
-            this.LatitudeLabel.Location = new System.Drawing.Point(107, 14);
+            this.LatitudeLabel.Location = new System.Drawing.Point(197, 5);
             this.LatitudeLabel.Name = "LatitudeLabel";
             this.LatitudeLabel.Size = new System.Drawing.Size(48, 13);
             this.LatitudeLabel.TabIndex = 32;
@@ -679,7 +681,7 @@
             // LatitudeValue
             // 
             this.LatitudeValue.AutoSize = true;
-            this.LatitudeValue.Location = new System.Drawing.Point(170, 14);
+            this.LatitudeValue.Location = new System.Drawing.Point(213, 20);
             this.LatitudeValue.Name = "LatitudeValue";
             this.LatitudeValue.Size = new System.Drawing.Size(13, 13);
             this.LatitudeValue.TabIndex = 33;
@@ -688,7 +690,7 @@
             // LongitudeLabel
             // 
             this.LongitudeLabel.AutoSize = true;
-            this.LongitudeLabel.Location = new System.Drawing.Point(107, 38);
+            this.LongitudeLabel.Location = new System.Drawing.Point(197, 35);
             this.LongitudeLabel.Name = "LongitudeLabel";
             this.LongitudeLabel.Size = new System.Drawing.Size(57, 13);
             this.LongitudeLabel.TabIndex = 34;
@@ -697,7 +699,7 @@
             // LongitudeValue
             // 
             this.LongitudeValue.AutoSize = true;
-            this.LongitudeValue.Location = new System.Drawing.Point(170, 38);
+            this.LongitudeValue.Location = new System.Drawing.Point(213, 50);
             this.LongitudeValue.Name = "LongitudeValue";
             this.LongitudeValue.Size = new System.Drawing.Size(13, 13);
             this.LongitudeValue.TabIndex = 35;
@@ -706,7 +708,7 @@
             // AltitudeLabel
             // 
             this.AltitudeLabel.AutoSize = true;
-            this.AltitudeLabel.Location = new System.Drawing.Point(107, 62);
+            this.AltitudeLabel.Location = new System.Drawing.Point(197, 65);
             this.AltitudeLabel.Name = "AltitudeLabel";
             this.AltitudeLabel.Size = new System.Drawing.Size(45, 13);
             this.AltitudeLabel.TabIndex = 36;
@@ -715,7 +717,7 @@
             // AltitudeValue
             // 
             this.AltitudeValue.AutoSize = true;
-            this.AltitudeValue.Location = new System.Drawing.Point(170, 62);
+            this.AltitudeValue.Location = new System.Drawing.Point(213, 80);
             this.AltitudeValue.Name = "AltitudeValue";
             this.AltitudeValue.Size = new System.Drawing.Size(13, 13);
             this.AltitudeValue.TabIndex = 37;
@@ -724,7 +726,7 @@
             // PDOPLabel
             // 
             this.PDOPLabel.AutoSize = true;
-            this.PDOPLabel.Location = new System.Drawing.Point(22, 87);
+            this.PDOPLabel.Location = new System.Drawing.Point(26, 75);
             this.PDOPLabel.Name = "PDOPLabel";
             this.PDOPLabel.Size = new System.Drawing.Size(40, 13);
             this.PDOPLabel.TabIndex = 38;
@@ -733,7 +735,7 @@
             // PDOPValue
             // 
             this.PDOPValue.AutoSize = true;
-            this.PDOPValue.Location = new System.Drawing.Point(64, 87);
+            this.PDOPValue.Location = new System.Drawing.Point(70, 75);
             this.PDOPValue.Name = "PDOPValue";
             this.PDOPValue.Size = new System.Drawing.Size(13, 13);
             this.PDOPValue.TabIndex = 39;
@@ -749,7 +751,7 @@
             this.ControlPanel.Controls.Add(this.NextFrame);
             this.ControlPanel.Controls.Add(this.PreviousFrame);
             this.ControlPanel.Controls.Add(this.button1);
-            this.ControlPanel.Location = new System.Drawing.Point(0, 4);
+            this.ControlPanel.Location = new System.Drawing.Point(4, 2);
             this.ControlPanel.Name = "ControlPanel";
             this.ControlPanel.Size = new System.Drawing.Size(207, 137);
             this.ControlPanel.TabIndex = 40;
@@ -840,7 +842,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.BackColor = System.Drawing.Color.Gainsboro;
-            this.label13.Location = new System.Drawing.Point(86, 342);
+            this.label13.Location = new System.Drawing.Point(156, 342);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(97, 13);
             this.label13.TabIndex = 42;
@@ -850,7 +852,7 @@
             // 
             this.comboBox1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(615, 152);
+            this.comboBox1.Location = new System.Drawing.Point(685, 152);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(158, 21);
             this.comboBox1.TabIndex = 45;
@@ -860,7 +862,7 @@
             // 
             this.comboBox2.BackColor = System.Drawing.Color.WhiteSmoke;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(615, 342);
+            this.comboBox2.Location = new System.Drawing.Point(685, 342);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(158, 21);
             this.comboBox2.TabIndex = 46;
@@ -870,7 +872,9 @@
             // 
             this.ChartVisibleCheck.AutoSize = true;
             this.ChartVisibleCheck.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.ChartVisibleCheck.Location = new System.Drawing.Point(238, 151);
+            this.ChartVisibleCheck.Checked = true;
+            this.ChartVisibleCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChartVisibleCheck.Location = new System.Drawing.Point(308, 151);
             this.ChartVisibleCheck.Name = "ChartVisibleCheck";
             this.ChartVisibleCheck.Size = new System.Drawing.Size(125, 17);
             this.ChartVisibleCheck.TabIndex = 47;
@@ -889,9 +893,9 @@
             this.toolStripStatusLabel5,
             this.EndTimeLabel,
             this.toolStripSplitButton1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 693);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 593);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(815, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(895, 22);
             this.statusStrip1.TabIndex = 48;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -982,7 +986,7 @@
             this.c1Chart1.BackColor = System.Drawing.Color.Gainsboro;
             this.c1Chart1.Interaction.Appearance = C1.Win.C1Chart.InteractionAppearance.FillSelectionArea;
             this.c1Chart1.Interaction.Enabled = true;
-            this.c1Chart1.Location = new System.Drawing.Point(61, 514);
+            this.c1Chart1.Location = new System.Drawing.Point(131, 514);
             this.c1Chart1.Name = "c1Chart1";
             this.c1Chart1.PropBag = resources.GetString("c1Chart1.PropBag");
             this.c1Chart1.Size = new System.Drawing.Size(732, 154);
@@ -1025,9 +1029,9 @@
             "Temperature",
             "UsedStats",
             "VisibleStats"});
-            this.graphDataCombo.Location = new System.Drawing.Point(3, 513);
+            this.graphDataCombo.Location = new System.Drawing.Point(4, 513);
             this.graphDataCombo.Name = "graphDataCombo";
-            this.graphDataCombo.Size = new System.Drawing.Size(65, 20);
+            this.graphDataCombo.Size = new System.Drawing.Size(94, 20);
             this.graphDataCombo.TabIndex = 51;
             this.graphDataCombo.Text = "X";
             this.graphDataCombo.Visible = false;
@@ -1038,7 +1042,7 @@
             this.ClearButton.BackColor = System.Drawing.Color.Gainsboro;
             this.ClearButton.Location = new System.Drawing.Point(3, 539);
             this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(65, 23);
+            this.ClearButton.Size = new System.Drawing.Size(95, 23);
             this.ClearButton.TabIndex = 52;
             this.ClearButton.Text = "Clear";
             this.ClearButton.UseVisualStyleBackColor = false;
@@ -1048,7 +1052,7 @@
             // ControlPanelButton
             // 
             this.ControlPanelButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.ControlPanelButton.Location = new System.Drawing.Point(790, 194);
+            this.ControlPanelButton.Location = new System.Drawing.Point(871, 194);
             this.ControlPanelButton.Name = "ControlPanelButton";
             this.ControlPanelButton.Size = new System.Drawing.Size(20, 184);
             this.ControlPanelButton.TabIndex = 53;
@@ -1077,7 +1081,7 @@
             this.groupControl4.Controls.Add(this.checkEditTypGLONASS);
             this.groupControl4.Controls.Add(this.checkEditTypGPS);
             this.groupControl4.Controls.Add(this.labelControl6);
-            this.groupControl4.Location = new System.Drawing.Point(818, 2);
+            this.groupControl4.Location = new System.Drawing.Point(899, 2);
             this.groupControl4.Name = "groupControl4";
             this.groupControl4.Size = new System.Drawing.Size(156, 168);
             this.groupControl4.TabIndex = 72;
@@ -1322,7 +1326,7 @@
             this.groupControl5.Controls.Add(this.labelControl11);
             this.groupControl5.Controls.Add(this.labelControl10);
             this.groupControl5.Controls.Add(this.labelControl9);
-            this.groupControl5.Location = new System.Drawing.Point(818, 173);
+            this.groupControl5.Location = new System.Drawing.Point(899, 173);
             this.groupControl5.Name = "groupControl5";
             this.groupControl5.Size = new System.Drawing.Size(156, 168);
             this.groupControl5.TabIndex = 73;
@@ -1479,7 +1483,7 @@
             this.groupControl1.Controls.Add(this.checkEditPktNMEA);
             this.groupControl1.Controls.Add(this.labelControl2);
             this.groupControl1.Controls.Add(this.labelControl1);
-            this.groupControl1.Location = new System.Drawing.Point(818, 343);
+            this.groupControl1.Location = new System.Drawing.Point(899, 343);
             this.groupControl1.Name = "groupControl1";
             this.groupControl1.Size = new System.Drawing.Size(156, 168);
             this.groupControl1.TabIndex = 74;
@@ -1692,7 +1696,7 @@
             this.groupControl6.Controls.Add(this.textEditMaxSpeed);
             this.groupControl6.Controls.Add(this.labelControl20);
             this.groupControl6.Controls.Add(this.labelControl21);
-            this.groupControl6.Location = new System.Drawing.Point(976, 2);
+            this.groupControl6.Location = new System.Drawing.Point(1057, 2);
             this.groupControl6.Name = "groupControl6";
             this.groupControl6.Size = new System.Drawing.Size(156, 168);
             this.groupControl6.TabIndex = 75;
@@ -1860,7 +1864,7 @@
             this.groupControl2.Controls.Add(this.listBoxGLONASS);
             this.groupControl2.Controls.Add(this.listBoxGPS);
             this.groupControl2.Controls.Add(this.labelControl3);
-            this.groupControl2.Location = new System.Drawing.Point(976, 172);
+            this.groupControl2.Location = new System.Drawing.Point(1057, 172);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(156, 338);
             this.groupControl2.TabIndex = 76;
@@ -2030,9 +2034,9 @@
             this.GraphToggle.BackgroundImage = global::GPSNavigator.Properties.Resources.Down;
             this.GraphToggle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.GraphToggle.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GraphToggle.Location = new System.Drawing.Point(4, 445);
+            this.GraphToggle.Location = new System.Drawing.Point(3, 445);
             this.GraphToggle.Name = "GraphToggle";
-            this.GraphToggle.Size = new System.Drawing.Size(58, 37);
+            this.GraphToggle.Size = new System.Drawing.Size(95, 37);
             this.GraphToggle.TabIndex = 49;
             this.GraphToggle.Text = "Graph";
             this.GraphToggle.UseVisualStyleBackColor = false;
@@ -2079,7 +2083,7 @@
             chartArea2.InnerPlotPosition.X = 5F;
             chartArea2.Name = "ChartArea1";
             this.chart2.ChartAreas.Add(chartArea2);
-            this.chart2.Location = new System.Drawing.Point(66, 333);
+            this.chart2.Location = new System.Drawing.Point(136, 333);
             this.chart2.Name = "chart2";
             this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
             series2.ChartArea = "ChartArea1";
@@ -2172,14 +2176,14 @@
             this.gaugeControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.gaugeControl1.Gauges.AddRange(new DevExpress.XtraGauges.Base.IGauge[] {
             this.SpeedGauge});
-            this.gaugeControl1.Location = new System.Drawing.Point(538, -8);
+            this.gaugeControl1.Location = new System.Drawing.Point(608, -8);
             this.gaugeControl1.Name = "gaugeControl1";
             this.gaugeControl1.Size = new System.Drawing.Size(135, 139);
             this.gaugeControl1.TabIndex = 56;
             // 
             // velLabel
             // 
-            this.velLabel.Location = new System.Drawing.Point(538, 127);
+            this.velLabel.Location = new System.Drawing.Point(608, 127);
             this.velLabel.Name = "velLabel";
             this.velLabel.Size = new System.Drawing.Size(135, 16);
             this.velLabel.TabIndex = 78;
@@ -2189,7 +2193,7 @@
             // HDOPLabel
             // 
             this.HDOPLabel.AutoSize = true;
-            this.HDOPLabel.Location = new System.Drawing.Point(19, 14);
+            this.HDOPLabel.Location = new System.Drawing.Point(25, 5);
             this.HDOPLabel.Name = "HDOPLabel";
             this.HDOPLabel.Size = new System.Drawing.Size(41, 13);
             this.HDOPLabel.TabIndex = 79;
@@ -2198,7 +2202,7 @@
             // VDOPLabel
             // 
             this.VDOPLabel.AutoSize = true;
-            this.VDOPLabel.Location = new System.Drawing.Point(19, 38);
+            this.VDOPLabel.Location = new System.Drawing.Point(25, 28);
             this.VDOPLabel.Name = "VDOPLabel";
             this.VDOPLabel.Size = new System.Drawing.Size(40, 13);
             this.VDOPLabel.TabIndex = 80;
@@ -2207,7 +2211,7 @@
             // TDOPLabel
             // 
             this.TDOPLabel.AutoSize = true;
-            this.TDOPLabel.Location = new System.Drawing.Point(19, 62);
+            this.TDOPLabel.Location = new System.Drawing.Point(25, 52);
             this.TDOPLabel.Name = "TDOPLabel";
             this.TDOPLabel.Size = new System.Drawing.Size(40, 13);
             this.TDOPLabel.TabIndex = 81;
@@ -2216,7 +2220,7 @@
             // HDOPValue
             // 
             this.HDOPValue.AutoSize = true;
-            this.HDOPValue.Location = new System.Drawing.Point(64, 14);
+            this.HDOPValue.Location = new System.Drawing.Point(70, 5);
             this.HDOPValue.Name = "HDOPValue";
             this.HDOPValue.Size = new System.Drawing.Size(13, 13);
             this.HDOPValue.TabIndex = 82;
@@ -2225,7 +2229,7 @@
             // VDOPValue
             // 
             this.VDOPValue.AutoSize = true;
-            this.VDOPValue.Location = new System.Drawing.Point(64, 38);
+            this.VDOPValue.Location = new System.Drawing.Point(70, 28);
             this.VDOPValue.Name = "VDOPValue";
             this.VDOPValue.Size = new System.Drawing.Size(13, 13);
             this.VDOPValue.TabIndex = 83;
@@ -2234,7 +2238,7 @@
             // TDOPValue
             // 
             this.TDOPValue.AutoSize = true;
-            this.TDOPValue.Location = new System.Drawing.Point(64, 62);
+            this.TDOPValue.Location = new System.Drawing.Point(70, 52);
             this.TDOPValue.Name = "TDOPValue";
             this.TDOPValue.Size = new System.Drawing.Size(13, 13);
             this.TDOPValue.TabIndex = 84;
@@ -2246,7 +2250,7 @@
             this.ResetZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ResetZoom.Location = new System.Drawing.Point(3, 568);
             this.ResetZoom.Name = "ResetZoom";
-            this.ResetZoom.Size = new System.Drawing.Size(65, 23);
+            this.ResetZoom.Size = new System.Drawing.Size(95, 23);
             this.ResetZoom.TabIndex = 85;
             this.ResetZoom.Text = "Reset Zoom";
             this.ResetZoom.UseVisualStyleBackColor = false;
@@ -2304,14 +2308,14 @@
             // StatLabel
             // 
             this.StatLabel.AutoSize = true;
-            this.StatLabel.Location = new System.Drawing.Point(22, 107);
+            this.StatLabel.Location = new System.Drawing.Point(12, 107);
             this.StatLabel.Name = "StatLabel";
             this.StatLabel.Size = new System.Drawing.Size(0, 13);
             this.StatLabel.TabIndex = 86;
             // 
             // AzimuthLabel
             // 
-            this.AzimuthLabel.Location = new System.Drawing.Point(417, 129);
+            this.AzimuthLabel.Location = new System.Drawing.Point(487, 129);
             this.AzimuthLabel.Name = "AzimuthLabel";
             this.AzimuthLabel.Size = new System.Drawing.Size(115, 13);
             this.AzimuthLabel.TabIndex = 96;
@@ -2320,7 +2324,7 @@
             // 
             // ElevationLabel
             // 
-            this.ElevationLabel.Location = new System.Drawing.Point(297, 129);
+            this.ElevationLabel.Location = new System.Drawing.Point(367, 129);
             this.ElevationLabel.Name = "ElevationLabel";
             this.ElevationLabel.Size = new System.Drawing.Size(114, 13);
             this.ElevationLabel.TabIndex = 97;
@@ -2331,7 +2335,7 @@
             // 
             this.relativeRadio.AutoSize = true;
             this.relativeRadio.Checked = true;
-            this.relativeRadio.Location = new System.Drawing.Point(100, 85);
+            this.relativeRadio.Location = new System.Drawing.Point(106, 54);
             this.relativeRadio.Name = "relativeRadio";
             this.relativeRadio.Size = new System.Drawing.Size(64, 17);
             this.relativeRadio.TabIndex = 98;
@@ -2342,7 +2346,7 @@
             // absoluteRadio
             // 
             this.absoluteRadio.AutoSize = true;
-            this.absoluteRadio.Location = new System.Drawing.Point(170, 85);
+            this.absoluteRadio.Location = new System.Drawing.Point(106, 23);
             this.absoluteRadio.Name = "absoluteRadio";
             this.absoluteRadio.Size = new System.Drawing.Size(66, 17);
             this.absoluteRadio.TabIndex = 99;
@@ -2352,7 +2356,7 @@
             // AmbiguityLabel
             // 
             this.AmbiguityLabel.AutoSize = true;
-            this.AmbiguityLabel.Location = new System.Drawing.Point(22, 127);
+            this.AmbiguityLabel.Location = new System.Drawing.Point(12, 127);
             this.AmbiguityLabel.Name = "AmbiguityLabel";
             this.AmbiguityLabel.Size = new System.Drawing.Size(0, 13);
             this.AmbiguityLabel.TabIndex = 100;
@@ -2428,7 +2432,7 @@
             strokeElement1.Thickness = 10D;
             linearGauge1.StrokeElement = strokeElement1;
             this.ultraGaugeDistance.Gauges.Add(linearGauge1);
-            this.ultraGaugeDistance.Location = new System.Drawing.Point(238, 6);
+            this.ultraGaugeDistance.Location = new System.Drawing.Point(308, 6);
             this.ultraGaugeDistance.Name = "ultraGaugeDistance";
             this.ultraGaugeDistance.Size = new System.Drawing.Size(53, 117);
             this.ultraGaugeDistance.TabIndex = 101;
@@ -2436,7 +2440,7 @@
             // radLabel11
             // 
             this.radLabel11.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.radLabel11.Location = new System.Drawing.Point(991, 563);
+            this.radLabel11.Location = new System.Drawing.Point(1072, 563);
             this.radLabel11.Name = "radLabel11";
             // 
             // 
@@ -2449,7 +2453,7 @@
             // radLabel10
             // 
             this.radLabel10.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.radLabel10.Location = new System.Drawing.Point(991, 541);
+            this.radLabel10.Location = new System.Drawing.Point(1072, 541);
             this.radLabel10.Name = "radLabel10";
             // 
             // 
@@ -2462,7 +2466,7 @@
             // radLabel1
             // 
             this.radLabel1.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.radLabel1.Location = new System.Drawing.Point(991, 517);
+            this.radLabel1.Location = new System.Drawing.Point(1072, 517);
             this.radLabel1.Name = "radLabel1";
             // 
             // 
@@ -2475,7 +2479,7 @@
             // checkEditAzimuth
             // 
             this.checkEditAzimuth.Enabled = false;
-            this.checkEditAzimuth.Location = new System.Drawing.Point(818, 563);
+            this.checkEditAzimuth.Location = new System.Drawing.Point(899, 563);
             this.checkEditAzimuth.Margin = new System.Windows.Forms.Padding(2);
             this.checkEditAzimuth.Name = "checkEditAzimuth";
             this.checkEditAzimuth.Properties.Appearance.ForeColor = System.Drawing.Color.Black;
@@ -2488,7 +2492,7 @@
             // labelControl30
             // 
             this.labelControl30.Appearance.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelControl30.Location = new System.Drawing.Point(941, 566);
+            this.labelControl30.Location = new System.Drawing.Point(1022, 566);
             this.labelControl30.Name = "labelControl30";
             this.labelControl30.Size = new System.Drawing.Size(8, 13);
             this.labelControl30.TabIndex = 123;
@@ -2498,7 +2502,7 @@
             // 
             this.textEditAzimuthTH.EditValue = "30";
             this.textEditAzimuthTH.Enabled = false;
-            this.textEditAzimuthTH.Location = new System.Drawing.Point(955, 563);
+            this.textEditAzimuthTH.Location = new System.Drawing.Point(1036, 563);
             this.textEditAzimuthTH.Name = "textEditAzimuthTH";
             this.textEditAzimuthTH.Size = new System.Drawing.Size(35, 20);
             this.textEditAzimuthTH.TabIndex = 122;
@@ -2507,7 +2511,7 @@
             // 
             this.textEditAzimuth.EditValue = "20";
             this.textEditAzimuth.Enabled = false;
-            this.textEditAzimuth.Location = new System.Drawing.Point(900, 563);
+            this.textEditAzimuth.Location = new System.Drawing.Point(981, 563);
             this.textEditAzimuth.Name = "textEditAzimuth";
             this.textEditAzimuth.Size = new System.Drawing.Size(35, 20);
             this.textEditAzimuth.TabIndex = 121;
@@ -2515,7 +2519,7 @@
             // checkEditElevation
             // 
             this.checkEditElevation.Enabled = false;
-            this.checkEditElevation.Location = new System.Drawing.Point(818, 540);
+            this.checkEditElevation.Location = new System.Drawing.Point(899, 540);
             this.checkEditElevation.Margin = new System.Windows.Forms.Padding(2);
             this.checkEditElevation.Name = "checkEditElevation";
             this.checkEditElevation.Properties.Appearance.ForeColor = System.Drawing.Color.Black;
@@ -2528,7 +2532,7 @@
             // labelControl26
             // 
             this.labelControl26.Appearance.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelControl26.Location = new System.Drawing.Point(941, 543);
+            this.labelControl26.Location = new System.Drawing.Point(1022, 543);
             this.labelControl26.Name = "labelControl26";
             this.labelControl26.Size = new System.Drawing.Size(8, 13);
             this.labelControl26.TabIndex = 119;
@@ -2538,7 +2542,7 @@
             // 
             this.textEditElevationTH.EditValue = "90";
             this.textEditElevationTH.Enabled = false;
-            this.textEditElevationTH.Location = new System.Drawing.Point(955, 540);
+            this.textEditElevationTH.Location = new System.Drawing.Point(1036, 540);
             this.textEditElevationTH.Name = "textEditElevationTH";
             this.textEditElevationTH.Size = new System.Drawing.Size(35, 20);
             this.textEditElevationTH.TabIndex = 118;
@@ -2547,7 +2551,7 @@
             // 
             this.textEditElevation.EditValue = "0";
             this.textEditElevation.Enabled = false;
-            this.textEditElevation.Location = new System.Drawing.Point(900, 540);
+            this.textEditElevation.Location = new System.Drawing.Point(981, 540);
             this.textEditElevation.Name = "textEditElevation";
             this.textEditElevation.Size = new System.Drawing.Size(35, 20);
             this.textEditElevation.TabIndex = 117;
@@ -2555,7 +2559,7 @@
             // checkEditDistance
             // 
             this.checkEditDistance.EditValue = true;
-            this.checkEditDistance.Location = new System.Drawing.Point(818, 517);
+            this.checkEditDistance.Location = new System.Drawing.Point(899, 517);
             this.checkEditDistance.Margin = new System.Windows.Forms.Padding(2);
             this.checkEditDistance.Name = "checkEditDistance";
             this.checkEditDistance.Properties.Appearance.ForeColor = System.Drawing.Color.Black;
@@ -2568,7 +2572,7 @@
             // labelControl34
             // 
             this.labelControl34.Appearance.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.labelControl34.Location = new System.Drawing.Point(941, 520);
+            this.labelControl34.Location = new System.Drawing.Point(1022, 520);
             this.labelControl34.Name = "labelControl34";
             this.labelControl34.Size = new System.Drawing.Size(8, 13);
             this.labelControl34.TabIndex = 114;
@@ -2577,7 +2581,7 @@
             // textEditDistanceTH
             // 
             this.textEditDistanceTH.EditValue = "0.4";
-            this.textEditDistanceTH.Location = new System.Drawing.Point(955, 517);
+            this.textEditDistanceTH.Location = new System.Drawing.Point(1036, 517);
             this.textEditDistanceTH.Name = "textEditDistanceTH";
             this.textEditDistanceTH.Size = new System.Drawing.Size(35, 20);
             this.textEditDistanceTH.TabIndex = 113;
@@ -2585,7 +2589,7 @@
             // textEditDistance
             // 
             this.textEditDistance.EditValue = "3.00";
-            this.textEditDistance.Location = new System.Drawing.Point(900, 517);
+            this.textEditDistance.Location = new System.Drawing.Point(981, 517);
             this.textEditDistance.Name = "textEditDistance";
             this.textEditDistance.Size = new System.Drawing.Size(35, 20);
             this.textEditDistance.TabIndex = 112;
@@ -2593,7 +2597,7 @@
             // applyButton
             // 
             this.applyButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.applyButton.Location = new System.Drawing.Point(1035, 517);
+            this.applyButton.Location = new System.Drawing.Point(1116, 517);
             this.applyButton.Name = "applyButton";
             this.applyButton.Size = new System.Drawing.Size(85, 30);
             this.applyButton.TabIndex = 0;
@@ -2604,7 +2608,7 @@
             // saveToFlashButton
             // 
             this.saveToFlashButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.saveToFlashButton.Location = new System.Drawing.Point(1035, 553);
+            this.saveToFlashButton.Location = new System.Drawing.Point(1116, 553);
             this.saveToFlashButton.Name = "saveToFlashButton";
             this.saveToFlashButton.Size = new System.Drawing.Size(85, 30);
             this.saveToFlashButton.TabIndex = 1;
@@ -2614,11 +2618,34 @@
             // 
             // distanceLabel
             // 
-            this.distanceLabel.Location = new System.Drawing.Point(203, 129);
+            this.distanceLabel.Location = new System.Drawing.Point(287, 129);
             this.distanceLabel.Name = "distanceLabel";
-            this.distanceLabel.Size = new System.Drawing.Size(107, 13);
+            this.distanceLabel.Size = new System.Drawing.Size(97, 13);
             this.distanceLabel.TabIndex = 128;
             this.distanceLabel.Text = "Distance:";
+            // 
+            // DetailPanel
+            // 
+            this.DetailPanel.Controls.Add(this.HDOPLabel);
+            this.DetailPanel.Controls.Add(this.LatitudeLabel);
+            this.DetailPanel.Controls.Add(this.LatitudeValue);
+            this.DetailPanel.Controls.Add(this.LongitudeLabel);
+            this.DetailPanel.Controls.Add(this.LongitudeValue);
+            this.DetailPanel.Controls.Add(this.AltitudeLabel);
+            this.DetailPanel.Controls.Add(this.PDOPValue);
+            this.DetailPanel.Controls.Add(this.AltitudeValue);
+            this.DetailPanel.Controls.Add(this.PDOPLabel);
+            this.DetailPanel.Controls.Add(this.VDOPLabel);
+            this.DetailPanel.Controls.Add(this.TDOPLabel);
+            this.DetailPanel.Controls.Add(this.HDOPValue);
+            this.DetailPanel.Controls.Add(this.VDOPValue);
+            this.DetailPanel.Controls.Add(this.TDOPValue);
+            this.DetailPanel.Controls.Add(this.relativeRadio);
+            this.DetailPanel.Controls.Add(this.absoluteRadio);
+            this.DetailPanel.Location = new System.Drawing.Point(15, 10);
+            this.DetailPanel.Name = "DetailPanel";
+            this.DetailPanel.Size = new System.Drawing.Size(293, 95);
+            this.DetailPanel.TabIndex = 129;
             // 
             // SpeedGauge
             // 
@@ -2635,7 +2662,7 @@
             // 
             // headingIndicator1
             // 
-            this.headingIndicator1.Location = new System.Drawing.Point(417, 8);
+            this.headingIndicator1.Location = new System.Drawing.Point(487, 8);
             this.headingIndicator1.Name = "headingIndicator1";
             this.headingIndicator1.Size = new System.Drawing.Size(115, 117);
             this.headingIndicator1.TabIndex = 95;
@@ -2643,7 +2670,7 @@
             // 
             // attitudeIndicator1
             // 
-            this.attitudeIndicator1.Location = new System.Drawing.Point(297, 8);
+            this.attitudeIndicator1.Location = new System.Drawing.Point(367, 8);
             this.attitudeIndicator1.Name = "attitudeIndicator1";
             this.attitudeIndicator1.Size = new System.Drawing.Size(114, 117);
             this.attitudeIndicator1.TabIndex = 94;
@@ -2654,12 +2681,18 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(815, 715);
+            this.ClientSize = new System.Drawing.Size(895, 615);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.ChartVisibleCheck);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.applyButton);
+            this.Controls.Add(this.ultraGaugeDistance);
             this.Controls.Add(this.saveToFlashButton);
             this.Controls.Add(this.radLabel11);
             this.Controls.Add(this.radLabel10);
             this.Controls.Add(this.radLabel1);
+            this.Controls.Add(this.DetailPanel);
             this.Controls.Add(this.checkEditAzimuth);
             this.Controls.Add(this.labelControl30);
             this.Controls.Add(this.textEditAzimuthTH);
@@ -2672,29 +2705,20 @@
             this.Controls.Add(this.labelControl34);
             this.Controls.Add(this.textEditDistanceTH);
             this.Controls.Add(this.textEditDistance);
-            this.Controls.Add(this.ultraGaugeDistance);
-            this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.AmbiguityLabel);
-            this.Controls.Add(this.absoluteRadio);
-            this.Controls.Add(this.relativeRadio);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.ElevationLabel);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
+            this.Controls.Add(this.ElevationLabel);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.ResetZoom);
-            this.Controls.Add(this.TDOPValue);
-            this.Controls.Add(this.AzimuthLabel);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.StatLabel);
-            this.Controls.Add(this.VDOPValue);
-            this.Controls.Add(this.HDOPValue);
-            this.Controls.Add(this.TDOPLabel);
-            this.Controls.Add(this.VDOPLabel);
-            this.Controls.Add(this.HDOPLabel);
+            this.Controls.Add(this.AzimuthLabel);
+            this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.velLabel);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.gaugeControl1);
@@ -2704,32 +2728,20 @@
             this.Controls.Add(this.groupControl5);
             this.Controls.Add(this.groupControl4);
             this.Controls.Add(this.ControlPanelButton);
-            this.Controls.Add(this.ClearButton);
             this.Controls.Add(this.graphDataCombo);
             this.Controls.Add(this.GraphToggle);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.PDOPLabel);
-            this.Controls.Add(this.AltitudeValue);
-            this.Controls.Add(this.PDOPValue);
-            this.Controls.Add(this.ultraGaugeClock);
-            this.Controls.Add(this.ChartVisibleCheck);
-            this.Controls.Add(this.AltitudeLabel);
-            this.Controls.Add(this.LongitudeValue);
-            this.Controls.Add(this.LongitudeLabel);
-            this.Controls.Add(this.LatitudeValue);
-            this.Controls.Add(this.LatitudeLabel);
-            this.Controls.Add(this.label9);
             this.Controls.Add(this.chart1);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.ultraGaugeClock);
+            this.Controls.Add(this.distanceLabel);
             this.Controls.Add(this.chart2);
             this.Controls.Add(this.c1Chart1);
             this.Controls.Add(this.headingIndicator1);
             this.Controls.Add(this.attitudeIndicator1);
-            this.Controls.Add(this.distanceLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "NorthDetail";
             this.Text = "MomentDetail";
@@ -2804,6 +2816,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.checkEditDistance.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistanceTH.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).EndInit();
+            this.DetailPanel.ResumeLayout(false);
+            this.DetailPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -2996,5 +3010,6 @@
         private System.Windows.Forms.Button applyButton;
         private System.Windows.Forms.Button saveToFlashButton;
         private System.Windows.Forms.Label distanceLabel;
+        private System.Windows.Forms.Panel DetailPanel;
     }
 }

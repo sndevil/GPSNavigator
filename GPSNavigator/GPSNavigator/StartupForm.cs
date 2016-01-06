@@ -33,7 +33,8 @@ namespace GPSNavigator
 
         public void ShowStartup()
         {
-            GPS.Hide();
+            GPS.Dispose();
+            GPS.Close();
             this.Show();
         }
     }
