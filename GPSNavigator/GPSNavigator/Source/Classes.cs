@@ -1126,11 +1126,28 @@ namespace GPSNavigator.Classes
                 PDOPMax.Close();
                 PDOPMin.Close();
                 state.Close();
+                if (hasStateExt)
+                {
+                    StateMin.Close();
+                    StateMax.Close();
+                }
                 Temperature.Close();
                 UsedStats.Close();
                 VisibleStats.Close();
                 timestream.Close();
                 Sat.Close();
+                if (LogType == AppModes.NorthFinder)
+                {
+                    Azimuth.Close();
+                    AzimuthMax.Close();
+                    AzimuthMin.Close();
+                    Elevation.Close();
+                    ElevationMax.Close();
+                    ElevationMin.Close();
+                    Distance.Close();
+                    DistanceMax.Close();
+                    DistanceMin.Close();
+                }
             }
         }
 

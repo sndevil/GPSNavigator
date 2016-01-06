@@ -111,7 +111,7 @@ namespace GPSNavigator
             {
                 case AppModes.GPS:
                     DetailForm = new MomentDetail(filemanager);
-                    DetailForm.Dock = DockStyle.Left;
+                    DetailForm.Dock = DockStyle.None;
                     DetailForm.TopLevel = false;
                     DetailForm.Show();
                     NewDockWindow = new DocumentWindow("Moment Details (Log) " + index.ToString());
@@ -122,7 +122,7 @@ namespace GPSNavigator
                     break;
                 case AppModes.NorthFinder:
                     NorthDetailForm = new NorthDetail(filemanager);
-                    NorthDetailForm.Dock = DockStyle.Left;
+                    NorthDetailForm.Dock = DockStyle.None;
                     NorthDetailForm.TopLevel = false;
                     NorthDetailForm.Show();
                     NewDockWindow = new DocumentWindow("Moment Details (Log) " + index.ToString());

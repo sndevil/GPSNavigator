@@ -74,8 +74,7 @@ namespace GPSNavigator
             //ToggleGraph();
             toolStripSplitButton1.Visible = true;
             this.Text = "MomentDetail (RealTime)";
-            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
-            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
+            ClearGraph();
             Parentform = Parent;
             toolStripStatusLabel1.Visible = true;
             ControlPanel.Visible = false;
@@ -224,9 +223,9 @@ namespace GPSNavigator
             try
             {
                 if (ShowingGraph)
-                    UpdateGraph(tempgpsdata, false);
+                    UpdateGraph(tempgpsdata, false,ChannelNum);
                 else
-                    UpdateGraph(tempgpsdata, true);
+                    UpdateGraph(tempgpsdata, true, ChannelNum);
             }
             catch { }
         }
@@ -642,24 +641,25 @@ namespace GPSNavigator
             comboBox2.Visible = true;
         }
 
-        public void UpdateGraph(GPSData data, bool NAN)
+        public void UpdateGraph(GPSData data, bool NAN,int SerialNumber)
         {
             if (juststarted)
             {
-                updater = UpdateGraphAsync(data, NAN);
+                updater = UpdateGraphAsync(data, NAN,SerialNumber);
                 juststarted = false;
             }
             else if (updater.IsCompleted)
-                updater = UpdateGraphAsync(data, NAN);
+                updater = UpdateGraphAsync(data, NAN, SerialNumber);
               
         }
 
-        public Task<bool> UpdateGraphAsync(GPSData data, bool NAN)
+        public Task<bool> UpdateGraphAsync(GPSData data, bool NAN,int SerialNumber)
         {
 
             return Task.Factory.StartNew(() =>
             {
                 double toAdd = 0;
+                int seriesIndex = SerialNumber - 1;
                 #region typeswitch
                 switch (RealtimeGraphType)
                 {
@@ -761,20 +761,50 @@ namespace GPSNavigator
                         break;
                 }
                 #endregion
-                if (c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Length > 180000)
+                if (c1Chart1.ChartGroups[0].ChartData.SeriesList[seriesIndex].Y.Length > 180000)
                     ClearGraph();
                 if (data.Time.Year < 3000 && data.Time.Year > 2000)
                 {
                     if (!NAN)
                     {
-                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(data.Time);
-                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
+                        switch (SerialNumber)
+                        {
+                            case 1:
+                                if (Serial1check.Checked)
+                                {
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(data.Time);
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
+                                }
+                                break;
+                            case 2:
+                                if (Serial2Check.Checked)
+                                {
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(data.Time);
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(toAdd);
+                                }
+                                break;
+                        }
                         previousTime = data.Time;
                     }
                     else if (previousTime.Year < 3000 && previousTime.Year > 2000)
                     {
-                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(previousTime);
-                        c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
+                        switch (SerialNumber)
+                        {
+                            case 1:
+                                if (Serial1check.Checked)
+                                {
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Add(previousTime);
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
+                                }
+                                break;
+                            case 2:
+                                if (Serial2Check.Checked)
+                                {
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(previousTime);
+                                    c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(double.NaN);
+                                }
+                                break;
+                        }
                     }
                 }
                 return true;
@@ -796,6 +826,8 @@ namespace GPSNavigator
                 graphDataCombo.Visible = true;
                 ClearButton.Visible = true;
                 ResetZoom.Visible = true;
+                Serial1check.Visible = true;
+                Serial2Check.Visible = true;
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
@@ -818,6 +850,8 @@ namespace GPSNavigator
                 graphDataCombo.Visible = false;
                 ClearButton.Visible = false;
                 ResetZoom.Visible = false;
+                Serial1check.Visible = false;
+                Serial2Check.Visible = false;
                 this.Height = 615;
             }
             ShowingGraph = !ShowingGraph;
@@ -968,8 +1002,7 @@ namespace GPSNavigator
                     c1Chart1.ChartArea.Axes[1].Text = "Buffer.VisibleSats";
                     break;
             }
-            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
-            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
+            ClearGraph();
         }
 
         private void ClearButton_Click(object sender, EventArgs e)
@@ -981,6 +1014,8 @@ namespace GPSNavigator
         {
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Clear();
             c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Clear();
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Clear();
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Clear();
         }
 
         private void ControlPanelButton_Click(object sender, EventArgs e)
@@ -2109,5 +2144,16 @@ namespace GPSNavigator
                 Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
             }
         }
+
+        private void Serial1check_CheckedChanged(object sender, EventArgs e)
+        {
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Display = Serial1check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+        }
+
+        private void Serial2Check_CheckedChanged(object sender, EventArgs e)
+        {
+            c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = Serial2Check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+        }
+
     }
 }
