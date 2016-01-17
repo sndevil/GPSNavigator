@@ -486,7 +486,7 @@ namespace GPSNavigator
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            GenerateRandomDualchannel();
+            //GenerateRandomDualchannel();
             if (!paused)
             {
                 if (DataTimeOut >= 0)
