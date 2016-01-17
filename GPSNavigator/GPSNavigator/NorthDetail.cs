@@ -135,13 +135,13 @@ namespace GPSNavigator
                 //clear_NorthFinder_Components();
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.Dbuf = data;
-            try
-            {
+            //try
+            //{
                 PlotGraph(tempgpsdata);
-            }
-            catch
-            {
-            }
+            //}
+            //catch
+            //{
+            //}
         }
 
         public void UpdateNorthfinderLabels(SingleDataBuffer data)
@@ -456,9 +456,37 @@ namespace GPSNavigator
             updateLabels(data.Time, VisibleGPS, UsedGPS, VisibleGLONASS, UsedGLONASS,data);
         }
 
+        Random rnd = new Random();
+        private void GenerateRandomDualchannel()
+        {
+            ////This is Function used to test multichannel graph            
+            SingleDataBuffer s0 = new SingleDataBuffer(), s = new SingleDataBuffer();
+            Globals g = new Globals();
+            Satellite[] gps = new Satellite[32];
+            for (int i = 0; i < 32; i++)
+            {
+                gps[i] = new Satellite();
+                gps[i].SNR = rnd.Next(30, 50);
+                gps[i].Signal_Status = (int)(rnd.Next(0, 3));
+            }
+            g.GPSlist.Add(gps);
+            g.GPSlist.Add(gps);
+            g.GLONASSlist.Add(gps);
+            g.GLONASSlist.Add(gps);
+            g.PacketTime = DateTime.Now;
+            s.datetime = g.PacketTime;
+
+            s.X = rnd.Next(-100, 0);
+            UpdateRealtimeGraph(g, s, 1);
+            UpdateData(g, s, 1);
+            s0.X = rnd.Next(0, 100);
+            UpdateRealtimeGraph(g, s0, 2);
+            UpdateData(g, s, 2);
+        }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            GenerateRandomDualchannel();
             if (!paused)
             {
                 if (DataTimeOut >= 0)

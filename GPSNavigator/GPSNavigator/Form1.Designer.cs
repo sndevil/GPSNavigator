@@ -110,7 +110,8 @@
             this.logger.ReadOnly = true;
             this.logger.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.logger.Size = new System.Drawing.Size(170, 188);
-            this.logger.TabIndex = 0;
+            this.logger.TabIndex = 6;
+            this.logger.TabStop = false;
             // 
             // opendialog
             // 
@@ -248,7 +249,7 @@
             0});
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(75, 20);
-            this.numericUpDown1.TabIndex = 5;
+            this.numericUpDown1.TabIndex = 10;
             this.numericUpDown1.Value = new decimal(new int[] {
             5,
             0,
@@ -282,7 +283,7 @@
             this.checkBox2.Location = new System.Drawing.Point(12, 312);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(80, 29);
-            this.checkBox2.TabIndex = 8;
+            this.checkBox2.TabIndex = 6;
             this.checkBox2.Text = "ShowDetails";
             this.checkBox2.UseVisualStyleBackColor = false;
             this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
@@ -302,7 +303,7 @@
             this.serialPorts.Location = new System.Drawing.Point(12, 12);
             this.serialPorts.Name = "serialPorts";
             this.serialPorts.Size = new System.Drawing.Size(139, 21);
-            this.serialPorts.TabIndex = 9;
+            this.serialPorts.TabIndex = 0;
             this.serialPorts.SelectedIndexChanged += new System.EventHandler(this.serialPorts_SelectedIndexChanged);
             // 
             // openPort
@@ -311,7 +312,7 @@
             this.openPort.Location = new System.Drawing.Point(12, 66);
             this.openPort.Name = "openPort";
             this.openPort.Size = new System.Drawing.Size(170, 21);
-            this.openPort.TabIndex = 10;
+            this.openPort.TabIndex = 3;
             this.openPort.Text = "Open Port";
             this.openPort.UseVisualStyleBackColor = false;
             this.openPort.Click += new System.EventHandler(this.openPort_Click);
@@ -372,7 +373,7 @@
             this.comboBox1.Location = new System.Drawing.Point(12, 39);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(170, 21);
-            this.comboBox1.TabIndex = 14;
+            this.comboBox1.TabIndex = 2;
             this.comboBox1.Text = "115200";
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
@@ -439,7 +440,7 @@
             this.button1.Location = new System.Drawing.Point(155, 312);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(29, 29);
-            this.button1.TabIndex = 13;
+            this.button1.TabIndex = 8;
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
@@ -451,7 +452,7 @@
             this.button2.Location = new System.Drawing.Point(120, 312);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(29, 29);
-            this.button2.TabIndex = 2;
+            this.button2.TabIndex = 7;
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -462,7 +463,7 @@
             this.AutoCancel.Location = new System.Drawing.Point(16, 356);
             this.AutoCancel.Name = "AutoCancel";
             this.AutoCancel.Size = new System.Drawing.Size(15, 14);
-            this.AutoCancel.TabIndex = 16;
+            this.AutoCancel.TabIndex = 9;
             this.AutoCancel.UseVisualStyleBackColor = false;
             // 
             // radDock1
@@ -539,7 +540,7 @@
             0});
             this.GraphRefreshrate.Name = "GraphRefreshrate";
             this.GraphRefreshrate.Size = new System.Drawing.Size(152, 20);
-            this.GraphRefreshrate.TabIndex = 22;
+            this.GraphRefreshrate.TabIndex = 12;
             this.GraphRefreshrate.Value = new decimal(new int[] {
             50,
             0,
@@ -563,7 +564,7 @@
             this.refreshButton.Location = new System.Drawing.Point(157, 9);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(25, 25);
-            this.refreshButton.TabIndex = 20;
+            this.refreshButton.TabIndex = 1;
             this.refreshButton.UseVisualStyleBackColor = true;
             this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
             // 
@@ -573,7 +574,8 @@
             this.hex.Location = new System.Drawing.Point(141, 95);
             this.hex.Name = "hex";
             this.hex.Size = new System.Drawing.Size(43, 17);
-            this.hex.TabIndex = 19;
+            this.hex.TabIndex = 5;
+            this.hex.TabStop = true;
             this.hex.Text = "hex";
             this.hex.UseVisualStyleBackColor = true;
             // 
@@ -584,7 +586,7 @@
             this.ascii.Location = new System.Drawing.Point(88, 94);
             this.ascii.Name = "ascii";
             this.ascii.Size = new System.Drawing.Size(47, 17);
-            this.ascii.TabIndex = 18;
+            this.ascii.TabIndex = 4;
             this.ascii.TabStop = true;
             this.ascii.Text = "ascii";
             this.ascii.UseVisualStyleBackColor = true;

@@ -178,6 +178,12 @@
     <Compile Include="ControlPanel.Designer.cs">
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="BTSDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BTSDetail.Designer.cs">
+      <DependentUpon>BTSDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="NorthDetail.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -228,6 +234,9 @@
     <EmbeddedResource Include="Avionics\AvionicsInstrumentsControlsRessources.resx" />
     <EmbeddedResource Include="ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BTSDetail.resx">
+      <DependentUpon>BTSDetail.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NorthDetail.resx">
       <DependentUpon>NorthDetail.cs</DependentUpon>
@@ -312,6 +321,7 @@
     <None Include="Resources\AirSpeedNeedle1.bmp" />
     <None Include="Resources\Altimeter_Background1.bmp" />
     <None Include="Resources\Bandeau_Dérouleur1.bmp" />
+    <None Include="Resources\Basestation.png" />
     <Content Include="Resources\Errors.png" />
     <None Include="Resources\refresh_256.png" />
     <None Include="Resources\satellite.PNG" />

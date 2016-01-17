@@ -88,6 +88,13 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Basestation {
+            get {
+                object obj = ResourceManager.GetObject("Basestation", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Cold_Start {
             get {
                 object obj = ResourceManager.GetObject("Cold_Start", resourceCulture);

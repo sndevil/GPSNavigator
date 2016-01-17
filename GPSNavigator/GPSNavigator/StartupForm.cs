@@ -37,5 +37,12 @@ namespace GPSNavigator
             GPS.Close();
             this.Show();
         }
+
+        private void BTSButton_Click(object sender, EventArgs e)
+        {
+            GPS = new Form1(this, AppModes.BaseStation);
+            GPS.Show();
+            this.Hide();
+        }
     }
 }

@@ -37,9 +37,13 @@ namespace GPSNavigator
         Logger log;
         DateTime RecordStarttime;
         int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0, serial1_MsgSize = -1, serial2_MsgSize = -1, RefreshRate = 50;
+        
+#region Forms
         MomentDetail DetailForm;
         NorthDetail NorthDetailForm;
+        BTSDetail BTSDetailForm;
         Skyview SkyView;
+#endregion
         ExtremumHandler exthandler = new ExtremumHandler();
         byte[] byt = new byte[150];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
@@ -70,6 +74,10 @@ namespace GPSNavigator
                 case AppModes.NorthFinder:
                     BaseText = "North Finder";
                     NorthDetailForm = new NorthDetail(this);
+                    break;
+                case AppModes.BaseStation:
+                    BaseText = "Base Station";
+                    BTSDetailForm = new BTSDetail(this);
                     break;
             }
             this.Text = BaseText;
@@ -928,6 +936,15 @@ namespace GPSNavigator
                         NewDockWindow.AutoScroll = true;
                         NewDockWindow.Controls.Add(NorthDetailForm);
                         break;
+                    case AppModes.BaseStation:
+                        BTSDetailForm = new BTSDetail(this);
+                        BTSDetailForm.Dock = DockStyle.None;
+                        BTSDetailForm.TopLevel = false;
+                        BTSDetailForm.Show();
+                        NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");
+                        NewDockWindow.AutoScroll = true;
+                        NewDockWindow.Controls.Add(BTSDetailForm);
+                        break;
                 }
                 radDock1.AddDocument(NewDockWindow);
             }
@@ -948,6 +965,7 @@ namespace GPSNavigator
                 {
                     DetailForm = new MomentDetail(this);
                     NorthDetailForm = new NorthDetail(this);
+                    BTSDetailForm = new BTSDetail(this);
                 }
             }
         }

@@ -742,7 +742,7 @@ namespace GPSNavigator
             else
             {
                 ControlPanelButton.Text = ">";
-                this.Width = 820;
+                this.Width = 815;
             }
             ShowingControlPanel = !ShowingControlPanel;
         }
