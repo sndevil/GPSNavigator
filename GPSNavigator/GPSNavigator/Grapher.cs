@@ -338,7 +338,7 @@ namespace GPSNavigator
             for (int i = 0; i < Globals.Databuffercount; i++)
                 time[i] = (data.date[i] == emptytime) ? double.NaN : (double)tlist[i].Ticks;
 
-            if (fmax - fmin > 0.02f && selectedtype != graphtype.State && selectedtype != graphtype.Temperature && selectedtype != graphtype.UsedStats && selectedtype != graphtype.VisibleStats)
+            if (fmax - fmin > 0.02f && (data.hasStateExt || selectedtype != graphtype.State) && selectedtype != graphtype.Temperature && selectedtype != graphtype.UsedStats && selectedtype != graphtype.VisibleStats)
             {
                 double[] max = Functions.FindMaxes(data.max);
                 double[] min = Functions.FindMins(data.min);

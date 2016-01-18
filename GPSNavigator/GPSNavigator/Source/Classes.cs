@@ -301,6 +301,7 @@ namespace GPSNavigator.Classes
             public List<double> max;
             public List<double> min;
             public SingleDataBuffer databuffer;
+            public bool hasStateExt = false;
 
             public GraphData(int Points)
             {
@@ -452,6 +453,8 @@ namespace GPSNavigator.Classes
 
             public GraphData Readbuffer(graphtype type,float fstart, float fend,int gpoints)
             {
+                GraphData tempgraphdata = new GraphData(gpoints);
+
                 #region stream_switch
                 switch (type)
                 {
@@ -511,6 +514,7 @@ namespace GPSNavigator.Classes
                         {
                             maxstream = StateMax;
                             minstream = StateMin;
+                            tempgraphdata.hasStateExt = true;
                         }
                         else
                             maxstream = minstream = state;
@@ -619,7 +623,6 @@ namespace GPSNavigator.Classes
                         break;
                 }
                 #endregion
-                GraphData tempgraphdata = new GraphData(gpoints);
                 float extoffset = 400f / (float)stream.Length;
                 if (stream.Length > 0)
                 {

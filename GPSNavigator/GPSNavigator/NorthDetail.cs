@@ -324,16 +324,16 @@ namespace GPSNavigator
             else
             {
                 AsyncCaller asynctask = new AsyncCaller(filemanager.ReadGPSCache);
-                IAsyncResult asyncresult = asynctask.BeginInvoke(position, null, null);
+                IAsyncResult asyncresult = asynctask.BeginInvoke(position, null,null);
+
+                while (!asyncresult.IsCompleted)
+                {
+                    Thread.Sleep(20);
+                }
+
+                CacheData2 = asynctask.EndInvoke(asyncresult);
                 //if (asyncresult.IsCompleted)
-                try
-                {
-                    CacheData2 = asynctask.EndInvoke(asyncresult);
-                }
-                catch
-                {
-                    throw new Exception("Cache Read Error");
-                }
+               
             }
             reading = false;
             returned = true;
