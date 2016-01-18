@@ -56,7 +56,7 @@
             this.NorthFinderButton.BackColor = System.Drawing.Color.WhiteSmoke;
             this.NorthFinderButton.BackgroundImage = global::GPSNavigator.Properties.Resources.Compass;
             this.NorthFinderButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.NorthFinderButton.Location = new System.Drawing.Point(191, 24);
+            this.NorthFinderButton.Location = new System.Drawing.Point(189, 24);
             this.NorthFinderButton.Name = "NorthFinderButton";
             this.NorthFinderButton.Size = new System.Drawing.Size(143, 143);
             this.NorthFinderButton.TabIndex = 1;
@@ -80,7 +80,7 @@
             this.NorthfinderLabel.AutoSize = true;
             this.NorthfinderLabel.BackColor = System.Drawing.Color.Gainsboro;
             this.NorthfinderLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NorthfinderLabel.Location = new System.Drawing.Point(215, 170);
+            this.NorthfinderLabel.Location = new System.Drawing.Point(213, 170);
             this.NorthfinderLabel.Name = "NorthfinderLabel";
             this.NorthfinderLabel.Size = new System.Drawing.Size(97, 20);
             this.NorthfinderLabel.TabIndex = 3;

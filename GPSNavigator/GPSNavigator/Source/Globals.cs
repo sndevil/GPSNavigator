@@ -18,6 +18,9 @@ namespace GPSNavigator
         public Satellite[] GPSSat = new Satellite[32];
         public Satellite[] GLONASSsat = new Satellite[32];
         public List<byte[]> licenses = new List<byte[]>();
+
+//        public List<int> stationsInGridIndex = new List<int>();
+        //public BaseStationInfo[] strBaseStationInfo = new BaseStationInfo[Functions.TOTAL_BASE_STATIONS_COUNT];
         public DateTime PacketTime = new DateTime();
         public static byte[] GPSNAN = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 

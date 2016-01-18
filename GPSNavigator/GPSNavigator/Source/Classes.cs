@@ -151,12 +151,13 @@ namespace GPSNavigator.Classes
             public byte[] BNumOfVisibleStats = new byte[4];
             public SettingBuffer settingbuffer = new SettingBuffer();
             public AttitudeInformation AttitudeBuffer = new AttitudeInformation();
+            public BaseStationInfo BaseStationBuffer = new BaseStationInfo();
             public double state;
             public byte Bstate,BStateMax,BStateMin;
             public DateTime datetime;
             public byte[] Bdatetime = new byte[6];
             public int statcounter,ChannelCounter = 0;
-            public bool WriteExtreme = false,error = false;
+            public bool WriteExtreme = false,error = false, hasBaseStationInfo = false;
         }
 
         public class SettingBuffer
@@ -1511,5 +1512,33 @@ namespace GPSNavigator.Classes
 
         }
 
+        public class BaseStationInfo
+        {
+            //public int stationGridIndex = -1;
+            public int connectionAcount = -1;
+            public int stationNumber = 0;
+            public double voltage = 0;
+            public double current = 0;
+            public double stability = 0;
+            public double temperature = 0;
+            public double humidity = 0;
+            public double batteryCharge = 0;
+            public double lastLocktoGPS = 0;
+            public int stationMACNumber = 0;
+            public double x = 0;
+            public double y = 0;
+            public double z = 0;
+            public double timeofweek = 0;
+            public int weekNumber = 0;
+            public int statusFlag = 0;
+            public int assignedFlyingObject = 0;
+            public int readyFlyingObject = 0;
+            public int rssiBaseStation = 0;
+            public int rssiCenterStation = 0;
+            public double[] SNRs = new double[Functions.TOTAL_FLYING_OBJECTS_COUNT];
+            public int ltrHealth = 0;
+            public int rownumber = -1;
+
+        }
 
 }

@@ -78,6 +78,13 @@ namespace GPSNavigator
                 case AppModes.BaseStation:
                     BaseText = "Base Station";
                     BTSDetailForm = new BTSDetail(this);
+                    BTSDetailForm.Dock = DockStyle.None;
+                    BTSDetailForm.TopLevel = false;
+                    BTSDetailForm.Show();
+                    var NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("BaseStation Details (Realtime)");
+                    NewDockWindow.AutoScroll = true;
+                    NewDockWindow.Controls.Add(BTSDetailForm);
+                    radDock1.AddDocument(NewDockWindow);
                     break;
             }
             this.Text = BaseText;
@@ -156,25 +163,37 @@ namespace GPSNavigator
                                     dbuf.AttitudeBuffer = attitudebuffer;
                                     previousdata = dbuf;
                                 }
-                                if (DetailRefreshCounter++ > RefreshRate - 1)
+                                if (dbuf.hasBaseStationInfo)
                                 {
-                                    if (showdetail)
-                                    {
-                                        UpdateRealtimeData(dbuf,1);
-                                        DetailRefreshCounter = 0;
-                                    }
-                                    if (showsky)
-                                        SkyUpdater(); // SkyView.UpdateView(vars);
+                                    UpdateBTSForm(dbuf, 1);
+                                    /////Pass the buffer to BTSDetail form
+                                    //
+                                    //
+                                    //
+                                    //
+                                    //
                                 }
-                                if (GraphRefreshCounter++ > GraphRefreshrate.Value - 1)
+                                else
                                 {
-                                    if (showdetail)
+                                    if (DetailRefreshCounter++ > RefreshRate - 1)
                                     {
-                                        UpdateRealtimeGraph(dbuf,1);
-                                        GraphRefreshCounter = 0;
+                                        if (showdetail)
+                                        {
+                                            UpdateRealtimeData(dbuf, 1);
+                                            DetailRefreshCounter = 0;
+                                        }
+                                        if (showsky)
+                                            SkyUpdater(); // SkyView.UpdateView(vars);
+                                    }
+                                    if (GraphRefreshCounter++ > GraphRefreshrate.Value - 1)
+                                    {
+                                        if (showdetail)
+                                        {
+                                            UpdateRealtimeGraph(dbuf, 1);
+                                            GraphRefreshCounter = 0;
+                                        }
                                     }
                                 }
-
                                 if (dbuf.settingbuffer.SettingReceived)
                                     DetailForm.ChangeSettings(dbuf.settingbuffer);
 
@@ -700,6 +719,11 @@ namespace GPSNavigator
                     NorthDetailForm.UpdateRealtimeGraph(vars, databuffer, SerialNumber);
             }
 
+        }
+
+        private void UpdateBTSForm(SingleDataBuffer databuffer, int SerialNumber)
+        {
+            
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)

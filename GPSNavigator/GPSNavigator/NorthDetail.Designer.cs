@@ -224,6 +224,7 @@
             this.arcScaleBackgroundLayerComponent4 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
             this.arcScaleBackgroundLayerComponent3 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
             this.gaugeControl1 = new DevExpress.XtraGauges.Win.GaugeControl();
+            this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.velLabel = new System.Windows.Forms.Label();
             this.HDOPLabel = new System.Windows.Forms.Label();
             this.VDOPLabel = new System.Windows.Forms.Label();
@@ -269,7 +270,6 @@
             this.DetailPanel = new System.Windows.Forms.Panel();
             this.Serial2Check = new System.Windows.Forms.CheckBox();
             this.Serial1check = new System.Windows.Forms.CheckBox();
-            this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.headingIndicator1 = new GPS.HeadingIndicatorInstrumentControl();
             this.attitudeIndicator1 = new GPS.AttitudeIndicatorInstrumentControl();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
@@ -322,6 +322,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.GraphOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).BeginInit();
@@ -336,7 +337,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistanceTH.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).BeginInit();
             this.DetailPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -1404,7 +1404,7 @@
             // 
             // PDOPText
             // 
-            this.PDOPText.EditValue = "30";
+            this.PDOPText.EditValue = "300";
             this.PDOPText.Location = new System.Drawing.Point(117, 99);
             this.PDOPText.Name = "PDOPText";
             this.PDOPText.Size = new System.Drawing.Size(35, 20);
@@ -2183,6 +2183,19 @@
             this.gaugeControl1.Size = new System.Drawing.Size(135, 139);
             this.gaugeControl1.TabIndex = 56;
             // 
+            // SpeedGauge
+            // 
+            this.SpeedGauge.BackgroundLayers.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent[] {
+            this.arcScaleBackgroundLayerComponent3,
+            this.arcScaleBackgroundLayerComponent4});
+            this.SpeedGauge.Bounds = new System.Drawing.Rectangle(3, 3, 132, 136);
+            this.SpeedGauge.Name = "SpeedGauge";
+            this.SpeedGauge.Needles.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent[] {
+            this.arcScaleNeedleComponent2});
+            this.SpeedGauge.Scales.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent[] {
+            this.arcScaleComponent3,
+            this.arcScaleComponent4});
+            // 
             // velLabel
             // 
             this.velLabel.Location = new System.Drawing.Point(608, 127);
@@ -2675,19 +2688,6 @@
             this.Serial1check.Visible = false;
             this.Serial1check.CheckedChanged += new System.EventHandler(this.Serial1check_CheckedChanged);
             // 
-            // SpeedGauge
-            // 
-            this.SpeedGauge.BackgroundLayers.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent[] {
-            this.arcScaleBackgroundLayerComponent3,
-            this.arcScaleBackgroundLayerComponent4});
-            this.SpeedGauge.Bounds = new System.Drawing.Rectangle(3, 3, 132, 136);
-            this.SpeedGauge.Name = "SpeedGauge";
-            this.SpeedGauge.Needles.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent[] {
-            this.arcScaleNeedleComponent2});
-            this.SpeedGauge.Scales.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent[] {
-            this.arcScaleComponent3,
-            this.arcScaleComponent4});
-            // 
             // headingIndicator1
             // 
             this.headingIndicator1.Location = new System.Drawing.Point(487, 8);
@@ -2833,6 +2833,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.GraphOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).EndInit();
@@ -2848,7 +2849,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).EndInit();
             this.DetailPanel.ResumeLayout(false);
             this.DetailPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

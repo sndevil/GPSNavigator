@@ -29,9 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
             Infragistics.UltraGauge.Resources.EllipseAnnotation ellipseAnnotation1 = new Infragistics.UltraGauge.Resources.EllipseAnnotation();
             Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement1 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
             Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement2 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
@@ -69,45 +66,21 @@
             Infragistics.UltraGauge.Resources.SimpleGradientBrushElement simpleGradientBrushElement1 = new Infragistics.UltraGauge.Resources.SimpleGradientBrushElement();
             Infragistics.UltraGauge.Resources.RadialGradientBrushElement radialGradientBrushElement1 = new Infragistics.UltraGauge.Resources.RadialGradientBrushElement();
             Infragistics.UltraGauge.Resources.SolidFillBrushElement solidFillBrushElement11 = new Infragistics.UltraGauge.Resources.SolidFillBrushElement();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn1 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn2 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn3 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn4 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn5 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn6 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn7 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn8 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn9 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn10 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn11 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn12 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewCommandColumn gridViewCommandColumn1 = new Telerik.WinControls.UI.GridViewCommandColumn();
             this.label12 = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.button1 = new System.Windows.Forms.Button();
             this.ultraGaugeClock = new Infragistics.Win.UltraWinGauge.UltraGauge();
-            this.LatitudeLabel = new System.Windows.Forms.Label();
-            this.LatitudeValue = new System.Windows.Forms.Label();
-            this.LongitudeLabel = new System.Windows.Forms.Label();
-            this.LongitudeValue = new System.Windows.Forms.Label();
-            this.AltitudeLabel = new System.Windows.Forms.Label();
-            this.AltitudeValue = new System.Windows.Forms.Label();
-            this.PDOPLabel = new System.Windows.Forms.Label();
-            this.PDOPValue = new System.Windows.Forms.Label();
-            this.ControlPanel = new System.Windows.Forms.GroupBox();
-            this.QuadRadio = new System.Windows.Forms.RadioButton();
-            this.DoubleRadio = new System.Windows.Forms.RadioButton();
-            this.NormalRadio = new System.Windows.Forms.RadioButton();
-            this.HalfRadio = new System.Windows.Forms.RadioButton();
-            this.QuarterRadio = new System.Windows.Forms.RadioButton();
-            this.NextFrame = new System.Windows.Forms.Button();
-            this.PreviousFrame = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.ChartVisibleCheck = new System.Windows.Forms.CheckBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -119,10 +92,6 @@
             this.coldStartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.warmStartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotStartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.c1Chart1 = new C1.Win.C1Chart.C1Chart();
-            this.graphDataCombo = new System.Windows.Forms.ComboBox();
-            this.ClearButton = new System.Windows.Forms.Button();
-            this.ControlPanelButton = new System.Windows.Forms.Button();
             this.groupControl4 = new DevExpress.XtraEditors.GroupControl();
             this.PositionTypeCombo = new System.Windows.Forms.ComboBox();
             this.AllSatsMax = new System.Windows.Forms.NumericUpDown();
@@ -197,29 +166,12 @@
             this.listBoxGLONASS = new DevExpress.XtraEditors.ListBoxControl();
             this.listBoxGPS = new DevExpress.XtraEditors.ListBoxControl();
             this.labelControl3 = new DevExpress.XtraEditors.LabelControl();
-            this.GraphToggle = new System.Windows.Forms.Button();
-            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.arcScaleComponent2 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent();
             this.arcScaleNeedleComponent1 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent();
             this.arcScaleComponent1 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent();
             this.arcScaleBackgroundLayerComponent2 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
             this.arcScaleBackgroundLayerComponent1 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
             this.circularGauge1 = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
-            this.arcScaleComponent4 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent();
-            this.arcScaleNeedleComponent2 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent();
-            this.arcScaleComponent3 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent();
-            this.arcScaleBackgroundLayerComponent4 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
-            this.arcScaleBackgroundLayerComponent3 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
-            this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
-            this.gaugeControl1 = new DevExpress.XtraGauges.Win.GaugeControl();
-            this.velLabel = new System.Windows.Forms.Label();
-            this.HDOPLabel = new System.Windows.Forms.Label();
-            this.VDOPLabel = new System.Windows.Forms.Label();
-            this.TDOPLabel = new System.Windows.Forms.Label();
-            this.HDOPValue = new System.Windows.Forms.Label();
-            this.VDOPValue = new System.Windows.Forms.Label();
-            this.TDOPValue = new System.Windows.Forms.Label();
-            this.ResetZoom = new System.Windows.Forms.Button();
             this.GraphOptions = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.SaveToImage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -229,12 +181,11 @@
             this.DataExporter = new System.Windows.Forms.SaveFileDialog();
             this.DataImporter = new System.Windows.Forms.OpenFileDialog();
             this.GraphTooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.Serial1check = new System.Windows.Forms.CheckBox();
-            this.Serial2Check = new System.Windows.Forms.CheckBox();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
-            this.ControlPanel.SuspendLayout();
+            this.radGridView1 = new Telerik.WinControls.UI.RadGridView();
+            this.radThemeManager1 = new Telerik.WinControls.RadThemeManager();
+            this.button1 = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.c1Chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).BeginInit();
             this.groupControl4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AllSatsMax)).BeginInit();
@@ -274,186 +225,15 @@
             this.groupControl2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listBoxGLONASS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.listBoxGPS)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleNeedleComponent1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.circularGauge1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleNeedleComponent2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.GraphOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.radGridView1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(406, 14);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Visible GPS:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(506, 14);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(13, 13);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "0";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(406, 38);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(60, 13);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Used GPS:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(506, 38);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(13, 13);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "0";
-            // 
-            // chart1
-            // 
-            this.chart1.BackColor = System.Drawing.Color.Gainsboro;
-            this.chart1.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
-            this.chart1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.chart1.BackImageTransparentColor = System.Drawing.Color.White;
-            this.chart1.BackSecondaryColor = System.Drawing.Color.White;
-            this.chart1.BorderSkin.PageColor = System.Drawing.Color.Gainsboro;
-            this.chart1.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Raised;
-            chartArea1.Area3DStyle.PointDepth = 50;
-            chartArea1.Area3DStyle.Rotation = 15;
-            chartArea1.Area3DStyle.WallWidth = 10;
-            chartArea1.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea1.AxisX.IsLabelAutoFit = false;
-            chartArea1.AxisX.LabelAutoFitMinFontSize = 5;
-            chartArea1.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea1.AxisX.LabelStyle.TruncatedLabels = true;
-            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea1.AxisX2.LabelAutoFitMinFontSize = 5;
-            chartArea1.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea1.AxisX2.LineColor = System.Drawing.Color.LightGray;
-            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea1.AxisY.Maximum = 100D;
-            chartArea1.AxisY2.LineColor = System.Drawing.Color.LightGray;
-            chartArea1.BorderColor = System.Drawing.Color.DarkGray;
-            chartArea1.InnerPlotPosition.Auto = false;
-            chartArea1.InnerPlotPosition.Height = 75F;
-            chartArea1.InnerPlotPosition.Width = 95F;
-            chartArea1.InnerPlotPosition.X = 5F;
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.Location = new System.Drawing.Point(66, 143);
-            this.chart1.Name = "chart1";
-            this.chart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series1.ChartArea = "ChartArea1";
-            series1.IsValueShownAsLabel = true;
-            series1.Legend = "Legend1";
-            series1.Name = "Series0";
-            series1.SmartLabelStyle.Enabled = false;
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(724, 190);
-            this.chart1.TabIndex = 1;
-            this.chart1.Text = "GPS";
-            title1.Name = "Title1";
-            this.chart1.Titles.Add(title1);
-            this.chart1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseClick);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(406, 62);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(94, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Visible GLONASS:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(506, 62);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(13, 13);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "0";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(406, 87);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(89, 13);
-            this.label7.TabIndex = 8;
-            this.label7.Text = "Used GLONASS:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(506, 87);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(13, 13);
-            this.label8.TabIndex = 9;
-            this.label8.Text = "0";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.BackColor = System.Drawing.Color.Gainsboro;
-            this.label9.Location = new System.Drawing.Point(86, 152);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(112, 13);
-            this.label9.TabIndex = 10;
-            this.label9.Text = "Antenna 1 SNR Value";
-            // 
-            // label10
-            // 
-            this.label10.BackColor = System.Drawing.Color.Blue;
-            this.label10.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label10.Location = new System.Drawing.Point(4, 145);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(58, 18);
-            this.label10.TabIndex = 11;
-            this.label10.Text = "Ready Sat";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label11
-            // 
-            this.label11.BackColor = System.Drawing.Color.Green;
-            this.label11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.label11.Location = new System.Drawing.Point(4, 163);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(58, 18);
-            this.label11.TabIndex = 12;
-            this.label11.Text = "Used Sat";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label12
             // 
@@ -464,23 +244,6 @@
             this.label12.TabIndex = 13;
             this.label12.Text = "Time:";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // timer1
-            // 
-            this.timer1.Enabled = true;
-            this.timer1.Interval = 20;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.Gainsboro;
-            this.button1.Location = new System.Drawing.Point(8, 20);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(188, 37);
-            this.button1.TabIndex = 17;
-            this.button1.Text = "Play";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // ultraGaugeClock
             // 
@@ -622,217 +385,6 @@
             this.ultraGaugeClock.Size = new System.Drawing.Size(132, 127);
             this.ultraGaugeClock.TabIndex = 31;
             // 
-            // LatitudeLabel
-            // 
-            this.LatitudeLabel.AutoSize = true;
-            this.LatitudeLabel.Location = new System.Drawing.Point(223, 14);
-            this.LatitudeLabel.Name = "LatitudeLabel";
-            this.LatitudeLabel.Size = new System.Drawing.Size(48, 13);
-            this.LatitudeLabel.TabIndex = 32;
-            this.LatitudeLabel.Text = "Latitude:";
-            // 
-            // LatitudeValue
-            // 
-            this.LatitudeValue.AutoSize = true;
-            this.LatitudeValue.Location = new System.Drawing.Point(286, 14);
-            this.LatitudeValue.Name = "LatitudeValue";
-            this.LatitudeValue.Size = new System.Drawing.Size(13, 13);
-            this.LatitudeValue.TabIndex = 33;
-            this.LatitudeValue.Text = "0";
-            // 
-            // LongitudeLabel
-            // 
-            this.LongitudeLabel.AutoSize = true;
-            this.LongitudeLabel.Location = new System.Drawing.Point(223, 38);
-            this.LongitudeLabel.Name = "LongitudeLabel";
-            this.LongitudeLabel.Size = new System.Drawing.Size(57, 13);
-            this.LongitudeLabel.TabIndex = 34;
-            this.LongitudeLabel.Text = "Longitude:";
-            // 
-            // LongitudeValue
-            // 
-            this.LongitudeValue.AutoSize = true;
-            this.LongitudeValue.Location = new System.Drawing.Point(286, 38);
-            this.LongitudeValue.Name = "LongitudeValue";
-            this.LongitudeValue.Size = new System.Drawing.Size(13, 13);
-            this.LongitudeValue.TabIndex = 35;
-            this.LongitudeValue.Text = "0";
-            // 
-            // AltitudeLabel
-            // 
-            this.AltitudeLabel.AutoSize = true;
-            this.AltitudeLabel.Location = new System.Drawing.Point(223, 62);
-            this.AltitudeLabel.Name = "AltitudeLabel";
-            this.AltitudeLabel.Size = new System.Drawing.Size(45, 13);
-            this.AltitudeLabel.TabIndex = 36;
-            this.AltitudeLabel.Text = "Altitude:";
-            // 
-            // AltitudeValue
-            // 
-            this.AltitudeValue.AutoSize = true;
-            this.AltitudeValue.Location = new System.Drawing.Point(286, 62);
-            this.AltitudeValue.Name = "AltitudeValue";
-            this.AltitudeValue.Size = new System.Drawing.Size(13, 13);
-            this.AltitudeValue.TabIndex = 37;
-            this.AltitudeValue.Text = "0";
-            // 
-            // PDOPLabel
-            // 
-            this.PDOPLabel.AutoSize = true;
-            this.PDOPLabel.Location = new System.Drawing.Point(223, 86);
-            this.PDOPLabel.Name = "PDOPLabel";
-            this.PDOPLabel.Size = new System.Drawing.Size(40, 13);
-            this.PDOPLabel.TabIndex = 38;
-            this.PDOPLabel.Text = "PDOP:";
-            // 
-            // PDOPValue
-            // 
-            this.PDOPValue.AutoSize = true;
-            this.PDOPValue.Location = new System.Drawing.Point(286, 86);
-            this.PDOPValue.Name = "PDOPValue";
-            this.PDOPValue.Size = new System.Drawing.Size(13, 13);
-            this.PDOPValue.TabIndex = 39;
-            this.PDOPValue.Text = "0";
-            // 
-            // ControlPanel
-            // 
-            this.ControlPanel.Controls.Add(this.QuadRadio);
-            this.ControlPanel.Controls.Add(this.DoubleRadio);
-            this.ControlPanel.Controls.Add(this.NormalRadio);
-            this.ControlPanel.Controls.Add(this.HalfRadio);
-            this.ControlPanel.Controls.Add(this.QuarterRadio);
-            this.ControlPanel.Controls.Add(this.NextFrame);
-            this.ControlPanel.Controls.Add(this.PreviousFrame);
-            this.ControlPanel.Controls.Add(this.button1);
-            this.ControlPanel.Location = new System.Drawing.Point(4, 0);
-            this.ControlPanel.Name = "ControlPanel";
-            this.ControlPanel.Size = new System.Drawing.Size(207, 137);
-            this.ControlPanel.TabIndex = 40;
-            this.ControlPanel.TabStop = false;
-            this.ControlPanel.Text = "Controls";
-            this.ControlPanel.Visible = false;
-            // 
-            // QuadRadio
-            // 
-            this.QuadRadio.AutoSize = true;
-            this.QuadRadio.Location = new System.Drawing.Point(168, 114);
-            this.QuadRadio.Name = "QuadRadio";
-            this.QuadRadio.Size = new System.Drawing.Size(36, 17);
-            this.QuadRadio.TabIndex = 24;
-            this.QuadRadio.Text = "4x";
-            this.QuadRadio.UseVisualStyleBackColor = true;
-            this.QuadRadio.CheckedChanged += new System.EventHandler(this.QuadRadio_CheckedChanged);
-            // 
-            // DoubleRadio
-            // 
-            this.DoubleRadio.AutoSize = true;
-            this.DoubleRadio.Location = new System.Drawing.Point(132, 114);
-            this.DoubleRadio.Name = "DoubleRadio";
-            this.DoubleRadio.Size = new System.Drawing.Size(36, 17);
-            this.DoubleRadio.TabIndex = 23;
-            this.DoubleRadio.Text = "2x";
-            this.DoubleRadio.UseVisualStyleBackColor = true;
-            this.DoubleRadio.CheckedChanged += new System.EventHandler(this.DoubleRadio_CheckedChanged);
-            // 
-            // NormalRadio
-            // 
-            this.NormalRadio.AutoSize = true;
-            this.NormalRadio.Checked = true;
-            this.NormalRadio.Location = new System.Drawing.Point(95, 114);
-            this.NormalRadio.Name = "NormalRadio";
-            this.NormalRadio.Size = new System.Drawing.Size(36, 17);
-            this.NormalRadio.TabIndex = 22;
-            this.NormalRadio.TabStop = true;
-            this.NormalRadio.Text = "1x";
-            this.NormalRadio.UseVisualStyleBackColor = true;
-            this.NormalRadio.CheckedChanged += new System.EventHandler(this.NormalRadio_CheckedChanged);
-            // 
-            // HalfRadio
-            // 
-            this.HalfRadio.AutoSize = true;
-            this.HalfRadio.Location = new System.Drawing.Point(50, 114);
-            this.HalfRadio.Name = "HalfRadio";
-            this.HalfRadio.Size = new System.Drawing.Size(45, 17);
-            this.HalfRadio.TabIndex = 21;
-            this.HalfRadio.Text = "0.5x";
-            this.HalfRadio.UseVisualStyleBackColor = true;
-            this.HalfRadio.CheckedChanged += new System.EventHandler(this.HalfRadio_CheckedChanged);
-            // 
-            // QuarterRadio
-            // 
-            this.QuarterRadio.AutoSize = true;
-            this.QuarterRadio.Location = new System.Drawing.Point(3, 114);
-            this.QuarterRadio.Name = "QuarterRadio";
-            this.QuarterRadio.Size = new System.Drawing.Size(51, 17);
-            this.QuarterRadio.TabIndex = 20;
-            this.QuarterRadio.Text = "0.25x";
-            this.QuarterRadio.UseVisualStyleBackColor = true;
-            this.QuarterRadio.CheckedChanged += new System.EventHandler(this.QuarterRadio_CheckedChanged);
-            // 
-            // NextFrame
-            // 
-            this.NextFrame.BackColor = System.Drawing.Color.Gainsboro;
-            this.NextFrame.Location = new System.Drawing.Point(106, 69);
-            this.NextFrame.Name = "NextFrame";
-            this.NextFrame.Size = new System.Drawing.Size(90, 30);
-            this.NextFrame.TabIndex = 19;
-            this.NextFrame.Text = ">>";
-            this.NextFrame.UseVisualStyleBackColor = false;
-            this.NextFrame.Click += new System.EventHandler(this.NextFrame_Click);
-            // 
-            // PreviousFrame
-            // 
-            this.PreviousFrame.BackColor = System.Drawing.Color.Gainsboro;
-            this.PreviousFrame.Location = new System.Drawing.Point(8, 69);
-            this.PreviousFrame.Name = "PreviousFrame";
-            this.PreviousFrame.Size = new System.Drawing.Size(90, 30);
-            this.PreviousFrame.TabIndex = 18;
-            this.PreviousFrame.Text = "<<";
-            this.PreviousFrame.UseVisualStyleBackColor = false;
-            this.PreviousFrame.Click += new System.EventHandler(this.PreviousFrame_Click);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.BackColor = System.Drawing.Color.Gainsboro;
-            this.label13.Location = new System.Drawing.Point(86, 342);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(97, 13);
-            this.label13.TabIndex = 42;
-            this.label13.Text = "No Antenna Found";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(615, 152);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(158, 21);
-            this.comboBox1.TabIndex = 45;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(615, 342);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(158, 21);
-            this.comboBox2.TabIndex = 46;
-            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
-            // 
-            // ChartVisibleCheck
-            // 
-            this.ChartVisibleCheck.AutoSize = true;
-            this.ChartVisibleCheck.BackColor = System.Drawing.Color.Transparent;
-            this.ChartVisibleCheck.Location = new System.Drawing.Point(327, 120);
-            this.ChartVisibleCheck.Name = "ChartVisibleCheck";
-            this.ChartVisibleCheck.Size = new System.Drawing.Size(125, 17);
-            this.ChartVisibleCheck.TabIndex = 47;
-            this.ChartVisibleCheck.Text = "Show Two Antennas";
-            this.ChartVisibleCheck.UseVisualStyleBackColor = false;
-            this.ChartVisibleCheck.CheckedChanged += new System.EventHandler(this.ChartVisibleCheck_CheckedChanged);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.LightGray;
@@ -844,9 +396,9 @@
             this.toolStripStatusLabel5,
             this.EndTimeLabel,
             this.toolStripSplitButton1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 593);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 594);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(815, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(917, 22);
             this.statusStrip1.TabIndex = 48;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -895,119 +447,23 @@
             // 
             // toolStripSplitButton1
             // 
-            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSplitButton1.DropDownButtonWidth = 20;
-            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.coldStartToolStripMenuItem,
-            this.warmStartToolStripMenuItem,
-            this.hotStartToolStripMenuItem});
-            this.toolStripSplitButton1.Image = global::GPSNavigator.Properties.Resources.Hot_Start;
-            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-            this.toolStripSplitButton1.Size = new System.Drawing.Size(41, 20);
-            this.toolStripSplitButton1.Text = "toolStripSplitButton1";
-            this.toolStripSplitButton1.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(16, 20);
             // 
             // coldStartToolStripMenuItem
             // 
-            this.coldStartToolStripMenuItem.Image = global::GPSNavigator.Properties.Resources.Cold_Start;
             this.coldStartToolStripMenuItem.Name = "coldStartToolStripMenuItem";
-            this.coldStartToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-            this.coldStartToolStripMenuItem.Text = "Cold Start";
-            this.coldStartToolStripMenuItem.Click += new System.EventHandler(this.coldStartToolStripMenuItem_Click);
+            this.coldStartToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
             // 
             // warmStartToolStripMenuItem
             // 
-            this.warmStartToolStripMenuItem.Image = global::GPSNavigator.Properties.Resources.Warm_Start;
             this.warmStartToolStripMenuItem.Name = "warmStartToolStripMenuItem";
-            this.warmStartToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-            this.warmStartToolStripMenuItem.Text = "Warm Start";
-            this.warmStartToolStripMenuItem.Click += new System.EventHandler(this.warmStartToolStripMenuItem_Click);
+            this.warmStartToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
             // 
             // hotStartToolStripMenuItem
             // 
-            this.hotStartToolStripMenuItem.Image = global::GPSNavigator.Properties.Resources.Hot_Start;
             this.hotStartToolStripMenuItem.Name = "hotStartToolStripMenuItem";
-            this.hotStartToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-            this.hotStartToolStripMenuItem.Text = "Hot Start";
-            this.hotStartToolStripMenuItem.Click += new System.EventHandler(this.hotStartToolStripMenuItem_Click);
-            // 
-            // c1Chart1
-            // 
-            this.c1Chart1.BackColor = System.Drawing.Color.Gainsboro;
-            this.c1Chart1.Interaction.Appearance = C1.Win.C1Chart.InteractionAppearance.FillSelectionArea;
-            this.c1Chart1.Interaction.Enabled = true;
-            this.c1Chart1.Location = new System.Drawing.Point(62, 514);
-            this.c1Chart1.Name = "c1Chart1";
-            this.c1Chart1.PropBag = resources.GetString("c1Chart1.PropBag");
-            this.c1Chart1.Size = new System.Drawing.Size(732, 154);
-            this.c1Chart1.TabIndex = 50;
-            this.c1Chart1.Visible = false;
-            this.c1Chart1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.c1Chart1_MouseClick);
-            // 
-            // graphDataCombo
-            // 
-            this.graphDataCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.graphDataCombo.FormattingEnabled = true;
-            this.graphDataCombo.Items.AddRange(new object[] {
-            "X",
-            "X_Processed",
-            "Y",
-            "Y_Processed",
-            "Z",
-            "Z_Processed",
-            "Latitude",
-            "Latitude_Processed",
-            "Longitude",
-            "Longitude_Processed",
-            "Altitude",
-            "Altitude_Processed",
-            "Vx",
-            "Vx_Processed",
-            "Vy",
-            "Vy_Processed",
-            "Vz",
-            "Vz_Processed",
-            "V",
-            "Ax",
-            "Ay",
-            "Az",
-            "A",
-            "PDOP",
-            "State",
-            "Temperature",
-            "UsedStats",
-            "VisibleStats"});
-            this.graphDataCombo.Location = new System.Drawing.Point(3, 513);
-            this.graphDataCombo.Name = "graphDataCombo";
-            this.graphDataCombo.Size = new System.Drawing.Size(65, 20);
-            this.graphDataCombo.TabIndex = 51;
-            this.graphDataCombo.Text = "X";
-            this.graphDataCombo.Visible = false;
-            this.graphDataCombo.SelectedIndexChanged += new System.EventHandler(this.graphDataCombo_SelectedIndexChanged);
-            // 
-            // ClearButton
-            // 
-            this.ClearButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClearButton.Location = new System.Drawing.Point(3, 539);
-            this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(65, 23);
-            this.ClearButton.TabIndex = 52;
-            this.ClearButton.Text = "Clear";
-            this.ClearButton.UseVisualStyleBackColor = false;
-            this.ClearButton.Visible = false;
-            this.ClearButton.Click += new System.EventHandler(this.ClearButton_Click);
-            // 
-            // ControlPanelButton
-            // 
-            this.ControlPanelButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.ControlPanelButton.Location = new System.Drawing.Point(790, 194);
-            this.ControlPanelButton.Name = "ControlPanelButton";
-            this.ControlPanelButton.Size = new System.Drawing.Size(20, 184);
-            this.ControlPanelButton.TabIndex = 53;
-            this.ControlPanelButton.Text = ">";
-            this.ControlPanelButton.UseVisualStyleBackColor = false;
-            this.ControlPanelButton.Click += new System.EventHandler(this.ControlPanelButton_Click);
+            this.hotStartToolStripMenuItem.Size = new System.Drawing.Size(32, 19);
             // 
             // groupControl4
             // 
@@ -1030,7 +486,7 @@
             this.groupControl4.Controls.Add(this.checkEditTypGLONASS);
             this.groupControl4.Controls.Add(this.checkEditTypGPS);
             this.groupControl4.Controls.Add(this.labelControl6);
-            this.groupControl4.Location = new System.Drawing.Point(818, 2);
+            this.groupControl4.Location = new System.Drawing.Point(917, 2);
             this.groupControl4.Name = "groupControl4";
             this.groupControl4.Size = new System.Drawing.Size(156, 168);
             this.groupControl4.TabIndex = 72;
@@ -1168,7 +624,6 @@
             this.ApplySearch.TabIndex = 61;
             this.ApplySearch.Text = "Apply";
             this.ApplySearch.UseVisualStyleBackColor = false;
-            this.ApplySearch.Click += new System.EventHandler(this.ApplySearch_Click);
             // 
             // labelControl22
             // 
@@ -1275,7 +730,7 @@
             this.groupControl5.Controls.Add(this.labelControl11);
             this.groupControl5.Controls.Add(this.labelControl10);
             this.groupControl5.Controls.Add(this.labelControl9);
-            this.groupControl5.Location = new System.Drawing.Point(818, 173);
+            this.groupControl5.Location = new System.Drawing.Point(917, 173);
             this.groupControl5.Name = "groupControl5";
             this.groupControl5.Size = new System.Drawing.Size(156, 210);
             this.groupControl5.TabIndex = 73;
@@ -1290,7 +745,6 @@
             this.ApplyThreshold.TabIndex = 63;
             this.ApplyThreshold.Text = "Apply";
             this.ApplyThreshold.UseVisualStyleBackColor = false;
-            this.ApplyThreshold.Click += new System.EventHandler(this.ApplyThreshold_Click);
             // 
             // SatDistanceText
             // 
@@ -1432,7 +886,7 @@
             this.groupControl1.Controls.Add(this.checkEditPktNMEA);
             this.groupControl1.Controls.Add(this.labelControl2);
             this.groupControl1.Controls.Add(this.labelControl1);
-            this.groupControl1.Location = new System.Drawing.Point(818, 385);
+            this.groupControl1.Location = new System.Drawing.Point(917, 385);
             this.groupControl1.Name = "groupControl1";
             this.groupControl1.Size = new System.Drawing.Size(156, 205);
             this.groupControl1.TabIndex = 74;
@@ -1505,7 +959,6 @@
             this.ApplyCom.TabIndex = 60;
             this.ApplyCom.Text = "Apply";
             this.ApplyCom.UseVisualStyleBackColor = false;
-            this.ApplyCom.Click += new System.EventHandler(this.ApplyCom_Click);
             // 
             // labelControl25
             // 
@@ -1645,7 +1098,7 @@
             this.groupControl6.Controls.Add(this.textEditMaxSpeed);
             this.groupControl6.Controls.Add(this.labelControl20);
             this.groupControl6.Controls.Add(this.labelControl21);
-            this.groupControl6.Location = new System.Drawing.Point(976, 2);
+            this.groupControl6.Location = new System.Drawing.Point(1075, 2);
             this.groupControl6.Name = "groupControl6";
             this.groupControl6.Size = new System.Drawing.Size(156, 210);
             this.groupControl6.TabIndex = 75;
@@ -1709,7 +1162,6 @@
             this.ApplyMisc.TabIndex = 68;
             this.ApplyMisc.Text = "Apply";
             this.ApplyMisc.UseVisualStyleBackColor = false;
-            this.ApplyMisc.Click += new System.EventHandler(this.ApplyMisc_Click);
             // 
             // labelControl18
             // 
@@ -1813,7 +1265,7 @@
             this.groupControl2.Controls.Add(this.listBoxGLONASS);
             this.groupControl2.Controls.Add(this.listBoxGPS);
             this.groupControl2.Controls.Add(this.labelControl3);
-            this.groupControl2.Location = new System.Drawing.Point(976, 215);
+            this.groupControl2.Location = new System.Drawing.Point(1075, 215);
             this.groupControl2.Name = "groupControl2";
             this.groupControl2.Size = new System.Drawing.Size(156, 375);
             this.groupControl2.TabIndex = 76;
@@ -1821,63 +1273,38 @@
             // 
             // SaveFlash
             // 
-            this.SaveFlash.BackColor = System.Drawing.Color.Gainsboro;
-            this.SaveFlash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveFlash.Location = new System.Drawing.Point(6, 343);
+            this.SaveFlash.Location = new System.Drawing.Point(0, 0);
             this.SaveFlash.Name = "SaveFlash";
-            this.SaveFlash.Size = new System.Drawing.Size(144, 28);
-            this.SaveFlash.TabIndex = 55;
-            this.SaveFlash.Text = "Save To Flash";
-            this.SaveFlash.UseVisualStyleBackColor = false;
-            this.SaveFlash.Click += new System.EventHandler(this.SaveFlash_Click);
+            this.SaveFlash.Size = new System.Drawing.Size(75, 23);
+            this.SaveFlash.TabIndex = 0;
             // 
             // ReadFlash
             // 
-            this.ReadFlash.BackColor = System.Drawing.Color.Gainsboro;
-            this.ReadFlash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReadFlash.Location = new System.Drawing.Point(6, 314);
+            this.ReadFlash.Location = new System.Drawing.Point(0, 0);
             this.ReadFlash.Name = "ReadFlash";
-            this.ReadFlash.Size = new System.Drawing.Size(144, 28);
-            this.ReadFlash.TabIndex = 54;
-            this.ReadFlash.Text = "Read From Flash";
-            this.ReadFlash.UseVisualStyleBackColor = false;
-            this.ReadFlash.Click += new System.EventHandler(this.ReadFlash_Click);
+            this.ReadFlash.Size = new System.Drawing.Size(75, 23);
+            this.ReadFlash.TabIndex = 1;
             // 
             // ClearAll
             // 
-            this.ClearAll.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClearAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClearAll.Location = new System.Drawing.Point(6, 285);
+            this.ClearAll.Location = new System.Drawing.Point(0, 0);
             this.ClearAll.Name = "ClearAll";
-            this.ClearAll.Size = new System.Drawing.Size(144, 28);
-            this.ClearAll.TabIndex = 53;
-            this.ClearAll.Text = "Clear All";
-            this.ClearAll.UseVisualStyleBackColor = false;
-            this.ClearAll.Click += new System.EventHandler(this.ClearAll_Click);
+            this.ClearAll.Size = new System.Drawing.Size(75, 23);
+            this.ClearAll.TabIndex = 2;
             // 
             // DeassignAll
             // 
-            this.DeassignAll.BackColor = System.Drawing.Color.Gainsboro;
-            this.DeassignAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DeassignAll.Location = new System.Drawing.Point(73, 256);
+            this.DeassignAll.Location = new System.Drawing.Point(0, 0);
             this.DeassignAll.Name = "DeassignAll";
-            this.DeassignAll.Size = new System.Drawing.Size(77, 28);
-            this.DeassignAll.TabIndex = 52;
-            this.DeassignAll.Text = "Deassign All";
-            this.DeassignAll.UseVisualStyleBackColor = false;
-            this.DeassignAll.Click += new System.EventHandler(this.DeassignAll_Click);
+            this.DeassignAll.Size = new System.Drawing.Size(75, 23);
+            this.DeassignAll.TabIndex = 3;
             // 
             // Deassign
             // 
-            this.Deassign.BackColor = System.Drawing.Color.Gainsboro;
-            this.Deassign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Deassign.Location = new System.Drawing.Point(6, 256);
+            this.Deassign.Location = new System.Drawing.Point(0, 0);
             this.Deassign.Name = "Deassign";
-            this.Deassign.Size = new System.Drawing.Size(64, 28);
-            this.Deassign.TabIndex = 51;
-            this.Deassign.Text = "Deassign";
-            this.Deassign.UseVisualStyleBackColor = false;
-            this.Deassign.Click += new System.EventHandler(this.Deassign_Click);
+            this.Deassign.Size = new System.Drawing.Size(75, 23);
+            this.Deassign.TabIndex = 4;
             // 
             // labelControl4
             // 
@@ -1977,77 +1404,6 @@
             this.labelControl3.TabIndex = 46;
             this.labelControl3.Text = "GPS Satellites:";
             // 
-            // GraphToggle
-            // 
-            this.GraphToggle.BackColor = System.Drawing.Color.Gainsboro;
-            this.GraphToggle.BackgroundImage = global::GPSNavigator.Properties.Resources.Down;
-            this.GraphToggle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.GraphToggle.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.GraphToggle.Location = new System.Drawing.Point(4, 445);
-            this.GraphToggle.Name = "GraphToggle";
-            this.GraphToggle.Size = new System.Drawing.Size(58, 37);
-            this.GraphToggle.TabIndex = 49;
-            this.GraphToggle.Text = "Graph";
-            this.GraphToggle.UseVisualStyleBackColor = false;
-            this.GraphToggle.Click += new System.EventHandler(this.GraphToggle_Click);
-            // 
-            // chart2
-            // 
-            this.chart2.BackColor = System.Drawing.Color.Gainsboro;
-            this.chart2.BackGradientStyle = System.Windows.Forms.DataVisualization.Charting.GradientStyle.VerticalCenter;
-            this.chart2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.chart2.BackImageTransparentColor = System.Drawing.Color.White;
-            this.chart2.BackSecondaryColor = System.Drawing.Color.White;
-            this.chart2.BorderSkin.PageColor = System.Drawing.Color.Gainsboro;
-            this.chart2.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Raised;
-            chartArea2.Area3DStyle.PointDepth = 50;
-            chartArea2.Area3DStyle.Rotation = 15;
-            chartArea2.Area3DStyle.WallWidth = 10;
-            chartArea2.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea2.AxisX.IsLabelAutoFit = false;
-            chartArea2.AxisX.LabelAutoFitMinFontSize = 5;
-            chartArea2.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea2.AxisX.LabelStyle.TruncatedLabels = true;
-            chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisX2.LabelAutoFitMinFontSize = 5;
-            chartArea2.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
-                        | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea2.AxisX2.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisY.Maximum = 100D;
-            chartArea2.AxisY2.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.BorderColor = System.Drawing.Color.DarkGray;
-            chartArea2.InnerPlotPosition.Auto = false;
-            chartArea2.InnerPlotPosition.Height = 75F;
-            chartArea2.InnerPlotPosition.Width = 95F;
-            chartArea2.InnerPlotPosition.X = 5F;
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
-            this.chart2.Location = new System.Drawing.Point(66, 333);
-            this.chart2.Name = "chart2";
-            this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series2.ChartArea = "ChartArea1";
-            series2.IsValueShownAsLabel = true;
-            series2.Legend = "Legend1";
-            series2.Name = "Series0";
-            series2.SmartLabelStyle.Enabled = false;
-            this.chart2.Series.Add(series2);
-            this.chart2.Size = new System.Drawing.Size(724, 190);
-            this.chart2.TabIndex = 77;
-            this.chart2.Text = "GPS";
-            title2.Name = "Title1";
-            this.chart2.Titles.Add(title2);
-            this.chart2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart2_MouseClick);
-            // 
             // arcScaleComponent2
             // 
             this.arcScaleComponent2.AppearanceTickmarkText.TextBrush = new DevExpress.XtraGauges.Core.Drawing.SolidBrushObject("Color:Silver");
@@ -2124,172 +1480,6 @@
             this.arcScaleComponent1,
             this.arcScaleComponent2});
             // 
-            // arcScaleComponent4
-            // 
-            this.arcScaleComponent4.AppearanceTickmarkText.TextBrush = new DevExpress.XtraGauges.Core.Drawing.SolidBrushObject("Color:Silver");
-            this.arcScaleComponent4.Center = new DevExpress.XtraGauges.Core.Base.PointF2D(125F, 125F);
-            this.arcScaleComponent4.EndAngle = -30F;
-            this.arcScaleComponent4.MajorTickCount = 8;
-            this.arcScaleComponent4.MajorTickmark.FormatString = "{0:F0}";
-            this.arcScaleComponent4.MajorTickmark.ShapeOffset = -4F;
-            this.arcScaleComponent4.MajorTickmark.ShapeType = DevExpress.XtraGauges.Core.Model.TickmarkShapeType.Circular_Style5_4;
-            this.arcScaleComponent4.MajorTickmark.TextOffset = -15F;
-            this.arcScaleComponent4.MajorTickmark.TextOrientation = DevExpress.XtraGauges.Core.Model.LabelOrientation.LeftToRight;
-            this.arcScaleComponent4.MaxValue = 700F;
-            this.arcScaleComponent4.MinorTickCount = 4;
-            this.arcScaleComponent4.MinorTickmark.ShapeType = DevExpress.XtraGauges.Core.Model.TickmarkShapeType.Circular_Style5_5;
-            this.arcScaleComponent4.Name = "arcScaleComponent11";
-            this.arcScaleComponent4.RadiusX = 65F;
-            this.arcScaleComponent4.RadiusY = 65F;
-            this.arcScaleComponent4.StartAngle = -240F;
-            this.arcScaleComponent4.ZOrder = -1;
-            // 
-            // arcScaleNeedleComponent2
-            // 
-            this.arcScaleNeedleComponent2.ArcScale = this.arcScaleComponent3;
-            this.arcScaleNeedleComponent2.Name = "arcScaleNeedleComponent7";
-            this.arcScaleNeedleComponent2.ShapeType = DevExpress.XtraGauges.Core.Model.NeedleShapeType.CircularFull_Style5;
-            this.arcScaleNeedleComponent2.StartOffset = -23.5F;
-            this.arcScaleNeedleComponent2.ZOrder = -50;
-            // 
-            // arcScaleComponent3
-            // 
-            this.arcScaleComponent3.AppearanceTickmarkText.Font = new System.Drawing.Font("Tahoma", 14F);
-            this.arcScaleComponent3.AppearanceTickmarkText.TextBrush = new DevExpress.XtraGauges.Core.Drawing.SolidBrushObject("Color:LightGrey");
-            this.arcScaleComponent3.Center = new DevExpress.XtraGauges.Core.Base.PointF2D(125F, 125F);
-            this.arcScaleComponent3.EndAngle = 60F;
-            this.arcScaleComponent3.MajorTickmark.FormatString = "{0:F0}";
-            this.arcScaleComponent3.MajorTickmark.ShapeOffset = -11F;
-            this.arcScaleComponent3.MajorTickmark.ShapeScale = new DevExpress.XtraGauges.Core.Base.FactorF2D(0.5F, 1F);
-            this.arcScaleComponent3.MajorTickmark.ShapeType = DevExpress.XtraGauges.Core.Model.TickmarkShapeType.Circular_Style5_1;
-            this.arcScaleComponent3.MajorTickmark.TextOffset = -28F;
-            this.arcScaleComponent3.MajorTickmark.TextOrientation = DevExpress.XtraGauges.Core.Model.LabelOrientation.LeftToRight;
-            this.arcScaleComponent3.MaxValue = 100F;
-            this.arcScaleComponent3.MinorTickCount = 4;
-            this.arcScaleComponent3.MinorTickmark.ShapeOffset = -5F;
-            this.arcScaleComponent3.MinorTickmark.ShapeScale = new DevExpress.XtraGauges.Core.Base.FactorF2D(0.5F, 1F);
-            this.arcScaleComponent3.MinorTickmark.ShapeType = DevExpress.XtraGauges.Core.Model.TickmarkShapeType.Circular_Style5_2;
-            this.arcScaleComponent3.Name = "arcScaleComponent7";
-            this.arcScaleComponent3.RadiusX = 122F;
-            this.arcScaleComponent3.RadiusY = 122F;
-            this.arcScaleComponent3.StartAngle = -240F;
-            // 
-            // arcScaleBackgroundLayerComponent4
-            // 
-            this.arcScaleBackgroundLayerComponent4.ArcScale = this.arcScaleComponent3;
-            this.arcScaleBackgroundLayerComponent4.Name = "arcScaleBackgroundLayerComponent10";
-            this.arcScaleBackgroundLayerComponent4.ShapeType = DevExpress.XtraGauges.Core.Model.BackgroundLayerShapeType.CircularFull_Style5_1;
-            this.arcScaleBackgroundLayerComponent4.Size = new System.Drawing.SizeF(216F, 216F);
-            this.arcScaleBackgroundLayerComponent4.ZOrder = 999;
-            // 
-            // arcScaleBackgroundLayerComponent3
-            // 
-            this.arcScaleBackgroundLayerComponent3.ArcScale = this.arcScaleComponent3;
-            this.arcScaleBackgroundLayerComponent3.Name = "arcScaleBackgroundLayerComponent7";
-            this.arcScaleBackgroundLayerComponent3.ShapeType = DevExpress.XtraGauges.Core.Model.BackgroundLayerShapeType.CircularFull_Style5;
-            this.arcScaleBackgroundLayerComponent3.ZOrder = 1000;
-            // 
-            // SpeedGauge
-            // 
-            this.SpeedGauge.BackgroundLayers.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent[] {
-            this.arcScaleBackgroundLayerComponent3,
-            this.arcScaleBackgroundLayerComponent4});
-            this.SpeedGauge.Bounds = new System.Drawing.Rectangle(3, 3, 132, 136);
-            this.SpeedGauge.Name = "SpeedGauge";
-            this.SpeedGauge.Needles.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent[] {
-            this.arcScaleNeedleComponent2});
-            this.SpeedGauge.Scales.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent[] {
-            this.arcScaleComponent3,
-            this.arcScaleComponent4});
-            // 
-            // gaugeControl1
-            // 
-            this.gaugeControl1.AutoLayout = false;
-            this.gaugeControl1.BackColor = System.Drawing.Color.Gainsboro;
-            this.gaugeControl1.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
-            this.gaugeControl1.Gauges.AddRange(new DevExpress.XtraGauges.Base.IGauge[] {
-            this.SpeedGauge});
-            this.gaugeControl1.Location = new System.Drawing.Point(538, -8);
-            this.gaugeControl1.Name = "gaugeControl1";
-            this.gaugeControl1.Size = new System.Drawing.Size(135, 139);
-            this.gaugeControl1.TabIndex = 56;
-            // 
-            // velLabel
-            // 
-            this.velLabel.Location = new System.Drawing.Point(538, 127);
-            this.velLabel.Name = "velLabel";
-            this.velLabel.Size = new System.Drawing.Size(135, 16);
-            this.velLabel.TabIndex = 78;
-            this.velLabel.Text = "Velocity:";
-            this.velLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // HDOPLabel
-            // 
-            this.HDOPLabel.AutoSize = true;
-            this.HDOPLabel.Location = new System.Drawing.Point(40, 14);
-            this.HDOPLabel.Name = "HDOPLabel";
-            this.HDOPLabel.Size = new System.Drawing.Size(41, 13);
-            this.HDOPLabel.TabIndex = 79;
-            this.HDOPLabel.Text = "HDOP:";
-            // 
-            // VDOPLabel
-            // 
-            this.VDOPLabel.AutoSize = true;
-            this.VDOPLabel.Location = new System.Drawing.Point(40, 38);
-            this.VDOPLabel.Name = "VDOPLabel";
-            this.VDOPLabel.Size = new System.Drawing.Size(40, 13);
-            this.VDOPLabel.TabIndex = 80;
-            this.VDOPLabel.Text = "VDOP:";
-            // 
-            // TDOPLabel
-            // 
-            this.TDOPLabel.AutoSize = true;
-            this.TDOPLabel.Location = new System.Drawing.Point(40, 62);
-            this.TDOPLabel.Name = "TDOPLabel";
-            this.TDOPLabel.Size = new System.Drawing.Size(40, 13);
-            this.TDOPLabel.TabIndex = 81;
-            this.TDOPLabel.Text = "TDOP:";
-            // 
-            // HDOPValue
-            // 
-            this.HDOPValue.AutoSize = true;
-            this.HDOPValue.Location = new System.Drawing.Point(96, 14);
-            this.HDOPValue.Name = "HDOPValue";
-            this.HDOPValue.Size = new System.Drawing.Size(13, 13);
-            this.HDOPValue.TabIndex = 82;
-            this.HDOPValue.Text = "0";
-            // 
-            // VDOPValue
-            // 
-            this.VDOPValue.AutoSize = true;
-            this.VDOPValue.Location = new System.Drawing.Point(96, 38);
-            this.VDOPValue.Name = "VDOPValue";
-            this.VDOPValue.Size = new System.Drawing.Size(13, 13);
-            this.VDOPValue.TabIndex = 83;
-            this.VDOPValue.Text = "0";
-            // 
-            // TDOPValue
-            // 
-            this.TDOPValue.AutoSize = true;
-            this.TDOPValue.Location = new System.Drawing.Point(96, 62);
-            this.TDOPValue.Name = "TDOPValue";
-            this.TDOPValue.Size = new System.Drawing.Size(13, 13);
-            this.TDOPValue.TabIndex = 84;
-            this.TDOPValue.Text = "0";
-            // 
-            // ResetZoom
-            // 
-            this.ResetZoom.BackColor = System.Drawing.Color.Gainsboro;
-            this.ResetZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ResetZoom.Location = new System.Drawing.Point(3, 568);
-            this.ResetZoom.Name = "ResetZoom";
-            this.ResetZoom.Size = new System.Drawing.Size(65, 23);
-            this.ResetZoom.TabIndex = 85;
-            this.ResetZoom.Text = "Reset Zoom";
-            this.ResetZoom.UseVisualStyleBackColor = false;
-            this.ResetZoom.Visible = false;
-            this.ResetZoom.Click += new System.EventHandler(this.ResetZoom_Click);
-            // 
             // GraphOptions
             // 
             this.GraphOptions.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -2300,7 +1490,6 @@
             this.GraphOptions.Name = "GraphOptions";
             this.GraphOptions.ShowImageMargin = false;
             this.GraphOptions.Size = new System.Drawing.Size(138, 76);
-            this.GraphOptions.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.GraphOptions_ItemClicked);
             // 
             // SaveToImage
             // 
@@ -2325,110 +1514,149 @@
             this.ImportData.Size = new System.Drawing.Size(137, 22);
             this.ImportData.Text = "Import Chart Data";
             // 
-            // ImageSaveDialog
+            // radGridView1
             // 
-            this.ImageSaveDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.ImageSaveDialog_FileOk);
+            this.radGridView1.BackColor = System.Drawing.Color.Gainsboro;
+            this.radGridView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.radGridView1.EnableTheming = false;
+            this.radGridView1.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.radGridView1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.radGridView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.radGridView1.Location = new System.Drawing.Point(10, 156);
             // 
-            // DataExporter
+            // radGridView1
             // 
-            this.DataExporter.FileOk += new System.ComponentModel.CancelEventHandler(this.DataExporter_FileOk);
+            this.radGridView1.MasterTemplate.AddNewRowPosition = Telerik.WinControls.UI.SystemRowPosition.Bottom;
+            this.radGridView1.MasterTemplate.AllowAddNewRow = false;
+            this.radGridView1.MasterTemplate.AllowColumnReorder = false;
+            gridViewTextBoxColumn1.EnableExpressionEditor = false;
+            gridViewTextBoxColumn1.FormatString = "";
+            gridViewTextBoxColumn1.HeaderText = "#";
+            gridViewTextBoxColumn1.Name = "NumberColumn";
+            gridViewTextBoxColumn1.Width = 15;
+            gridViewTextBoxColumn2.EnableExpressionEditor = false;
+            gridViewTextBoxColumn2.FormatString = "";
+            gridViewTextBoxColumn2.HeaderText = "Name";
+            gridViewTextBoxColumn2.Name = "NameColumn";
+            gridViewTextBoxColumn2.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn2.Width = 38;
+            gridViewTextBoxColumn3.HeaderText = "MAC";
+            gridViewTextBoxColumn3.Name = "MacColumn";
+            gridViewTextBoxColumn3.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn3.Width = 33;
+            gridViewTextBoxColumn4.EnableExpressionEditor = false;
+            gridViewTextBoxColumn4.FormatString = "";
+            gridViewTextBoxColumn4.HeaderText = "Voltage";
+            gridViewTextBoxColumn4.Name = "VoltageColumn";
+            gridViewTextBoxColumn4.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn4.Width = 47;
+            gridViewTextBoxColumn5.EnableExpressionEditor = false;
+            gridViewTextBoxColumn5.FormatString = "";
+            gridViewTextBoxColumn5.HeaderText = "Current";
+            gridViewTextBoxColumn5.Name = "CurrentColumn";
+            gridViewTextBoxColumn5.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn5.Width = 46;
+            gridViewTextBoxColumn6.EnableExpressionEditor = false;
+            gridViewTextBoxColumn6.FormatString = "";
+            gridViewTextBoxColumn6.HeaderText = "Stability";
+            gridViewTextBoxColumn6.Name = "StabilityColumn";
+            gridViewTextBoxColumn6.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn6.Width = 48;
+            gridViewTextBoxColumn7.EnableExpressionEditor = false;
+            gridViewTextBoxColumn7.FormatString = "";
+            gridViewTextBoxColumn7.HeaderText = "Last Locked";
+            gridViewTextBoxColumn7.Name = "LastLockColumn";
+            gridViewTextBoxColumn7.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn7.Width = 66;
+            gridViewTextBoxColumn8.HeaderText = "RSSI Base Station";
+            gridViewTextBoxColumn8.Name = "RSSIBTSColumn";
+            gridViewTextBoxColumn8.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn8.Width = 94;
+            gridViewTextBoxColumn9.HeaderText = "RSSI Central";
+            gridViewTextBoxColumn9.Name = "RSSICColumn";
+            gridViewTextBoxColumn9.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn9.Width = 69;
+            gridViewTextBoxColumn10.EnableExpressionEditor = false;
+            gridViewTextBoxColumn10.FormatString = "";
+            gridViewTextBoxColumn10.HeaderText = "Temperature";
+            gridViewTextBoxColumn10.Name = "TemperatureColumn";
+            gridViewTextBoxColumn10.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn10.Width = 72;
+            gridViewTextBoxColumn11.EnableExpressionEditor = false;
+            gridViewTextBoxColumn11.FormatString = "";
+            gridViewTextBoxColumn11.HeaderText = "Battery";
+            gridViewTextBoxColumn11.Name = "BatteryColumn";
+            gridViewTextBoxColumn11.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn11.Width = 43;
+            gridViewTextBoxColumn12.HeaderText = "BTS Mode";
+            gridViewTextBoxColumn12.Name = "ModeColumn";
+            gridViewTextBoxColumn12.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewTextBoxColumn12.Width = 59;
+            gridViewCommandColumn1.EnableExpressionEditor = false;
+            gridViewCommandColumn1.FormatString = "";
+            gridViewCommandColumn1.HeaderText = "ShowDetail";
+            gridViewCommandColumn1.Name = "DetailColumn";
+            gridViewCommandColumn1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
+            gridViewCommandColumn1.Width = 64;
+            this.radGridView1.MasterTemplate.Columns.AddRange(new Telerik.WinControls.UI.GridViewDataColumn[] {
+            gridViewTextBoxColumn1,
+            gridViewTextBoxColumn2,
+            gridViewTextBoxColumn3,
+            gridViewTextBoxColumn4,
+            gridViewTextBoxColumn5,
+            gridViewTextBoxColumn6,
+            gridViewTextBoxColumn7,
+            gridViewTextBoxColumn8,
+            gridViewTextBoxColumn9,
+            gridViewTextBoxColumn10,
+            gridViewTextBoxColumn11,
+            gridViewTextBoxColumn12,
+            gridViewCommandColumn1});
+            this.radGridView1.MasterTemplate.EnableGrouping = false;
+            this.radGridView1.Name = "radGridView1";
+            this.radGridView1.ReadOnly = true;
+            this.radGridView1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.radGridView1.Size = new System.Drawing.Size(899, 429);
+            this.radGridView1.TabIndex = 85;
+            this.radGridView1.Text = "radGridView1";
             // 
-            // DataImporter
+            // button1
             // 
-            this.DataImporter.FileOk += new System.ComponentModel.CancelEventHandler(this.DataImporter_FileOk);
+            this.button1.Location = new System.Drawing.Point(10, 98);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 86;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Serial1check
+            // timer1
             // 
-            this.Serial1check.AutoSize = true;
-            this.Serial1check.Checked = true;
-            this.Serial1check.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.Serial1check.Location = new System.Drawing.Point(7, 597);
-            this.Serial1check.Name = "Serial1check";
-            this.Serial1check.Size = new System.Drawing.Size(58, 17);
-            this.Serial1check.TabIndex = 86;
-            this.Serial1check.Text = "Serial1";
-            this.Serial1check.UseVisualStyleBackColor = true;
-            this.Serial1check.Visible = false;
-            this.Serial1check.CheckedChanged += new System.EventHandler(this.Serial1check_CheckedChanged);
-            // 
-            // Serial2Check
-            // 
-            this.Serial2Check.AutoSize = true;
-            this.Serial2Check.Location = new System.Drawing.Point(7, 620);
-            this.Serial2Check.Name = "Serial2Check";
-            this.Serial2Check.Size = new System.Drawing.Size(58, 17);
-            this.Serial2Check.TabIndex = 87;
-            this.Serial2Check.Text = "Serial2";
-            this.Serial2Check.UseVisualStyleBackColor = true;
-            this.Serial2Check.Visible = false;
-            this.Serial2Check.CheckedChanged += new System.EventHandler(this.Serial2Check_CheckedChanged);
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 1000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // BTSDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(815, 615);
-            this.Controls.Add(this.Serial2Check);
-            this.Controls.Add(this.Serial1check);
-            this.Controls.Add(this.ResetZoom);
-            this.Controls.Add(this.ControlPanel);
-            this.Controls.Add(this.TDOPValue);
-            this.Controls.Add(this.VDOPValue);
-            this.Controls.Add(this.HDOPValue);
-            this.Controls.Add(this.TDOPLabel);
-            this.Controls.Add(this.VDOPLabel);
-            this.Controls.Add(this.HDOPLabel);
-            this.Controls.Add(this.velLabel);
+            this.ClientSize = new System.Drawing.Size(917, 616);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.radGridView1);
             this.Controls.Add(this.label12);
-            this.Controls.Add(this.gaugeControl1);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupControl6);
             this.Controls.Add(this.groupControl2);
             this.Controls.Add(this.groupControl5);
             this.Controls.Add(this.groupControl1);
             this.Controls.Add(this.groupControl4);
-            this.Controls.Add(this.ControlPanelButton);
-            this.Controls.Add(this.ClearButton);
-            this.Controls.Add(this.graphDataCombo);
-            this.Controls.Add(this.GraphToggle);
-            this.Controls.Add(this.label10);
-            this.Controls.Add(this.label11);
-            this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.ChartVisibleCheck);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.PDOPValue);
-            this.Controls.Add(this.PDOPLabel);
-            this.Controls.Add(this.AltitudeValue);
-            this.Controls.Add(this.AltitudeLabel);
-            this.Controls.Add(this.LongitudeValue);
-            this.Controls.Add(this.LongitudeLabel);
-            this.Controls.Add(this.LatitudeValue);
-            this.Controls.Add(this.LatitudeLabel);
             this.Controls.Add(this.ultraGaugeClock);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.chart1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.chart2);
-            this.Controls.Add(this.c1Chart1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BTSDetail";
             this.Text = "MomentDetail";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MomentDetail_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
-            this.ControlPanel.ResumeLayout(false);
-            this.ControlPanel.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.c1Chart1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).EndInit();
             this.groupControl4.ResumeLayout(false);
             this.groupControl4.PerformLayout();
@@ -2473,20 +1701,14 @@
             this.groupControl2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.listBoxGLONASS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.listBoxGPS)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleNeedleComponent1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.circularGauge1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleNeedleComponent2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.GraphOptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.radGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2494,42 +1716,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Button button1;
         private Infragistics.Win.UltraWinGauge.UltraGauge ultraGaugeClock;
-        private System.Windows.Forms.Label LatitudeLabel;
-        private System.Windows.Forms.Label LatitudeValue;
-        private System.Windows.Forms.Label LongitudeLabel;
-        private System.Windows.Forms.Label LongitudeValue;
-        private System.Windows.Forms.Label AltitudeLabel;
-        private System.Windows.Forms.Label AltitudeValue;
-        private System.Windows.Forms.Label PDOPLabel;
-        private System.Windows.Forms.Label PDOPValue;
-        private System.Windows.Forms.GroupBox ControlPanel;
-        private System.Windows.Forms.Button NextFrame;
-        private System.Windows.Forms.Button PreviousFrame;
-        private System.Windows.Forms.RadioButton QuadRadio;
-        private System.Windows.Forms.RadioButton DoubleRadio;
-        private System.Windows.Forms.RadioButton NormalRadio;
-        private System.Windows.Forms.RadioButton HalfRadio;
-        private System.Windows.Forms.RadioButton QuarterRadio;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.CheckBox ChartVisibleCheck;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
@@ -2537,11 +1725,6 @@
         private System.Windows.Forms.ToolStripStatusLabel StartTimeLabel;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel5;
         private System.Windows.Forms.ToolStripStatusLabel EndTimeLabel;
-        private System.Windows.Forms.Button GraphToggle;
-        private C1.Win.C1Chart.C1Chart c1Chart1;
-        private System.Windows.Forms.ComboBox graphDataCombo;
-        private System.Windows.Forms.Button ClearButton;
-        private System.Windows.Forms.Button ControlPanelButton;
         private DevExpress.XtraEditors.GroupControl groupControl4;
         private System.Windows.Forms.ComboBox PositionTypeCombo;
         private System.Windows.Forms.NumericUpDown AllSatsMax;
@@ -2620,28 +1803,12 @@
         private System.Windows.Forms.ToolStripMenuItem coldStartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hotStartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem warmStartToolStripMenuItem;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent arcScaleComponent2;
         private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent arcScaleNeedleComponent1;
         private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent arcScaleComponent1;
         private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent arcScaleBackgroundLayerComponent2;
         private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent arcScaleBackgroundLayerComponent1;
         private DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge circularGauge1;
-        private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent arcScaleComponent4;
-        private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent arcScaleNeedleComponent2;
-        private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent arcScaleComponent3;
-        private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent arcScaleBackgroundLayerComponent4;
-        private DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent arcScaleBackgroundLayerComponent3;
-        private DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge SpeedGauge;
-        private DevExpress.XtraGauges.Win.GaugeControl gaugeControl1;
-        private System.Windows.Forms.Label velLabel;
-        private System.Windows.Forms.Label HDOPLabel;
-        private System.Windows.Forms.Label VDOPLabel;
-        private System.Windows.Forms.Label TDOPLabel;
-        private System.Windows.Forms.Label HDOPValue;
-        private System.Windows.Forms.Label VDOPValue;
-        private System.Windows.Forms.Label TDOPValue;
-        private System.Windows.Forms.Button ResetZoom;
         private System.Windows.Forms.ContextMenuStrip GraphOptions;
         private System.Windows.Forms.ToolStripMenuItem SaveToImage;
         private System.Windows.Forms.SaveFileDialog ImageSaveDialog;
@@ -2651,7 +1818,9 @@
         private System.Windows.Forms.OpenFileDialog DataImporter;
         private System.Windows.Forms.ToolTip GraphTooltip;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.CheckBox Serial1check;
-        private System.Windows.Forms.CheckBox Serial2Check;
+        private Telerik.WinControls.UI.RadGridView radGridView1;
+        private Telerik.WinControls.RadThemeManager radThemeManager1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
