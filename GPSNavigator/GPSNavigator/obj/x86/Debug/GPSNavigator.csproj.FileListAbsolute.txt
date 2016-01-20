@@ -17,9 +17,6 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\DevExp
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Shared.v12.1.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.UltraWinEditors.v12.1.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.v12.1.dll
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics4.Shared.v12.1.dll
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics4.Win.UltraWinChart.v12.1.dll
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics4.Win.UltraWinGauge.v12.1.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Microsoft.CSharp.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Microsoft.VisualBasic.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Telerik.WinControls.dll
@@ -39,9 +36,6 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\DevExp
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Shared.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.UltraWinEditors.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.v12.1.xml
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics4.Shared.v12.1.xml
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics4.Win.UltraWinChart.v12.1.xml
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics4.Win.UltraWinGauge.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Telerik.WinControls.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Telerik.WinControls.RadDock.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Telerik.WinControls.UI.xml
@@ -95,3 +89,4 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GP
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.exe
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.pdb
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.BTSDetail.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.BaseStation.resources

@@ -1619,6 +1619,7 @@
             this.radGridView1.Size = new System.Drawing.Size(899, 429);
             this.radGridView1.TabIndex = 85;
             this.radGridView1.Text = "radGridView1";
+            this.radGridView1.CellClick += new Telerik.WinControls.UI.GridViewCellEventHandler(this.radGridView1_CellClick);
             // 
             // button1
             // 

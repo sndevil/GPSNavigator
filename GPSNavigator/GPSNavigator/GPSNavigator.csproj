@@ -104,16 +104,8 @@
     <Reference Include="Infragistics2.Win.UltraWinEditors.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="Infragistics2.Win.UltraWinGauge.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL" />
     <Reference Include="Infragistics2.Win.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Infragistics4.Shared.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Infragistics4.Win.UltraWinChart.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Infragistics4.Win.UltraWinGauge.v12.1, Version=12.1.20121.1001, Culture=neutral, PublicKeyToken=7dd5c3163f2cd0cb, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
@@ -172,6 +164,12 @@
     </Compile>
     <Compile Include="Avionics\InstrumentControl.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BaseStation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BaseStation.Designer.cs">
+      <DependentUpon>BaseStation.cs</DependentUpon>
     </Compile>
     <Compile Include="ControlPanel.cs">
       <SubType>Form</SubType>
@@ -233,6 +231,9 @@
       <DependentUpon>AddLicense.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Avionics\AvionicsInstrumentsControlsRessources.resx" />
+    <EmbeddedResource Include="BaseStation.resx">
+      <DependentUpon>BaseStation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ControlPanel.resx">
       <DependentUpon>ControlPanel.cs</DependentUpon>
     </EmbeddedResource>

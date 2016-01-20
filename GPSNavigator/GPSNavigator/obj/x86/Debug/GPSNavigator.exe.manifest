@@ -44,6 +44,11 @@
   </dependency>
   <dependency>
     <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Infragistics2.Win.UltraWinGauge.v12.1" version="12.1.20121.1001" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
       <assemblyIdentity name="Telerik.WinControls.GridView" version="2012.2.608.40" publicKeyToken="5BB2A467CBEC794E" language="neutral" processorArchitecture="msil" />
     </dependentAssembly>
   </dependency>
@@ -600,14 +605,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GPSNavigator.exe" size="6857728">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GPSNavigator.exe" size="6902272">
       <assemblyIdentity name="GPSNavigator" version="1.1.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>5b3CxipJx60Alla7Vb0qM5E6xJY=</dsig:DigestValue>
+        <dsig:DigestValue>yk2wgmouTHvRgYXS2QYhfKUYEKU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -644,42 +649,6 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
         <dsig:DigestValue>zy2GCYYyG6EGBX7OLfEv0c3cn2I=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Infragistics4.Shared.v12.1.dll" size="315392">
-      <assemblyIdentity name="Infragistics4.Shared.v12.1" version="12.1.20121.1001" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>6381CGFhVKrhvX7R11VUULCtddw=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Infragistics4.Win.UltraWinChart.v12.1.dll" size="1794048">
-      <assemblyIdentity name="Infragistics4.Win.UltraWinChart.v12.1" version="12.1.20121.1001" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>yP/v7ZWnkkZue1lF7KS/i4Ew9vo=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Infragistics4.Win.UltraWinGauge.v12.1.dll" size="431104">
-      <assemblyIdentity name="Infragistics4.Win.UltraWinGauge.v12.1" version="12.1.20121.1001" publicKeyToken="7DD5C3163F2CD0CB" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>q8Lg1FZ1gAzZ1C2mEMBJeogCeDE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
