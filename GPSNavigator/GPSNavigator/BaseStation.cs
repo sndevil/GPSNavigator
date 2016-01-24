@@ -17,15 +17,26 @@ namespace GPSNavigator
         public bool xyz = true;
         public GEOpoint LatLong;
         public double x, y, z;
+        public bool ackRecievedFlag,ShowingSettings = false;
+        public int BasestationNumber;
+        public BTSDetail Parentform;
 
-        public BaseStation()
+        public BaseStation(BTSDetail parent)
         {
             InitializeComponent();
+            PositionLabel1.Click += new EventHandler(ClickListener_Click);
+            PositionLabel2.Click += new EventHandler(ClickListener_Click);
+            PositionLabel3.Click += new EventHandler(ClickListener_Click);
+            PositionValue1.Click += new EventHandler(ClickListener_Click);
+            PositionValue2.Click += new EventHandler(ClickListener_Click);
+            PositionValue3.Click += new EventHandler(ClickListener_Click);
+            Parentform = parent;
         }
 
         public void ShowBaseStation(BaseStationInfo info)
         {
             NameLabel.Text = "BTS#" + info.stationNumber.ToString();
+            BasestationNumber = info.stationNumber;
             UpdateGUI(info);
         }
         public void UpdateGUI(BaseStationInfo toUpdate)
@@ -45,6 +56,7 @@ namespace GPSNavigator
 
                 linearScaleLevelComponent1.Value = (float)(toUpdate.humidity);
                 linearScaleComponent2.Value = (float)toUpdate.batteryCharge;
+                BatteryLevelLabel.Text = toUpdate.batteryCharge.ToString() + "%";
 
             }
             catch
@@ -77,7 +89,8 @@ namespace GPSNavigator
             }
         }
 
-        private void ChangePosTypeButton_Click(object sender, EventArgs e)
+
+        private void ClickListener_Click(object sender, EventArgs e)
         {
             if (xyz)
             {
@@ -91,6 +104,70 @@ namespace GPSNavigator
             }
         }
 
+        private void ToggleSettings_Click(object sender, EventArgs e)
+        {
+            if (ShowingSettings)
+            {
+                this.Width = 800;
+                ToggleSettings.Text = ">";
+            }
+            else
+            {
+                this.Width = 1000;
+                ToggleSettings.Text = "<";
+            }
+            ShowingSettings = !ShowingSettings;
+        }
+
+        private void SetPositionBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendChangePosCommand(BasestationNumber, Convert.ToDouble(LatTextbox.Text), Convert.ToDouble(LongTextbox.Text), Convert.ToDouble(AltTextbox.Text));
+        }
+
+        private void SetPositionModeBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendChangePosModeCommand(BasestationNumber, PosModeCombo.SelectedIndex);
+        }
+
+        private void SetTimeBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendChangeTimeCommand(BasestationNumber, timeEdit.Time, dateEdit.DateTime,checkEditSetGPSTime.Checked);
+        }
+
+        private void SetRangeBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendChangeRangeCommand(BasestationNumber, Convert.ToDouble(RangeTextbox.Text));
+        }
+
+        private void SetNumberBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendChangeNumberCommand(BasestationNumber, Convert.ToInt32(NumberTextbox.Text));
+        }
+
+        private void GetStatusBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendGetStatusCommand(BasestationNumber);
+        }
+
+        private void ResetBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendResetCommand(BasestationNumber);
+        }
+
+        private void TurnOnBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendTurnOnCommand(BasestationNumber);
+        }
+
+        private void TurnOffBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendTurnOffCommand(BasestationNumber);
+        }
+
+        private void SaveBtn_Click(object sender, EventArgs e)
+        {
+            Parentform.SendSaveSettingsCommand(BasestationNumber);
+        }
 
     }
 }

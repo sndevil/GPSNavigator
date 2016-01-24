@@ -613,6 +613,9 @@ namespace GPSNavigator
 
         }
 
-
+        public void CloseFiles()
+        {
+            filemanager.Close();
+        }
     }
 }

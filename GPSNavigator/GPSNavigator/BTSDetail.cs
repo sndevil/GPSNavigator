@@ -26,6 +26,24 @@ namespace GPSNavigator
         public List<int> BlinkingList = new List<int>();
         public List<int> BlinkingList2 = new List<int>();
         public DateTime datetime;
+        public bool ackRecivedFlag = true;
+
+        int[,] conditionThreshoulds =
+        {
+            {5,10,15,20},  // No
+            {5,10,15,20},  // MAC
+            {5,10,15,20},  // Name
+            {10,11,13,14},  // Voltage
+            {1,2,3,4},  // Current
+            {0,1,2,3},  // Stability
+            {50,100,150,200},  // Last Locked
+            {-100,-90,-40,-30},  // RSSI Base Station
+            {-100,-90,-40,-30},  // RSSI Central Station
+            {-20,10,55,85},  // Temprature
+            {40,70,100,120}   // Battery
+        };
+        int DataReceiveTimeOut = 1000, DataReceiveTimeOutS2 = 1000, ackTimeOutCounter = 0, maxDetectedBaseStationNumber = 10;
+
 
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
 
@@ -128,6 +146,7 @@ namespace GPSNavigator
         public void AddBTS(BaseStationInfo toAdd)
         {
             toAdd.rownumber = radGridView1.Rows.Count;
+            toAdd.connectionAcount = Functions.MAX_CONNECTION_ACOUNT;
             BaseStationList.Add(toAdd);
             var basestationstate = toAdd.ltrHealth / 16;
             string str;
@@ -197,6 +216,7 @@ namespace GPSNavigator
 
         public void UpdateBTSInfo(SingleDataBuffer databuffer, int index)
         {
+            databuffer.BaseStationBuffer.connectionAcount = Functions.MAX_CONNECTION_ACOUNT;
             BaseStationList[index] = databuffer.BaseStationBuffer;
             GridViewRowInfo item = radGridView1.Rows[index];
             AddBlinkingCell(index);
@@ -224,11 +244,31 @@ namespace GPSNavigator
                 item.Cells[11].Value = str;
                 item.Cells[12].Value = "View Details";
 
-                foreach (GridViewCellInfo cell in item.Cells)
+                item.Cells[0].Style.CustomizeFill = true;
+                item.Cells[0].Style.DrawFill = true;
+                item.Cells[0].Style.BackColor = Color.Lime;
+                item.Cells[1].Style.CustomizeFill = true;
+                item.Cells[1].Style.DrawFill = true;
+                item.Cells[1].Style.BackColor = Color.Lime;
+                item.Cells[11].Style.CustomizeFill = true;
+                item.Cells[11].Style.DrawFill = true;
+                item.Cells[11].Style.BackColor = Color.Lime;
+                item.Cells[12].Style.CustomizeFill = true;
+                item.Cells[12].Style.DrawFill = true;
+                item.Cells[12].Style.BackColor = Color.Lime;
+
+                for (int i = 2; i < 11; i++)
                 {
-                    cell.Style.CustomizeFill = true;
-                    cell.Style.DrawFill = true;
-                    cell.Style.BackColor = Color.Lime;
+                    item.Cells[i].Style.CustomizeFill = true;
+                    item.Cells[i].Style.DrawFill = true;
+                    var val = (int)Convert.ToDouble(item.Cells[i].Value);
+                    if ((val >= conditionThreshoulds[index, 1]) && (val <= conditionThreshoulds[index, 2]))
+                        item.Cells[i].Style.BackColor = Color.Lime;
+                    else if (((val >= conditionThreshoulds[index, 0]) && (val < conditionThreshoulds[index, 1])) ||
+                            ((val > conditionThreshoulds[index, 2]) && (val <= conditionThreshoulds[index, 3])))
+                        item.Cells[i].Style.BackColor = Color.Yellow;
+                    else
+                        item.Cells[i].Style.BackColor = Color.DarkOrange;
                 }
 
                 var formidx = BaseStationFormList.FindIndex(x => x.data.stationNumber == databuffer.BaseStationBuffer.stationNumber);                
@@ -365,7 +405,7 @@ namespace GPSNavigator
 
         private void radGridView1_CellClick(object sender, GridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 12 && e.Row.Cells[1].Style.BackColor != Color.Red)
+            if (e.RowIndex >= 0 && e.ColumnIndex == 12 && e.Row.Cells[1].Style.BackColor != Color.Red)
             {
                 var stationnumber = Convert.ToInt32(e.Row.Cells[0].Value);
                 var idx = BaseStationList.FindIndex(x => x.stationNumber == stationnumber);
@@ -394,7 +434,7 @@ namespace GPSNavigator
             if (idx == -1)
             {
                 //not found. make a new page for it
-                var BaseStationForm = new BaseStation();
+                var BaseStationForm = new BaseStation(this);
                 BaseStationForm.ShowBaseStation(basestation);
                 BaseStationForm.Dock = DockStyle.None;
                 BaseStationForm.TopLevel = false;
@@ -408,7 +448,7 @@ namespace GPSNavigator
             }
             else if (formidx == -1)
             {
-                var BaseStationForm = new BaseStation();
+                var BaseStationForm = new BaseStation(this);
                 BaseStationForm.ShowBaseStation(basestation);
                 BaseStationForm.Dock = DockStyle.None;
                 BaseStationForm.TopLevel = false;
@@ -438,6 +478,621 @@ namespace GPSNavigator
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = toshow.Hour + (double)toshow.Minute / 60;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[1].Markers[0].Value = toshow.Minute;
             ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[2].Markers[0].Value = toshow.Second;
+        }
+
+        public void SendChangePosCommand(int number,double lat, double longi,double alt)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+                Int32 result;
+                char[] xyz = new char[4];
+
+                XYZpoint xyzpos = new XYZpoint();
+                //command 1: 
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.BASE_STATION_SET_POS_CMD;
+                index++;
+                //set base station number
+
+                Msg[index] = (char)number;
+                index++;
+                xyzpos = Functions.Calculate_XYZ_From_LatLongAlt(lat, longi, alt);
+
+                result = (Int32)(xyzpos.x * 100);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Msg[index] = (char)(result & 0xFF);
+                    result >>= 8;
+                    index++;
+                }
+
+                result = (Int32)(xyzpos.y * 100);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Msg[index] = (char)(result & 0xFF);
+                    result >>= 8;
+                    index++;
+                }
+
+                result = (Int32)(xyzpos.z * 100);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    Msg[index] = (char)(result & 0xFF);
+                    result >>= 8;
+                    index++;
+                }
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error: " + ex.Message);
+            }
+            ackRecivedFlag = false;   
+        }
+
+        public void SendChangePosModeCommand(int number, int ind)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                double altitude = 0, longitude = 0, latitude = 0;
+                Int32 result;
+                int index=0;
+                char[] xyz = new char[4];
+                //command 1: 
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.CHANGE_BASE_STATION_POSITIONING_MODE_CMD;
+                index++;
+                //set base station number
+
+                Msg[index] = (char)number;
+                index++;
+
+                Msg[index] = (char)ind;
+                index++;
+
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);                   
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error: " + ex.Message);
+            }
+            ackRecivedFlag = false;
+        }
+
+        public void SendChangeNumberCommand(int currentnumber, int afterchange)
+        {
+            DialogResult messageBoxShow = MessageBox.Show("Are You Sure Want to Change BaseStation Number?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (messageBoxShow == DialogResult.Yes)
+            {
+                try
+                {
+                    char[] Msg = new char[60];
+                    byte[] byteMsg = new byte[60];
+                    int index = 0;
+                    //command 1: 
+                    //Header
+                    Msg[index] = Functions.MSG_Header[0];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[1];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[2];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[3];
+                    index++;
+
+                    //CMD
+                    Msg[index] = Functions.BASE_STATION_CHANGE_NUMBER_CMD;
+                    index++;
+                    //set base station number
+
+                    Msg[index] = (char)currentnumber;
+                    index++;
+
+                    //set new baseStation Number
+                    Msg[index] = (char)afterchange;
+                    index++;
+
+                    //CRC
+                    Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                    index++;
+
+                    for (int i = 0; i < index; i++)
+                        byteMsg[i] = (byte)Msg[i];
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        Parentform.Serial1_Write(byteMsg, i, 1);
+                        Thread.Sleep(20);
+                        Application.DoEvents();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("There was an error: " + ex.Message);
+                }
+                ackRecivedFlag = false;
+            }
+        }
+
+        public void SendChangeRangeCommand(int number, double range)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+
+                //command 1: 
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.SET_RANGE_OFFSET_CMD;
+                index++;
+                //set base station number
+
+                Msg[index] = (char)number;
+                index++;
+                try
+                {
+                    int offset = (int)(range * 100);
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Msg[index] = (char)(offset % 256);
+                        index++;
+                        offset /= 256;
+                    }
+
+                }
+                catch
+                {
+
+                }
+
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);                   
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error: " + ex.Message);
+            }
+            ackRecivedFlag = false;
+        }
+
+        public void SendChangeTimeCommand(int number, DateTime time, DateTime date,bool fromGPS)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.BASE_STATION_SET_TIME_CMD;
+                index++;
+
+                //set base station number
+                Msg[index] = (char)number;
+                index++;
+                //Set GPS Time
+                //Msg[index] = (char)(formBaseStationSetTime.checkEditSetGPSTime.Checked ? 1 : 0);
+                //index++;
+
+                //Year
+                Msg[index] = (char)(date.Year >> 8);
+                index++;
+                Msg[index] = (char)(date.Year & 0xff);
+                index++;
+
+                Msg[index] = (char)(date.Month);
+                index++;
+
+                Msg[index] = (char)(date.Day);
+                index++;
+
+                Msg[index] = (char)(time.Hour);
+                index++;
+
+                Msg[index] = (char)(time.Minute);
+                index++;
+
+                Msg[index] = (char)(time.Second);
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);                    
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error: " + ex.Message);
+            }
+            ackRecivedFlag = false;
+        }
+
+        public void SendResetCommand(int number)
+        {
+            DialogResult result = MessageBox.Show("Are you sure to Reset BTS#" + number.ToString() + "?", "BaseStation", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                try
+                {
+                    char[] Msg = new char[60];
+                    byte[] byteMsg = new byte[60];
+                    int index = 0;
+
+                    //command 1: 
+                    //Header
+                    Msg[index] = Functions.MSG_Header[0];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[1];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[2];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[3];
+                    index++;
+                    Msg[index] = Functions.BASE_STATION_RESET_LTR_CMD;
+                    //ackRecivedFlag = false;
+
+                    index++;
+
+                    Msg[index] = (char)number;
+                    index++;
+                    Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                    index++;
+
+                    for (int i = 0; i < index; i++)
+                        byteMsg[i] = (byte)Msg[i];
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        Parentform.Serial1_Write(byteMsg, i, 1);
+                        Thread.Sleep(20);
+                        Application.DoEvents();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+                }
+                ackRecivedFlag = false;
+            }
+        }
+
+        public void SendTurnOnCommand(int number)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.TURN_ON_OFF_LTR_CMD;
+                index++;
+
+                Msg[index] = (char)number;
+                index++;
+
+                Msg[index] = '1';
+                index++;
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error: " + ex.Message);
+            }
+            ackRecivedFlag = false;
+        }
+
+        public void SendTurnOffCommand(int number)
+        {
+            DialogResult result = MessageBox.Show("Are you sure to turn off BTS#" + number.ToString()+"?","BaseStation",MessageBoxButtons.YesNo,MessageBoxIcon.Warning);
+
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                try
+                {
+                    char[] Msg = new char[60];
+                    byte[] byteMsg = new byte[60];
+                    int index = 0;
+
+                    //Header
+                    Msg[index] = Functions.MSG_Header[0];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[1];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[2];
+                    index++;
+                    Msg[index] = Functions.MSG_Header[3];
+                    index++;
+
+                    //CMD
+                    Msg[index] = Functions.TURN_ON_OFF_LTR_CMD;
+                    index++;
+
+                    Msg[index] = (char)number;
+                    index++;
+
+                    Msg[index] = '0';
+                    index++;
+                    //CRC
+                    Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                    index++;
+
+                    for (int i = 0; i < index; i++)
+                        byteMsg[i] = (byte)Msg[i];
+
+                    for (int i = 0; i < index; i++)
+                    {
+                        Parentform.Serial1_Write(byteMsg, i, 1);
+                        Thread.Sleep(20);
+                        Application.DoEvents();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("There was an error: " + ex.Message);
+                }
+                ackRecivedFlag = false;
+            }
+        }
+
+        public void SendSaveSettingsCommand(int number)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.SAVE_SETTING_CMD;
+                index++;
+
+                Msg[index] = (char)number;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    //SelectedSerialPort.Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
+            ackRecivedFlag = false;
+        }
+
+        public void SendGetStatusCommand(int number)
+        {
+             try
+             {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+                    
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+                Msg[index] = Functions.BASE_STATION_GET_STATUS_CMD;
+                index++;
+
+                Msg[index] = (char)number;
+                index++;
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);                       
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+             }
+             catch (Exception ex)
+             {
+                 Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+             }
+
+
+        }
+
+        private void tmrDetectDisconnectedStation_Tick(object sender, EventArgs e)
+        {
+            for (int i = 0; i < BaseStationList.Count; i++)
+            {
+                BaseStationList[i].connectionAcount--;
+                if (BaseStationList[i].connectionAcount <= 0)        // Remove
+                {
+                    var number = BaseStationList[i].stationNumber;
+                    int index = -1;
+                    for (int j = 0; j < radGridView1.RowCount; j++)
+                        if (Convert.ToInt16(radGridView1.Rows[j].Cells[0].Value) == number)
+                            index = j;
+                    if (index != -1)
+                        radGridView1.Rows.RemoveAt(index);
+                    index = -1;
+                    for (int j = 0; j < BaseStationFormList.Count; j++)
+                        if (BaseStationFormList[j].BasestationNumber == number)
+                            index = j;
+                    if (index != -1)
+                    {
+                        for (int j = 0; j < Parentform.radDock1.DocumentManager.DocumentArray.Length; j++)
+                        {
+                            if (Parentform.radDock1.DocumentManager.DocumentArray[j].Text.Contains("BTS#" + number.ToString()))
+                            {
+                                Parentform.radDock1.DocumentManager.DocumentArray[j].Close();
+                            }
+                        }
+                        BaseStationFormList[index].Close();
+                        BaseStationFormList.RemoveAt(index);
+                    }
+                    BaseStationList.RemoveAt(i);
+
+                    // formBaseStationGetStatus.comboBox2.Items.RemoveAt(index);
+                }
+            }
+            ackTimeOutCounter++;
+            if (!ackRecivedFlag)
+            {
+                if (ackTimeOutCounter > 2)
+                {
+                    ackTimeOutCounter = 0;
+                    ackRecivedFlag = true;
+                    MessageBox.Show("ACK Signal Not Receive", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+                ackTimeOutCounter = 0;
+
         }
     }
 }

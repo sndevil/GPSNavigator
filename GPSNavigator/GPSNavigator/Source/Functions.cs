@@ -48,6 +48,17 @@ namespace GPSNavigator.Source
         public const char ATTITUDE_INFO_CMD = (char)26;
         public const char BASE_STATION_SET_TIME_CMD = (char)27;
         public const char BASE_STATION_SET_POS_CMD = (char)28;
+        public const char BASE_STATION_GET_STATUS_CMD = (char)29;
+        public const char BASE_STATION_RESET_LTR_CMD = (char)30;
+        public const char AUTOMATIC_SEARCH_ENABLE_CMD = (char)31;
+        public const char AUTOMATIC_SEARCH_DIABLE_CMD = (char)32;
+        public const char BASE_STATION_CHANGE_NUMBER_CMD = (char)33;
+        public const char CHANGE_BASE_STATION_POSITIONING_MODE_CMD = (char)34;
+        public const char SET_RANGE_OFFSET_CMD = (char)35;
+
+        public const char GET_STATUS_BASED_ON_MAC_CMD = (char)36;
+        public const char SET_LTR_TX_POWER_LEVEL_CMD = (char)37;
+        public const char TURN_ON_OFF_LTR_CMD = (char)38;
 
         public const int BIN_FULL_MSG_SIZE = 152;
         public const int BIN_FULL_PLUS_MSG_SIZE = 164;
@@ -2938,22 +2949,7 @@ namespace GPSNavigator.Source
         public static SingleDataBuffer Process_Binary_Message_BaseStation_Info(byte[] data, int serialNum)
         {
             SingleDataBuffer dbuf = new SingleDataBuffer();
-            Satellite[] GPS_satellite_channel1;
-            Satellite[] GLONASS_satellite_channel1;
             BaseStationInfo baseStationInfo = new BaseStationInfo();
-
-            //if (serialNum == 0)
-            //{
-            //    dbuf = dataBuf;
-            //    GPS_satellite_channel1 = GPSsat;
-            //    GLONASS_satellite_channel1 = GLONASSsat;
-            //}
-            //else
-            //{
-            //    dbuf = dataBuf2;
-            //    GPS_satellite_channel1 = GPSsatS2;
-            //    GLONASS_satellite_channel1 = GLONASSsatS2;
-            //}
 
             int checksum = calcrc(data, BIN_DUAL_CHANNEL_MSG_SIZE - 4);
             byte checksum0 = (byte)(checksum & 0xFF);
@@ -3082,15 +3078,6 @@ namespace GPSNavigator.Source
 
             baseStationInfo.rssiCenterStation = (int)(-120.0 + (a + b) * 0.5);
             index += 2;
-            //a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-            //baseStationInfo.readyFlyingObject = (int)a;
-            //index += 4;
-
-            // a = data[index + 3]; for (int i = 2; i >= 0; --i) a = a * 256 + data[index + i];
-            //baseStationInfo.readyFlyingObject = (int)a;
-            //index += 4;
-
-
 
             for (int i = 0; i < TOTAL_FLYING_OBJECTS_COUNT; ++i)
             {
@@ -3116,125 +3103,6 @@ namespace GPSNavigator.Source
             dbuf.BaseStationBuffer = baseStationInfo;
 
             return dbuf;
-            /*
-            bool availableStation = false;
-            //int stationIndex = baseStationInfo.stationNumber;
-            int stationIndex = baseStationInfo.stationMACNumber;
-
-            vars.strBaseStationInfo[stationIndex].stationNumber = baseStationInfo.stationNumber;
-            vars.strBaseStationInfo[stationIndex].stationMACNumber = baseStationInfo.stationMACNumber;
-            vars.strBaseStationInfo[stationIndex].assignedFlyingObject = baseStationInfo.assignedFlyingObject;
-            vars.strBaseStationInfo[stationIndex].batteryCharge = baseStationInfo.batteryCharge;
-            vars.strBaseStationInfo[stationIndex].current = baseStationInfo.current;
-            vars.strBaseStationInfo[stationIndex].humidity = baseStationInfo.humidity;
-            vars.strBaseStationInfo[stationIndex].lastLocktoGPS = baseStationInfo.lastLocktoGPS;
-            vars.strBaseStationInfo[stationIndex].readyFlyingObject = baseStationInfo.readyFlyingObject;
-            vars.strBaseStationInfo[stationIndex].stability = baseStationInfo.stability;
-            vars.strBaseStationInfo[stationIndex].stationNumber = baseStationInfo.stationNumber;
-            vars.strBaseStationInfo[stationIndex].statusFlag = baseStationInfo.statusFlag;
-            vars.strBaseStationInfo[stationIndex].temperature = baseStationInfo.temperature;
-            vars.strBaseStationInfo[stationIndex].timeofweek = baseStationInfo.timeofweek;
-            vars.strBaseStationInfo[stationIndex].voltage = baseStationInfo.voltage;
-            vars.strBaseStationInfo[stationIndex].weekNumber = baseStationInfo.weekNumber;
-            vars.strBaseStationInfo[stationIndex].x = baseStationInfo.x;
-            vars.strBaseStationInfo[stationIndex].y = baseStationInfo.y;
-            vars.strBaseStationInfo[stationIndex].z = baseStationInfo.z;
-            vars.strBaseStationInfo[stationIndex].rssiBaseStation = baseStationInfo.rssiBaseStation;
-            vars.strBaseStationInfo[stationIndex].rssiCenterStation = baseStationInfo.rssiCenterStation;
-            vars.strBaseStationInfo[stationIndex].ltrHealth = baseStationInfo.ltrHealth;
-
-            Array.Copy(baseStationInfo.SNRs, vars.strBaseStationInfo[stationIndex].SNRs, TOTAL_FLYING_OBJECTS_COUNT);
-            vars.strBaseStationInfo[stationIndex].connectionAcount = MAX_CONNECTION_ACOUNT;
-
-            //foreach (GridViewRowInfo item in radGridViewBaseStations.Rows)
-            //if (int.Parse((item.Cells[1].Value.ToString()).Substring(12)) == baseStationInfo.stationNumber)
-
-            //update base station number in send command form
-            if (vars.strBaseStationInfo[stationIndex].stationNumber > TOTAL_BASE_STATIONS_COUNT)
-            {
-
-                //if (!formBaseStationGetStatus.comboBox2.Items.Contains(vars.strBaseStationInfo[stationIndex].stationNumber.ToString()))
-                //    formBaseStationGetStatus.comboBox2.Items.Add(strBaseStationInfo[stationIndex].stationNumber.ToString());
-            }
-
-            int gridIndex = 0;
-            for (int i = 0; i < vars.strBaseStationInfo.Count; i++)
-                if (vars.stationsInGridIndex[i] == baseStationInfo.stationMACNumber)
-                {
-                    gridIndex = i;
-                    availableStation = true;
-                    break;
-                }
-
-            if (!availableStation)
-            {
-                gridIndex = vars.strBaseStationInfo.Count;// radGridViewBaseStations.Rows.Count;
-                vars.stationsInGridIndex[gridIndex] = baseStationInfo.stationMACNumber;
-                //strBaseStationInfo[stationIndex].stationGridIndex = radGridViewBaseStations.Rows.Count;
-                if ((baseStationInfo.ltrHealth & 0xF) != 0)
-                {
-                    radGridViewBaseStations.Rows.Add(baseStationInfo.stationNumber.ToString(), "Base Station #" + baseStationInfo.stationNumber.ToString(),
-                         baseStationInfo.stationMACNumber.ToString(), "", "", "", "", "", "", "", "", "", "Show Details");
-                }
-                else
-                {
-                    radGridViewBaseStations.Rows.Add(baseStationInfo.stationNumber.ToString(), "Base Station #" + baseStationInfo.stationNumber.ToString(),
-                      baseStationInfo.stationMACNumber.ToString(), "", "", "", "", "", "", "", "", "", "DATA Not Valid");
-                }
-                //formBaseStationGetStatus.comboBox2.Items.Add(baseStationInfo.stationNumber.ToString());
-            }
-
-            GridViewRowInfo item = radGridViewBaseStations.Rows[gridIndex];
-            //stationIndex = item.Index;
-            var health = baseStationInfo.ltrHealth % 16;
-            var basestationstate = baseStationInfo.ltrHealth / 16;
-            string str;
-            if (basestationstate == 1)
-                str = "Internal GPS";
-            else if (basestationstate == 2)
-                str = "External GPS";
-            else
-                str = "Manual";
-
-            item.Cells[0].Value = baseStationInfo.stationNumber.ToString();
-            item.Cells[1].Value = "Base Station #" + baseStationInfo.stationNumber.ToString();
-            item.Cells[2].Value = baseStationInfo.stationMACNumber.ToString();
-
-            if (health != 0)
-            {
-
-
-                setCellValueColor(item.Cells[3], baseStationInfo.voltage, true);
-                setCellValueColor(item.Cells[4], baseStationInfo.current, true);
-                setCellValueColor(item.Cells[5], baseStationInfo.stability, true);
-                setCellValueColor(item.Cells[6], baseStationInfo.lastLocktoGPS, true);
-                setCellValueColor(item.Cells[7], baseStationInfo.rssiBaseStation, true);
-                setCellValueColor(item.Cells[8], baseStationInfo.rssiCenterStation, true);
-                setCellValueColor(item.Cells[9], baseStationInfo.temperature, true);
-                setCellValueColor(item.Cells[10], baseStationInfo.batteryCharge, true);
-                setCellValueColor(item.Cells[11], str, true);
-                item.Cells[12].Value = (string)"Show Details";
-            }
-            else
-            {
-                setCellValueColor(item.Cells[3], baseStationInfo.voltage, false);
-                setCellValueColor(item.Cells[4], baseStationInfo.current, false);
-                setCellValueColor(item.Cells[5], baseStationInfo.stability, false);
-                setCellValueColor(item.Cells[6], baseStationInfo.lastLocktoGPS, false);
-                setCellValueColor(item.Cells[7], baseStationInfo.rssiBaseStation, false);
-                setCellValueColor(item.Cells[8], baseStationInfo.rssiCenterStation, false);
-                setCellValueColor(item.Cells[9], baseStationInfo.temperature, false);
-                setCellValueColor(item.Cells[10], baseStationInfo.batteryCharge, false);
-                setCellValueColor(item.Cells[11], str, false);
-                item.Cells[12].Value = (string)"DATA Not Valid";
-            }
-
-
-
-            blinkingCellColor(item.Cells[0]);
-
-            if ((radPageView1.SelectedPage == PageBaseMonitoring) && (pageBaseMonitoringIndex == baseStationInfo.stationMACNumber))
-                updateBaseMonitoringPage(pageBaseMonitoringIndex);*/
         }
 
         public static SingleDataBuffer handle_packet(byte[] packet,ref Globals vars, int number)

@@ -723,7 +723,7 @@ namespace GPSNavigator
 
         private void UpdateBTSForm(SingleDataBuffer databuffer, int SerialNumber)
         {
-            
+            BTSDetailForm.UpdateInfo(databuffer);
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -1250,7 +1250,12 @@ namespace GPSNavigator
                 if (MessageBox.Show("Are You Sure?", "GPS Navigator", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == System.Windows.Forms.DialogResult.Yes)
                 {
                     appclosing = true;
+                    foreach (Grapher g in grapherlist)
+                    {
+                        g.CloseFiles();
+                    }
                     Parentform.Close();
+
                 }
                 else
                 {
@@ -1260,6 +1265,10 @@ namespace GPSNavigator
             else
             {
                 appclosing = true;
+                foreach (Grapher g in grapherlist)
+                {
+                    g.CloseFiles();
+                }
                 Parentform.Close();
             }
         }
@@ -1290,11 +1299,30 @@ namespace GPSNavigator
 
         private void programSelectionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are You Sure?", "GPS Navigator", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+            if (isRecording)
             {
-                appclosing = true;
-                ClosePort();
-                Parentform.ShowStartup();
+                if (MessageBox.Show("Cancel Recording?", "GPS Navigator", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    EndRecording();
+                    appclosing = true;
+                    ClosePort();
+                    foreach (Grapher g in grapherlist)
+                        g.CloseFiles();
+                    //log.CloseFiles();
+                    Parentform.ShowStartup();
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("Are You Sure?", "GPS Navigator", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+                {
+                    appclosing = true;
+                    ClosePort();
+                    foreach (Grapher g in grapherlist)
+                        g.CloseFiles();
+                    //log.CloseFiles();
+                    Parentform.ShowStartup();
+                }
             }
         }
 

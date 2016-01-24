@@ -1152,6 +1152,7 @@ namespace GPSNavigator.Classes
                     DistanceMax.Close();
                     DistanceMin.Close();
                 }
+                Directory.Delete(filepath,true);
             }
         }
 
