@@ -183,7 +183,7 @@
             this.GraphTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.radGridView1 = new Telerik.WinControls.UI.RadGridView();
             this.radThemeManager1 = new Telerik.WinControls.RadThemeManager();
-            this.button1 = new System.Windows.Forms.Button();
+            this.AutoSearchBtn = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -191,6 +191,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tmrDetectDisconnectedStation = new System.Windows.Forms.Timer(this.components);
+            this.ManSearchBtn = new System.Windows.Forms.Button();
+            this.ManualSearchText = new System.Windows.Forms.TextBox();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).BeginInit();
             this.groupControl4.SuspendLayout();
@@ -1540,6 +1542,7 @@
             gridViewTextBoxColumn1.FormatString = "";
             gridViewTextBoxColumn1.HeaderText = "#";
             gridViewTextBoxColumn1.Name = "NumberColumn";
+            gridViewTextBoxColumn1.TextAlignment = System.Drawing.ContentAlignment.MiddleCenter;
             gridViewTextBoxColumn1.Width = 15;
             gridViewTextBoxColumn2.EnableExpressionEditor = false;
             gridViewTextBoxColumn2.FormatString = "";
@@ -1628,15 +1631,15 @@
             this.radGridView1.Text = "radGridView1";
             this.radGridView1.CellClick += new Telerik.WinControls.UI.GridViewCellEventHandler(this.radGridView1_CellClick);
             // 
-            // button1
+            // AutoSearchBtn
             // 
-            this.button1.Location = new System.Drawing.Point(164, 124);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 86;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.AutoSearchBtn.Location = new System.Drawing.Point(155, 17);
+            this.AutoSearchBtn.Name = "AutoSearchBtn";
+            this.AutoSearchBtn.Size = new System.Drawing.Size(125, 23);
+            this.AutoSearchBtn.TabIndex = 86;
+            this.AutoSearchBtn.Text = "Automatic Search";
+            this.AutoSearchBtn.UseVisualStyleBackColor = true;
+            this.AutoSearchBtn.Click += new System.EventHandler(this.AutoSearchBtn_Click);
             // 
             // timer1
             // 
@@ -1707,14 +1710,33 @@
             this.tmrDetectDisconnectedStation.Interval = 1000;
             this.tmrDetectDisconnectedStation.Tick += new System.EventHandler(this.tmrDetectDisconnectedStation_Tick);
             // 
+            // ManSearchBtn
+            // 
+            this.ManSearchBtn.Location = new System.Drawing.Point(155, 71);
+            this.ManSearchBtn.Name = "ManSearchBtn";
+            this.ManSearchBtn.Size = new System.Drawing.Size(125, 23);
+            this.ManSearchBtn.TabIndex = 92;
+            this.ManSearchBtn.Text = "Manual Search";
+            this.ManSearchBtn.UseVisualStyleBackColor = true;
+            this.ManSearchBtn.Click += new System.EventHandler(this.ManSearchBtn_Click);
+            // 
+            // ManualSearchText
+            // 
+            this.ManualSearchText.Location = new System.Drawing.Point(155, 100);
+            this.ManualSearchText.Name = "ManualSearchText";
+            this.ManualSearchText.Size = new System.Drawing.Size(125, 20);
+            this.ManualSearchText.TabIndex = 93;
+            // 
             // BTSDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(917, 616);
+            this.Controls.Add(this.ManualSearchText);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.ManSearchBtn);
+            this.Controls.Add(this.AutoSearchBtn);
             this.Controls.Add(this.radGridView1);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.statusStrip1);
@@ -1893,7 +1915,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private Telerik.WinControls.UI.RadGridView radGridView1;
         private Telerik.WinControls.RadThemeManager radThemeManager1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button AutoSearchBtn;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -1901,5 +1923,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Timer tmrDetectDisconnectedStation;
+        private System.Windows.Forms.Button ManSearchBtn;
+        private System.Windows.Forms.TextBox ManualSearchText;
     }
 }

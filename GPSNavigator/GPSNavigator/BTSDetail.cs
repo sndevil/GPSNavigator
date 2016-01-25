@@ -19,14 +19,17 @@ namespace GPSNavigator
 {
     public partial class BTSDetail : Form
     {
-        public List<BaseStationInfo> BaseStationList;// = new List<BaseStationInfo>();
-        public List<BaseStation> BaseStationFormList;
+        public List<BaseStationInfo> BaseStationList = new List<BaseStationInfo>();
+        public List<BaseStation> BaseStationFormList = new List<BaseStation>();
 
         public List<Color> RowColor = new List<Color>();
         public List<int> BlinkingList = new List<int>();
         public List<int> BlinkingList2 = new List<int>();
         public DateTime datetime;
         public bool ackRecivedFlag = true;
+        public bool searching = false;
+        public int datatimeout = -1;
+        public bool alive = false;
 
         int[,] conditionThreshoulds =
         {
@@ -61,51 +64,51 @@ namespace GPSNavigator
             DateLabel = ultraGaugeClock.Annotations[0] as Infragistics.UltraGauge.Resources.EllipseAnnotation;
 
 
-            BaseStationList = new List<BaseStationInfo>();
-            BaseStationFormList = new List<BaseStation>();
-            SingleDataBuffer d = new SingleDataBuffer();
-            d.hasBaseStationInfo = true;
-            d.BaseStationBuffer = new BaseStationInfo();            
-            d.BaseStationBuffer.batteryCharge = 1;
-            d.BaseStationBuffer.current = 1;
-            d.BaseStationBuffer.humidity = 0.5;
-            d.BaseStationBuffer.lastLocktoGPS = 1524.2;
-            d.BaseStationBuffer.ltrHealth = 34;
-            d.BaseStationBuffer.rssiBaseStation = 1;
-            d.BaseStationBuffer.rssiCenterStation = 2;
-            d.BaseStationBuffer.stability = 1;
-            d.BaseStationBuffer.stationNumber = 3;
-            d.BaseStationBuffer.temperature = 23;
-            d.BaseStationBuffer.voltage = 12;
-            d.BaseStationBuffer.SNRs = new double[] { 32, 54, 36, 53, 48, 49 };
-            UpdateInfo(d);
-            d = new SingleDataBuffer();
-            d.hasBaseStationInfo = true;
-            d.BaseStationBuffer = new BaseStationInfo();
-            d.BaseStationBuffer.batteryCharge = 1;
-            d.BaseStationBuffer.current = 1;
-            d.BaseStationBuffer.humidity = 0.5;
-            d.BaseStationBuffer.lastLocktoGPS = 1524.2;
-            d.BaseStationBuffer.ltrHealth = 34;
-            d.BaseStationBuffer.rssiBaseStation = 1;
-            d.BaseStationBuffer.rssiCenterStation = 2;
-            d.BaseStationBuffer.stationNumber = 4;
-            d.BaseStationBuffer.SNRs = new double[] { 32, 54, 36, 53, 48, 49 };
-            UpdateInfo(d);
-            d = new SingleDataBuffer();
-            d.hasBaseStationInfo = true;
-            d.BaseStationBuffer = new BaseStationInfo();
-            d.BaseStationBuffer.batteryCharge = 1;
-            d.BaseStationBuffer.current = 1;
-            d.BaseStationBuffer.humidity = 0.5;
-            d.BaseStationBuffer.lastLocktoGPS = 1524.2;
-            d.BaseStationBuffer.ltrHealth = 34;
-            d.BaseStationBuffer.rssiBaseStation = 1;
-            d.BaseStationBuffer.rssiCenterStation = 2;
-            d.BaseStationBuffer.stationNumber = 5;
-            d.datetime = DateTime.Now;
-            d.BaseStationBuffer.SNRs = new double[] { 32, 54, 36, 53, 48, 49 };
-            UpdateInfo(d);
+            //BaseStationList = new List<BaseStationInfo>();
+            //BaseStationFormList = new List<BaseStation>();
+            //SingleDataBuffer d = new SingleDataBuffer();
+            //d.hasBaseStationInfo = true;
+            //d.BaseStationBuffer = new BaseStationInfo();            
+            //d.BaseStationBuffer.batteryCharge = 1;
+            //d.BaseStationBuffer.current = 1;
+            //d.BaseStationBuffer.humidity = 0.5;
+            //d.BaseStationBuffer.lastLocktoGPS = 1524.2;
+            //d.BaseStationBuffer.ltrHealth = 34;
+            //d.BaseStationBuffer.rssiBaseStation = 1;
+            //d.BaseStationBuffer.rssiCenterStation = 2;
+            //d.BaseStationBuffer.stability = 1;
+            //d.BaseStationBuffer.stationNumber = 3;
+            //d.BaseStationBuffer.temperature = 23;
+            //d.BaseStationBuffer.voltage = 12;
+            //d.BaseStationBuffer.SNRs = new double[] { 32, 54, 36, 53, 48, 49 };
+            //UpdateInfo(d);
+            //d = new SingleDataBuffer();
+            //d.hasBaseStationInfo = true;
+            //d.BaseStationBuffer = new BaseStationInfo();
+            //d.BaseStationBuffer.batteryCharge = 1;
+            //d.BaseStationBuffer.current = 1;
+            //d.BaseStationBuffer.humidity = 0.5;
+            //d.BaseStationBuffer.lastLocktoGPS = 1524.2;
+            //d.BaseStationBuffer.ltrHealth = 34;
+            //d.BaseStationBuffer.rssiBaseStation = 1;
+            //d.BaseStationBuffer.rssiCenterStation = 2;
+            //d.BaseStationBuffer.stationNumber = 4;
+            //d.BaseStationBuffer.SNRs = new double[] { 32, 54, 36, 53, 48, 49 };
+            //UpdateInfo(d);
+            //d = new SingleDataBuffer();
+            //d.hasBaseStationInfo = true;
+            //d.BaseStationBuffer = new BaseStationInfo();
+            //d.BaseStationBuffer.batteryCharge = 1;
+            //d.BaseStationBuffer.current = 1;
+            //d.BaseStationBuffer.humidity = 0.5;
+            //d.BaseStationBuffer.lastLocktoGPS = 1524.2;
+            //d.BaseStationBuffer.ltrHealth = 34;
+            //d.BaseStationBuffer.rssiBaseStation = 1;
+            //d.BaseStationBuffer.rssiCenterStation = 2;
+            //d.BaseStationBuffer.stationNumber = 5;
+            //d.datetime = DateTime.Now;
+            //d.BaseStationBuffer.SNRs = new double[] { 32, 54, 36, 53, 48, 49 };
+            //UpdateInfo(d);
 
 
             //radGridView1.Rows.Add(new object[] { 1, "1", "2", "3", "4", "5", "6", "7", "View Details" });
@@ -114,7 +117,7 @@ namespace GPSNavigator
         public void UpdateInfo(SingleDataBuffer databuffer)
         {
             datetime = databuffer.datetime;
-            ShowTime(datetime);
+            Showtime(datetime);
             //databuffer.BaseStationBuffer.stationNumber
             int index = -1;
             //foreach (BaseStationInfo i in BaseStationList)
@@ -313,76 +316,222 @@ namespace GPSNavigator
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        public void SendRessetingAutomaticSearchCommand(int number, int min, int max, int timeintervalms)
         {
-            SingleDataBuffer d = new SingleDataBuffer();
-            d.hasBaseStationInfo = true;
-            d.BaseStationBuffer = new BaseStationInfo();
-            d.BaseStationBuffer.batteryCharge = 1;
-            d.BaseStationBuffer.current = 1;
-            d.BaseStationBuffer.humidity = 0.5;
-            d.BaseStationBuffer.lastLocktoGPS = 1524.2;
-            d.BaseStationBuffer.ltrHealth = 34;
-            d.BaseStationBuffer.rssiBaseStation = 1;
-            d.BaseStationBuffer.rssiCenterStation = 2;
-            d.BaseStationBuffer.stability = 1;
-            d.BaseStationBuffer.stationNumber = 3;
-            d.BaseStationBuffer.temperature = 23;
-            d.BaseStationBuffer.voltage = 12;
-            d.BaseStationBuffer.SNRs = new double[] { 10, 10, 10, 10, 10, 10 };
-            UpdateInfo(d);
-            d = new SingleDataBuffer();
-            d.hasBaseStationInfo = true;
-            d.BaseStationBuffer = new BaseStationInfo();
-            d.BaseStationBuffer.batteryCharge = 1;
-            d.BaseStationBuffer.current = 100;
-            d.BaseStationBuffer.humidity = 1.5;
-            d.BaseStationBuffer.lastLocktoGPS = 0;
-            d.BaseStationBuffer.ltrHealth = 16;
-            d.BaseStationBuffer.rssiBaseStation = 1;
-            d.BaseStationBuffer.rssiCenterStation = 2;
-            d.BaseStationBuffer.stationNumber = 4;
-            UpdateInfo(d);
-            d = new SingleDataBuffer();
-            d.hasBaseStationInfo = true;
-            d.BaseStationBuffer = new BaseStationInfo();
-            d.BaseStationBuffer.batteryCharge = 1;
-            d.BaseStationBuffer.current = 100;
-            d.BaseStationBuffer.humidity = 1.5;
-            d.BaseStationBuffer.lastLocktoGPS = 0;
-            d.BaseStationBuffer.ltrHealth = 16;
-            d.BaseStationBuffer.rssiBaseStation = 1;
-            d.BaseStationBuffer.rssiCenterStation = 2;
-            d.BaseStationBuffer.stationNumber = 5;
-            UpdateInfo(d);
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //command 1: 
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.AUTOMATIC_SEARCH_ENABLE_CMD;
+
+                index++;
+
+                //minimum earch index
+                Msg[index] = (char)min;
+                index++;
+
+                //maximum search index
+                Msg[index] = (char)max;
+                index++;
+
+                //Search Mode ('R' for resseting and 'A' for appending)
+                Msg[index] = 'R';
+                index++;
+
+                //Search time interval
+                Msg[index] = Functions.MakeTimeIntervalByte(timeintervalms);
+                index++;
+
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
+        }
+
+        public void SendAppendingAutomaticSearchCommand(int number, int min, int max, int timeintervalms)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //command 1: 
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.AUTOMATIC_SEARCH_ENABLE_CMD;
+
+                index++;
+
+                //minimum earch index
+                Msg[index] = (char)min;
+                index++;
+
+                //maximum search index
+                Msg[index] = (char)max;
+                index++;
+
+                //Search Mode ('R' for resseting and 'A' for appending)
+                Msg[index] = 'A';
+                index++;
+
+                //Search time interval
+                Msg[index] = Functions.MakeTimeIntervalByte(timeintervalms);
+                index++;
+
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
+        }
+
+        public void SendCancelSearchCommand(int number)
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //command 1: 
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.AUTOMATIC_SEARCH_DIABLE_CMD;
+                index++;
+
+                //minimum earch index
+                Msg[index] = (char)0;
+                index++;
+
+                //maximum search index
+                Msg[index] = (char)15;
+                index++;
+
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            SingleDataBuffer d = new SingleDataBuffer();
-            d.hasBaseStationInfo = true;
-            d.BaseStationBuffer = new BaseStationInfo();
-            d.BaseStationBuffer.batteryCharge = rnd.Next(50);
-            d.BaseStationBuffer.current = rnd.Next(50);
-            d.BaseStationBuffer.humidity = rnd.Next(50);
-            d.BaseStationBuffer.lastLocktoGPS = rnd.Next(50);
-            d.BaseStationBuffer.ltrHealth = 34;
-            d.BaseStationBuffer.rssiBaseStation = rnd.Next(50);
-            d.BaseStationBuffer.rssiCenterStation = rnd.Next(50);
-            d.BaseStationBuffer.stability = rnd.Next(50);
-            d.BaseStationBuffer.stationNumber = 3;
-            d.BaseStationBuffer.temperature = rnd.Next(50);
-            d.BaseStationBuffer.voltage = rnd.Next(50);
-            d.BaseStationBuffer.x = rnd.Next(10000);
-            d.BaseStationBuffer.y = rnd.Next(10000);
-            d.BaseStationBuffer.z = rnd.Next(10000);
-            d.datetime = DateTime.Now;
-            d.BaseStationBuffer.SNRs = new double[] { rnd.Next(50), rnd.Next(50), rnd.Next(50), rnd.Next(50), rnd.Next(50), rnd.Next(50) };
-            UpdateInfo(d);
-                        
+            //SingleDataBuffer d = new SingleDataBuffer();
+            //d.hasBaseStationInfo = true;
+            //d.BaseStationBuffer = new BaseStationInfo();
+            //d.BaseStationBuffer.batteryCharge = rnd.Next(50);
+            //d.BaseStationBuffer.current = rnd.Next(50);
+            //d.BaseStationBuffer.humidity = rnd.Next(50);
+            //d.BaseStationBuffer.lastLocktoGPS = rnd.Next(50);
+            //d.BaseStationBuffer.ltrHealth = 34;
+            //d.BaseStationBuffer.rssiBaseStation = rnd.Next(50);
+            //d.BaseStationBuffer.rssiCenterStation = rnd.Next(50);
+            //d.BaseStationBuffer.stability = rnd.Next(50);
+            //d.BaseStationBuffer.stationNumber = 3;
+            //d.BaseStationBuffer.temperature = rnd.Next(50);
+            //d.BaseStationBuffer.voltage = rnd.Next(50);
+            //d.BaseStationBuffer.x = rnd.Next(10000);
+            //d.BaseStationBuffer.y = rnd.Next(10000);
+            //d.BaseStationBuffer.z = rnd.Next(10000);
+            //d.datetime = DateTime.Now;
+            //d.BaseStationBuffer.SNRs = new double[] { rnd.Next(50), rnd.Next(50), rnd.Next(50), rnd.Next(50), rnd.Next(50), rnd.Next(50) };
+            //UpdateInfo(d);
+            if (datatimeout > -1)
+            {
+                datatimeout--;
+                if (!alive)
+                {
+                    alive = true;
+                    toolStripStatusLabel1.BackColor = Color.Lime;
+                    toolStripStatusLabel1.Text = "Receiving Data";
+                }
+            }
+            else
+            {
+                if (alive)
+                {
+                    alive = false;
+                    toolStripStatusLabel1.BackColor = Color.Salmon;
+                    toolStripStatusLabel1.Text = "No Data";
+                }
+            }
+
             if (cycle)
             {
-                for (int i = BlinkingList.Count-1; i >= 0; i--)
+                for (int i = BlinkingList.Count - 1; i >= 0; i--)
                 {
                     RowColor.Add(radGridView1.Rows[BlinkingList[i]].Cells[0].Style.BackColor);
                     radGridView1.Rows[BlinkingList[i]].Cells[0].Style.BackColor = Color.White;
@@ -393,7 +542,7 @@ namespace GPSNavigator
             }
             else
             {
-                for (int i = BlinkingList2.Count-1; i >= 0; i--)
+                for (int i = BlinkingList2.Count - 1; i >= 0; i--)
                 {
                     radGridView1.Rows[BlinkingList2[i]].Cells[0].Style.BackColor = RowColor[i];
                     BlinkingList2.RemoveAt(i);
@@ -405,7 +554,7 @@ namespace GPSNavigator
 
         private void radGridView1_CellClick(object sender, GridViewCellEventArgs e)
         {
-            if (e.RowIndex >= 0 && e.ColumnIndex == 12 && e.Row.Cells[1].Style.BackColor != Color.Red)
+            if (e.RowIndex >= 0 && e.ColumnIndex == 12)// && e.Row.Cells[1].Style.BackColor != Color.Red)
             {
                 var stationnumber = Convert.ToInt32(e.Row.Cells[0].Value);
                 var idx = BaseStationList.FindIndex(x => x.stationNumber == stationnumber);
@@ -471,13 +620,27 @@ namespace GPSNavigator
             }
         }
 
-        public void ShowTime(DateTime toshow)
+        delegate void SetTextCallback(DateTime toshow);
+
+        private void Showtime(DateTime toshow)
         {
-            label12.Text = "Time: " + toshow.ToLongTimeString();
-            DateLabel.Label.FormatString = toshow.Month.ToString("D2") + "/" + toshow.Day.ToString("D2") + "/" + toshow.Year.ToString();
-            ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = toshow.Hour + (double)toshow.Minute / 60;
-            ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[1].Markers[0].Value = toshow.Minute;
-            ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[2].Markers[0].Value = toshow.Second;
+            try
+            {
+                if (this.InvokeRequired)
+                {
+                    SetTextCallback d = new SetTextCallback(Showtime);
+                    this.Invoke(d, new object[] { toshow });
+                }
+                else
+                {
+                    label12.Text = "Time: " + toshow.ToLongTimeString();
+                    DateLabel.Label.FormatString = toshow.Month.ToString("D2") + "/" + toshow.Day.ToString("D2") + "/" + toshow.Year.ToString();
+                    ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[0].Markers[0].Value = toshow.Hour + (double)toshow.Minute / 60;
+                    ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[1].Markers[0].Value = toshow.Minute;
+                    ((RadialGauge)ultraGaugeClock.Gauges[0]).Scales[2].Markers[0].Value = toshow.Second;
+                }
+            }
+            catch { }
         }
 
         public void SendChangePosCommand(int number,double lat, double longi,double alt)
@@ -1083,16 +1246,97 @@ namespace GPSNavigator
             ackTimeOutCounter++;
             if (!ackRecivedFlag)
             {
-                if (ackTimeOutCounter > 2)
+                if (ackTimeOutCounter > 5)
                 {
                     ackTimeOutCounter = 0;
                     ackRecivedFlag = true;
-                    MessageBox.Show("ACK Signal Not Receive", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("ACK Signal Not Received", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
                 ackTimeOutCounter = 0;
 
+        }
+
+
+        private void AutoSearchBtn_Click(object sender, EventArgs e)
+        {
+            SendRessetingAutomaticSearchCommand(1, 1, 10, 1000);
+        }
+
+        private void ManSearchBtn_Click(object sender, EventArgs e)
+        {
+            //SendAppendingAutomaticSearchCommand(1, 1, 2, 1000);
+            var list = ProcessString(ManualSearchText.Text);
+            bool first = true;
+            foreach (SearchRange range in list)
+            {
+                if (first)
+                {
+                    SendRessetingAutomaticSearchCommand(1, range.start, range.end, 1000);
+                    first = false;
+                }
+                else
+                    SendAppendingAutomaticSearchCommand(1, range.start, range.end, 1000);
+            }
+        }
+
+        private List<SearchRange> ProcessString(string input)
+        {
+            List<SearchRange> outlist = new List<SearchRange>();
+
+            List<string> substrs = new List<string>();
+
+            List<int> starts = new List<int>();
+            List<int> ends = new List<int>();
+            int start = 0;
+            for (int i = 0; i < input.Length; i++)
+                if (input[i] == ',')
+                {
+                    starts.Add(start);
+                    ends.Add(i - 1);
+                    start = i + 1;
+                }
+
+            if (start < input.Length)
+            {
+                starts.Add(start);
+                ends.Add(input.Length-1);
+            }
+            if (starts.Count == 0)
+            {
+                starts.Add(0);
+                ends.Add(input.Length);
+            }
+
+            for (int i = 0; i < starts.Count; i++)
+            {
+                string tmp = new string(input.ToCharArray(starts[i],ends[i]-starts[i]+1));
+                substrs.Add(tmp);
+            }
+
+            foreach (string s in substrs)
+            {
+                SearchRange temp = new SearchRange();
+                if (s.Contains('-'))
+                {
+                    var dashidx = s.IndexOf('-');
+                    int strt = Convert.ToInt32(new string(s.ToCharArray(0, dashidx)));
+                    int end = Convert.ToInt32(new string(s.ToCharArray(dashidx + 1, s.Length - dashidx - 1)));
+                    temp.start = strt;
+                    temp.end = end;
+                    temp.length = end - start + 1;
+                }
+                else
+                {
+                    temp.start = temp.end = Convert.ToInt32(s);
+                    temp.length = 1;
+                }
+                outlist.Add(temp);
+            }
+
+
+            return outlist;
         }
     }
 }

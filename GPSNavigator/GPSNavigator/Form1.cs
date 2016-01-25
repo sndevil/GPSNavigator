@@ -124,6 +124,7 @@ namespace GPSNavigator
                     {
                         case BinaryProtocolState.waitForPacket:
                             serialPort1.Read(byt, 0, 1);
+
                             if (byt[0] == '~')
                                 Serial1State = BinaryProtocolState.waitForMessageType;
                             break;
@@ -153,6 +154,7 @@ namespace GPSNavigator
                             try
                             {
                                 dbuf = Functions.handle_packet(byt, ref vars, 0);
+
                                 if (dbuf.AttitudeBuffer.counter != 0)
                                 {
                                     attitudebuffer = dbuf.AttitudeBuffer;
@@ -163,18 +165,19 @@ namespace GPSNavigator
                                     dbuf.AttitudeBuffer = attitudebuffer;
                                     previousdata = dbuf;
                                 }
+
+                                if (dbuf.AckSignalReceived)
+                                    BTSDetailForm.ackRecivedFlag = true;
+
                                 if (dbuf.hasBaseStationInfo)
-                                {
                                     UpdateBTSForm(dbuf, 1);
-                                    /////Pass the buffer to BTSDetail form
-                                    //
-                                    //
-                                    //
-                                    //
-                                    //
-                                }
                                 else
                                 {
+                                    if (dbuf.isAlive)
+                                    {
+                                        //BTSDetailForm.alive = true;
+                                        BTSDetailForm.datatimeout = 10;
+                                    }
                                     if (DetailRefreshCounter++ > RefreshRate - 1)
                                     {
                                         if (showdetail)

@@ -157,7 +157,7 @@ namespace GPSNavigator.Classes
             public DateTime datetime;
             public byte[] Bdatetime = new byte[6];
             public int statcounter,ChannelCounter = 0;
-            public bool WriteExtreme = false,error = false, hasBaseStationInfo = false;
+            public bool WriteExtreme = false,error = false, hasBaseStationInfo = false,AckSignalReceived = false,isAlive=false;
         }
 
         public class SettingBuffer
@@ -331,6 +331,13 @@ namespace GPSNavigator.Classes
                 VisibleGPS = UsedGPS = VisibleGlonass = VisibleGPS = 0;
                 Time = new DateTime();
             }
+        }
+
+        public class SearchRange
+        {
+            public int start;
+            public int end;
+            public int length;
         }
 
 

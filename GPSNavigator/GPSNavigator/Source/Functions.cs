@@ -71,6 +71,9 @@ namespace GPSNavigator.Source
         public const int BIN_SETTING_MSG_SIZE = 41;
         public const int BIN_ATTITUDE_INFO_MSG_SIZE = 40;
         public const int BIN_DUAL_CHANNEL_MSG_SIZE = 164;
+        public const int BIN_BASESTATION_INFO_MSG_SIZE = 60; //49
+        public const int BIN_KEEP_ALIVE_MSG_SIZE = 12;
+        public const int BIN_ACK_SIGNAL_MSG_SIZE = 13;
         public const int BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE = 88;
 
 
@@ -458,7 +461,7 @@ namespace GPSNavigator.Source
             else if (msgType == BIN_FULL_PLUS)
                 msgSize = BIN_FULL_PLUS_MSG_SIZE;
             else if (msgType == BIN_COMPACT)
-                msgSize = BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE;//Was BIN_COMPACT_MSG_SIZE
+                msgSize = BIN_COMPACT_MSG_SIZE;
             else if (msgType == BIN_GPS_SUPPLEMENT)
                 msgSize = BIN_GPS_SUPPLEMENT_MSG_SIZE;
             else if (msgType == BIN_DEBUG)
@@ -475,6 +478,12 @@ namespace GPSNavigator.Source
                 msgSize = BIN_ATTITUDE_INFO_MSG_SIZE;
             else if (msgType == BIN_DUAL_CHANNEL)
                 msgSize = BIN_DUAL_CHANNEL_MSG_SIZE;
+            else if (msgType == BIN_BASESTATION_INFO)
+                msgSize = BIN_BASESTATION_INFO_MSG_SIZE;
+            else if (msgType == BIN_KEEP_ALIVE)
+                msgSize = BIN_KEEP_ALIVE_MSG_SIZE;
+            else if (msgType == BIN_ACK_SIGNAL)
+                msgSize = BIN_ACK_SIGNAL_MSG_SIZE;
             else
                 msgSize = -1;           //packet not valid
 
@@ -2951,7 +2960,7 @@ namespace GPSNavigator.Source
             SingleDataBuffer dbuf = new SingleDataBuffer();
             BaseStationInfo baseStationInfo = new BaseStationInfo();
 
-            int checksum = calcrc(data, BIN_DUAL_CHANNEL_MSG_SIZE - 4);
+            int checksum = calcrc(data, BIN_BASESTATION_INFO_MSG_SIZE - 4);
             byte checksum0 = (byte)(checksum & 0xFF);
             byte checksum1 = (byte)((checksum >> 8) & 0xFF);
 
@@ -3090,15 +3099,15 @@ namespace GPSNavigator.Source
 
             int crc = 0;
             ushort tmp = 0;
-            a = data[index + 3]; for (int i = 0; i >= 0; --i) a = a * 256 + data[index + i];
+            a = data[index+1]; for (int i = 0; i >= 0; --i) a = a * 256 + data[index + i];
             crc = (int)a;
             index += 2;
 
             for (int ii = 0; ii < index; ii++)
                 tmp += data[ii];
 
-            //            if (tmp != crc)
-            //                return;
+           // if (tmp != crc)
+           //     throw new Exception("CRC error");
             dbuf.hasBaseStationInfo = true;
             dbuf.BaseStationBuffer = baseStationInfo;
 
@@ -3129,6 +3138,20 @@ namespace GPSNavigator.Source
                 dbuffer = Process_Binary_Message_Attitude_Info(packet, number);
             else if (key == BIN_BASESTATION_INFO)
                 dbuffer =  Process_Binary_Message_BaseStation_Info(packet, number);
+            else if (key == BIN_KEEP_ALIVE)
+            {
+                dbuffer = new SingleDataBuffer();
+                dbuffer.isAlive = true;
+                //if (serialNum == 0)
+                //    DataReceiveTimeOut = 0;
+                //else
+                //    DataReceiveTimeOutS2 = 0;
+            }
+            else if (key == BIN_ACK_SIGNAL)
+            {
+                dbuffer = new SingleDataBuffer();
+                dbuffer.AckSignalReceived = true;
+            }
             else
             {
                 dbuffer.ToString();
@@ -3234,6 +3257,31 @@ namespace GPSNavigator.Source
 
             return datetimeUTC;
 
+        }
+
+        public static char MakeTimeIntervalByte(int intervalms)
+        {
+            //max interval is 165 sec
+            char output;
+            if (intervalms < 250)
+                output = (char)0;
+            else if (intervalms < 10200)
+            {
+                //error = 100ms
+                int f = (int)Math.Floor((double)(intervalms - 200) / 100);
+                output = (char)f;
+                //output < 100
+            }
+            else
+            {
+                //error = 1s;
+                int sec = (int)Math.Floor((double)(intervalms - 10000) / 1000);
+                if (sec > 155)
+                    sec = 155;
+                output = (char)(sec + 100);
+
+            }
+            return output;
         }
     }
 }
