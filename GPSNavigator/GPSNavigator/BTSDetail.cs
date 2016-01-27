@@ -300,6 +300,9 @@ namespace GPSNavigator
                     cell.Style.DrawFill = true;
                     cell.Style.BackColor = Color.Red;
                 }
+                var formidx = BaseStationFormList.FindIndex(x => x.data.stationNumber == databuffer.BaseStationBuffer.stationNumber);
+                if (formidx >= 0)
+                    BaseStationFormList[formidx].UpdateGUI(databuffer.BaseStationBuffer);
             }
 
         }
@@ -317,7 +320,7 @@ namespace GPSNavigator
         }
 
 
-        public void SendRessetingAutomaticSearchCommand(int number, int min, int max, int timeintervalms)
+        public void SendRessetingAutomaticSearchCommand(int number, int min, int max, char delayinterval)
         {
             try
             {
@@ -354,7 +357,7 @@ namespace GPSNavigator
                 index++;
 
                 //Search time interval
-                Msg[index] = Functions.MakeTimeIntervalByte(timeintervalms);
+                Msg[index] = delayinterval;
                 index++;
 
                 Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
@@ -378,7 +381,7 @@ namespace GPSNavigator
             }
         }
 
-        public void SendAppendingAutomaticSearchCommand(int number, int min, int max, int timeintervalms)
+        public void SendAppendingAutomaticSearchCommand(int number, int min, int max, char delayinterval)
         {
             try
             {
@@ -415,7 +418,7 @@ namespace GPSNavigator
                 index++;
 
                 //Search time interval
-                Msg[index] = Functions.MakeTimeIntervalByte(timeintervalms);
+                Msg[index] = delayinterval;
                 index++;
 
                 Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
@@ -1261,23 +1264,41 @@ namespace GPSNavigator
 
         private void AutoSearchBtn_Click(object sender, EventArgs e)
         {
-            SendRessetingAutomaticSearchCommand(1, 1, 10, 1000);
+            int delay = Convert.ToInt32(DelayText.Text);
+            DelayRange r = DelayRange.ms;
+            if (sRadio.Checked)
+                r = DelayRange.s;
+            else if (mRadio.Checked)
+                r = DelayRange.m;
+            else if (hRadio.Checked)
+                r = DelayRange.h;
+            var delaychar = Functions.MakeTimeIntervalByte(delay, r);
+            SendRessetingAutomaticSearchCommand(1, 1, 10, delaychar);
         }
 
         private void ManSearchBtn_Click(object sender, EventArgs e)
         {
             //SendAppendingAutomaticSearchCommand(1, 1, 2, 1000);
+            int delay = Convert.ToInt32(DelayText.Text);
+            DelayRange r = DelayRange.ms;
+            if (sRadio.Checked)
+                r = DelayRange.s;
+            else if (mRadio.Checked)
+                r = DelayRange.m;
+            else if (hRadio.Checked)
+                r = DelayRange.h;
+            var delaychar = Functions.MakeTimeIntervalByte(delay, r);
             var list = ProcessString(ManualSearchText.Text);
             bool first = true;
             foreach (SearchRange range in list)
             {
                 if (first)
                 {
-                    SendRessetingAutomaticSearchCommand(1, range.start, range.end, 1000);
+                    SendRessetingAutomaticSearchCommand(1, range.start, range.end, delaychar);
                     first = false;
                 }
                 else
-                    SendAppendingAutomaticSearchCommand(1, range.start, range.end, 1000);
+                    SendAppendingAutomaticSearchCommand(1, range.start, range.end, delaychar);
             }
         }
 

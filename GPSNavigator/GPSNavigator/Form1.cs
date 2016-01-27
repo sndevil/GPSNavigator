@@ -170,7 +170,10 @@ namespace GPSNavigator
                                     BTSDetailForm.ackRecivedFlag = true;
 
                                 if (dbuf.hasBaseStationInfo)
+                                {
                                     UpdateBTSForm(dbuf, 1);
+                                    BTSDetailForm.datatimeout = 10;
+                                }
                                 else
                                 {
                                     if (dbuf.isAlive)

@@ -193,6 +193,12 @@
             this.tmrDetectDisconnectedStation = new System.Windows.Forms.Timer(this.components);
             this.ManSearchBtn = new System.Windows.Forms.Button();
             this.ManualSearchText = new System.Windows.Forms.TextBox();
+            this.DelayText = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.msRadio = new System.Windows.Forms.RadioButton();
+            this.sRadio = new System.Windows.Forms.RadioButton();
+            this.mRadio = new System.Windows.Forms.RadioButton();
+            this.hRadio = new System.Windows.Forms.RadioButton();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).BeginInit();
             this.groupControl4.SuspendLayout();
@@ -1727,12 +1733,76 @@
             this.ManualSearchText.Size = new System.Drawing.Size(125, 20);
             this.ManualSearchText.TabIndex = 93;
             // 
+            // DelayText
+            // 
+            this.DelayText.Location = new System.Drawing.Point(362, 100);
+            this.DelayText.Name = "DelayText";
+            this.DelayText.Size = new System.Drawing.Size(144, 20);
+            this.DelayText.TabIndex = 94;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(359, 57);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(148, 13);
+            this.label5.TabIndex = 95;
+            this.label5.Text = "Time Between Searches (ms):";
+            // 
+            // msRadio
+            // 
+            this.msRadio.AutoSize = true;
+            this.msRadio.Checked = true;
+            this.msRadio.Location = new System.Drawing.Point(362, 80);
+            this.msRadio.Name = "msRadio";
+            this.msRadio.Size = new System.Drawing.Size(38, 17);
+            this.msRadio.TabIndex = 96;
+            this.msRadio.TabStop = true;
+            this.msRadio.Text = "ms";
+            this.msRadio.UseVisualStyleBackColor = true;
+            // 
+            // sRadio
+            // 
+            this.sRadio.AutoSize = true;
+            this.sRadio.Location = new System.Drawing.Point(400, 80);
+            this.sRadio.Name = "sRadio";
+            this.sRadio.Size = new System.Drawing.Size(30, 17);
+            this.sRadio.TabIndex = 97;
+            this.sRadio.Text = "s";
+            this.sRadio.UseVisualStyleBackColor = true;
+            // 
+            // mRadio
+            // 
+            this.mRadio.AutoSize = true;
+            this.mRadio.Location = new System.Drawing.Point(436, 80);
+            this.mRadio.Name = "mRadio";
+            this.mRadio.Size = new System.Drawing.Size(33, 17);
+            this.mRadio.TabIndex = 98;
+            this.mRadio.Text = "m";
+            this.mRadio.UseVisualStyleBackColor = true;
+            // 
+            // hRadio
+            // 
+            this.hRadio.AutoSize = true;
+            this.hRadio.Location = new System.Drawing.Point(475, 80);
+            this.hRadio.Name = "hRadio";
+            this.hRadio.Size = new System.Drawing.Size(31, 17);
+            this.hRadio.TabIndex = 99;
+            this.hRadio.Text = "h";
+            this.hRadio.UseVisualStyleBackColor = true;
+            // 
             // BTSDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(917, 616);
+            this.Controls.Add(this.hRadio);
+            this.Controls.Add(this.mRadio);
+            this.Controls.Add(this.sRadio);
+            this.Controls.Add(this.msRadio);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.DelayText);
             this.Controls.Add(this.ManualSearchText);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ManSearchBtn);
@@ -1925,5 +1995,11 @@
         private System.Windows.Forms.Timer tmrDetectDisconnectedStation;
         private System.Windows.Forms.Button ManSearchBtn;
         private System.Windows.Forms.TextBox ManualSearchText;
+        private System.Windows.Forms.TextBox DelayText;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.RadioButton msRadio;
+        private System.Windows.Forms.RadioButton sRadio;
+        private System.Windows.Forms.RadioButton mRadio;
+        private System.Windows.Forms.RadioButton hRadio;
     }
 }

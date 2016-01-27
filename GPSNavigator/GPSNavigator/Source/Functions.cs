@@ -3259,28 +3259,85 @@ namespace GPSNavigator.Source
 
         }
 
-        public static char MakeTimeIntervalByte(int intervalms)
+        public static char MakeTimeIntervalByte(int interval,DelayRange range)
         {
-            //max interval is 165 sec
-            char output;
-            if (intervalms < 250)
+            char output = (char)0;
+            switch (range)
+            {
+                case DelayRange.ms:
+                    if (interval >= 5000)
+                    {
+                        output = MakeTimeIntervalByte(interval / 1000, DelayRange.s);
+                        break;
+                    }
+                    else if (interval < 250)
+                    {
+                        output = (char)0;
+                        break;
+                    }
+                    output = (char)((interval / 250) - 1);
+                    //    0 <= output < 19
+                    break;
+
+                case DelayRange.s:
+                    if (interval >= 120)
+                    {
+                        output = MakeTimeIntervalByte(interval / 60, DelayRange.m);
+                        break;
+                    }
+                    else if (interval < 1)
+                    {
+                        output = (char)3;
+                        break;
+                    }
+                    output = (char)(interval + 18);
+                    //    19 <= output < 138
+                    break;
+
+                case DelayRange.m:
+                    if (interval >= 90)
+                    {
+                        output = MakeTimeIntervalByte(interval / 60, DelayRange.h);
+                        break;
+                    }
+                    else if (interval < 1)
+                    {
+                        output = (char)78;
+                        break;
+                    }
+                    output = (char)(interval + 137);
+                    //    138 <= output < 227
+                    break;
+
+                case DelayRange.h:
+                    if (interval > 29)
+                        interval = 29;
+                    else if (interval < 1)
+                        interval = 1;
+
+                    output = (char)(interval + 226);
+                    //    227 <= output < 255
+                    break;
+
+            }
+            /*if (interval < 250)
                 output = (char)0;
-            else if (intervalms < 10200)
+            else if (interval < 10200)
             {
                 //error = 100ms
-                int f = (int)Math.Floor((double)(intervalms - 200) / 100);
+                int f = (int)Math.Floor((double)(interval - 200) / 100);
                 output = (char)f;
                 //output < 100
             }
             else
             {
                 //error = 1s;
-                int sec = (int)Math.Floor((double)(intervalms - 10000) / 1000);
+                int sec = (int)Math.Floor((double)(interval - 10000) / 1000);
                 if (sec > 155)
                     sec = 155;
                 output = (char)(sec + 100);
 
-            }
+            }*/
             return output;
         }
     }

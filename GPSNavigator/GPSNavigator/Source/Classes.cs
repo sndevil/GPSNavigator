@@ -260,6 +260,7 @@ namespace GPSNavigator.Classes
         public enum PlaybackSpeed { NormalSpeed, Double, Quadrople, Half, Quarter };
         public enum optionfor { chart1, chart2, graph };
         public enum Logtype { GPS, Northfinder };
+        public enum DelayRange { ms, s, m, h };
 
         public class GEOpoint
         {

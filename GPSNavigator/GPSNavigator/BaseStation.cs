@@ -30,6 +30,7 @@ namespace GPSNavigator
             PositionValue1.Click += new EventHandler(ClickListener_Click);
             PositionValue2.Click += new EventHandler(ClickListener_Click);
             PositionValue3.Click += new EventHandler(ClickListener_Click);
+            chart1.Series[0].Points.Clear();
             Parentform = parent;
         }
 
@@ -67,25 +68,83 @@ namespace GPSNavigator
 
         public void PlotGraph(double[] SNRInfo)
         {
-            chart1.Series[0].Points.Clear();
             for (int i = 0; i < SNRInfo.Length; i++)
-                chart1.Series[0].Points.AddXY((double)i + 1,SNRInfo[i]);
-
+            {
+                if (chart1.Series[0].Points.Count > i)
+                    EditPointInChart(i, (double)i + 1, SNRInfo[i]);
+                else
+                    AddPointToChart((double)i + 1, SNRInfo[i]);                
+            }
+            ClearChartAfterIndex(SNRInfo.Length);
         }
 
-        public void UpdatePosition()
+        delegate void ChartAdder(double x, double y);
+        public void AddPointToChart(double x, double y)
         {
-            if (xyz)
+            if (chart1.InvokeRequired)
             {
-                PositionValue1.Text = x.ToString();
-                PositionValue2.Text = y.ToString();
-                PositionValue3.Text = z.ToString();
+                ChartAdder d = new ChartAdder(AddPointToChart);
+                chart1.Invoke(d, new object[] { x, y });
             }
             else
             {
-                PositionValue1.Text = LatLong.Latitude.ToString("#0.000000");
-                PositionValue2.Text = LatLong.Longitude.ToString("#0.000000");
-                PositionValue3.Text = LatLong.Altitude.ToString("#0.00");
+                chart1.Series[0].Points.AddXY(x, y);
+            }
+        }
+
+        delegate void ChartEditor(int index, double x, double y);
+        public void EditPointInChart(int index, double x, double y)
+        {
+            if (chart1.InvokeRequired)
+            {
+                ChartEditor d = new ChartEditor(EditPointInChart);
+                chart1.Invoke(d, new object[] { index, x, y });
+            }
+            else
+            {
+                if (chart1.Series[0].Points[index].YValues[0] != y)
+                {
+                    chart1.Series[0].Points[index].XValue = x;
+                    chart1.Series[0].Points[index].YValues[0] = y;
+                }
+            }
+        }
+
+        delegate void ChartClearer(int index);
+        public void ClearChartAfterIndex(int index)
+        {
+            if (chart1.InvokeRequired)
+            {
+                ChartClearer d = new ChartClearer(ClearChartAfterIndex);
+                chart1.Invoke(d, new object[] { index });
+            }
+            else
+                for (int i = chart1.Series[0].Points.Count; i > index; i--)
+                    chart1.Series[0].Points.RemoveAt(i);
+        }
+
+        delegate void PositionUpdater();
+        public void UpdatePosition()
+        {
+            if (this.InvokeRequired)
+            {
+                PositionUpdater d = new PositionUpdater(UpdatePosition);
+                this.Invoke(d);
+            }
+            else
+            {
+                if (xyz)
+                {
+                    PositionValue1.Text = x.ToString();
+                    PositionValue2.Text = y.ToString();
+                    PositionValue3.Text = z.ToString();
+                }
+                else
+                {
+                    PositionValue1.Text = LatLong.Latitude.ToString("#0.000000");
+                    PositionValue2.Text = LatLong.Longitude.ToString("#0.000000");
+                    PositionValue3.Text = LatLong.Altitude.ToString("#0.00");
+                }
             }
         }
 
