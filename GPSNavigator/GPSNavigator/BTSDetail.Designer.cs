@@ -199,6 +199,7 @@
             this.sRadio = new System.Windows.Forms.RadioButton();
             this.mRadio = new System.Windows.Forms.RadioButton();
             this.hRadio = new System.Windows.Forms.RadioButton();
+            this.CancelSearchBtn = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).BeginInit();
             this.groupControl4.SuspendLayout();
@@ -1791,12 +1792,23 @@
             this.hRadio.Text = "h";
             this.hRadio.UseVisualStyleBackColor = true;
             // 
+            // CancelSearchBtn
+            // 
+            this.CancelSearchBtn.Location = new System.Drawing.Point(362, 17);
+            this.CancelSearchBtn.Name = "CancelSearchBtn";
+            this.CancelSearchBtn.Size = new System.Drawing.Size(144, 23);
+            this.CancelSearchBtn.TabIndex = 100;
+            this.CancelSearchBtn.Text = "Cancel Search";
+            this.CancelSearchBtn.UseVisualStyleBackColor = true;
+            this.CancelSearchBtn.Click += new System.EventHandler(this.CancelSearchBtn_Click);
+            // 
             // BTSDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(917, 616);
+            this.Controls.Add(this.CancelSearchBtn);
             this.Controls.Add(this.hRadio);
             this.Controls.Add(this.mRadio);
             this.Controls.Add(this.sRadio);
@@ -1819,6 +1831,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BTSDetail";
             this.Text = "MomentDetail";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BTSDetail_FormClosing);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.groupControl4)).EndInit();
@@ -2001,5 +2014,6 @@
         private System.Windows.Forms.RadioButton sRadio;
         private System.Windows.Forms.RadioButton mRadio;
         private System.Windows.Forms.RadioButton hRadio;
+        private System.Windows.Forms.Button CancelSearchBtn;
     }
 }

@@ -377,7 +377,7 @@ namespace GPSNavigator
             }
             catch (Exception ex)
             {
-                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+                throw ex;
             }
         }
 
@@ -436,7 +436,7 @@ namespace GPSNavigator
             }
             catch (Exception ex)
             {
-                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+                throw ex;
             }
         }
 
@@ -486,7 +486,7 @@ namespace GPSNavigator
             }
             catch (Exception ex)
             {
-                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+                throw ex;
             }
         }
 
@@ -1288,17 +1288,20 @@ namespace GPSNavigator
             else if (hRadio.Checked)
                 r = DelayRange.h;
             var delaychar = Functions.MakeTimeIntervalByte(delay, r);
-            var list = ProcessString(ManualSearchText.Text);
-            bool first = true;
-            foreach (SearchRange range in list)
+            if (ManualSearchText.Text != "")
             {
-                if (first)
+                var list = ProcessString(ManualSearchText.Text);
+                bool first = true;
+                foreach (SearchRange range in list)
                 {
-                    SendRessetingAutomaticSearchCommand(1, range.start, range.end, delaychar);
-                    first = false;
+                    if (first)
+                    {
+                        SendRessetingAutomaticSearchCommand(1, range.start, range.end, delaychar);
+                        first = false;
+                    }
+                    else
+                        SendAppendingAutomaticSearchCommand(1, range.start, range.end, delaychar);
                 }
-                else
-                    SendAppendingAutomaticSearchCommand(1, range.start, range.end, delaychar);
             }
         }
 
@@ -1358,6 +1361,27 @@ namespace GPSNavigator
 
 
             return outlist;
+        }
+
+        private void BTSDetail_FormClosing(object sender, FormClosingEventArgs e)
+        {
+           
+        }
+
+        public void CancelSearches()
+        {
+            try
+            {
+                SendCancelSearchCommand(0);
+            }
+            catch
+            {
+            }
+        }
+
+        private void CancelSearchBtn_Click(object sender, EventArgs e)
+        {
+            CancelSearches();
         }
     }
 }

@@ -78,13 +78,6 @@ namespace GPSNavigator
                 case AppModes.BaseStation:
                     BaseText = "Base Station";
                     BTSDetailForm = new BTSDetail(this);
-                    BTSDetailForm.Dock = DockStyle.None;
-                    BTSDetailForm.TopLevel = false;
-                    BTSDetailForm.Show();
-                    var NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("BaseStation Details (Realtime)");
-                    NewDockWindow.AutoScroll = true;
-                    NewDockWindow.Controls.Add(BTSDetailForm);
-                    radDock1.AddDocument(NewDockWindow);
                     break;
             }
             this.Text = BaseText;
@@ -783,6 +776,8 @@ namespace GPSNavigator
         {
             isPlaying = false;
             appclosing = true;
+            if (Appmode == AppModes.BaseStation)
+                BTSDetailForm.CancelSearches();
             ClosePort();
             button2.Text = "Play";
             this.Text = "GPS Navigator";
@@ -1260,6 +1255,8 @@ namespace GPSNavigator
                     {
                         g.CloseFiles();
                     }
+                    if (Appmode == AppModes.BaseStation && serialPort1.IsOpen)
+                        BTSDetailForm.CancelSearches();
                     Parentform.Close();
 
                 }
@@ -1275,6 +1272,8 @@ namespace GPSNavigator
                 {
                     g.CloseFiles();
                 }
+                if (Appmode == AppModes.BaseStation)
+                    BTSDetailForm.CancelSearches();
                 Parentform.Close();
             }
         }
@@ -1314,7 +1313,8 @@ namespace GPSNavigator
                     ClosePort();
                     foreach (Grapher g in grapherlist)
                         g.CloseFiles();
-                    //log.CloseFiles();
+                    if (Appmode == AppModes.BaseStation)
+                        BTSDetailForm.CancelSearches();
                     Parentform.ShowStartup();
                 }
             }
@@ -1326,7 +1326,8 @@ namespace GPSNavigator
                     ClosePort();
                     foreach (Grapher g in grapherlist)
                         g.CloseFiles();
-                    //log.CloseFiles();
+                    if (Appmode == AppModes.BaseStation)
+                        BTSDetailForm.CancelSearches();
                     Parentform.ShowStartup();
                 }
             }
