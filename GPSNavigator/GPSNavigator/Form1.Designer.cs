@@ -671,7 +671,6 @@
 
         #endregion
 
-        private System.IO.Ports.SerialPort serialPort1;
         private System.Windows.Forms.TextBox logger;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.OpenFileDialog opendialog;
@@ -720,6 +719,7 @@
         private System.Windows.Forms.NumericUpDown GraphRefreshrate;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripMenuItem programSelectionToolStripMenuItem;
+        public System.IO.Ports.SerialPort serialPort1;
     }
 }
 

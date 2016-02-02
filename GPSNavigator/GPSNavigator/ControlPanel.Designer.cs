@@ -71,6 +71,7 @@
             this.VerifyBtn.TabIndex = 1;
             this.VerifyBtn.Text = "Verify Chip";
             this.VerifyBtn.UseVisualStyleBackColor = true;
+            this.VerifyBtn.Click += new System.EventHandler(this.VerifyBtn_Click);
             // 
             // EraseBtn
             // 
@@ -80,6 +81,11 @@
             this.EraseBtn.TabIndex = 0;
             this.EraseBtn.Text = "Erase Chip";
             this.EraseBtn.UseVisualStyleBackColor = true;
+            this.EraseBtn.Click += new System.EventHandler(this.EraseBtn_Click);
+            // 
+            // openProgramFile
+            // 
+            this.openProgramFile.FileOk += new System.ComponentModel.CancelEventHandler(this.openProgramFile_FileOk);
             // 
             // ControlPanel
             // 

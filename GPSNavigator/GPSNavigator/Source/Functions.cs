@@ -100,6 +100,41 @@ namespace GPSNavigator.Source
         public const int MAX_CONNECTION_ACOUNT = 30;//30;
 
 
+        #region Programmer_Constants
+        public const int FLASH_SECTOR_SIZE = 4096;
+        public const int FLASH_MEMORY_nSECTORS = 2048;
+        public const int INTEL_HEX_MAX_DATA_LENGTH = 64;
+
+        public const char INTEL_HEX_START_CODE =':';
+
+        public const int INTEL_HEX_MIN_RECORD_LENGTH = 11;
+
+        public const int INTEL_HEX_START_CODE_OFFSET = 0;
+        public const int INTEL_HEX_START_CODE_LENGTH = 1;
+        public const int INTEL_HEX_BYTE_COUNT_LENGTH = 2;
+        public const int INTEL_HEX_ADDRESS_LENGTH = 4;
+        public const int INTEL_HEX_RECORD_TYPE_LENGTH = 2;
+        public const int INTEL_HEX_CHECKSUM_LENGTH = 2;
+        public const int INTEL_HEX_BYTE_COUNT_OFFSET = (INTEL_HEX_START_CODE_OFFSET+INTEL_HEX_START_CODE_LENGTH);
+        public const int INTEL_HEX_ADDRESS_OFFSET = (INTEL_HEX_BYTE_COUNT_OFFSET+INTEL_HEX_BYTE_COUNT_LENGTH);
+        public const int INTEL_HEX_RECORD_TYPE_OFFSET = (INTEL_HEX_ADDRESS_OFFSET + INTEL_HEX_ADDRESS_LENGTH);
+        public const int INTEL_HEX_DATA_OFFSET	= (INTEL_HEX_RECORD_TYPE_OFFSET+INTEL_HEX_RECORD_TYPE_LENGTH);
+
+        public const char REMOTE_FLASH_PACKET_HEADER0 = (char)0xAA;
+        public const char REMOTE_FLASH_PACKET_HEADER1=(char)0x55;
+        public const char REMOTE_FLASH_PACKET_HEADER2 = (char)0x55;
+        public const char REMOTE_FLASH_PACKET_HEADER3 = (char)0xAA;
+        public const int REMOTE_FLASH_PACKET_HEADER_SIZE = 4;
+        public const int REMOTE_FLASH_RETRY_COUNT = 5;
+        public const int REMOTE_FLASH_FULL_ERASE_TIMOUT_RETRIES = 40;
+
+        public const char REMOTE_FLASH_PROGRAMMING_MODE_COMMAND = (char)27;
+
+
+
+        #endregion
+
+
         #endregion
 
         public static double[][] MatrixMult(double[][] matrixA, int aRows, int aCols, double[][] matrixB, int bCols)
@@ -3339,6 +3374,105 @@ namespace GPSNavigator.Source
 
             }*/
             return output;
+        }
+
+        
+        public static int crc32b(char[] message, int length, int seed)
+        {
+           int i, j;
+           uint Byte, crc, mask;
+
+           i = 0;
+           crc = ~(uint)seed;
+           for (i=0; i<length; i++)
+           {
+              Byte = message[i];            // Get next byte.
+              crc = crc ^ Byte;
+              for (j = 7; j >= 0; j--)
+              {    // Do eight times.
+                 mask = (uint)(-(crc & 1));
+                 crc = (uint)((crc >> 1) ^ (0xEDB88320 & mask));
+              }
+           }
+           return (int)(~crc);
+        }
+
+        public static int hexToDecimal(char[] hex,int offset, int length)
+        {
+	        int integer = 0;
+            int pow = 1;
+	        for (int i=0; i<length; i++)
+	        {
+		        char hexDigit = hexDigitToInt(hex[offset+i]);
+                if (hexDigit != '#')
+                {
+                    integer += hexDigit * pow;
+                    pow *= 10;
+                    //integer <<= 4;
+                    //integer |= hexDigit;
+                }
+                else
+                    continue;
+	        }
+	        return integer;
+        }
+
+        public static char hexDigitToInt(char digit)
+        {
+            char result = '#';
+            switch (digit)
+            {
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    result = (char)(digit - 48);
+                    break;
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                    result = (char)(digit - 87);
+                    break;
+                case 'A':
+                case 'B':
+                case 'C':
+                case 'D':
+                case 'E':
+                case 'F':
+                    result = (char)(digit - 55);
+                    break;
+                default:
+                    break;
+            }
+            return result;
+        }
+
+        public static byte[] ChartoByte(char[] input)
+        {
+            byte[] output = new byte[input.Length];
+            for (int i = 0; i < input.Length; i++)
+                output[i] = (byte)input[i];
+            return output;
+        }
+
+        public static int CharToInt(char[] input)
+        {
+            int temp = 0;
+            for (int i = input.Length -1; i >= 0; i++)
+            {
+                temp *= 256;
+                temp += (int)input[i];
+            }
+            return temp;
         }
     }
 }

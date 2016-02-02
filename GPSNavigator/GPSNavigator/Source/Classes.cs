@@ -262,6 +262,7 @@ namespace GPSNavigator.Classes
         public enum Logtype { GPS, Northfinder };
         public enum DelayRange { ms, s, m, h };
 
+
         public class GEOpoint
         {
             public double Latitude;
