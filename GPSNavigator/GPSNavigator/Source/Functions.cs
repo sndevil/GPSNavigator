@@ -3401,7 +3401,7 @@ namespace GPSNavigator.Source
         {
 	        int integer = 0;
             int pow = 1;
-	        for (int i=0; i<length; i++)
+	        for (int i=length-1; i>=0; i--)
 	        {
 		        char hexDigit = hexDigitToInt(hex[offset+i]);
                 if (hexDigit != '#')
@@ -3467,7 +3467,7 @@ namespace GPSNavigator.Source
         public static int CharToInt(char[] input)
         {
             int temp = 0;
-            for (int i = input.Length -1; i >= 0; i++)
+            for (int i = input.Length -1; i >= 0; i--)
             {
                 temp *= 256;
                 temp += (int)input[i];

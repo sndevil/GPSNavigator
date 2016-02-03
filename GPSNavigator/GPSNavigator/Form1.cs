@@ -371,6 +371,7 @@ namespace GPSNavigator
             return hex.ToString();
         }
 
+        public FileStream f = new FileStream("C://a.txt",FileMode.Create,FileAccess.Write);
         public void Serial1_Write(byte[] data,int offset, int count)
         {
             System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
@@ -380,8 +381,13 @@ namespace GPSNavigator
             Thread.Sleep(10);
             toolStripProgressBar1.Value = 0;
             System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
+            f.Write(data, offset, count);
         }
 
+        public void SetProgress(int percent)
+        {
+            toolStripProgressBar1.Value = percent;
+        }
         public void ToggleDetailForm()
         {
             if (checkBox2.Checked)

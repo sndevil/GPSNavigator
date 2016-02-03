@@ -33,7 +33,7 @@ namespace GPSNavigator
             {
                 FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
                 DeviceProgrammer = new Programmer(file, Parentform);
-                DeviceProgrammer.StartProgram(460800, true, true);
+                DeviceProgrammer.StartProgram(115200, false, false);
                 //MessageBox.Show("Programming chip");
             }
         }
