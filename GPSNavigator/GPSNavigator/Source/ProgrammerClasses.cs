@@ -42,6 +42,7 @@ namespace GPSNavigator.Source
 
         public void StartProgram(int baudrate, bool erase, bool verify)
         {
+            Parentform.Programming_Mode = true;
             MCSFile.Position = 0;
             char[] buffer = new char[100];
             char[] cbuffer = new char[100];
@@ -385,6 +386,7 @@ namespace GPSNavigator.Source
         public void setProgramSectorCommand(int sectorIndex, char[] data)
         {
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_PROGRAM_SECTOR;
+
             this.sectorIndex = sectorIndex;
             dataLength = Functions.FLASH_SECTOR_SIZE;
             for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
@@ -457,7 +459,9 @@ namespace GPSNavigator.Source
 	        };
             Parentform.Serial1_Write(Functions.ChartoByte(header),0,4);
             commandPacket.ToCharArray();
+            //Parentform.f.Write(Functions.ChartoByte(commandPacket.objectdescriber), 0, commandPacket.objectdescriber.Length);
             Parentform.Serial1_Write(Functions.ChartoByte(commandPacket.objectdescriber),0,commandPacket.objectdescriber.Length);
+
             commandPacket.insertChecksum();
             byte[] crc = new byte[4];
             int temp = commandPacket.crc32;
@@ -466,7 +470,9 @@ namespace GPSNavigator.Source
                 crc[i] = (byte)(temp & 0xFF);
                 temp >>= 8;
             }
+            //Parentform.f.Write(crc, 0, 4);
             Parentform.Serial1_Write(crc,0,4);
+            Parentform.f.Close();
             Thread.Sleep(10);
             Parentform.serialPort1.Encoding = Encoding.Default;
             char[] line = new char[1];
@@ -504,7 +510,7 @@ namespace GPSNavigator.Source
         private bool receiveResponse(int serialTimoutRetries = 1)
         {
             char[] header = new char[Functions.REMOTE_FLASH_PACKET_HEADER_SIZE];
-            Parentform.f.Close();
+            //Parentform.f.Close();
             Parentform.serialPort1.Read(header,0,Functions.REMOTE_FLASH_PACKET_HEADER_SIZE);
 	        if (
 			        header[0] != Functions.REMOTE_FLASH_PACKET_HEADER0 ||
@@ -559,11 +565,8 @@ namespace GPSNavigator.Source
 	        if (responsePacket.dataLength != 4)
 		        return -1;
 
-	        int temp = 0;
 	        for (int i=0; i<4; i++)
-		        temp = (temp<<8) | (char)responsePacket.data[i];
-
-	        checksum = temp;
+		        checksum = (checksum<<8) | (int)responsePacket.data[i];
 	        return checksum;
         }
         private int getChipChecksum()
@@ -637,13 +640,14 @@ namespace GPSNavigator.Source
             Parentform.Serial1_Write(bytemsg,0,9);
 	        //if (!serial->sendString((const char*)enterProgrammingModeCommand, sizeof(enterProgrammingModeCommand)))
 	        //	return false;
-            Thread.Sleep(2048*10/programmingBaudrate+1);
+            //Thread.Sleep(2048*10/programmingBaudrate+1);
 	        //sleep(2048*10/programmingBaudrate+1);	//2048=Maximum buffer size of UART in FPGA
 
-            Parentform.serialPort1.Close();
-            Parentform.serialPort1.BaudRate= programmingBaudrate;
-            Parentform.serialPort1.Open();
-            Parentform.serialPort1.DiscardInBuffer();
+
+            ///////Uncomment these
+           // Parentform.serialPort1.Close();
+           // Parentform.serialPort1.BaudRate= programmingBaudrate;
+           // Parentform.serialPort1.Open();
 	        //serial->closePort();
 
 	        //if (!serial->openPort(programmingBaudrate))
@@ -671,6 +675,7 @@ namespace GPSNavigator.Source
                 crc[i] = (byte)(temp & 0xFF);
                 temp>>=8;
             }
+            Parentform.serialPort1.DiscardInBuffer();
             Parentform.Serial1_Write(crc,0,4);
             Thread.Sleep(10);
             Parentform.serialPort1.Encoding = Encoding.Default;
@@ -745,6 +750,7 @@ namespace GPSNavigator.Source
 	        int remoteChecksum;
 	        bool printProgress = true;
 	        int i;
+            var result = programSector(10, localMemory.sector[10].data);
 	        for (i=0; i<Functions.FLASH_MEMORY_nSECTORS; i++)
 	        {
 		        remoteChecksum=0;
@@ -775,8 +781,10 @@ namespace GPSNavigator.Source
                     continue;
                 }
 
-		        if (remoteChecksum == localMemory.sector[i].checksum())
+                var sectorchecksum = localMemory.sector[i].checksum();
+		        if (remoteChecksum == sectorchecksum)
 			        continue;
+
 		        if (!programSector(i, localMemory.sector[i].data))
 		        {
 			        //retry to program
@@ -882,7 +890,7 @@ namespace GPSNavigator.Source
 		        if (remoteChecksum != localMemory.sector[i].checksum())
 		        {
 			        //printf("\r\nFlash verification failed, mismatch in sector %d.\r\n", i);
-                    throw new Exception("Flash verification failed, mismatch in sector " + i.ToString());
+                    //throw new Exception("Flash verification failed, mismatch in sector " + i.ToString());
 			        return false;
 		        }
 	        }
