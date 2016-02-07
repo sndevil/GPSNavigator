@@ -376,14 +376,20 @@ namespace GPSNavigator
         public FileStream f = new FileStream("C://b.txt",FileMode.Create,FileAccess.Write);
         public void Serial1_Write(byte[] data,int offset, int count)
         {
-            System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
-            toolStripProgressBar1.Value = 10;
+            //System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
+            //toolStripProgressBar1.Value = 10;
             serialPort1.Write(data, offset, count);
-            toolStripProgressBar1.Value = 100;
-            Thread.Sleep(10);
-            toolStripProgressBar1.Value = 0;
-            System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
-            f.Write(data, offset, count);
+            //toolStripProgressBar1.Value = 100;
+            //Thread.Sleep(10);
+            //toolStripProgressBar1.Value = 0;
+            //System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
+            try
+            {
+                f.Write(data, offset, count);
+            }
+            catch
+            {
+            }
         }
 
         public void SetProgress(int percent)

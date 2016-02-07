@@ -269,13 +269,23 @@ namespace GPSNavigator.Source
         {
             int sectorNumber = address / Functions.FLASH_SECTOR_SIZE;
             int addressOffset = address % Functions.FLASH_SECTOR_SIZE;
-            sector[sectorNumber].data[addressOffset] = data;
+            try
+            {
+
+                sector[sectorNumber].data[addressOffset] = data;
+            }
+            catch
+            {
+                sector[sectorNumber] = new FlashSector();
+                sector[sectorNumber].erase();
+                sector[sectorNumber].data[addressOffset] = data;
+            }
         }
         public FlashMemory()
         {
             sector = new FlashSector[Functions.FLASH_MEMORY_nSECTORS];
 
-            erase();
+            //erase();
         }
         public void erase()
         {
@@ -472,71 +482,66 @@ namespace GPSNavigator.Source
             }
             //Parentform.f.Write(crc, 0, 4);
             Parentform.Serial1_Write(crc,0,4);
-            Parentform.f.Close();
             Thread.Sleep(10);
             Parentform.serialPort1.Encoding = Encoding.Default;
             char[] line = new char[1];
+            byte[] bline = new byte[4];
+            //while (true)
+            //{
+                //var r = Parentform.serialPort1.ReadExisting();
             while (true)
             {
-                line = Parentform.serialPort1.ReadExisting().ToCharArray();
-                if (line.Length > 0)
+                if (Parentform.serialPort1.ReadByte() == (byte)170)
                     break;
+
             }
+            bline[0] = (byte)170;
+            Parentform.serialPort1.Read(bline, 1, 3);
+                //if (toRead != null)
+                //{
+                    
+                //}
+                //Encoding.Convert(Encoding.Default,Encoding.UTF8,
+                //line = r.ToCharArray();
+                //Encoding.
+                //if (line.Length > 0)
+                //    break;
+            //}
             if (
-                 line[0] != Functions.REMOTE_FLASH_PACKET_HEADER0 ||
-                 line[1] != Functions.REMOTE_FLASH_PACKET_HEADER1 ||
-                 line[2] != Functions.REMOTE_FLASH_PACKET_HEADER2 ||
-                 line[3] != Functions.REMOTE_FLASH_PACKET_HEADER3
+                 bline[0] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER0 ||
+                 bline[1] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER1 ||
+                 bline[2] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER2 ||
+                 bline[3] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER3
              )
                 return false;
 
-            responsePacket.data = new char[Functions.FLASH_SECTOR_SIZE];
+            responsePacket.data = new byte[Functions.FLASH_SECTOR_SIZE];
             responsePacket.reset();
             
-            Array.Copy(line, 4, header, 0, 4);
-            responsePacket.responseCode = (RemoteFlashResponseCode)Functions.CharToInt(header);
-            Array.Copy(line, 8, header, 0, 4);
-            responsePacket.dataLength = Functions.CharToInt(header);
-            header = new char[responsePacket.dataLength];
-            Array.Copy(line, 12, header, 0, responsePacket.dataLength);
-            responsePacket.data = header;
-            header = new char[4];
-            Array.Copy(line, 12 + responsePacket.dataLength, header, 0, 4);
-            responsePacket.crc32 = Functions.CharToInt(header);
+            //Array.Copy(line, 4, header, 0, 4);
+            Parentform.serialPort1.Read(bline, 0, 4);
+            //responsePacket.responseCode = (RemoteFlashResponseCode)Functions.CharToInt(header);
+            responsePacket.responseCode = (RemoteFlashResponseCode)Functions.ByteToInt(bline);
+            //Array.Copy(line, 8, header, 0, 4);
+            Parentform.serialPort1.Read(bline, 0, 4);
+            responsePacket.dataLength = Functions.ByteToInt(bline);
+            bline = new byte[responsePacket.dataLength];
+            Parentform.serialPort1.Read(bline, 0, responsePacket.dataLength);
+            //header = new char[responsePacket.dataLength];
+            //Array.Copy(line, 12, header, 0, responsePacket.dataLength);
+            //for (int k = 0; k < 4; k++)
+            //    if (header[k] == '€')
+            //        header[k] = (char)128;
+            responsePacket.data = bline;
+            bline = new byte[4];
+            Parentform.serialPort1.Read(bline, 0, 4);
+            //Array.Copy(line, 12 + responsePacket.dataLength, header, 0, 4);
+            responsePacket.crc32 = Functions.ByteToInt(bline);
             if (!responsePacket.verifyChecksum())
                 return false;
             return true;
         }
-        private bool receiveResponse(int serialTimoutRetries = 1)
-        {
-            char[] header = new char[Functions.REMOTE_FLASH_PACKET_HEADER_SIZE];
-            //Parentform.f.Close();
-            Parentform.serialPort1.Read(header,0,Functions.REMOTE_FLASH_PACKET_HEADER_SIZE);
-	        if (
-			        header[0] != Functions.REMOTE_FLASH_PACKET_HEADER0 ||
-			        header[1] != Functions.REMOTE_FLASH_PACKET_HEADER1 ||
-			        header[2] != Functions.REMOTE_FLASH_PACKET_HEADER2 ||
-			        header[3] != Functions.REMOTE_FLASH_PACKET_HEADER3
-		        )
-		        return false;
 
-	        responsePacket.reset();            
-            Parentform.serialPort1.Read(header,0,4);
-            responsePacket.responseCode = (RemoteFlashResponseCode)Functions.CharToInt(header);
-            Parentform.serialPort1.Read(header,0,4);
-            responsePacket.dataLength = Functions.CharToInt(header);
-            Parentform.serialPort1.Read(header,0,responsePacket.dataLength);
-            responsePacket.data = header;
-            Parentform.serialPort1.Read(header,0,4);
-            responsePacket.crc32 = Functions.CharToInt(header);
-    //serial->receiveString((char*)&responsePacket.responseCode, sizeof(RemoteFlashResponseCode), serialTimoutRetries);
-    //serial->receiveString((char*)&responsePacket.dataLength, sizeof(int), serialTimoutRetries);
-    //serial->receiveString((char*)responsePacket.data, responsePacket.dataLength, serialTimoutRetries);
-    //serial->receiveString((char*)&responsePacket.crc32, sizeof(unsigned int), serialTimoutRetries);
-	        if (!responsePacket.verifyChecksum())
-		        return false;
-	        return true;
-        }
         private bool sendReceiveCommandResponse(int serialTimoutRetries = 1)
         {
             if (connectionStatus == RemoteFlashConnectionStatus.REMOTE_FLASH_CONNECTION_STATUS_DISCONNECTED)
@@ -645,9 +650,9 @@ namespace GPSNavigator.Source
 
 
             ///////Uncomment these
-           // Parentform.serialPort1.Close();
-           // Parentform.serialPort1.BaudRate= programmingBaudrate;
-           // Parentform.serialPort1.Open();
+            //Parentform.serialPort1.Close();
+            //Parentform.serialPort1.BaudRate = programmingBaudrate;
+            //Parentform.serialPort1.Open();
 	        //serial->closePort();
 
 	        //if (!serial->openPort(programmingBaudrate))
@@ -680,31 +685,58 @@ namespace GPSNavigator.Source
             Thread.Sleep(10);
             Parentform.serialPort1.Encoding = Encoding.Default;
             char[] line = new char[1];
+            byte[] bline = new byte[4];
+            //while (true)
+            //{
+            //var r = Parentform.serialPort1.ReadExisting();
             while (true)
             {
-                line = Parentform.serialPort1.ReadExisting().ToCharArray();
-                if (line.Length > 0)
+                if (Parentform.serialPort1.ReadByte() == (byte)170)
                     break;
+                
             }
-            if (
-                 line[0] != Functions.REMOTE_FLASH_PACKET_HEADER0 ||
-                 line[1] != Functions.REMOTE_FLASH_PACKET_HEADER1 ||
-                 line[2] != Functions.REMOTE_FLASH_PACKET_HEADER2 ||
-                 line[3] != Functions.REMOTE_FLASH_PACKET_HEADER3
-             )
-		        return false;
+            bline[0] = (byte)170;
+            Parentform.serialPort1.Read(bline,1, 3);
+            //if (toRead != null)
+            //{
 
-	        responsePacket.reset();
-            Array.Copy(line, 4, header, 0, 4);
-            responsePacket.responseCode = (RemoteFlashResponseCode)Functions.CharToInt(header);
-            Array.Copy(line, 8, header, 0, 4);
-            responsePacket.dataLength = Functions.CharToInt(header);
-            header = new char[responsePacket.dataLength];
-            Array.Copy(line, 12, header, 0, responsePacket.dataLength);
-            responsePacket.data = header;
-            header = new char[4];
-            Array.Copy(line, 12 + responsePacket.dataLength, header, 0, 4);
-            responsePacket.crc32 = Functions.CharToInt(header);
+            //}
+            //Encoding.Convert(Encoding.Default,Encoding.UTF8,
+            //line = r.ToCharArray();
+            //Encoding.
+            //if (line.Length > 0)
+            //    break;
+            //}
+            if (
+                 bline[0] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER0 ||
+                 bline[1] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER1 ||
+                 bline[2] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER2 ||
+                 bline[3] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER3
+             )
+                return false;
+
+            //responsePacket.data = new byte[Functions.FLASH_SECTOR_SIZE];
+            responsePacket.reset();
+
+            //Array.Copy(line, 4, header, 0, 4);
+            Parentform.serialPort1.Read(bline, 0, 4);
+            //responsePacket.responseCode = (RemoteFlashResponseCode)Functions.CharToInt(header);
+            responsePacket.responseCode = (RemoteFlashResponseCode)Functions.ByteToInt(bline);
+            //Array.Copy(line, 8, header, 0, 4);
+            Parentform.serialPort1.Read(bline, 0, 4);
+            responsePacket.dataLength = Functions.ByteToInt(bline);
+            bline = new byte[responsePacket.dataLength];
+            Parentform.serialPort1.Read(bline, 0, responsePacket.dataLength);
+            //header = new char[responsePacket.dataLength];
+            //Array.Copy(line, 12, header, 0, responsePacket.dataLength);
+            //for (int k = 0; k < 4; k++)
+            //    if (header[k] == '€')
+            //        header[k] = (char)128;
+            responsePacket.data = bline;
+            bline = new byte[4];
+            Parentform.serialPort1.Read(bline, 0, 4);
+            //Array.Copy(line, 12 + responsePacket.dataLength, header, 0, 4);
+            responsePacket.crc32 = Functions.ByteToInt(bline);
 
 	        if (!responsePacket.verifyChecksum())
 		        return false;
@@ -732,9 +764,9 @@ namespace GPSNavigator.Source
             return returnValue;
         }
 
-        public char[] readbackSector(int sectorIndex)
+        public byte[] readbackSector(int sectorIndex)
         {
-            char[] data = new char[Functions.FLASH_SECTOR_SIZE];
+            byte[] data = new byte[Functions.FLASH_SECTOR_SIZE];
             commandPacket.setReadbackSectorCommand(sectorIndex);
             if (!sendReceiveCommandResponse())
                 throw new Exception("Response Error");
@@ -749,26 +781,26 @@ namespace GPSNavigator.Source
         {
 	        int remoteChecksum;
 	        bool printProgress = true;
-	        int i;
-            var result = programSector(10, localMemory.sector[10].data);
+	        int i,sectorchecksum;
+            //var result = programSector(10, localMemory.sector[10].data);
 	        for (i=0; i<Functions.FLASH_MEMORY_nSECTORS; i++)
 	        {
-		        remoteChecksum=0;
-		        if (printProgress)
-		        {
-			        if ((i%64)==0)
-			        {
-                        Parentform.SetProgress(i * 100 / Functions.FLASH_MEMORY_nSECTORS);
-				        //printf("\b%d%%", (i*100/FLASH_MEMORY_nSECTORS));
-				        //fflush(stdout);
-			        }
-			        else
-			        {
+                //remoteChecksum=0;
+                //if (printProgress)
+                //{
+                //    if ((i%64)==0)
+                //    {
+                //        Parentform.SetProgress(i * 100 / Functions.FLASH_MEMORY_nSECTORS);
+                //        //printf("\b%d%%", (i*100/FLASH_MEMORY_nSECTORS));
+                //        //fflush(stdout);
+                //    }
+                //    else
+                //    {
 
-			        }
-		        }
-		        else
-			        printProgress = true;
+                //    }
+                //}
+                //else
+                //    printProgress = true;
 
                 try
                 {
@@ -781,12 +813,23 @@ namespace GPSNavigator.Source
                     continue;
                 }
 
-                var sectorchecksum = localMemory.sector[i].checksum();
+                try
+                {
+                    sectorchecksum = localMemory.sector[i].checksum();
+                }
+                catch
+                {
+                    sectorchecksum = -246126838;
+                }
+
 		        if (remoteChecksum == sectorchecksum)
 			        continue;
 
 		        if (!programSector(i, localMemory.sector[i].data))
 		        {
+
+                    ////Initialize 1 Empty sector for the case sector was empty and had to be programmed
+
 			        //retry to program
 			        //fprintf(stderr, "Retrying to program sector %d.\r\n", i);
                     //throw new Exception
@@ -796,10 +839,11 @@ namespace GPSNavigator.Source
 		        i--;
 		        printProgress = false;
 	        }
+            Parentform.f.Close();
             Parentform.SetProgress(0);
 	        //printf("\b100%\r\n");
 	        remoteChecksum=getChipChecksum();
-	        if (remoteChecksum < 0 )
+	        if (remoteChecksum == -1 )
 	        {
 		        //fprintf(stderr, "Failed to read chip checksum.\r\n");
 		        return false;
@@ -924,12 +968,12 @@ namespace GPSNavigator.Source
 
         public RemoteFlashResponseCode responseCode;
         public int dataLength;
-        public char[] data;
+        public byte[] data;
         public int crc32;
 
         public RemoteFlashResponsePacket()
         {
-            data = new char[Functions.FLASH_SECTOR_SIZE];
+            data = new byte[Functions.FLASH_SECTOR_SIZE];
             reset();
         }
         public void reset()
@@ -937,22 +981,22 @@ namespace GPSNavigator.Source
             responseCode = RemoteFlashResponseCode.REMOTE_FLASH_RESPONSE_CODE_INVALID;
             dataLength = 0;
             for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+                data[i] = (byte)0xFF;
             crc32 = 0;
         }
         public bool verifyChecksum()
         {
-            char[] tochecksum = new char[8 + dataLength];
+            byte[] tochecksum = new byte[8 + dataLength];
             int responsecodeint = (int)responseCode;
             for (int i = 0; i < 4; i++)
             {
-                tochecksum[i] = (char)(responsecodeint % 256);
+                tochecksum[i] = (byte)(responsecodeint % 256);
                 responsecodeint /= 256;
             }
             responsecodeint = dataLength;
             for (int i = 0; i < 4; i++)
             {
-                tochecksum[i+4] = (char)(responsecodeint % 256);
+                tochecksum[i+4] = (byte)(responsecodeint % 256);
                 responsecodeint /= 256;
             }
             for (int i = 0; i < dataLength; i++)
@@ -962,7 +1006,7 @@ namespace GPSNavigator.Source
 		        return true;
 
 	    //printf("Warning: Checksum failed!\r\n");
-            throw new Exception("Checksum Error");
+            //throw new Exception("Checksum Error");
 	        return false;
         }
     };

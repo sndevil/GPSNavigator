@@ -3397,6 +3397,26 @@ namespace GPSNavigator.Source
            return (int)(~crc);
         }
 
+        public static int crc32b(byte[] message, int length, int seed)
+        {
+            int i, j;
+            uint Byte, crc, mask;
+
+            i = 0;
+            crc = ~(uint)seed;
+            for (i = 0; i < length; i++)
+            {
+                Byte = message[i];            // Get next byte.
+                crc = crc ^ Byte;
+                for (j = 7; j >= 0; j--)
+                {    // Do eight times.
+                    mask = (uint)(-(crc & 1));
+                    crc = (uint)((crc >> 1) ^ (0xEDB88320 & mask));
+                }
+            }
+            return (int)(~crc);
+        }
+
         public static int hexToDecimal(char[] hex,int offset, int length)
         {
 	        int integer = 0;
@@ -3407,7 +3427,7 @@ namespace GPSNavigator.Source
                 if (hexDigit != '#')
                 {
                     integer += hexDigit * pow;
-                    pow *= 10;
+                    pow *= 16;
                     //integer <<= 4;
                     //integer |= hexDigit;
                 }
@@ -3468,6 +3488,17 @@ namespace GPSNavigator.Source
         {
             int temp = 0;
             for (int i = input.Length -1; i >= 0; i--)
+            {
+                temp *= 256;
+                temp += (int)input[i];
+            }
+            return temp;
+        }
+
+        public static int ByteToInt(byte[] input)
+        {
+            int temp = 0;
+            for (int i = input.Length - 1; i >= 0; i--)
             {
                 temp *= 256;
                 temp += (int)input[i];
