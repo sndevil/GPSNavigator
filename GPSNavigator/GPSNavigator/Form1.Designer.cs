@@ -98,7 +98,7 @@
             this.serialPort1.PortName = "COM5";
             this.serialPort1.ReadBufferSize = 256000;
             this.serialPort1.ReceivedBytesThreshold = 20;
-            this.serialPort1.WriteBufferSize = 4200;
+            this.serialPort1.WriteBufferSize = 8000;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
             // logger

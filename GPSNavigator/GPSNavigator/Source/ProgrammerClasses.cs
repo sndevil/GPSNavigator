@@ -440,24 +440,30 @@ namespace GPSNavigator.Source
             }
             int index = 4;
             code = sectorIndex;
-            if (code >= 0)
+            for (int i = 0; i < 4; i++)
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    objectdescriber[index + i] = (char)(code % 256);
-                    code /= 256;
-                }
+                objectdescriber[index+i] = (char)(code & 0xFF);
+                code >>= 4;
             }
-            else
-            {
-                objectdescriber[4] = (char)255;
-                objectdescriber[5] = (char)255;
-                objectdescriber[6] = (char)255;
-                objectdescriber[7] = (char)255;
-            }
+
+            //if (code >= 0)
+            //{
+             //   for (int i = 0; i < 4; i++)
+              //  {
+              //      objectdescriber[index + i] = (char)(code % 256);
+               //     code /= 256;
+               // }
+            //}
+            //else
+           // {
+            //    objectdescriber[4] = (char)255;
+             //   objectdescriber[5] = (char)255;
+              //  objectdescriber[6] = (char)255;
+               // objectdescriber[7] = (char)255;
+           // }
             index += 4;
             code = dataLength;
-            for (int i = 3; i > 0; i--)
+            for (int i = 0; i < 4; i++)
             {
                 objectdescriber[index + i] = (char)(code % 256);
                 code /= 256;
@@ -477,15 +483,17 @@ namespace GPSNavigator.Source
 	    public RemoteFlashConnectionStatus connectionStatus;
         private bool sendCommand()
         {
+            FileStream lastfile = new FileStream("C:\\lastfile.txt",FileMode.Create, FileAccess.Write );
             char[] header =
 	        {
 			    Functions.REMOTE_FLASH_PACKET_HEADER0, Functions.REMOTE_FLASH_PACKET_HEADER1,
 			    Functions.REMOTE_FLASH_PACKET_HEADER2, Functions.REMOTE_FLASH_PACKET_HEADER3
 	        };
             Parentform.Serial1_Write(Functions.ChartoByte(header),0,4);
+            lastfile.Write(Functions.ChartoByte(header), 0, 4);
             commandPacket.ToCharArray();
             Parentform.Serial1_Write(Functions.ChartoByte(commandPacket.objectdescriber),0,commandPacket.objectdescriber.Length);
-
+            lastfile.Write(Functions.ChartoByte(commandPacket.objectdescriber), 0, commandPacket.objectdescriber.Length);
             commandPacket.insertChecksum();
             byte[] crc = new byte[4];
             int temp = commandPacket.crc32;
@@ -496,6 +504,8 @@ namespace GPSNavigator.Source
             }
             Parentform.serialPort1.DiscardInBuffer();
             Parentform.Serial1_Write(crc,0,4);
+            lastfile.Write(crc, 0, 4);
+            lastfile.Close();
             //Thread.Sleep(10);
             Parentform.serialPort1.Encoding = Encoding.Default;
             char[] line = new char[1];
@@ -558,6 +568,7 @@ namespace GPSNavigator.Source
             Parentform.serialin.Write(bline, 0, 4);
             //Array.Copy(line, 12 + responsePacket.dataLength, header, 0, 4);
             responsePacket.crc32 = Functions.ByteToInt(bline);
+            Parentform.serialin.Write(bline, 0, 4);
             if (!responsePacket.verifyChecksum())
                 return false;
             return true;
@@ -670,7 +681,7 @@ namespace GPSNavigator.Source
             Parentform.Serial1_Write(bytemsg,0,9);
 
 
-            ///////Uncomment these
+            ////////Uncomment these
             //Parentform.serialPort1.Close();
             //Parentform.serialPort1.BaudRate = programmingBaudrate;
             //Parentform.serialPort1.Open();
@@ -835,8 +846,8 @@ namespace GPSNavigator.Source
                     sectorchecksum = -246126838;
                 }
 
-		        if (remoteChecksum == sectorchecksum)
-			        continue;
+		        //if (remoteChecksum == sectorchecksum)
+			    //    continue;
                 char[] toprogram;
                 try
                 {
@@ -856,6 +867,8 @@ namespace GPSNavigator.Source
                     //throw new Exception
 			        continue;
 		        }
+                Parentform.f.Close();
+                Parentform.serialin.Close();
 		        // Programming sector successful, make sure you verify it again
 		        i--;
 		        printProgress = false;
