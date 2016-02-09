@@ -98,7 +98,7 @@
             this.serialPort1.PortName = "COM5";
             this.serialPort1.ReadBufferSize = 256000;
             this.serialPort1.ReceivedBytesThreshold = 20;
-            this.serialPort1.WriteBufferSize = 200000;
+            this.serialPort1.WriteBufferSize = 4200;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
             // logger
@@ -707,7 +707,7 @@
         private Telerik.WinControls.UI.Docking.DocumentContainer documentContainer1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serialControllerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripStatusLabel ErrorCount;
+        public System.Windows.Forms.ToolStripStatusLabel ErrorCount;
         private System.Windows.Forms.Label FormatLabel;
         private System.Windows.Forms.RadioButton ascii;
         private System.Windows.Forms.RadioButton hex;

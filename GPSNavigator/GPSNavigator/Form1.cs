@@ -374,6 +374,7 @@ namespace GPSNavigator
         }
 
         public FileStream f = new FileStream("C://b.txt",FileMode.Create,FileAccess.Write);
+        public FileStream serialin = new FileStream("C://Serialin.txt", FileMode.Create, FileAccess.Write);
         public void Serial1_Write(byte[] data,int offset, int count)
         {
             //System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
