@@ -8,14 +8,14 @@
     <framework targetVersion="4.0" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="GPSNavigator.exe.manifest" size="45963">
+    <dependentAssembly dependencyType="install" codebase="GPSNavigator.exe.manifest" size="44861">
       <assemblyIdentity name="GPSNavigator.exe" version="1.1.0.1" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="x86" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>sz76XEXpjId89VtjK1nh+mCLSIg=</dsig:DigestValue>
+        <dsig:DigestValue>obYWybYFa018jy68lD0WH5avD4E=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

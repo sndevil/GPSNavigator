@@ -87,12 +87,18 @@ namespace GPSNavigator
             SkyView = new Skyview(vars);
             ToggleDetailForm();
             RefreshSerial();
-            serialPorts.SelectedIndex = 0;
-            if (OpenPort())
+            try
             {
-                //status = Form1Status.Connected;
-                StatusLabel.Text = "Connected";
-                openPort.Text = "Close Port";
+                serialPorts.SelectedIndex = 0;
+                if (OpenPort())
+                {
+                    //status = Form1Status.Connected;
+                    StatusLabel.Text = "Connected";
+                    openPort.Text = "Close Port";
+                }
+            }
+            catch
+            {
             }
         }
 
@@ -373,8 +379,8 @@ namespace GPSNavigator
             return hex.ToString();
         }
 
-        public FileStream f = new FileStream("C://b.txt",FileMode.Create,FileAccess.Write);
-        public FileStream serialin = new FileStream("C://Serialin.txt", FileMode.Create, FileAccess.Write);
+        //public FileStream f = new FileStream("C://b.txt",FileMode.Create,FileAccess.Write);
+        //public FileStream serialin = new FileStream("C://Serialin.txt", FileMode.Create, FileAccess.Write);
         public void Serial1_Write(byte[] data,int offset, int count)
         {
             //System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
@@ -384,13 +390,13 @@ namespace GPSNavigator
             //Thread.Sleep(10);
             //toolStripProgressBar1.Value = 0;
             //System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
-            try
-            {
-                f.Write(data, offset, count);
-            }
-            catch
-            {
-            }
+            //try
+            //{
+                //f.Write(data, offset, count);
+            //}
+            //catch
+            //{
+            //}
         }
 
         public void SetProgress(int percent)
@@ -1136,9 +1142,9 @@ namespace GPSNavigator
             Task<bool> asyncsaver = SaveAsync(savedialog.FileName);
             StatusLabel.Text = "Saving";
         }
-        private delegate void Progressbar(int percent);
+        public delegate void Progressbar(int percent);
 
-        private void ProgressbarChangeValue(int percent)
+        public void ProgressbarChangeValue(int percent)
         {
             if (this.InvokeRequired)
             {
@@ -1347,6 +1353,8 @@ namespace GPSNavigator
                 }
             }
         }
+
+        //public void SetProgramProgress(
 
     }
 }

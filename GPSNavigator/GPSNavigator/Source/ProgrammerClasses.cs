@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Threading;
 using System.IO;
+using System.Diagnostics;
 
 namespace GPSNavigator.Source
 {
@@ -63,14 +64,9 @@ namespace GPSNavigator.Source
 
                 }
 
-                //MCSFile.read
-                //MCSFile.Read(buffer, 0, 100);
-                //var bufferp = formatString(buffer);
-                //cbuffer = new char[bufferp.Length];
                 cbuffer = new char[len];
                 Array.Copy(buffer, cbuffer, len);
-                //for (int i = 0;i<buffer.Length;i++)
-                //    cbuffer[i] = buffer[i];
+
                 if (parser.parseRecord(cbuffer))
                 {
                     IntelHexRecord record = parser.getRecord();
@@ -102,20 +98,19 @@ namespace GPSNavigator.Source
                 Parentform.ErrorCount.Text = (int.Parse(Parentform.ErrorCount.Text) + 1).ToString();
                 Parentform.ErrorCount.BackColor = Color.Red;
             }
-            if (remotemem.connectionStatus != RemoteFlashConnectionStatus.REMOTE_FLASH_CONNECTION_STATUS_ESTABLISHED)
-            {
-                Parentform.ErrorCount.Text = (int.Parse(Parentform.ErrorCount.Text) + 1).ToString();
-                Parentform.ErrorCount.BackColor = Color.Red;
-            }
-
-            if (erase)
-                Erase(remotemem);
-            if (verify)
-                Verify(remotemem);
             else
-                Synchronise(remotemem);
+            {
 
-            remotemem.closeConnection();
+                if (erase)
+                    Erase(remotemem);
+                if (verify)
+                    Verify(remotemem);
+                else
+                    Synchronise(remotemem);
+
+                remotemem.closeConnection();
+            }
+            Parentform.Programming_Mode = false;
         }
 
         private void Erase(RemoteFlashInterface Interface)
@@ -138,21 +133,33 @@ namespace GPSNavigator.Source
     {
 
         public char[] data;
+        public bool nullsector = false;
 
         public FlashSector()
         {
             data = new char[Functions.FLASH_SECTOR_SIZE];
 	        erase();
         }
-    	public void erase()
+
+        public FlashSector(FlashSector f)
         {
-	        for (int i=0; i<Functions.FLASH_SECTOR_SIZE; i++)
-		        data[i] = (char)0xFF;
+            data = new char[Functions.FLASH_SECTOR_SIZE];
+            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
+                data[i] = f.data[i];
+        }
+
+        public void erase()
+        {
+            nullsector = true;
+	        //for (int i=0; i<Functions.FLASH_SECTOR_SIZE; i++)
+		    //    data[i] = (char)0xFF;
         }
 	    public int checksum()
-        {
+        {            
             return Functions.crc32b(data, Functions.FLASH_SECTOR_SIZE, 0);
         }
+
+
     }
 
     public class IntelHexRecord
@@ -272,20 +279,18 @@ namespace GPSNavigator.Source
     {
         public FlashSector[] sector;
         public FlashSector EmptySector;
-
+        private int crc;
         public void setData(int address, char data)
         {
             int sectorNumber = address / Functions.FLASH_SECTOR_SIZE;
             int addressOffset = address % Functions.FLASH_SECTOR_SIZE;
             try
             {
-
                 sector[sectorNumber].data[addressOffset] = data;
             }
             catch
             {
-                sector[sectorNumber] = new FlashSector();
-                sector[sectorNumber].erase();
+                sector[sectorNumber] = new FlashSector(EmptySector);
                 sector[sectorNumber].data[addressOffset] = data;
             }
         }
@@ -293,26 +298,22 @@ namespace GPSNavigator.Source
         {
             sector = new FlashSector[Functions.FLASH_MEMORY_nSECTORS];
             EmptySector = new FlashSector();
-            EmptySector.erase();
+            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
+                EmptySector.data[i] = (char)0xFF;
+            //this.crc = Functions.crc32b(EmptySector.data, Functions.FLASH_SECTOR_SIZE, 0);
+            //EmptySector.erase();
             //erase();
         }
         public void erase()
         {
             for (int i = 0; i < Functions.FLASH_MEMORY_nSECTORS; i++)
-                try
-                {
-                    sector[i].erase();
-                }
-                catch
-                {
-                    sector[i] = new FlashSector();
-                    sector[i].erase();
-                }
+                    sector[i] = new FlashSector(EmptySector);
         }
         public int checksum()
         {
             int checksum = 0;
-	        for (int i=0; i<Functions.FLASH_MEMORY_nSECTORS; i++)
+            for (int i = 0; i < Functions.FLASH_MEMORY_nSECTORS; i++)
+            {
                 try
                 {
                     checksum = Functions.crc32b(sector[i].data, Functions.FLASH_SECTOR_SIZE, checksum);
@@ -321,6 +322,7 @@ namespace GPSNavigator.Source
                 {
                     checksum = Functions.crc32b(EmptySector.data, Functions.FLASH_SECTOR_SIZE, checksum);
                 }
+            }
 	        return checksum;
         }
     }
@@ -331,6 +333,7 @@ namespace GPSNavigator.Source
 	    private int sectorIndex;
 	    private int dataLength;
 	    private char[] data = new char[Functions.FLASH_SECTOR_SIZE];
+        private char[] emptydata = new char[Functions.FLASH_SECTOR_SIZE];
         private char[] forchecksum;
         public char[] objectdescriber;
 
@@ -338,12 +341,14 @@ namespace GPSNavigator.Source
         public void insertChecksum()
         {
             this.ToCharArray();
-            crc32 = Functions.crc32b(objectdescriber,objectdescriber.Length,0);
+            crc32 = (int)Functions.crc32b(objectdescriber,objectdescriber.Length,0);
         }
 
         public RemoteFlashCommandPacket()
         {
             forchecksum = new char[12 + dataLength];
+            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
+                emptydata[i] = (char)0xFF;
             reset();
         }
         public void reset()
@@ -351,8 +356,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_HELLO;
             sectorIndex = -1;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             crc32 = 0;
         }
         public void setHelloCommand()
@@ -360,8 +364,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_HELLO;
             sectorIndex = -1;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             insertChecksum();
         }
         public void setDisconnectCommand()
@@ -369,8 +372,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_DISCONNECT;
             sectorIndex = -1;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             insertChecksum();
         }
         public void setGetChecksumCommand(int sectorIndex)
@@ -378,8 +380,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_GET_CHECKSUM;
             this.sectorIndex = sectorIndex;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             insertChecksum();
         }
         public void setGetChipChecksumCommand()
@@ -387,8 +388,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_GET_CHIP_CHECKSUM;
             this.sectorIndex = -1;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             insertChecksum();
         }
         public void setEraseSectorCommand(int sectorIndex)
@@ -396,8 +396,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_ERASE_SECTOR;
             this.sectorIndex = sectorIndex;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             insertChecksum();
         }
         public void setFullEraseCommand()
@@ -405,8 +404,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_FULL_ERASE;
             sectorIndex = -1;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             insertChecksum();
         }
         public void setProgramSectorCommand(int sectorIndex, char[] data)
@@ -415,8 +413,7 @@ namespace GPSNavigator.Source
 
             this.sectorIndex = sectorIndex;
             dataLength = Functions.FLASH_SECTOR_SIZE;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                this.data[i] = data[i];
+            this.data = data;
             insertChecksum();
         }
         public void setReadbackSectorCommand(int sectorIndex)
@@ -424,8 +421,7 @@ namespace GPSNavigator.Source
             commandCode = RemoteFlashCommandCode.REMOTE_FLASH_COMMAND_CODE_READBACK;
             this.sectorIndex = sectorIndex;
             dataLength = 0;
-            for (int i = 0; i < Functions.FLASH_SECTOR_SIZE; i++)
-                data[i] = (char)0xFF;
+            data = emptydata;
             insertChecksum();
         }
         public void ToCharArray()
@@ -483,17 +479,17 @@ namespace GPSNavigator.Source
 	    public RemoteFlashConnectionStatus connectionStatus;
         private bool sendCommand()
         {
-            FileStream lastfile = new FileStream("C:\\lastfile.txt",FileMode.Create, FileAccess.Write );
+            //FileStream lastfile = new FileStream("C:\\lastfile.txt",FileMode.Create, FileAccess.Write );
             char[] header =
 	        {
 			    Functions.REMOTE_FLASH_PACKET_HEADER0, Functions.REMOTE_FLASH_PACKET_HEADER1,
 			    Functions.REMOTE_FLASH_PACKET_HEADER2, Functions.REMOTE_FLASH_PACKET_HEADER3
 	        };
             Parentform.Serial1_Write(Functions.ChartoByte(header),0,4);
-            lastfile.Write(Functions.ChartoByte(header), 0, 4);
+            //lastfile.Write(Functions.ChartoByte(header), 0, 4);
             commandPacket.ToCharArray();
             Parentform.Serial1_Write(Functions.ChartoByte(commandPacket.objectdescriber),0,commandPacket.objectdescriber.Length);
-            lastfile.Write(Functions.ChartoByte(commandPacket.objectdescriber), 0, commandPacket.objectdescriber.Length);
+            //lastfile.Write(Functions.ChartoByte(commandPacket.objectdescriber), 0, commandPacket.objectdescriber.Length);
             commandPacket.insertChecksum();
             byte[] crc = new byte[4];
             int temp = commandPacket.crc32;
@@ -504,10 +500,10 @@ namespace GPSNavigator.Source
             }
             Parentform.serialPort1.DiscardInBuffer();
             Parentform.Serial1_Write(crc,0,4);
-            lastfile.Write(crc, 0, 4);
-            lastfile.Close();
+            //lastfile.Write(crc, 0, 4);
+            //lastfile.Close();
             //Thread.Sleep(10);
-            Parentform.serialPort1.Encoding = Encoding.Default;
+            //Parentform.serialPort1.Encoding = Encoding.Default;
             char[] line = new char[1];
             byte[] bline = new byte[4];
 
@@ -540,24 +536,24 @@ namespace GPSNavigator.Source
                  bline[3] != (byte)Functions.REMOTE_FLASH_PACKET_HEADER3
              )
                 return false;
-            Parentform.serialin.Write(bline, 0, 4);
+            //Parentform.serialin.Write(bline, 0, 4);
             responsePacket.data = new byte[Functions.FLASH_SECTOR_SIZE];
             responsePacket.reset();
             
             //Array.Copy(line, 4, header, 0, 4);
             Parentform.serialPort1.Read(bline, 0, 4);
-            Parentform.serialin.Write(bline, 0, 4);
+            //Parentform.serialin.Write(bline, 0, 4);
             //responsePacket.responseCode = (RemoteFlashResponseCode)Functions.CharToInt(header);
             responsePacket.responseCode = (RemoteFlashResponseCode)Functions.ByteToInt(bline);
             //Array.Copy(line, 8, header, 0, 4);
             Parentform.serialPort1.Read(bline, 0, 4);
-            Parentform.serialin.Write(bline, 0, 4);
+            //Parentform.serialin.Write(bline, 0, 4);
             responsePacket.dataLength = Functions.ByteToInt(bline);
             bline = new byte[responsePacket.dataLength];
             var datacount = Parentform.serialPort1.Read(bline, 0, responsePacket.dataLength);
             while (datacount < responsePacket.dataLength)
                 datacount += Parentform.serialPort1.Read(bline, datacount, responsePacket.dataLength - datacount);
-            Parentform.serialin.Write(bline, 0, responsePacket.dataLength);
+            //Parentform.serialin.Write(bline, 0, responsePacket.dataLength);
             //header = new char[responsePacket.dataLength];
             //Array.Copy(line, 12, header, 0, responsePacket.dataLength);
             responsePacket.data = bline;
@@ -565,10 +561,10 @@ namespace GPSNavigator.Source
             var checksumcount = Parentform.serialPort1.Read(bline, 0, 4);
             while (checksumcount < 4)
                 checksumcount += Parentform.serialPort1.Read(bline, checksumcount, 4 - checksumcount);
-            Parentform.serialin.Write(bline, 0, 4);
+            //Parentform.serialin.Write(bline, 0, 4);
             //Array.Copy(line, 12 + responsePacket.dataLength, header, 0, 4);
             responsePacket.crc32 = Functions.ByteToInt(bline);
-            Parentform.serialin.Write(bline, 0, 4);
+            //Parentform.serialin.Write(bline, 0, 4);
             if (!responsePacket.verifyChecksum())
                 return false;
             return true;
@@ -639,8 +635,8 @@ namespace GPSNavigator.Source
             commandPacket.setProgramSectorCommand(sectorIndex, data);
             if (!sendReceiveCommandResponse())
             {
-                Parentform.f.Close();
-                Parentform.serialin.Close();
+                //Parentform.f.Close();
+                //Parentform.serialin.Close();
                 return false;
             }
             if (responsePacket.responseCode != RemoteFlashResponseCode.REMOTE_FLASH_RESPONSE_CODE_ACK_PROGRAM)
@@ -778,7 +774,7 @@ namespace GPSNavigator.Source
 
             if (!responsePacket.verifyChecksum())
             {
-                Parentform.f.Close();
+                //Parentform.f.Close();
                 return false;
             }
 
@@ -799,7 +795,6 @@ namespace GPSNavigator.Source
                     returnValue = false;
                 else if (responsePacket.responseCode != RemoteFlashResponseCode.REMOTE_FLASH_RESPONSE_CODE_ACK_DISCONNECT)
                     returnValue = false;
-                Parentform.serialPort1.Close();
             }
             connectionStatus = RemoteFlashConnectionStatus.REMOTE_FLASH_CONNECTION_STATUS_DISCONNECTED;
             return returnValue;
@@ -821,60 +816,61 @@ namespace GPSNavigator.Source
         public bool synchronize(FlashMemory localMemory)
         {
 	        int remoteChecksum;
-	        bool printProgress = true;
 	        int i,sectorchecksum;
+            double progress;
+            //List<long> stopwatches = new List<long>();
+            //string checkpoint1, checkpoint2, checkpoint3;
+            //var localchecksum = localMemory.checksum();
+            //long getchecksumtime, memorychecksumtime, programtime;
+            //Stopwatch watch;// = Stopwatch.StartNew();
             //var result = programSector(10, localMemory.sector[10].data);
 	        for (i=0; i<Functions.FLASH_MEMORY_nSECTORS; i++)
 	        {
-                try
+                //watch = Stopwatch.StartNew();
+                //try
+                //{               
+                progress = (double)i / Functions.FLASH_MEMORY_nSECTORS;
+                Parentform.ProgressbarChangeValue((int)(progress * 100));
+                remoteChecksum = getSectorChecksum(i);
+                if (remoteChecksum == -1)
                 {
-                    remoteChecksum = getSectorChecksum(i);
-                }
-                catch
-                {
-                    //throw new Exception("getting checksum failed. retrying");
                     i--;
                     continue;
                 }
+                //}
+                //catch
+                //{
+                    //throw new Exception("getting checksum failed. retrying");
 
-                try
-                {
-                    sectorchecksum = localMemory.sector[i].checksum();
-                }
-                catch
-                {
-                    sectorchecksum = -246126838;
-                }
-
-		        //if (remoteChecksum == sectorchecksum)
-			    //    continue;
+                //getchecksumtime = watch.ElapsedMilliseconds;
+                //watch.Restart();
                 char[] toprogram;
                 try
                 {
+                    sectorchecksum = localMemory.sector[i].checksum();
                     toprogram = localMemory.sector[i].data;
                 }
                 catch
                 {
+                    sectorchecksum = -246126838;
                     toprogram = localMemory.EmptySector.data;
                 }
-		        if (programSector(i, toprogram))
-		        {
-
-                    ////Initialize 1 Empty sector for the case sector was empty and had to be programmed
-
-			        //retry to program
-			        //fprintf(stderr, "Retrying to program sector %d.\r\n", i);
-                    //throw new Exception
+		        if (remoteChecksum == sectorchecksum)
 			        continue;
-		        }
-                Parentform.f.Close();
-                Parentform.serialin.Close();
+
+                var programresult = programSector(i, toprogram);
+                //stopwatches.Add(watch.ElapsedMilliseconds);
+                //watch.Reset();
+		        if (programresult)
+			        continue;
+
+                //Parentform.f.Close();
+                //Parentform.serialin.Close();
 		        // Programming sector successful, make sure you verify it again
 		        i--;
-		        printProgress = false;
 	        }
-            Parentform.f.Close();
-            Parentform.SetProgress(0);
+            //Parentform.f.Close();
+            Parentform.ProgressbarChangeValue(0);
 	        //printf("\b100%\r\n");
 	        remoteChecksum=getChipChecksum();
 	        if (remoteChecksum == -1 )
@@ -882,7 +878,8 @@ namespace GPSNavigator.Source
 		        //fprintf(stderr, "Failed to read chip checksum.\r\n");
 		        return false;
 	        }
-	        if (remoteChecksum != localMemory.checksum())
+            var localchecksum  = localMemory.checksum();
+	        if (remoteChecksum != localchecksum)
 	        {
 		        //fprintf(stderr, "Chip checksum mismatch.\r\n");
 		        return false;
@@ -894,39 +891,51 @@ namespace GPSNavigator.Source
         {
 	        int remoteChecksum;
 	        bool printProgress = true;
+            int localchecksum;
+            long same=0, notsame=0,empty=0;
 	        for (int i=0; i<Functions.FLASH_MEMORY_nSECTORS; i++)
 	        {
-		        remoteChecksum=0;
-                if (printProgress)
-                {
-
-                }
-                try
-                {
+                //try
+                //{
                     remoteChecksum = getSectorChecksum(i);
-                    //if (remoteChecksum == -1)
-                    //{
-                    //    i--;
-                    //    continue;
-                    //}
-                }
-                catch
-                {
-                    throw new Exception("getting checksum failed. retrying");
-                    i--;
-                    continue;
-                }
+                    if (remoteChecksum == -1)
+                    {
+                        i--;
+                        continue;
+                    }
+                //}
+                //catch
+                //{
+                //   throw new Exception("getting checksum failed. retrying");
+                //    i--;
+                //    continue;
+                //}
 
-                var temp = localMemory.sector[i].checksum();
-		        if (remoteChecksum != localMemory.sector[i].checksum())
-		        {
-			        //printf("\r\nFlash verification failed, mismatch in sector %d.\r\n", i);
-                    //throw new Exception("Flash verification failed, mismatch in sector " + i.ToString());
-			        return false;
-		        }
+                    try
+                    {
+                       localchecksum = localMemory.sector[i].checksum();
+                    }
+                    catch
+                    {
+                        localchecksum = -246126838;
+                        empty++;
+                    }
+
+
+                    if (remoteChecksum != localchecksum)
+		            {
+			            //printf("\r\nFlash verification failed, mismatch in sector %d.\r\n", i);
+                        //throw new Exception("Flash verification failed, mismatch in sector " + i.ToString());
+
+                        notsame++;
+                        //return false;
+
+		            }
+                    else
+                        same++;
 	        }
 	        remoteChecksum=getChipChecksum();
-	        if (remoteChecksum < 0)
+	        if (remoteChecksum == -1)
 	        {
 		        //fprintf(stderr, "Failed to read chip checksum.\r\n");
 		        return false;
@@ -988,7 +997,7 @@ namespace GPSNavigator.Source
             }
             for (int i = 0; i < dataLength; i++)
                 tochecksum[i + 8] = data[i];
-            int localChecksum = Functions.crc32b(tochecksum, 8+dataLength,0);
+            int localChecksum = (int)Functions.crc32b(tochecksum, 8+dataLength,0);
 	        if (localChecksum == crc32)
 		        return true;
 

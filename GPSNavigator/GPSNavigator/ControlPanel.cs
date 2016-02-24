@@ -10,6 +10,7 @@ using System.Threading;
 using System.IO;
 using GPSNavigator.Source;
 using GPSNavigator.Classes;
+using System.Threading.Tasks;
 
 namespace GPSNavigator
 {
@@ -33,14 +34,36 @@ namespace GPSNavigator
             {
                 FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
                 DeviceProgrammer = new Programmer(file, Parentform);
-                DeviceProgrammer.StartProgram(115200, false,false);
+                Task<bool> asyncsaver = StartProgram(115200,false,false);
+                //DeviceProgrammer.StartProgram(115200, false,false);
                 //MessageBox.Show("Programming chip");
             }
         }
 
+
+        public Task<bool> StartProgram(int Baudrate, bool erase, bool verify)
+        {
+
+            return Task.Factory.StartNew(() =>
+            {
+
+                DeviceProgrammer.StartProgram(Baudrate, erase, verify);
+                return true;
+
+            });
+        }
+
+
         private void VerifyBtn_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Verifying chip");
+            if (openProgramFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
+                DeviceProgrammer = new Programmer(file, Parentform);
+                Task<bool> asyncsaver = StartProgram(115200, false, true);
+                //DeviceProgrammer.StartProgram(115200, false,false);
+                //MessageBox.Show("Programming chip");
+            }
         }
 
         private void EraseBtn_Click(object sender, EventArgs e)
