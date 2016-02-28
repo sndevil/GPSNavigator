@@ -96,7 +96,8 @@ namespace GPSNavigator.Source
                     }
                     else
                     {
-                        throw new Exception("Failed to parse");
+                        Controlpanelform.SetStatusText("Error in File Reading");
+                        return;
                     }
                 }
             }
@@ -144,6 +145,8 @@ namespace GPSNavigator.Source
                 remotemem.closeConnection();
             }
             Parentform.Programming_Mode = false;
+            remotemem = null;
+            localMemory = null;
         }
 
         private bool Erase(RemoteFlashInterface Interface)
@@ -300,7 +303,6 @@ namespace GPSNavigator.Source
     {
         public FlashSector[] sector;
         public FlashSector EmptySector;
-        private int crc;
         public void setData(int address, char data)
         {
             int sectorNumber = address / Functions.FLASH_SECTOR_SIZE;
@@ -805,7 +807,6 @@ namespace GPSNavigator.Source
         public bool verifyChecksum(FlashMemory localMemory)
         {
 	        int remoteChecksum;
-	        bool printProgress = true;
             double progress;
             int localchecksum;
 	        for (int i=0; i<Functions.FLASH_MEMORY_nSECTORS; i++)

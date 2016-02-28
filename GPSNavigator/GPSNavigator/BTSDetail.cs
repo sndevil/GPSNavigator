@@ -45,7 +45,7 @@ namespace GPSNavigator
             {-20,10,55,85},  // Temprature
             {40,70,100,120}   // Battery
         };
-        int DataReceiveTimeOut = 1000, DataReceiveTimeOutS2 = 1000, ackTimeOutCounter = 0, maxDetectedBaseStationNumber = 10;
+        int ackTimeOutCounter = 0;//, maxDetectedBaseStationNumber = 10;
 
 
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
@@ -731,8 +731,6 @@ namespace GPSNavigator
             {
                 char[] Msg = new char[60];
                 byte[] byteMsg = new byte[60];
-                double altitude = 0, longitude = 0, latitude = 0;
-                Int32 result;
                 int index=0;
                 char[] xyz = new char[4];
                 //command 1: 

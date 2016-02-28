@@ -3381,10 +3381,8 @@ namespace GPSNavigator.Source
         {
             int i, j;
             uint Byte, crc, mask;
-            long temp;
             i = 0;
             crc = ~(uint)seed;
-            //mask = ~((uint)seed);
             for (i = 0; i < length; i++)
             {
                 Byte = message[i];            // Get next byte.
@@ -3392,8 +3390,6 @@ namespace GPSNavigator.Source
                 for (j = 7; j >= 0; j--)
                 {    // Do eight times.
                     mask = (uint)(-(crc & 1));
-                    //Byte = ~(crc & 1) + 1;
-                    //temp = (0
                     crc = (uint)((crc >> 1) ^ (0xEDB88320 & mask));
                 }
             }
@@ -3404,10 +3400,8 @@ namespace GPSNavigator.Source
         {
             int i, j;
             uint Byte, crc, mask;
-            long temp;
             i = 0;
             crc = ~seed;
-            //mask = ~((uint)seed);
             for (i = 0; i < length; i++)
             {
                 Byte = message[i];            // Get next byte.
@@ -3415,8 +3409,6 @@ namespace GPSNavigator.Source
                 for (j = 7; j >= 0; j--)
                 {    // Do eight times.
                     mask = (uint)(-(crc & 1));
-                    //Byte = ~(crc & 1) + 1;
-                    //temp = (0
                     crc = (uint)((crc >> 1) ^ (0xEDB88320 & mask));
                 }
             }
@@ -3428,7 +3420,6 @@ namespace GPSNavigator.Source
         {
             int i, j;
             uint Byte, crc, mask;
-
             i = 0;
             crc = ~(uint)seed;
             for (i = 0; i < length; i++)
