@@ -33,10 +33,8 @@ namespace GPSNavigator
             if (openProgramFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
-                DeviceProgrammer = new Programmer(file, Parentform);
-                Task<bool> asyncsaver = StartProgram(115200,false,false);
-                //DeviceProgrammer.StartProgram(115200, false,false);
-                //MessageBox.Show("Programming chip");
+                DeviceProgrammer = new Programmer(file, Parentform,this);
+                Task<bool> asyncprogrammer = StartProgram(115200,false,false);
             }
         }
 
@@ -59,20 +57,36 @@ namespace GPSNavigator
             if (openProgramFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
-                DeviceProgrammer = new Programmer(file, Parentform);
-                Task<bool> asyncsaver = StartProgram(115200, false, true);
-                //DeviceProgrammer.StartProgram(115200, false,false);
-                //MessageBox.Show("Programming chip");
+                DeviceProgrammer = new Programmer(file, Parentform,this);
+                Task<bool> asyncverify = StartProgram(115200, false, true);
             }
         }
 
         private void EraseBtn_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Erasing Chip");
+            if (MessageBox.Show("Are You Sure?", "Programmer", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                DeviceProgrammer = new Programmer(null, Parentform, this);
+                Task<bool> asynceraser = StartProgram(115200, true, false);
+            }
         }
 
         private void openProgramFile_FileOk(object sender, CancelEventArgs e)
         {
+
+        }
+
+
+        public delegate void StatusSetter(string text);
+        public void SetStatusText(string text)
+        {
+            if (this.StatusLabel.InvokeRequired)
+            {
+                StatusSetter d = new StatusSetter(SetStatusText);
+                this.StatusLabel.Invoke(d, new object[] { text });
+            }
+            else
+                this.StatusLabel.Text = text;
 
         }
 

@@ -3400,6 +3400,29 @@ namespace GPSNavigator.Source
             return (int)(~crc);
         }
 
+        public static uint crc32b(char[] message, int length, uint seed)
+        {
+            int i, j;
+            uint Byte, crc, mask;
+            long temp;
+            i = 0;
+            crc = ~seed;
+            //mask = ~((uint)seed);
+            for (i = 0; i < length; i++)
+            {
+                Byte = message[i];            // Get next byte.
+                crc = crc ^ Byte;
+                for (j = 7; j >= 0; j--)
+                {    // Do eight times.
+                    mask = (uint)(-(crc & 1));
+                    //Byte = ~(crc & 1) + 1;
+                    //temp = (0
+                    crc = (uint)((crc >> 1) ^ (0xEDB88320 & mask));
+                }
+            }
+            return ~crc;
+        }
+
 
         public static int crc32b(byte[] message, int length, int seed)
         {
