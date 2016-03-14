@@ -18,6 +18,7 @@ namespace GPSNavigator.Source
         public Form1 Parentform;
         public ControlPanel Controlpanelform;
         int baseAddress = 0;
+        public bool programloaded = false;
 
         public Programmer(FileStream filetoprogram,Form1 Parent, ControlPanel controlpanelform)
         {
@@ -28,79 +29,101 @@ namespace GPSNavigator.Source
             Parentform = Parent;
         }
 
+        public Programmer(Form1 Parent, ControlPanel controlpanelform)
+        {
+            programloaded = false;
+            localMemory = new FlashMemory();
+            parser = new IntelHexParser();
+            Controlpanelform = controlpanelform;
+            Parentform = Parent;
+        }
+
         public byte[] formatString(byte[] str)
         {
             byte[] output = new byte[1];
             for (int i = 0; i < str.Length; i++)
-                if (str[i] == '\r' || str[i] == '\n')
-                {
-                    str[i] = 0;
-                    output = new byte[i];
-                    for (int j = 0; j < i;j++)
-                        output[j] = str[j];
-                    break;
-                }
+            if (str[i] == '\r' || str[i] == '\n')
+            {
+                str[i] = 0;
+                output = new byte[i];
+                for (int j = 0; j < i;j++)
+                    output[j] = str[j];
+                break;
+            }
             return output;
         }
 
+        public void LoadFile(FileStream file)
+        {            
+            MCSFile = file;
+            LoadFile();
+            programloaded = true;
+            Controlpanelform.SetFilenameText(file.Name);
+        }
 
+        public void LoadFile()
+        {
+            Controlpanelform.SetStatusText("Reading File...");
+            MCSFile.Position = 0;
+            char[] buffer = new char[100];
+            char[] cbuffer = new char[100];
+            double prog;
+            while (MCSFile.Position < MCSFile.Length)
+            {
+                prog = (double)MCSFile.Position / MCSFile.Length * 100;
+                Parentform.ProgressbarChangeValue((int)prog);
+                var len = 0;
+                while (true)
+                {
+                    var readbyte = MCSFile.ReadByte();
+                    if (readbyte == (int)'\r' || readbyte == (int)'\n' || MCSFile.Position >= MCSFile.Length)
+                        break;
+                    else
+                    {
+                        buffer[len] = (char)readbyte;
+                        len++;
+                    }
+
+                }
+
+                cbuffer = new char[len];
+                Array.Copy(buffer, cbuffer, len);
+
+                if (parser.parseRecord(cbuffer))
+                {
+                    IntelHexRecord record = parser.getRecord();
+                    switch (record.type)
+                    {
+                        case IntelHexRecordType.INTEL_HEX_RECORD_TYPE_EXTENDED_LINEAR_ADDRESS:
+                            for (int i = 0; i < record.byteCount; i++)
+                                baseAddress = (baseAddress << 8) | record.data[i];
+                            for (int i = record.byteCount; i < 4; i++)
+                                baseAddress <<= 8;
+                            break;
+                        case IntelHexRecordType.INTEL_HEX_RECORD_TYPE_DATA:
+                            for (int i = 0; i < record.byteCount; i++)
+                                localMemory.setData(baseAddress + record.address + i, record.data[i]);
+                            break;
+                        case IntelHexRecordType.INTEL_HEX_RECORD_TYPE_END_OF_FILE:
+                            break;
+                    }
+                }
+                else
+                {
+                    Controlpanelform.SetStatusText("Error in File Reading");
+                    return;
+                }
+            }
+            Controlpanelform.SetStatusText("File Loaded Successfully");
+            Parentform.ProgressbarChangeValue(0);
+        }
         public void StartProgram(int baudrate, bool erase, bool verify)
         {
             Parentform.Programming_Mode = true;
-            if (!erase || verify)
-            {
-                Controlpanelform.SetStatusText("Reading File...");
-                MCSFile.Position = 0;
-                char[] buffer = new char[100];
-                char[] cbuffer = new char[100];
-                double prog;
-                while (MCSFile.Position < MCSFile.Length)
-                {
-                    prog = (double)MCSFile.Position / MCSFile.Length * 100;
-                    Parentform.ProgressbarChangeValue((int)prog);
-                    var len = 0;
-                    while (true)
-                    {
-                        var readbyte = MCSFile.ReadByte();
-                        if (readbyte == (int)'\r' || readbyte == (int)'\n' || MCSFile.Position >= MCSFile.Length)
-                            break;
-                        else
-                        {
-                            buffer[len] = (char)readbyte;
-                            len++;
-                        }
-
-                    }
-
-                    cbuffer = new char[len];
-                    Array.Copy(buffer, cbuffer, len);
-
-                    if (parser.parseRecord(cbuffer))
-                    {
-                        IntelHexRecord record = parser.getRecord();
-                        switch (record.type)
-                        {
-                            case IntelHexRecordType.INTEL_HEX_RECORD_TYPE_EXTENDED_LINEAR_ADDRESS:
-                                for (int i = 0; i < record.byteCount; i++)
-                                    baseAddress = (baseAddress << 8) | record.data[i];
-                                for (int i = record.byteCount; i < 4; i++)
-                                    baseAddress <<= 8;
-                                break;
-                            case IntelHexRecordType.INTEL_HEX_RECORD_TYPE_DATA:
-                                for (int i = 0; i < record.byteCount; i++)
-                                    localMemory.setData(baseAddress + record.address + i, record.data[i]);
-                                break;
-                            case IntelHexRecordType.INTEL_HEX_RECORD_TYPE_END_OF_FILE:
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Controlpanelform.SetStatusText("Error in File Reading");
-                        return;
-                    }
-                }
-            }
+            //if (!erase || verify)
+            //{
+            //    LoadFile();
+            //}
 
             RemoteFlashInterface remotemem = new RemoteFlashInterface(new char[1],Parentform.serialPort1.BaudRate,Parentform);
             Controlpanelform.SetStatusText("Opening Connection");
@@ -146,7 +169,7 @@ namespace GPSNavigator.Source
             }
             Parentform.Programming_Mode = false;
             remotemem = null;
-            localMemory = null;
+            //localMemory = null;
         }
 
         private bool Erase(RemoteFlashInterface Interface)
