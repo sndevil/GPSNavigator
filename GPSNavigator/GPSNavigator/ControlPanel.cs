@@ -26,17 +26,16 @@ namespace GPSNavigator
             Parentform = Parent;
             openProgramFile.Filter = "MCS File (*.MCS)|*.MCS|All Files|*.*";
             DeviceProgrammer = new Programmer(Parentform, this);
-            //opendialog.Filter = "GPS LogPackage File (*.GLP)|*.GLP|All Files|*.*";
         }
 
         private void ProgramBtn_Click(object sender, EventArgs e)
         {        
-           // if (openProgramFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //{
-           //     FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
-            //    DeviceProgrammer = new Programmer(file, Parentform,this);
-                Task<bool> asyncprogrammer = StartProgram(115200,false,false);
-           // }
+            if (DeviceProgrammer.programloaded)
+            {
+                Task<bool> asyncprogrammer = StartProgram(115200, false, false);
+            }
+            else
+                MessageBox.Show("Load a program first");
         }
 
 
@@ -64,19 +63,18 @@ namespace GPSNavigator
 
         private void VerifyBtn_Click(object sender, EventArgs e)
         {
-           //if (openProgramFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-           // {
-            //    FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
-             //   DeviceProgrammer = new Programmer(file, Parentform,this);
+            if (DeviceProgrammer.programloaded)
+            {
                 Task<bool> asyncverify = StartProgram(115200, false, true);
-           // }
+            }
+            else
+                MessageBox.Show("Load a program first");
         }
 
         private void EraseBtn_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Are You Sure?", "Programmer", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
             {
-                //DeviceProgrammer = new Programmer(null, Parentform, this);
                 Task<bool> asynceraser = StartProgram(115200, true, false);
             }
         }
@@ -117,8 +115,7 @@ namespace GPSNavigator
             if (openProgramFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 FileStream file = new FileStream(openProgramFile.FileName, FileMode.Open, FileAccess.Read);
-                Task<bool> asynceraser = LoadFile(file);//StartProgram(115200, true, false);// 
-                //Task<bool> asyncverify = StartProgram(115200, false, true);
+                Task<bool> asynceraser = LoadFile(file);
             }
         }
 

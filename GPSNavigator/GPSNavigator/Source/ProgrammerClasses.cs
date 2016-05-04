@@ -169,6 +169,7 @@ namespace GPSNavigator.Source
             }
             Parentform.Programming_Mode = false;
             remotemem = null;
+            Parentform.ProgressbarChangeValue(0);
             //localMemory = null;
         }
 

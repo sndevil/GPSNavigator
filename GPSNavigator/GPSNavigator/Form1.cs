@@ -156,6 +156,30 @@ namespace GPSNavigator
                             {
                                 dbuf = Functions.handle_packet(byt, ref vars, 0);
 
+                                if (!timeCheck.Checked)
+                                {
+                                    dbuf.datetime = DateTime.Now;
+                                    TimeSpan dt = dbuf.datetime - new DateTime(1980, 1, 6, 0, 0, 0);
+                                    int weeknum = (int)Math.Floor((double)dt.Days / 7);
+                                    double TOW = dt.TotalMilliseconds - (double)weeknum * 604800000;
+                                    dbuf.Bdatetime = new byte[6];
+                                    dbuf.Bdatetime[0] = (byte)(weeknum % 256);
+                                    dbuf.Bdatetime[1] = (byte)(weeknum / 256);
+                                    for (int i = 0; i < 4; i++)
+                                    {
+                                        dbuf.Bdatetime[2 + i] = (byte)(TOW % 256);
+                                        TOW /= 256;
+                                    }
+                                    //var datetimeUTC = new DateTime(1980, 1, 6, 0, 0, 0);
+                                    //datetimeUTC = datetimeUTC.AddDays(weeknum * 7);
+                                    //datetimeUTC = datetimeUTC.AddMilliseconds(TOW);
+
+                                    //MessageBox.Show(datetimeUTC.ToString());
+                                    //Int64 a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.Bdatetime[2 + i] = data[index + i]; }
+                                    //double TOW = a;     //millisecond
+                                    //dbuf.Bdatetime = 
+                                }
+
                                 if (dbuf.AttitudeBuffer.counter != 0)
                                 {
                                     attitudebuffer = dbuf.AttitudeBuffer;
@@ -378,25 +402,10 @@ namespace GPSNavigator
                 hex.AppendFormat("{0:x2}", b);
             return hex.ToString();
         }
-
-        //public FileStream f = new FileStream("C://b.txt",FileMode.Create,FileAccess.Write);
-        //public FileStream serialin = new FileStream("C://Serialin.txt", FileMode.Create, FileAccess.Write);
+        
         public void Serial1_Write(byte[] data,int offset, int count)
         {
-            //System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.WaitCursor;
-            //toolStripProgressBar1.Value = 10;
             serialPort1.Write(data, offset, count);
-            //toolStripProgressBar1.Value = 100;
-            //Thread.Sleep(10);
-            //toolStripProgressBar1.Value = 0;
-            //System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Default;
-            //try
-            //{
-                //f.Write(data, offset, count);
-            //}
-            //catch
-            //{
-            //}
         }
 
         public void SetProgress(int percent)

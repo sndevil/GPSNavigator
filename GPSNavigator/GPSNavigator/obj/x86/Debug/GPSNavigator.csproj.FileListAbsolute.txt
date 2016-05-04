@@ -16,6 +16,7 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\DevExp
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\DevExpress.XtraGauges.v12.1.Win.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Shared.v12.1.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.UltraWinEditors.v12.1.dll
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.UltraWinGauge.v12.1.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.v12.1.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Microsoft.CSharp.dll
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Microsoft.VisualBasic.dll
@@ -35,6 +36,7 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\DevExp
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\DevExpress.XtraGauges.v12.1.Win.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Shared.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.UltraWinEditors.v12.1.xml
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.UltraWinGauge.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Infragistics2.Win.v12.1.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Telerik.WinControls.xml
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\bin\Debug\Telerik.WinControls.RadDock.xml
@@ -73,7 +75,9 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\Re
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.About.resources
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.AddLicense.resources
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.Avionics.AvionicsInstrumentsControlsRessources.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.BaseStation.resources
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.ControlPanel.resources
+C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.BTSDetail.resources
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.NorthDetail.resources
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.Form1.resources
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.Grapher.resources
@@ -88,5 +92,3 @@ C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GP
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.application
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.exe
 C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.pdb
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.BTSDetail.resources
-C:\cygwin\home\Mobarezi\GPSNavigation\GPSNavigator\GPSNavigator\obj\x86\Debug\GPSNavigator.BaseStation.resources

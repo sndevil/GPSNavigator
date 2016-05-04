@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using System.Windows;
 using GPSNavigator.Classes;
@@ -562,7 +563,7 @@ namespace GPSNavigator
 
         private void ExportData_Click(object sender, EventArgs e)
         {
-            DataExportDialog.Filter = "GPS Navigator Graph Data (*.ggd)|*.ggd";
+            DataExportDialog.Filter = "GPS Navigator Graph Data (*.ggd)|*.ggd|Matlab Data (*.Dat)|*.dat";            
             DataExportDialog.ShowDialog();
         }
 
@@ -597,7 +598,26 @@ namespace GPSNavigator
 
         private void DataExportDialog_FileOk(object sender, CancelEventArgs e)
         {
-            Chart1.SaveChartToFile(DataExportDialog.FileName);
+            //MessageBox.Show(DataExportDialog.FilterIndex.ToString());
+            if (DataExportDialog.FilterIndex != 2)
+                Chart1.SaveChartToFile(DataExportDialog.FileName);
+            else
+            {
+                FileStream f = new FileStream(DataExportDialog.FileName, FileMode.Create, FileAccess.Write);
+                byte[] output = Encoding.UTF8.GetBytes("x,y\n");
+                f.Write(output,0,output.Length);
+                for (int i = 0; i < Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Length; i++)
+                {
+                    //var x = Chart1.ChartGroups[0].ChartData.SeriesList[0].X[i];
+                    var y = Chart1.ChartGroups[0].ChartData.SeriesList[0].Y[i];
+                    
+                    string s = i.ToString()+","+y.ToString()+"\n";
+                    f.Write(Encoding.UTF8.GetBytes(s),0,s.Length);
+                }
+                f.Close();
+
+            }
+
         }
 
         private void DataImportDialog_FileOk(object sender, CancelEventArgs e)
