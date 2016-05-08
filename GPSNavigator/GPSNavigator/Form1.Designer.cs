@@ -70,6 +70,7 @@
             this.AutoCancel = new System.Windows.Forms.CheckBox();
             this.radDock1 = new Telerik.WinControls.UI.Docking.RadDock();
             this.SerialController = new Telerik.WinControls.UI.Docking.ToolWindow();
+            this.timeCheck = new System.Windows.Forms.CheckBox();
             this.GraphRefreshrate = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.refreshButton = new System.Windows.Forms.Button();
@@ -79,7 +80,6 @@
             this.toolTabStrip1 = new Telerik.WinControls.UI.Docking.ToolTabStrip();
             this.documentContainer1 = new Telerik.WinControls.UI.Docking.DocumentContainer();
             this.radThemeManager1 = new Telerik.WinControls.RadThemeManager();
-            this.timeCheck = new System.Windows.Forms.CheckBox();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -529,6 +529,18 @@
             this.SerialController.Size = new System.Drawing.Size(198, 526);
             this.SerialController.Text = "Serial Controller";
             // 
+            // timeCheck
+            // 
+            this.timeCheck.AutoSize = true;
+            this.timeCheck.Checked = true;
+            this.timeCheck.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.timeCheck.Location = new System.Drawing.Point(16, 405);
+            this.timeCheck.Name = "timeCheck";
+            this.timeCheck.Size = new System.Drawing.Size(130, 17);
+            this.timeCheck.TabIndex = 22;
+            this.timeCheck.Text = "Get Time From Serial";
+            this.timeCheck.UseVisualStyleBackColor = true;
+            // 
             // GraphRefreshrate
             // 
             this.GraphRefreshrate.Increment = new decimal(new int[] {
@@ -635,18 +647,6 @@
             this.documentContainer1.TabIndex = 0;
             this.documentContainer1.TabStop = false;
             this.documentContainer1.ThemeName = "ControlDefault";
-            // 
-            // timeCheck
-            // 
-            this.timeCheck.AutoSize = true;
-            this.timeCheck.Checked = true;
-            this.timeCheck.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.timeCheck.Location = new System.Drawing.Point(16, 405);
-            this.timeCheck.Name = "timeCheck";
-            this.timeCheck.Size = new System.Drawing.Size(130, 17);
-            this.timeCheck.TabIndex = 22;
-            this.timeCheck.Text = "Get Time From Serial";
-            this.timeCheck.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

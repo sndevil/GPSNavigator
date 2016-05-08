@@ -166,10 +166,9 @@
             this.label5.BackColor = System.Drawing.Color.Transparent;
             this.label5.Location = new System.Drawing.Point(6, 415);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(691, 13);
+            this.label5.Size = new System.Drawing.Size(914, 13);
             this.label5.TabIndex = 16;
-            this.label5.Text = "Click : Zoom In          Right Click : Zoom Out          Click (Hold) + Drag : Zo" +
-                "om In To the selected Region          Alt + Click : Open In Moment Detail";
+            this.label5.Text = resources.GetString("label5.Text");
             // 
             // FileAdressLabel
             // 

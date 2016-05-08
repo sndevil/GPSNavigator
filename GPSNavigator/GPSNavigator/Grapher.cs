@@ -97,8 +97,8 @@ namespace GPSNavigator
             "PDOP",
             "State",
             "Temperature",
-            "UsedStats",
-            "VisibleStats"});
+            "UsedSats",
+            "VisibleSats"});
             if (Logtype == AppModes.NorthFinder)
             {
                 this.comboBox1.Items.AddRange(new object[] { "Azimuth", "Elevation", "Distance" });
@@ -161,6 +161,33 @@ namespace GPSNavigator
                             if (parentForm.radDock1.DocumentManager.DocumentArray[i].Text == "Moment Details (Log) " + index.ToString())
                                 parentForm.radDock1.ActivateWindow(parentForm.radDock1.DocumentManager.DocumentArray[i]);
                         }
+                    else if (Control.ModifierKeys == Keys.Control)
+                    {
+                        var length = Chart1.ChartGroups[0].ChartData[0].X.Length;
+                        Chart1.ChartGroups[0].ChartData[3].X.Clear();
+                        Chart1.ChartGroups[0].ChartData[3].Y.Clear();
+                        var counter = 0;
+                        double avg = 0;
+                        var max = 50;
+                        for (int i = 0; i < length; i++)
+                        {
+                            avg += (double)Chart1.ChartGroups[0].ChartData[0].Y[i];
+                            if (counter++ >= max)
+                            {
+                                avg /= max+1;
+                                //for (int j = i - max; j < i; j++)
+                                //{
+                                    Chart1.ChartGroups[0].ChartData[3].X.Add(Chart1.ChartGroups[0].ChartData[0].X[i-max/2]);
+                                    Chart1.ChartGroups[0].ChartData[3].Y.Add(avg);
+                                //}
+                                counter = 0;
+                                avg = 0;
+                            }
+
+                        }
+
+                    }
+
                 }
             }
         }
@@ -331,6 +358,8 @@ namespace GPSNavigator
 
         public void PlotGraph(GraphData data)
         {
+            Chart1.ChartGroups[0].ChartData[3].X.Clear();
+            Chart1.ChartGroups[0].ChartData[3].Y.Clear();
             xlist = data.x;
             ylist = data.y;
             tlist = data.date;
@@ -598,7 +627,6 @@ namespace GPSNavigator
 
         private void DataExportDialog_FileOk(object sender, CancelEventArgs e)
         {
-            //MessageBox.Show(DataExportDialog.FilterIndex.ToString());
             if (DataExportDialog.FilterIndex != 2)
                 Chart1.SaveChartToFile(DataExportDialog.FileName);
             else
@@ -608,7 +636,6 @@ namespace GPSNavigator
                 f.Write(output,0,output.Length);
                 for (int i = 0; i < Chart1.ChartGroups[0].ChartData.SeriesList[0].X.Length; i++)
                 {
-                    //var x = Chart1.ChartGroups[0].ChartData.SeriesList[0].X[i];
                     var y = Chart1.ChartGroups[0].ChartData.SeriesList[0].Y[i];
                     
                     string s = i.ToString()+","+y.ToString()+"\n";

@@ -71,14 +71,17 @@ namespace GPSNavigator
                 case AppModes.GPS:
                     BaseText = "GPS Navigator";
                     DetailForm = new MomentDetail(this);
+                    numericUpDown2.Value = 50;
                     break;
                 case AppModes.NorthFinder:
                     BaseText = "North Finder";
                     NorthDetailForm = new NorthDetail(this);
+                    numericUpDown2.Value = 20;
                     break;
                 case AppModes.BaseStation:
                     BaseText = "Base Station";
                     BTSDetailForm = new BTSDetail(this);
+                    numericUpDown2.Value = 50;
                     break;
             }
             this.Text = BaseText;
