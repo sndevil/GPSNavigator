@@ -184,7 +184,7 @@ namespace GPSNavigator
                                 avg = 0;
                             }
 
-                        }
+                        }                        
 
                     }
 
