@@ -473,8 +473,9 @@ namespace GPSNavigator.Source
             return true;
         }
 
-        private static void Calculate_NMEA_fields(string Data,List<string> field)
+        public static List<string> Calculate_NMEA_fields(string Data)
         {
+            List<string> field = new List<string>();
             int field_Num = Data.Count(f => f == ',') + 2;       //Number of fields from begining to checksum
 
             int pos = 0;
@@ -485,6 +486,7 @@ namespace GPSNavigator.Source
             }
             field.Add(Data.Substring(Data.LastIndexOf(',') + 1, Data.IndexOf('*') - Data.LastIndexOf(',') - 1));
             field.Add(Data.Substring(Data.Length - 3, 2));              //Checksum
+            return field;
         }
 
         public static int checkMsgSize(int msgType)
@@ -3195,6 +3197,102 @@ namespace GPSNavigator.Source
             return dbuffer;
         }
 
+        public static void handle_NMEA(List<string> fields, ref Globals vars, ref SingleDataBuffer Data)
+        {
+            TimeSpan dt;
+            int weeknum;
+            double TOW;
+            switch (fields[0])
+            {
+                case "$GPGGA":  //positioning system fix data
+                    Data.Latitude = StringToFloatNMEA(fields[2]);
+                    Data.BLatitude = doubletoByte(Data.Latitude, 4);
+                    Data.Longitude = StringToFloatNMEA(fields[4]);
+                    Data.BLongitude = doubletoByte(Data.Longitude, 4);
+                    Data.NumOfUsedSats = StringToFloatNMEA(fields[7]);
+                    Data.BNumOfUsedStats = doubletoByte(Data.NumOfUsedSats, 4);
+                    Data.Altitude = StringToFloatNMEA(fields[9]);
+                    Data.BAltitude = doubletoByte(Data.Altitude, 4);
+                    break;
+
+                case "$GPVTG":  //SPEED
+                    Data.V = StringToFloatNMEA(fields[7]) * 1000;
+                    Data.BV = doubletoByte(Data.V, 4);
+                    break;
+                case "$GPGSA":  //PDOP
+                    #region GSA
+                    /*if (vars.GPSlist.Count < 1)
+                    {
+                        List<Satellite[]> tempsat = new List<Satellite[]>();
+                        for (int i = 0; i < 2; i++)
+                        {
+                            tempsat.Add(new Satellite[32]);
+                            for (int j = 0; j < 32; j++)
+                            {
+                                tempsat[i][j] = new Satellite();
+                            }
+                            if (i % 2 == 0)
+                                vars.GPSlist.Add(tempsat[i]);
+                            else
+                                vars.GLONASSlist.Add(tempsat[i]);
+                        }                        
+                    }*/
+                    Data.NumOfUsedSats = 0;
+                    for (int i = 0; i < 12; i++)
+                    {
+                        int index = (int)StringToFloatNMEA(fields[3 + i]);
+                        if (fields[3+i].Length > 0)
+                        {
+                            Data.NumOfUsedSats++;
+                        }
+                    }
+                    Data.BNumOfUsedStats = doubletoByte(Data.NumOfUsedSats, 4);
+                    Data.PDOP = StringToFloatNMEA(fields[15]);
+                    Data.BPDOP = doubletoByte(Data.PDOP, 4);
+                    Data.HDOP = StringToFloatNMEA(fields[16]);                    
+                    Data.VDOP = StringToFloatNMEA(fields[17]);
+#endregion
+                    break;
+                case "$GPZDA":  //Time
+                    DateTime t = TimeFromStrings(fields[1],fields[2],fields[3],fields[4]);
+                    Data.datetime = t;
+                    dt = Data.datetime - new DateTime(1980, 1, 6, 0, 0, 0);
+                    weeknum = (int)Math.Floor((double)dt.Days / 7);
+                    TOW = dt.TotalMilliseconds - (double)weeknum * 604800000;
+                    Data.Bdatetime = new byte[6];
+                    Data.Bdatetime[0] = (byte)(weeknum % 256);
+                    Data.Bdatetime[1] = (byte)(weeknum / 256);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Data.Bdatetime[2 + i] = (byte)(TOW % 256);
+                        TOW /= 256;
+                    }
+                    vars.PacketTime = t;
+                    break;
+                case "$GPGLL":  //Latitude and longitude, with time of position fix and status
+                    Data.Latitude = StringToFloatNMEA(fields[1]);
+                    Data.BLatitude = doubletoByte(Data.Latitude,4);
+                    Data.Longitude = StringToFloatNMEA(fields[3]);
+                    Data.BLongitude = doubletoByte(Data.Longitude,4);
+                    Data.datetime = TimeFromStrings(fields[5]);
+                    dt = Data.datetime - new DateTime(1980, 1, 6, 0, 0, 0);
+                    weeknum = (int)Math.Floor((double)dt.Days / 7);
+                    TOW = dt.TotalMilliseconds - (double)weeknum * 604800000;
+                    Data.Bdatetime = new byte[6];
+                    Data.Bdatetime[0] = (byte)(weeknum % 256);
+                    Data.Bdatetime[1] = (byte)(weeknum / 256);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Data.Bdatetime[2 + i] = (byte)(TOW % 256);
+                        TOW /= 256;
+                    }
+                    vars.PacketTime = Data.datetime;
+                    break;
+
+            }
+            
+        }
+
         public static byte[] CopyByteWithOffset(byte[] input, int offset)
         {
             byte[] output = new byte[input.Length - offset];
@@ -3522,6 +3620,78 @@ namespace GPSNavigator.Source
                 temp += (int)input[i];
             }
             return temp;
+        }
+
+        public static float StringToFloatNMEA(string input)
+        {
+            char[] inp = input.ToCharArray();
+            bool negative = false;
+            if (inp.Length == 0)
+                return 0;
+            if (inp[0] == '-')
+            {
+                negative = true;
+                inp = input.ToCharArray(1, input.Length - 1);
+            }
+            float temp = 0;
+            int flag = inp.Length;
+            for (int i = 0; i < inp.Length; i++)
+            {
+                if (inp[i] == '.')
+                {
+                    flag = i;
+                    continue;
+                }
+                temp += (int)inp[i] - (int)'0';
+                if (i != inp.Length-1)
+                    temp *= 10;
+            }
+            for (int i = 0; i < inp.Length - flag - 1; i++)
+                temp /= 10;
+            if (negative)
+                temp *= -1;
+            return temp;
+        }
+
+        public static DateTime TimeFromStrings(string Time, string Day, string Month, string Year)
+        {
+            int timeint = (int)StringToFloatNMEA(Time);
+            int sec,minute,hour;
+            sec = timeint %100;
+            timeint/=100;
+            minute = timeint %100;
+            //timeint/=100;
+            hour =timeint/100;
+            int dayint = (int)StringToFloatNMEA(Day);
+            int monthint = (int)StringToFloatNMEA(Month);
+            int yearint = (int)StringToFloatNMEA(Year);
+            DateTime t = new DateTime(yearint, monthint, dayint, hour, minute, sec);
+            return t;
+        }
+        public static DateTime TimeFromStrings(string Time)
+        {
+            int timeint = (int)StringToFloatNMEA(Time);
+            int sec, minute, hour;
+            sec = timeint % 100;
+            timeint /= 100;
+            minute = timeint % 100;
+            //timeint/=100;
+            hour = timeint / 100;
+            DateTime t = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, hour, minute, sec);
+            return t;
+        }
+
+        public static byte[] doubletoByte(double input, int bytes)
+        {
+            byte[] output = new byte[bytes];
+            Int64 temp = unformatFloat(input);
+
+            for (int i = 0; i < bytes; i++)
+                output[i] = (byte)(temp % 256);
+
+            //buffer.BPDOP[3] = data[index + 3];
+            //a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BPDOP[i] = data[index + i]; }
+            return output;
         }
     }
 }

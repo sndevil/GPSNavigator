@@ -254,7 +254,9 @@ namespace GPSNavigator.Classes
         {
             waitForPacket,
             waitForMessageType,
-            readMessage
+            readMessage,
+            NMEAHeader,
+            NMEAReadMessage,
         };
         public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats,Azimuth,Elevation,Distance,Null };
         public enum PlaybackSpeed { NormalSpeed, Double, Quadrople, Half, Quarter };
@@ -1073,7 +1075,10 @@ namespace GPSNavigator.Classes
             private void initSats(int count)
             {
                 inited = true;
-                delta = (float)1200 / GPS[0].Length;
+                if (GPS[0].Length != 0)
+                    delta = (float)1200 / GPS[0].Length;
+                else
+                    delta = (float)1200 / A.Length;
             }
 
 

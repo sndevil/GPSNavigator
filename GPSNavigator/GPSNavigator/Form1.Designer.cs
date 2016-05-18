@@ -532,8 +532,6 @@
             // timeCheck
             // 
             this.timeCheck.AutoSize = true;
-            this.timeCheck.Checked = true;
-            this.timeCheck.CheckState = System.Windows.Forms.CheckState.Checked;
             this.timeCheck.Location = new System.Drawing.Point(16, 405);
             this.timeCheck.Name = "timeCheck";
             this.timeCheck.Size = new System.Drawing.Size(130, 17);

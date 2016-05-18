@@ -59,6 +59,7 @@ namespace GPSNavigator
         AppModes Appmode;
         StartupForm Parentform;
         SingleDataBuffer previousdata = new SingleDataBuffer();
+        SingleDataBuffer dbuf = new SingleDataBuffer();
         #endregion
 
         public Form1(StartupForm Parent,AppModes Mode)
@@ -118,7 +119,7 @@ namespace GPSNavigator
         {
             timeoutCounter = 0;
             gotdata = true;
-            SingleDataBuffer dbuf;
+
             if (!Programming_Mode)
             try
             {
@@ -126,13 +127,207 @@ namespace GPSNavigator
                 {
                     switch (Serial1State)
                     {
+
+                        #region WaitingForPacket
                         case BinaryProtocolState.waitForPacket:
                             serialPort1.Read(byt, 0, 1);
 
                             if (byt[0] == '~')
+                            {
                                 Serial1State = BinaryProtocolState.waitForMessageType;
+                                byt = new byte[150];
+                                byt[0] = (byte)'~';
+                            }
+                            else if (byt[0] == '$')
+                            {
+                                Serial1State = BinaryProtocolState.NMEAHeader;
+                                byt = new byte[150];
+                                byt[0] = (byte)'$';
+                            }
                             break;
-
+                        #endregion
+                        case BinaryProtocolState.NMEAHeader:
+                            serialPort1.Read(byt, 1, 5);
+                            Serial1State = BinaryProtocolState.NMEAReadMessage;
+                            break;
+                        #region NMEAReadMessage
+                        case BinaryProtocolState.NMEAReadMessage:
+                            int counter = 6;
+                            while (true)
+                            {
+                                serialPort1.Read(byt, counter, 1);
+                                if (byt[counter] == '\x0a')
+                                    break;
+                                counter++;
+                            }
+                            string s = Encoding.ASCII.GetString(byt);
+                            List<string> fields = Functions.Calculate_NMEA_fields(s);
+                            Functions.handle_NMEA(fields, ref vars, ref dbuf);
+                            if (DetailRefreshCounter++ > RefreshRate - 1)
+                            {
+                                if (showdetail)
+                                {
+                                    UpdateRealtimeData(dbuf, 1);
+                                    DetailRefreshCounter = 0;
+                                }
+                            }
+                            if (GraphRefreshCounter++ > GraphRefreshrate.Value - 1)
+                            {
+                                if (showdetail)
+                                {
+                                    UpdateRealtimeGraph(dbuf, 1);
+                                    GraphRefreshCounter = 0;
+                                }
+                            }
+                            if (isRecording)
+                            {
+                                #region Extremum_Ifs
+                                // message += dbuf.X + "  |  ";
+                                if (exthandler.ExtremumStarted)
+                                {
+                                    if (exthandler.ExtremeCounter++ >= 100)
+                                    {
+                                        exthandler.ExtremeCounter = 0;
+                                        dbuf.WriteExtreme = true;
+                                        dbuf.BAMax = exthandler.BAMax;
+                                        dbuf.BAMin = exthandler.BAmin;
+                                        dbuf.BAxMax = exthandler.BAxMax;
+                                        dbuf.BAxMin = exthandler.BAxMin;
+                                        dbuf.BAyMax = exthandler.BAyMax;
+                                        dbuf.BAyMin = exthandler.BAyMin;
+                                        dbuf.BAzMax = exthandler.BAzMax;
+                                        dbuf.BAzMin = exthandler.BAzMin;
+                                        dbuf.BVMax = exthandler.BVMax;
+                                        dbuf.BVMin = exthandler.BVMin;
+                                        dbuf.BVxMax = exthandler.BVxMax;
+                                        dbuf.BVxMin = exthandler.BVxMin;
+                                        dbuf.BVyMax = exthandler.BVyMax;
+                                        dbuf.BVyMin = exthandler.BVyMin;
+                                        dbuf.BVzMax = exthandler.BVzMax;
+                                        dbuf.BVzMin = exthandler.BVzMin;
+                                        dbuf.BXMax = exthandler.BXMax;
+                                        dbuf.BXMin = exthandler.BXMin;
+                                        dbuf.BYMax = exthandler.BYMax;
+                                        dbuf.BYMin = exthandler.BYMin;
+                                        dbuf.BZMax = exthandler.BZMax;
+                                        dbuf.BZMin = exthandler.BZMin;
+                                        dbuf.BPDOPMax = exthandler.BPDOPMax;
+                                        dbuf.BPDOPMin = exthandler.BPDOPMin;
+                                        dbuf.BAltitudeMax = exthandler.BAltitudeMax;
+                                        dbuf.BAltitudeMin = exthandler.BAltitudeMin;
+                                        dbuf.BLatitudeMax = exthandler.BLatitudeMax;
+                                        dbuf.BLatitudeMin = exthandler.BLatitudeMin;
+                                        dbuf.BLongitudeMax = exthandler.BLongitudeMax;
+                                        dbuf.BLongitudeMin = exthandler.BLongitudeMin;
+                                        dbuf.BStateMax = exthandler.BStateMax;
+                                        dbuf.BStateMin = exthandler.BStateMin;
+                                        dbuf.AttitudeBuffer.BAzimuthMax = exthandler.BAzimuthMax;
+                                        dbuf.AttitudeBuffer.BAzimuthMin = exthandler.BAzimuthMin;
+                                        dbuf.AttitudeBuffer.BElevationMax = exthandler.BElevationMax;
+                                        dbuf.AttitudeBuffer.BElevationMin = exthandler.BElevationMin;
+                                        dbuf.AttitudeBuffer.BDistanceMax = exthandler.BDistanceMax;
+                                        dbuf.AttitudeBuffer.BDistanceMin = exthandler.BDistanceMin;
+                                        exthandler.ExtremumStarted = false;
+                                    }
+                                    if (dbuf.A > exthandler.AMax) { exthandler.AMax = dbuf.A; exthandler.BAMax = dbuf.BA; }
+                                    if (dbuf.A < exthandler.Amin) { exthandler.Amin = dbuf.A; exthandler.BAmin = dbuf.BA; }
+                                    if (dbuf.V > exthandler.VMax) { exthandler.VMax = dbuf.V; exthandler.BVMax = dbuf.BV; }
+                                    if (dbuf.V < exthandler.VMin) { exthandler.VMin = dbuf.V; exthandler.BVMin = dbuf.BV; }
+                                    if (dbuf.Altitude > exthandler.AltitudeMax) { exthandler.AltitudeMax = dbuf.Altitude; exthandler.BAltitudeMax = dbuf.BAltitude; }
+                                    if (dbuf.Altitude < exthandler.AltitudeMin) { exthandler.AltitudeMin = dbuf.Altitude; exthandler.BAltitudeMin = dbuf.BAltitude; }
+                                    if (dbuf.Latitude > exthandler.LatitudeMax) { exthandler.LatitudeMax = dbuf.Latitude; exthandler.BLatitudeMax = dbuf.BLatitude; }
+                                    if (dbuf.Latitude < exthandler.LatitudeMin) { exthandler.LatitudeMin = dbuf.Latitude; exthandler.BLatitudeMin = dbuf.BLatitude; }
+                                    if (dbuf.Longitude > exthandler.LongitudeMax) { exthandler.LongitudeMax = dbuf.Longitude; exthandler.BLongitudeMax = dbuf.BLongitude; }
+                                    if (dbuf.Longitude < exthandler.LongitudeMin) { exthandler.LongitudeMin = dbuf.Longitude; exthandler.BLongitudeMin = dbuf.BLongitude; }
+                                    if (dbuf.Ax > exthandler.AxMax) { exthandler.AxMax = dbuf.Ax; exthandler.BAxMax = dbuf.BAx; }
+                                    if (dbuf.Ax < exthandler.AxMin) { exthandler.AxMin = dbuf.Ax; exthandler.BAxMin = dbuf.BAx; }
+                                    if (dbuf.Ay > exthandler.AyMax) { exthandler.AyMax = dbuf.Ay; exthandler.BAyMax = dbuf.BAy; }
+                                    if (dbuf.Ay < exthandler.AyMin) { exthandler.AyMin = dbuf.Ay; exthandler.BAyMin = dbuf.BAy; }
+                                    if (dbuf.Az > exthandler.AzMax) { exthandler.AzMax = dbuf.Az; exthandler.BAzMax = dbuf.BAz; }
+                                    if (dbuf.Az < exthandler.AzMin) { exthandler.AzMin = dbuf.Az; exthandler.BAzMin = dbuf.BAz; }
+                                    if (dbuf.Vx > exthandler.VxMax) { exthandler.VxMax = dbuf.Vx; exthandler.BVxMax = dbuf.BVx; }
+                                    if (dbuf.Vx < exthandler.VxMin) { exthandler.VxMin = dbuf.Vx; exthandler.BVxMin = dbuf.BVx; }
+                                    if (dbuf.Vy > exthandler.VyMax) { exthandler.VyMax = dbuf.Vy; exthandler.BVyMax = dbuf.BVy; }
+                                    if (dbuf.Vy < exthandler.VyMin) { exthandler.VyMin = dbuf.Vy; exthandler.BVyMin = dbuf.BVy; }
+                                    if (dbuf.Vz > exthandler.VzMax) { exthandler.VzMax = dbuf.Vz; exthandler.BVzMax = dbuf.BVz; }
+                                    if (dbuf.Vz < exthandler.VzMin) { exthandler.VzMin = dbuf.Vz; exthandler.BVzMin = dbuf.BVz; }
+                                    if (dbuf.X > exthandler.XMax) { exthandler.XMax = dbuf.X; exthandler.BXMax = dbuf.BX; }
+                                    if (dbuf.X < exthandler.XMin) { exthandler.XMin = dbuf.X; exthandler.BXMin = dbuf.BX; }
+                                    if (dbuf.Y > exthandler.YMax) { exthandler.YMax = dbuf.Y; exthandler.BYMax = dbuf.BY; }
+                                    if (dbuf.Y < exthandler.YMin) { exthandler.YMin = dbuf.Y; exthandler.BYMin = dbuf.BY; }
+                                    if (dbuf.Z > exthandler.ZMax) { exthandler.ZMax = dbuf.Z; exthandler.BZMax = dbuf.BZ; }
+                                    if (dbuf.Z < exthandler.ZMin) { exthandler.ZMin = dbuf.Z; exthandler.BZMin = dbuf.BZ; }
+                                    if (dbuf.PDOP > exthandler.PDOPMax) { exthandler.PDOPMax = dbuf.PDOP; exthandler.BPDOPMax = dbuf.BPDOP; }
+                                    if (dbuf.PDOP < exthandler.PDOPMin) { exthandler.PDOPMin = dbuf.PDOP; exthandler.BPDOPMin = dbuf.BPDOP; }
+                                    if (dbuf.AttitudeBuffer.Azimuth > exthandler.AzimuthMax) { exthandler.AzimuthMax = dbuf.AttitudeBuffer.Azimuth; exthandler.BAzimuthMax = dbuf.AttitudeBuffer.BAzimuth; }
+                                    if (dbuf.AttitudeBuffer.Azimuth < exthandler.AzimuthMin) { exthandler.AzimuthMin = dbuf.AttitudeBuffer.Azimuth; exthandler.BAzimuthMin = dbuf.AttitudeBuffer.BAzimuth; }
+                                    if (dbuf.AttitudeBuffer.Elevation > exthandler.ElevationMax) { exthandler.ElevationMax = dbuf.AttitudeBuffer.Elevation; exthandler.BElevationMax = dbuf.AttitudeBuffer.BElevation; }
+                                    if (dbuf.AttitudeBuffer.Elevation < exthandler.ElevationMin) { exthandler.ElevationMin = dbuf.AttitudeBuffer.Elevation; exthandler.BElevationMin = dbuf.AttitudeBuffer.BElevation; }
+                                    if (dbuf.AttitudeBuffer.Distance > exthandler.DistanceMax) { exthandler.DistanceMax = dbuf.AttitudeBuffer.Distance; exthandler.BDistanceMax = dbuf.AttitudeBuffer.BDistance; }
+                                    if (dbuf.AttitudeBuffer.Distance < exthandler.DistanceMin) { exthandler.DistanceMin = dbuf.AttitudeBuffer.Distance; exthandler.BDistanceMin = dbuf.AttitudeBuffer.BDistance; }
+                                    if (dbuf.state > exthandler.StateMax) { exthandler.StateMax = dbuf.state; exthandler.BStateMax = (byte)dbuf.state; }
+                                    if (dbuf.state < exthandler.StateMin) { exthandler.StateMin = dbuf.state; exthandler.BStateMin = (byte)dbuf.state; }
+                                }
+                                else
+                                {
+                                    exthandler.ExtremumStarted = true;
+                                    exthandler.AltitudeMax = exthandler.AltitudeMin = dbuf.Altitude;
+                                    exthandler.BAltitudeMax = exthandler.BAltitudeMin = dbuf.BAltitude;
+                                    exthandler.AMax = exthandler.Amin = dbuf.A;
+                                    exthandler.BAMax = exthandler.BAmin = dbuf.BA;
+                                    exthandler.AxMax = exthandler.AxMin = dbuf.Ax;
+                                    exthandler.BAxMax = exthandler.BAxMin = dbuf.BAx;
+                                    exthandler.AyMax = exthandler.AyMin = dbuf.Ay;
+                                    exthandler.BAyMax = exthandler.BAyMin = dbuf.BAy;
+                                    exthandler.AzMax = exthandler.AzMin = dbuf.Az;
+                                    exthandler.BAzMax = exthandler.BAzMin = dbuf.BAz;
+                                    exthandler.LatitudeMax = exthandler.LatitudeMin = dbuf.Latitude;
+                                    exthandler.BLatitudeMax = exthandler.BLatitudeMin = dbuf.BLatitude;
+                                    exthandler.LongitudeMax = exthandler.LongitudeMin = dbuf.Longitude;
+                                    exthandler.BLongitudeMax = exthandler.BLongitudeMin = dbuf.BLongitude;
+                                    exthandler.PDOPMax = exthandler.PDOPMin = dbuf.PDOP;
+                                    exthandler.BPDOPMax = exthandler.BPDOPMin = dbuf.BPDOP;
+                                    exthandler.VMax = exthandler.VMin = dbuf.V;
+                                    exthandler.BVMax = exthandler.BVMin = dbuf.BV;
+                                    exthandler.VxMax = exthandler.VxMin = dbuf.Vx;
+                                    exthandler.BVxMax = exthandler.BVxMin = dbuf.BVx;
+                                    exthandler.VyMax = exthandler.VyMin = dbuf.Vy;
+                                    exthandler.BVyMax = exthandler.BVyMin = dbuf.BVy;
+                                    exthandler.VzMax = exthandler.VzMin = dbuf.Vz;
+                                    exthandler.BVzMax = exthandler.BVzMin = dbuf.BVz;
+                                    exthandler.XMax = exthandler.XMin = dbuf.X;
+                                    exthandler.BXMax = exthandler.BXMin = dbuf.BX;
+                                    exthandler.YMax = exthandler.YMin = dbuf.Y;
+                                    exthandler.BYMax = exthandler.BYMin = dbuf.BY;
+                                    exthandler.ZMax = exthandler.ZMin = dbuf.Z;
+                                    exthandler.BZMax = exthandler.BZMin = dbuf.BZ;
+                                    exthandler.StateMax = exthandler.StateMin = dbuf.state;
+                                    exthandler.BStateMax = exthandler.BStateMin = dbuf.Bstate;
+                                    exthandler.AzimuthMax = exthandler.AzimuthMin = dbuf.AttitudeBuffer.Azimuth;
+                                    exthandler.BAzimuthMax = exthandler.BAzimuthMin = dbuf.AttitudeBuffer.BAzimuth;
+                                    exthandler.ElevationMax = exthandler.ElevationMin = dbuf.AttitudeBuffer.Elevation;
+                                    exthandler.BElevationMax = exthandler.BElevationMin = dbuf.AttitudeBuffer.BElevation;
+                                    exthandler.DistanceMax = exthandler.DistanceMin = dbuf.AttitudeBuffer.Distance;
+                                    exthandler.BDistanceMax = exthandler.BDistanceMin = dbuf.AttitudeBuffer.BDistance;
+                                    exthandler.ExtremeCounter++;
+                                }
+                                #endregion
+                                log.Writebuffer(dbuf);
+                            }
+                            Serial1State = BinaryProtocolState.waitForPacket;
+                            if (DateTime.Now.Second != serialcounter)
+                            {
+                                serialcounter = DateTime.Now.Second;
+                                if (ascii.Checked)
+                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
+                                else if (hex.Checked)
+                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + ByteArrayToString(byt));
+                                packetcounter = 0;
+                            }
+                            else
+                                packetcounter++;
+                            break;
+                        #endregion
                         case BinaryProtocolState.waitForMessageType:
                             serialPort1.Read(byt, 1, 1);
                             Serial1State = BinaryProtocolState.readMessage;
