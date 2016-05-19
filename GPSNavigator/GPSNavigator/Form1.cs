@@ -586,11 +586,11 @@ namespace GPSNavigator
                             break;
                     }
                 }
-            }
-            catch
-            {
+           }
+           catch
+           {
                 ErrorCount.Text = (int.Parse(ErrorCount.Text) + 1).ToString();
-            }
+           }
         }
 
         public static string ByteArrayToString(byte[] ba)

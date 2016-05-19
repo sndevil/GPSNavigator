@@ -3210,13 +3210,13 @@ namespace GPSNavigator.Source
                     Data.Longitude = StringToFloatNMEA(fields[4]);
                     Data.BLongitude = doubletoByte(Data.Longitude, 4);
                     Data.NumOfUsedSats = StringToFloatNMEA(fields[7]);
-                    Data.BNumOfUsedStats = doubletoByte(Data.NumOfUsedSats, 4);
+                    Data.BNumOfUsedStats = doubletoByte(Data.NumOfUsedSats, 4, false);
                     Data.Altitude = StringToFloatNMEA(fields[9]);
                     Data.BAltitude = doubletoByte(Data.Altitude, 4);
                     break;
 
                 case "$GPVTG":  //SPEED
-                    Data.V = StringToFloatNMEA(fields[7]) * 1000;
+                    Data.V = StringToFloatNMEA(fields[7]);// * 1000;
                     Data.BV = doubletoByte(Data.V, 4);
                     break;
                 case "$GPGSA":  //PDOP
@@ -3246,7 +3246,7 @@ namespace GPSNavigator.Source
                             Data.NumOfUsedSats++;
                         }
                     }
-                    Data.BNumOfUsedStats = doubletoByte(Data.NumOfUsedSats, 4);
+                    Data.BNumOfUsedStats = doubletoByte(Data.NumOfUsedSats, 4,false);
                     Data.PDOP = StringToFloatNMEA(fields[15]);
                     Data.BPDOP = doubletoByte(Data.PDOP, 4);
                     Data.HDOP = StringToFloatNMEA(fields[16]);                    
@@ -3681,13 +3681,18 @@ namespace GPSNavigator.Source
             return t;
         }
 
-        public static byte[] doubletoByte(double input, int bytes)
+        public static byte[] doubletoByte(double input, int bytes, bool Unformat = true)
         {
             byte[] output = new byte[bytes];
-            Int64 temp = unformatFloat(input);
+            Int64 temp = (Int64)input;
+            if (Unformat)
+                temp = unformatFloat(input);
 
             for (int i = 0; i < bytes; i++)
+            {
                 output[i] = (byte)(temp % 256);
+                temp /= 256;
+            }
 
             //buffer.BPDOP[3] = data[index + 3];
             //a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; buffer.BPDOP[i] = data[index + i]; }

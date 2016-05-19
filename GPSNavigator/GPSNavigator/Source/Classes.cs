@@ -635,9 +635,10 @@ namespace GPSNavigator.Classes
                         break;
                 }
                 #endregion
-                float extoffset = 400f / (float)stream.Length;
+
                 if (stream.Length > 0)
                 {
+                    float extoffset = 400f / (float)stream.Length;
                     stream.Position = Functions.QuantizePosition(fstart * stream.Length);
                     maxstream.Position = minstream.Position = (type != graphtype.State) ? Functions.QuantizePosition(fstart * minstream.Length) : (long)(fstart * minstream.Length);
                     timestream.Position = Functions.QuantizePosition6bit(fstart * timestream.Length);
@@ -1075,10 +1076,15 @@ namespace GPSNavigator.Classes
             private void initSats(int count)
             {
                 inited = true;
-                if (GPS[0].Length != 0)
-                    delta = (float)1200 / GPS[0].Length;
+                if (GPS.Count > 0)
+                {
+                    if (GPS[0].Length != 0)
+                        delta = (float)1200 / GPS[0].Length;
+                    else
+                        delta = (float)1200 / A.Length;
+                }
                 else
-                    delta = (float)1200 / A.Length;
+                    delta = 0;
             }
 
 

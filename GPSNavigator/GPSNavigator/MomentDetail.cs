@@ -154,7 +154,7 @@ namespace GPSNavigator
                     comboBox2.Items.Add("Antenna " + i.ToString());
                 }
             }
-            if (comboBox1.SelectedIndex < 0)
+            if (comboBox1.SelectedIndex < 0 && comboBox1.Items.Count > 0)
             {
                 comboBox1.SelectedIndex = 0;
                 comboBox2.SelectedIndex = 0;
