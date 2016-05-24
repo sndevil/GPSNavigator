@@ -156,9 +156,14 @@ namespace GPSNavigator
                             while (true)
                             {
                                 serialPort1.Read(byt, counter, 1);
-                                if (byt[counter] == '\x0a')
+                                if (byt[counter] == '\x0a' || counter > 200)
                                     break;
                                 counter++;
+                            }
+                            if (counter > 200)
+                            {
+                                Serial1State = BinaryProtocolState.waitForPacket;
+                                break;
                             }
                             string s = Encoding.ASCII.GetString(byt);
                             List<string> fields = Functions.Calculate_NMEA_fields(s);
