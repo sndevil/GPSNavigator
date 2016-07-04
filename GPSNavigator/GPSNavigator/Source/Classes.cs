@@ -248,7 +248,7 @@ namespace GPSNavigator.Classes
             public bool isNorthfinder = false;
         }
 
-        public enum AppModes { GPS, NorthFinder,BaseStation };
+        public enum AppModes { GPS, NorthFinder,BaseStation, RTK };
 
         public enum BinaryProtocolState
         {

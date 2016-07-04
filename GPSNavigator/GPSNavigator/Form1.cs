@@ -43,6 +43,7 @@ namespace GPSNavigator
         MomentDetail DetailForm;
         NorthDetail NorthDetailForm;
         BTSDetail BTSDetailForm;
+        RTKDetail RTKDetailForm;
         Skyview SkyView;
 #endregion
         ExtremumHandler exthandler = new ExtremumHandler();
@@ -83,6 +84,11 @@ namespace GPSNavigator
                     BaseText = "Base Station";
                     BTSDetailForm = new BTSDetail(this);
                     numericUpDown2.Value = 50;
+                    break;
+                case AppModes.RTK:
+                    BaseText = "RTK";
+                    RTKDetailForm = new RTKDetail(this);
+                    numericUpDown2.Value = 10;
                     break;
             }
             this.Text = BaseText;
@@ -326,7 +332,7 @@ namespace GPSNavigator
                                 if (ascii.Checked)
                                     WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
                                 else if (hex.Checked)
-                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + ByteArrayToString(byt));
+                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + Functions.ByteArrayToString(byt));// Functions.ByteArrayToString(byt));
                                 packetcounter = 0;
                             }
                             else
@@ -579,7 +585,7 @@ namespace GPSNavigator
                                 if (ascii.Checked)
                                     WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
                                 else if (hex.Checked)
-                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + ByteArrayToString(byt));
+                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + Functions.ByteArrayToString(byt));
                                 packetcounter = 0;
                             }
                             else
@@ -596,14 +602,6 @@ namespace GPSNavigator
            {
                 ErrorCount.Text = (int.Parse(ErrorCount.Text) + 1).ToString();
            }
-        }
-
-        public static string ByteArrayToString(byte[] ba)
-        {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
-            foreach (byte b in ba)
-                hex.AppendFormat("{0:x2}", b);
-            return hex.ToString();
         }
         
         public void Serial1_Write(byte[] data,int offset, int count)
@@ -855,7 +853,7 @@ namespace GPSNavigator
                                 if (ascii.Checked)
                                     WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
                                 else if (hex.Checked)
-                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + ByteArrayToString(byt));
+                                    WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + Functions.ByteArrayToString(byt));
                                 packetcounter = 0;
                             }
                             else
@@ -1070,24 +1068,24 @@ namespace GPSNavigator
 
         private void opendialog_FileOk(object sender, CancelEventArgs e)
         {
-                string path = folderManager.addfolder(); //  AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
-                try
-                {
-                    Directory.Delete(path, true);
-                }
-                catch { }
-                Directory.CreateDirectory(path);
-                extractdone = false;
-                StatusLabel.Text = "Loading Log";
-                try
-                {
-                    logdir = path;
-                    Task<bool> extractor = ExtractAsync(opendialog.FileName);
-                }
-                catch
-                {
-                    MessageBox.Show("There was an error opening the file");
-                }
+            string path = folderManager.addfolder(); //  AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\";
+            try
+            {
+                Directory.Delete(path, true);
+            }
+            catch { }
+            Directory.CreateDirectory(path);
+            extractdone = false;
+            StatusLabel.Text = "Loading Log";
+            try
+            {
+                logdir = path;
+                Task<bool> extractor = ExtractAsync(opendialog.FileName);
+            }
+            catch
+            {
+                MessageBox.Show("There was an error opening the file");
+            }
         }
 
         public Task<bool> ExtractAsync(string path)
@@ -1120,7 +1118,7 @@ namespace GPSNavigator
             if (showdetail)
                 if (Appmode == AppModes.GPS)
                     DetailForm.Show();
-                else
+                else if (Appmode == AppModes.NorthFinder)
                     NorthDetailForm.Show();
             var path = folderManager.findrecordfolder();
             Logtype type = Logtype.GPS;
@@ -1182,7 +1180,7 @@ namespace GPSNavigator
                         DetailForm.TopLevel = false;
                         DetailForm.Show();
                         NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Moment Detail (RealTime)");
-                        NewDockWindow.AutoScroll = true;
+                        NewDockWindow.AutoScroll = false;
                         NewDockWindow.Controls.Add(DetailForm);
                         break;
                     case AppModes.NorthFinder:
@@ -1191,7 +1189,7 @@ namespace GPSNavigator
                         NorthDetailForm.TopLevel = false;
                         NorthDetailForm.Show();
                         NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");
-                        NewDockWindow.AutoScroll = true;
+                        NewDockWindow.AutoScroll = false;
                         NewDockWindow.Controls.Add(NorthDetailForm);
                         break;
                     case AppModes.BaseStation:
@@ -1200,8 +1198,17 @@ namespace GPSNavigator
                         BTSDetailForm.TopLevel = false;
                         BTSDetailForm.Show();
                         NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");
-                        NewDockWindow.AutoScroll = true;
+                        NewDockWindow.AutoScroll = false;
                         NewDockWindow.Controls.Add(BTSDetailForm);
+                        break;
+                    case AppModes.RTK:
+                        RTKDetailForm = new RTKDetail(this);
+                        RTKDetailForm.Dock = DockStyle.None;
+                        RTKDetailForm.TopLevel = false;
+                        RTKDetailForm.Show();
+                        NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");
+                        NewDockWindow.AutoScroll = false;
+                        NewDockWindow.Controls.Add(RTKDetailForm);
                         break;
                 }
                 radDock1.AddDocument(NewDockWindow);
@@ -1211,8 +1218,21 @@ namespace GPSNavigator
                 showdetail = false;
                 try
                 {
-                    //radDock1.
-                    DetailForm.Hide();
+                    switch (Appmode)
+                    {
+                        case AppModes.GPS:
+                            DetailForm.Hide();
+                            break;
+                        case AppModes.BaseStation:
+                            BTSDetailForm.Hide();
+                            break;
+                        case AppModes.NorthFinder:
+                            NorthDetailForm.Hide();
+                            break;
+                        case AppModes.RTK:
+                            RTKDetailForm.Hide();
+                            break;
+                    }
                     foreach (DockWindow dw in radDock1.DocumentManager.DocumentArray)
                     {
                         if (dw.Text == "Moment Detail (RealTime)")
@@ -1224,6 +1244,7 @@ namespace GPSNavigator
                     DetailForm = new MomentDetail(this);
                     NorthDetailForm = new NorthDetail(this);
                     BTSDetailForm = new BTSDetail(this);
+                    RTKDetailForm = new RTKDetail(this);
                 }
             }
         }
@@ -1261,7 +1282,7 @@ namespace GPSNavigator
             }
             catch
             {
-                MessageBox.Show("Couldnt Open");
+                MessageBox.Show("Couldn't Open Serial Port");
                 return false;
             }
         }
@@ -1372,10 +1393,6 @@ namespace GPSNavigator
         {
 
             serialPort1.BaudRate = int.Parse((string)comboBox1.SelectedItem);
-            /*if ((string)comboBox1.SelectedItem == "4800")
-                serialPort1.BaudRate = 4800;
-            else if ((string)comboBox1.SelectedItem == "115200")
-                serialPort1.BaudRate = 115200;*/
         }
 
         private void controlPanelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1565,8 +1582,5 @@ namespace GPSNavigator
                 }
             }
         }
-
-        //public void SetProgramProgress(
-
     }
 }

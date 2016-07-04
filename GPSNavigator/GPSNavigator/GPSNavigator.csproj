@@ -197,6 +197,12 @@
     <Compile Include="MomentDetail.Designer.cs">
       <DependentUpon>MomentDetail.cs</DependentUpon>
     </Compile>
+    <Compile Include="RTKDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RTKDetail.Designer.cs">
+      <DependentUpon>RTKDetail.cs</DependentUpon>
+    </Compile>
     <Compile Include="Skyview.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -266,6 +272,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RTKDetail.resx">
+      <DependentUpon>RTKDetail.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Skyview.resx">
       <DependentUpon>Skyview.cs</DependentUpon>
     </EmbeddedResource>

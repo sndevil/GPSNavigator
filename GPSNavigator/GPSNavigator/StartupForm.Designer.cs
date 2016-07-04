@@ -37,6 +37,8 @@
             this.BTSButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.GPSLabel = new System.Windows.Forms.Label();
+            this.RTKButton = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // GPSButton
@@ -130,12 +132,34 @@
             this.GPSLabel.TabIndex = 7;
             this.GPSLabel.Text = "GPS";
             // 
+            // RTKButton
+            // 
+            this.RTKButton.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RTKButton.Location = new System.Drawing.Point(21, 239);
+            this.RTKButton.Name = "RTKButton";
+            this.RTKButton.Size = new System.Drawing.Size(143, 143);
+            this.RTKButton.TabIndex = 8;
+            this.RTKButton.UseVisualStyleBackColor = false;
+            this.RTKButton.Click += new System.EventHandler(this.RTKButton_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(72, 388);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(40, 20);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "RTK";
+            // 
             // StartupForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(520, 422);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.RTKButton);
             this.Controls.Add(this.GPSLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.BTSButton);
@@ -163,5 +187,7 @@
         private System.Windows.Forms.Button BTSButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label GPSLabel;
+        private System.Windows.Forms.Button RTKButton;
+        private System.Windows.Forms.Label label2;
     }
 }

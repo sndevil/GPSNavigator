@@ -44,5 +44,12 @@ namespace GPSNavigator
             GPS.Show();
             this.Hide();
         }
+
+        private void RTKButton_Click(object sender, EventArgs e)
+        {
+            GPS = new Form1(this, AppModes.RTK);
+            GPS.Show();
+            this.Hide();
+        }
     }
 }
