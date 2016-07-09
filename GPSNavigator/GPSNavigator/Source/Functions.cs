@@ -101,7 +101,7 @@ namespace GPSNavigator.Source
 
         public const int TOTAL_BASE_STATIONS_COUNT = 256;
         public const int TOTAL_FLYING_OBJECTS_COUNT = 16;
-        public const int MAX_CONNECTION_ACOUNT = 30;//30;
+        public const int MAX_CONNECTION_ACOUNT = 30;
 
 
         #region Programmer_Constants
