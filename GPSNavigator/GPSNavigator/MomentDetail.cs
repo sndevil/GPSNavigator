@@ -42,7 +42,6 @@ namespace GPSNavigator
             filemanager = manager;
             InitializeComponent();
             toolStripSplitButton1.Visible = false;
-            //this.Text = "MomentDetail (Log)";
             toolStripStatusLabel1.Visible = false;
             ControlPanel.Visible = true;
             ControlPanelButton.Visible = false;
@@ -1428,7 +1427,7 @@ namespace GPSNavigator
             index++;
 
             //CMD
-            Msg[index] = Functions.AUTO_MAX_ANGLE_ATTITUDE_CMD;
+            Msg[index] = Functions.AUTO_MASK_ANGLE_ATTITUDE_CMD;
             index++;
 
             //Automatic Max Angle Attitude

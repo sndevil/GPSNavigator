@@ -37,7 +37,8 @@ namespace GPSNavigator
         public List<NorthDetail> northDetailList = new List<NorthDetail>();
         Logger log;
         DateTime RecordStarttime;
-        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0, serial1_MsgSize = -1, serial2_MsgSize = -1, RefreshRate = 50;
+        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0
+            , serial1_MsgSize = -1, serial2_MsgSize = -1, RefreshRate = 50;
         
 #region Forms
         MomentDetail DetailForm;
@@ -124,16 +125,14 @@ namespace GPSNavigator
         void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
         {
             timeoutCounter = 0;
-            gotdata = true;
-
+            gotdata = true;            
             if (!Programming_Mode)
             try
             {
                 while (isPlaying && serialPort1.BytesToRead > ((Serial1State == BinaryProtocolState.readMessage) ? serial1_MsgSize - 3 : 0) && !appclosing)
                 {
                     switch (Serial1State)
-                    {
-
+                    {                            
                         #region WaitingForPacket
                         case BinaryProtocolState.waitForPacket:
                             serialPort1.Read(byt, 0, 1);
@@ -1180,7 +1179,7 @@ namespace GPSNavigator
                         DetailForm.TopLevel = false;
                         DetailForm.Show();
                         NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Moment Detail (RealTime)");
-                        NewDockWindow.AutoScroll = false;
+                        NewDockWindow.AutoScroll = true;
                         NewDockWindow.Controls.Add(DetailForm);
                         break;
                     case AppModes.NorthFinder:
@@ -1189,7 +1188,7 @@ namespace GPSNavigator
                         NorthDetailForm.TopLevel = false;
                         NorthDetailForm.Show();
                         NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");
-                        NewDockWindow.AutoScroll = false;
+                        NewDockWindow.AutoScroll = true;
                         NewDockWindow.Controls.Add(NorthDetailForm);
                         break;
                     case AppModes.BaseStation:
@@ -1198,7 +1197,7 @@ namespace GPSNavigator
                         BTSDetailForm.TopLevel = false;
                         BTSDetailForm.Show();
                         NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");
-                        NewDockWindow.AutoScroll = false;
+                        NewDockWindow.AutoScroll = true;
                         NewDockWindow.Controls.Add(BTSDetailForm);
                         break;
                     case AppModes.RTK:
@@ -1207,7 +1206,7 @@ namespace GPSNavigator
                         RTKDetailForm.TopLevel = false;
                         RTKDetailForm.Show();
                         NewDockWindow = new DocumentWindow("Moment Detail (RealTime)");
-                        NewDockWindow.AutoScroll = false;
+                        NewDockWindow.AutoScroll = true;
                         NewDockWindow.Controls.Add(RTKDetailForm);
                         break;
                 }

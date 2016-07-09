@@ -1587,7 +1587,7 @@ namespace GPSNavigator
             index++;
 
             //CMD
-            Msg[index] = Functions.AUTO_MAX_ANGLE_ATTITUDE_CMD;
+            Msg[index] = Functions.AUTO_MASK_ANGLE_ATTITUDE_CMD;
             index++;
 
             //Automatic Max Angle Attitude
@@ -2056,6 +2056,16 @@ namespace GPSNavigator
 
         private void applyButton_Click(object sender, EventArgs e)
         {
+            if (checkEditDistance.Checked)
+                senddistancecommand();
+            if (checkEditAzimuth.Checked)
+                sendazimuthcommand();
+            if (checkEditElevation.Checked)
+                sendelevationcommand();
+        }
+
+        private void senddistancecommand()
+        {
             double TH = Convert.ToDouble(textEditDistanceTH.Text);
             ((NumericAxis)((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Axis).StartValue = Convert.ToDouble(textEditDistance.Text) - TH;
             ((NumericAxis)((LinearGauge)ultraGaugeDistance.Gauges[0]).Scales[0].Axis).EndValue = Convert.ToDouble(textEditDistance.Text) + TH;
@@ -2117,13 +2127,157 @@ namespace GPSNavigator
 
                 for (int i = 0; i < index; i++)
                     byteMsg[i] = (byte)Msg[i];
-      
+
                 for (int i = 0; i < index; i++)
                 {
                     Parentform.Serial1_Write(byteMsg, i, 1);
                     Thread.Sleep(20);
                     Application.DoEvents();
-                }             
+                }
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
+        }
+
+        private void sendazimuthcommand()
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.AZIMUTH_INFO_CMD;    // Change this
+                index++;
+
+                //Distance
+                int d = (int)(Double.Parse(textEditAzimuth.Text) * 1000);
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+
+                //Tol
+                d = (int)(Double.Parse(textEditAzimuthTH.Text) * 1000);
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
+            }
+            catch (Exception ex)
+            {
+                Telerik.WinControls.RadMessageBox.Show(ex.Message, "Error in sending command");
+            }
+        }
+
+        private void sendelevationcommand()
+        {
+            try
+            {
+                char[] Msg = new char[60];
+                byte[] byteMsg = new byte[60];
+                int index = 0;
+
+                //Header
+                Msg[index] = Functions.MSG_Header[0];
+                index++;
+                Msg[index] = Functions.MSG_Header[1];
+                index++;
+                Msg[index] = Functions.MSG_Header[2];
+                index++;
+                Msg[index] = Functions.MSG_Header[3];
+                index++;
+
+                //CMD
+                Msg[index] = Functions.ELEVATION_INFO_CMD;    // Change this
+                index++;
+
+                //Distance
+                int d = (int)(Double.Parse(textEditElevation.Text) * 1000);
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+
+                //Tol
+                d = (int)(Double.Parse(textEditElevationTH.Text) * 1000);
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+                Msg[index] = (char)(d & 0xFF);
+                d /= 256;
+                index++;
+
+                //CRC
+                Msg[index] = Functions.Calculate_Checksum_Char(Msg, index);
+                index++;
+
+                for (int i = 0; i < index; i++)
+                    byteMsg[i] = (byte)Msg[i];
+
+                for (int i = 0; i < index; i++)
+                {
+                    Parentform.Serial1_Write(byteMsg, i, 1);
+                    Thread.Sleep(20);
+                    Application.DoEvents();
+                }
             }
             catch (Exception ex)
             {

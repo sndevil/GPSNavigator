@@ -40,7 +40,7 @@ namespace GPSNavigator.Source
         public const char READ_SETTING_CMD = (char)18;
         public const char MASK_ANGLE_CMD = (char)19;
         public const char IONOSPHORIC_CORRECTION_CMD = (char)20;
-        public const char AUTO_MAX_ANGLE_ATTITUDE_CMD = (char)21;
+        public const char AUTO_MASK_ANGLE_ATTITUDE_CMD = (char)21;
         public const char POSITIONING_TYPE_CMD = (char)22;
         public const char READ_LICENCE_CMD = (char)23;
         public const char ADD_LICENCE_CMD = (char)24;
@@ -59,6 +59,10 @@ namespace GPSNavigator.Source
         public const char GET_STATUS_BASED_ON_MAC_CMD = (char)36;
         public const char SET_LTR_TX_POWER_LEVEL_CMD = (char)37;
         public const char TURN_ON_OFF_LTR_CMD = (char)38;
+
+        // These are new
+        public const char AZIMUTH_INFO_CMD = (char)39;
+        public const char ELEVATION_INFO_CMD = (char)40;
 
         public const int BIN_FULL_MSG_SIZE = 152;
         public const int BIN_FULL_PLUS_MSG_SIZE = 164;
@@ -3216,7 +3220,7 @@ namespace GPSNavigator.Source
                     break;
 
                 case "$GPVTG":  //SPEED
-                    Data.V = StringToFloatNMEA(fields[7]);// * 1000;
+                    Data.V = StringToFloatNMEA(fields[7]);
                     Data.BV = doubletoByte(Data.V, 4);
                     break;
                 case "$GPGSA":  //PDOP
