@@ -223,4 +223,7 @@
   <data name="Basestation" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Basestation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="resizedimage120120_CORRECT_RTK_Icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\resizedimage120120-CORRECT-RTK-Icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

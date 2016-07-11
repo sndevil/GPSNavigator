@@ -3208,6 +3208,7 @@ namespace GPSNavigator.Source
             double TOW;
             switch (fields[0])
             {
+                case "$GLGGA":
                 case "$GPGGA":  //positioning system fix data
                     Data.Latitude = StringToFloatNMEA(fields[2]);
                     Data.BLatitude = doubletoByte(Data.Latitude, 4);
@@ -3218,11 +3219,12 @@ namespace GPSNavigator.Source
                     Data.Altitude = StringToFloatNMEA(fields[9]);
                     Data.BAltitude = doubletoByte(Data.Altitude, 4);
                     break;
-
+                case "$GLVTG":
                 case "$GPVTG":  //SPEED
                     Data.V = StringToFloatNMEA(fields[7]);
                     Data.BV = doubletoByte(Data.V, 4);
                     break;
+                case "$GLGSA":
                 case "$GPGSA":  //PDOP
                     #region GSA
                     /*if (vars.GPSlist.Count < 1)
@@ -3257,6 +3259,7 @@ namespace GPSNavigator.Source
                     Data.VDOP = StringToFloatNMEA(fields[17]);
 #endregion
                     break;
+                case "$GLZDA":
                 case "$GPZDA":  //Time
                     DateTime t = TimeFromStrings(fields[1],fields[2],fields[3],fields[4]);
                     Data.datetime = t;
@@ -3273,6 +3276,7 @@ namespace GPSNavigator.Source
                     }
                     vars.PacketTime = t;
                     break;
+                case "$GLGLL":
                 case "$GPGLL":  //Latitude and longitude, with time of position fix and status
                     Data.Latitude = StringToFloatNMEA(fields[1]);
                     Data.BLatitude = doubletoByte(Data.Latitude,4);

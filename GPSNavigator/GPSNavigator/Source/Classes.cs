@@ -337,6 +337,15 @@ namespace GPSNavigator.Classes
             }
         }
 
+
+        public class RTKData
+        {
+            double latitude, longitude, altitude;
+
+
+
+        }
+
         public class SearchRange
         {
             public int start;

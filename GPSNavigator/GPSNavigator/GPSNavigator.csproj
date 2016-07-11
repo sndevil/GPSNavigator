@@ -358,6 +358,7 @@
     <None Include="Resources\TurnCoordinatorMarks1.bmp" />
     <None Include="Resources\VerticalSpeedIndicator_Background1.bmp" />
     <None Include="Resources\VerticalSpeedNeedle1.bmp" />
+    <None Include="Resources\resizedimage120120-CORRECT-RTK-Icon.png" />
     <Content Include="Resources\Warm Start.png" />
     <None Include="Resources\videoplay512.gif" />
     <None Include="Resources\pause.png" />

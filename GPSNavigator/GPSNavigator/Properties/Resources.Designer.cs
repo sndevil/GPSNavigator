@@ -235,6 +235,13 @@ namespace GPSNavigator.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap resizedimage120120_CORRECT_RTK_Icon {
+            get {
+                object obj = ResourceManager.GetObject("resizedimage120120_CORRECT_RTK_Icon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap satellite {
             get {
                 object obj = ResourceManager.GetObject("satellite", resourceCulture);

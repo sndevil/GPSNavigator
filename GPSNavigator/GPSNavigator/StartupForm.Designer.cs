@@ -135,6 +135,7 @@
             // RTKButton
             // 
             this.RTKButton.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RTKButton.Image = global::GPSNavigator.Properties.Resources.resizedimage120120_CORRECT_RTK_Icon;
             this.RTKButton.Location = new System.Drawing.Point(21, 239);
             this.RTKButton.Name = "RTKButton";
             this.RTKButton.Size = new System.Drawing.Size(143, 143);

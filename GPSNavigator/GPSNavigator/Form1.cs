@@ -177,8 +177,8 @@ namespace GPSNavigator
                             {
                                 if (showdetail)
                                 {
-                                    UpdateRealtimeData(dbuf, 1);
-                                    DetailRefreshCounter = 0;
+                                        UpdateRealtimeData(dbuf, 1);
+                                        DetailRefreshCounter = 0;
                                 }
                             }
                             if (GraphRefreshCounter++ > GraphRefreshrate.Value - 1)
@@ -919,12 +919,19 @@ namespace GPSNavigator
                 ShowRealtime d = new ShowRealtime(UpdateRealtimeData);
                 this.Invoke(d, new object[] { databuffer , SerialNumber });
             }
+            else if (Appmode == AppModes.RTK && RTKDetailForm.InvokeRequired)
+            {
+                ShowRealtime d = new ShowRealtime(UpdateRealtimeData);
+                this.Invoke(d, new object[] { databuffer, SerialNumber });
+            }
             else
             {
                 if (Appmode == AppModes.GPS)
                     DetailForm.UpdateData(vars, databuffer, SerialNumber);
                 else if (Appmode == AppModes.NorthFinder)
                     NorthDetailForm.UpdateData(vars, databuffer, SerialNumber);
+                else if (Appmode == AppModes.RTK)
+                    RTKDetailForm.UpdateData(vars, databuffer,SerialNumber);
             }
         }
 
