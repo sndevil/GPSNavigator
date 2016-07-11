@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title7 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ResetAvgBtn = new System.Windows.Forms.Button();
             this.SetReferenceBtn = new System.Windows.Forms.Button();
@@ -58,6 +58,9 @@
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.SNRLabel = new System.Windows.Forms.Label();
+            this.ClearBtn = new System.Windows.Forms.Button();
+            this.RotRightBtn = new System.Windows.Forms.Button();
+            this.RotLeftBtn = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -306,52 +309,52 @@
             this.chart2.BackSecondaryColor = System.Drawing.Color.White;
             this.chart2.BorderSkin.PageColor = System.Drawing.Color.Gainsboro;
             this.chart2.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Raised;
-            chartArea7.Area3DStyle.PointDepth = 50;
-            chartArea7.Area3DStyle.Rotation = 15;
-            chartArea7.Area3DStyle.WallWidth = 10;
-            chartArea7.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea7.AxisX.IsLabelAutoFit = false;
-            chartArea7.AxisX.LabelAutoFitMinFontSize = 5;
-            chartArea7.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea4.Area3DStyle.PointDepth = 50;
+            chartArea4.Area3DStyle.Rotation = 15;
+            chartArea4.Area3DStyle.WallWidth = 10;
+            chartArea4.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea4.AxisX.IsLabelAutoFit = false;
+            chartArea4.AxisX.LabelAutoFitMinFontSize = 5;
+            chartArea4.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea7.AxisX.LabelStyle.TruncatedLabels = true;
-            chartArea7.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea7.AxisX2.LabelAutoFitMinFontSize = 5;
-            chartArea7.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea4.AxisX.LabelStyle.TruncatedLabels = true;
+            chartArea4.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea4.AxisX2.LabelAutoFitMinFontSize = 5;
+            chartArea4.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea7.AxisX2.LineColor = System.Drawing.Color.LightGray;
-            chartArea7.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea7.AxisY.Maximum = 100D;
-            chartArea7.AxisY2.LineColor = System.Drawing.Color.LightGray;
-            chartArea7.BorderColor = System.Drawing.Color.DarkGray;
-            chartArea7.InnerPlotPosition.Auto = false;
-            chartArea7.InnerPlotPosition.Height = 75F;
-            chartArea7.InnerPlotPosition.Width = 95F;
-            chartArea7.InnerPlotPosition.X = 5F;
-            chartArea7.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea7);
+            chartArea4.AxisX2.LineColor = System.Drawing.Color.LightGray;
+            chartArea4.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea4.AxisY.Maximum = 100D;
+            chartArea4.AxisY2.LineColor = System.Drawing.Color.LightGray;
+            chartArea4.BorderColor = System.Drawing.Color.DarkGray;
+            chartArea4.InnerPlotPosition.Auto = false;
+            chartArea4.InnerPlotPosition.Height = 75F;
+            chartArea4.InnerPlotPosition.Width = 95F;
+            chartArea4.InnerPlotPosition.X = 5F;
+            chartArea4.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea4);
             this.chart2.Location = new System.Drawing.Point(12, 131);
             this.chart2.Name = "chart2";
             this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series7.ChartArea = "ChartArea1";
-            series7.IsValueShownAsLabel = true;
-            series7.Legend = "Legend1";
-            series7.Name = "Series0";
-            series7.SmartLabelStyle.Enabled = false;
-            this.chart2.Series.Add(series7);
+            series4.ChartArea = "ChartArea1";
+            series4.IsValueShownAsLabel = true;
+            series4.Legend = "Legend1";
+            series4.Name = "Series0";
+            series4.SmartLabelStyle.Enabled = false;
+            this.chart2.Series.Add(series4);
             this.chart2.Size = new System.Drawing.Size(648, 148);
             this.chart2.TabIndex = 12;
             this.chart2.Text = "GPS";
-            title7.Name = "Title1";
-            this.chart2.Titles.Add(title7);
+            title4.Name = "Title1";
+            this.chart2.Titles.Add(title4);
             // 
             // SNRLabel
             // 
@@ -362,12 +365,45 @@
             this.SNRLabel.TabIndex = 13;
             this.SNRLabel.Text = "SNR";
             // 
+            // ClearBtn
+            // 
+            this.ClearBtn.Location = new System.Drawing.Point(20, 293);
+            this.ClearBtn.Name = "ClearBtn";
+            this.ClearBtn.Size = new System.Drawing.Size(75, 23);
+            this.ClearBtn.TabIndex = 14;
+            this.ClearBtn.Text = "Clear";
+            this.ClearBtn.UseVisualStyleBackColor = true;
+            this.ClearBtn.Click += new System.EventHandler(this.ClearBtn_Click);
+            // 
+            // RotRightBtn
+            // 
+            this.RotRightBtn.Location = new System.Drawing.Point(484, 321);
+            this.RotRightBtn.Name = "RotRightBtn";
+            this.RotRightBtn.Size = new System.Drawing.Size(35, 30);
+            this.RotRightBtn.TabIndex = 15;
+            this.RotRightBtn.Text = ">";
+            this.RotRightBtn.UseVisualStyleBackColor = true;
+            this.RotRightBtn.Click += new System.EventHandler(this.RotRightBtn_Click);
+            // 
+            // RotLeftBtn
+            // 
+            this.RotLeftBtn.Location = new System.Drawing.Point(151, 321);
+            this.RotLeftBtn.Name = "RotLeftBtn";
+            this.RotLeftBtn.Size = new System.Drawing.Size(35, 30);
+            this.RotLeftBtn.TabIndex = 16;
+            this.RotLeftBtn.Text = "<";
+            this.RotLeftBtn.UseVisualStyleBackColor = true;
+            this.RotLeftBtn.Click += new System.EventHandler(this.RotLeftBtn_Click);
+            // 
             // RTKDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
             this.ClientSize = new System.Drawing.Size(672, 665);
+            this.Controls.Add(this.RotLeftBtn);
+            this.Controls.Add(this.RotRightBtn);
+            this.Controls.Add(this.ClearBtn);
             this.Controls.Add(this.SNRLabel);
             this.Controls.Add(this.chart2);
             this.Controls.Add(this.chart1);
@@ -417,6 +453,9 @@
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
         private System.Windows.Forms.Label SNRLabel;
+        private System.Windows.Forms.Button ClearBtn;
+        private System.Windows.Forms.Button RotRightBtn;
+        private System.Windows.Forms.Button RotLeftBtn;
 
     }
 }

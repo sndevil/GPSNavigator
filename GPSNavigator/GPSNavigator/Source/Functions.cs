@@ -3297,6 +3297,15 @@ namespace GPSNavigator.Source
                     vars.PacketTime = Data.datetime;
                     break;
 
+                case "$GLRMC":
+                case "$GPRMC":
+                    //Data.Latitude = StringToFloatNMEA(fields[3]);
+                    //Data.BLatitude = doubletoByte(Data.Latitude,4);
+                    //Data.Longitude = StringToFloatNMEA(fields[5]);
+                    //Data.BLongitude = doubletoByte(Data.Longitude,4);
+
+                    break;
+
             }
             
         }
@@ -3632,7 +3641,7 @@ namespace GPSNavigator.Source
 
         public static float StringToFloatNMEA(string input)
         {
-            char[] inp = input.ToCharArray();
+            /*char[] inp = input.ToCharArray();
             bool negative = false;
             if (inp.Length == 0)
                 return 0;
@@ -3657,8 +3666,12 @@ namespace GPSNavigator.Source
             for (int i = 0; i < inp.Length - flag - 1; i++)
                 temp /= 10;
             if (negative)
-                temp *= -1;
-            return temp;
+                temp *= -1;*/
+            if (input != "")
+                return (float)double.Parse(input);
+            else
+                return 0;
+            //return temp;
         }
 
         public static DateTime TimeFromStrings(string Time, string Day, string Month, string Year)

@@ -89,7 +89,8 @@ namespace GPSNavigator
                 case AppModes.RTK:
                     BaseText = "RTK";
                     RTKDetailForm = new RTKDetail(this);
-                    numericUpDown2.Value = 10;
+                    numericUpDown2.Value = 1;
+                    GraphRefreshrate.Value = 1;
                     break;
             }
             this.Text = BaseText;
