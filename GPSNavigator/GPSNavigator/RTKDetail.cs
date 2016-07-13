@@ -34,11 +34,12 @@ namespace GPSNavigator
         public bool paused = false;
 
         long starttime;
+        Random r;
 
         public RTKDetail(Form1 Parent)
         {
             InitializeComponent();
-
+            r = new Random(DateTime.Now.Millisecond);
             chart1.ViewPortChanged += new WinViewPortEventHandler(chart1_ViewPortChanged);
             chart1.MouseDown += new MouseEventHandler(chart1_MouseDown);
             chart1.MouseUp += new MouseEventHandler(chart1_MouseUp);
@@ -112,6 +113,7 @@ namespace GPSNavigator
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            //chart2.Series[0].Points.AddXY(r.Next(0,100), r.Next(0,100));
             chart1.updateViewPort(true, false);
 
             if (!paused)
