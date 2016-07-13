@@ -3289,7 +3289,7 @@ namespace GPSNavigator.Source
                     Data.Bdatetime = new byte[6];
                     Data.Bdatetime[0] = (byte)(weeknum % 256);
                     Data.Bdatetime[1] = (byte)(weeknum / 256);
-                    for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < 4; i++)        
                     {
                         Data.Bdatetime[2 + i] = (byte)(TOW % 256);
                         TOW /= 256;

@@ -24,6 +24,9 @@ namespace GPSNavigator
         double firstalt = -1, firstlong = -1, firstlat = -1;
         double rotation = 45;
 
+        bool mousedown=false;
+        int refx=0;
+
         double refalt=0, reflong=0, reflat= 0;
         Form1 parent;
 
@@ -37,12 +40,36 @@ namespace GPSNavigator
             InitializeComponent();
 
             chart1.ViewPortChanged += new WinViewPortEventHandler(chart1_ViewPortChanged);
+            chart1.MouseDown += new MouseEventHandler(chart1_MouseDown);
+            chart1.MouseUp += new MouseEventHandler(chart1_MouseUp);
+            chart1.MouseMove += new MouseEventHandler(chart1_MouseMove);
 
             for (int i = 0; i < buffersize; i++)
                 xData[i] = yData[i] = zData[i] = double.NaN;
             Createchart(chart1);
             parent = Parent;
             starttime = 0;
+        }
+
+        void chart1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mousedown)
+            {
+                rotation = e.X - refx;
+                chart1.updateViewPort(true, false);
+            }
+
+        }
+
+        void chart1_MouseUp(object sender, MouseEventArgs e)
+        {
+            mousedown = false;
+        }
+
+        void chart1_MouseDown(object sender, MouseEventArgs e)
+        {
+            mousedown = true;
+            refx = e.X - (int)rotation;           
         }
 
         void chart1_ViewPortChanged(object sender, WinViewPortEventArgs e)
@@ -128,35 +155,38 @@ namespace GPSNavigator
 
         public void UpdateData(Globals vars,SingleDataBuffer data,int Serialnumber)
         {
-            if (pointcount != buffersize)
+            if (!(data.Latitude == data.Longitude && data.Latitude == data.Altitude && data.Latitude == 0))
             {
-                pointcount++;
-                latavg = (latavg * (pointcount - 1) + data.Latitude) / pointcount;
-                longavg = (longavg * (pointcount - 1) + data.Longitude) / pointcount;
-                altavg = (altavg * (pointcount - 1) + data.Altitude) / pointcount;
+                if (pointcount != buffersize)
+                {
+                    pointcount++;
+                    latavg = (latavg * (pointcount - 1) + data.Latitude) / pointcount;
+                    longavg = (longavg * (pointcount - 1) + data.Longitude) / pointcount;
+                    altavg = (altavg * (pointcount - 1) + data.Altitude) / pointcount;
+                }
+                else
+                {
+                    latavg = ((latavg * (buffersize - 1)) + data.Latitude) / buffersize;
+                    longavg = ((longavg * (buffersize - 1)) + data.Longitude) / buffersize;
+                    altavg = ((altavg * (buffersize - 1)) + data.Altitude) / buffersize;
+                }
+
+                latitudeavgText.Text = latavg.ToString();
+                longitudeavgText.Text = longavg.ToString();
+                altitudeavgText.Text = altavg.ToString();
+
+                if (firstalt == -1)
+                {
+                    firstlat = data.Latitude;
+                    firstlong = data.Longitude;
+                    firstalt = data.Altitude;
+                }
+
+                //AddPosition(data.Latitude - firstlat, data.Longitude - firstlong, data.Altitude - firstalt);
+                AddPosition(latavg - firstlat, longavg - firstlong, altavg - firstalt);
             }
-            else
-            {
-                latavg = ((latavg * (buffersize - 1)) + data.Latitude) / buffersize;
-                longavg = ((longavg * (buffersize - 1)) + data.Longitude) / buffersize;
-                altavg = ((altavg * (buffersize - 1)) + data.Altitude) / buffersize;
-            }
-
-            latitudeavgText.Text = latavg.ToString();
-            longitudeavgText.Text = longavg.ToString();
-            altitudeavgText.Text = altavg.ToString();
-
-            if (firstalt == -1)
-            {
-                firstlat = data.Latitude;
-                firstlong = data.Longitude;
-                firstalt = data.Altitude;
-            }
-
-            //AddPosition(data.Latitude - firstlat, data.Longitude - firstlong, data.Altitude - firstalt);
-            AddPosition(latavg - firstlat, longavg - firstlong, altavg - firstalt);
-
             datareceived = true;
+
         }
 
         private void AddPosition(double lat, double longi, double alt)
@@ -246,6 +276,16 @@ namespace GPSNavigator
         {
             rotation += 10;
             chart1.updateViewPort(true, false);
+        }
+
+        private void GetBtn_Click(object sender, EventArgs e)
+        {
+            // Get Command
+        }
+
+        private void ReAverageBtn_Click(object sender, EventArgs e)
+        {
+            // Re-average Command
         }
 
     }
