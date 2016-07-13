@@ -984,6 +984,8 @@ namespace GPSNavigator
                     DetailForm.paused = true;
                 else if (Appmode == AppModes.NorthFinder)
                     NorthDetailForm.paused = true;
+                else if (Appmode == AppModes.RTK)
+                    RTKDetailForm.paused = true;
                 this.Text = "GPS Navigator";
             }
             else
@@ -994,6 +996,9 @@ namespace GPSNavigator
                     DetailForm.paused = false;
                 else if (Appmode == AppModes.NorthFinder)
                     NorthDetailForm.paused = false;
+                else if (Appmode == AppModes.RTK)
+                    RTKDetailForm.paused = false;
+
                 if (isRecording)
                     this.Text = "GPS Navigator (Recording)";
                 else

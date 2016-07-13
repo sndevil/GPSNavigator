@@ -31,7 +31,7 @@ namespace GPSNavigator
         PlaybackSpeed playspeed = PlaybackSpeed.NormalSpeed;
         DateTime StartTime, EndTime,previousTime;
         Infragistics.UltraGauge.Resources.EllipseAnnotation DateLabel;
-        Form1 Parentform;// = new Form1();
+        Form1 Parentform;
         SettingBuffer Settings = new SettingBuffer();
         Task<bool> updater;
         graphtype RealtimeGraphType = graphtype.X;
