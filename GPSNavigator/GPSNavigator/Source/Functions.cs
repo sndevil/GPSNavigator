@@ -480,16 +480,24 @@ namespace GPSNavigator.Source
         public static List<string> Calculate_NMEA_fields(string Data)
         {
             List<string> field = new List<string>();
-            int field_Num = Data.Count(f => f == ',') + 2;       //Number of fields from begining to checksum
-
-            int pos = 0;
-            for (int i = 0; i < field_Num - 2; i++)
+            var count = Data.Count(f => f == ',');
+            if (count > 0)
             {
-                field.Add(Data.Substring(pos, Data.IndexOf(',', pos) - pos));
-                pos = Data.IndexOf(',', pos) + 1;
+                int field_Num = Data.Count(f => f == ',') + 2;       //Number of fields from begining to checksum
+
+                int pos = 0;
+                for (int i = 0; i < field_Num - 2; i++)
+                {
+                    field.Add(Data.Substring(pos, Data.IndexOf(',', pos) - pos));
+                    pos = Data.IndexOf(',', pos) + 1;
+                }
+                field.Add(Data.Substring(Data.LastIndexOf(',') + 1, Data.IndexOf('*') - Data.LastIndexOf(',') - 1));
+                field.Add(Data.Substring(Data.Length - 3, 2));              //Checksum
             }
-            field.Add(Data.Substring(Data.LastIndexOf(',') + 1, Data.IndexOf('*') - Data.LastIndexOf(',') - 1));
-            field.Add(Data.Substring(Data.Length - 3, 2));              //Checksum
+            else
+            {
+                field.Add(Data);
+            }
             return field;
         }
 
@@ -3306,6 +3314,141 @@ namespace GPSNavigator.Source
 
                     break;
 
+                case "$GPGSV":       
+            
+                    var tempsat = new Satellite[32];
+                    if (vars.GPSlist.Count < 1)
+                    {
+                        for (int j = 0; j < 32; j++)
+                            tempsat[j] = new Satellite();
+                        vars.GPSlist.Add(tempsat);
+                    }
+
+                    if (fields[2] == "1")
+                    {
+                        Data.BGPSstat = new List<byte[]>();
+                        Data.BGPSstat.Add(new byte[12]);
+                        //Data.BGLONASSstat.Add(new byte[12]);
+                        Data.ChannelCounter = 1;
+                        for (int i = 0; i < 8; i++)
+                            Data.BSatStats[i] = (byte)0;
+                        Data.BSatStats[16] = (byte)1;
+                        //Data.BSatStats[16] = (byte)1;
+                        vars.GPSlist[0] = new Satellite[32];
+                    }
+
+                    for (int i = 0; i < fields.Count - 9; i += 4)
+                    {
+                        var idx = (int)StringToFloatNMEA(fields[4 + i]);
+                        if (idx > 0 && idx < 32)
+                        {
+                            vars.GPSlist[0][idx] = new Satellite();
+                            vars.GPSlist[0][idx].Signal_Status = 2;
+                            vars.GPSlist[0][idx].Elevation = StringToFloatNMEA(fields[5 + i]);
+                            vars.GPSlist[0][idx].Azimuth = StringToFloatNMEA(fields[6 + i]);
+                            vars.GPSlist[0][idx].SNR = StringToFloatNMEA(fields[7 + i]);
+                        }
+                    }
+
+                    if (fields[1] == fields[2]) //messages done
+                    {
+                        int a = 0, counter = 0;
+                        byte[] temp = new byte[12];
+                        for (int i = 31; i >= 0;i--)
+                        {
+                            a <<= 1;
+                            if (vars.GPSlist[0][i] == null)
+                                continue;
+                            if (vars.GPSlist[0][i].Signal_Status != 0 && vars.GPSlist[0][i].SNR != 0)
+                            {
+                                temp[counter++] = (byte)vars.GPSlist[0][i].SNR;
+                                //Data.BGPSstat[0][0] = (byte)vars.GPSlist[0][i].SNR;
+                                a |= 1;
+                            }
+                        }
+
+                        for (int i = 0; i < counter; i++)
+                            Data.BGPSstat[0][i] = temp[counter - i - 1];
+
+                        Data.BSatStats[0] = Data.BSatStats[4] = (byte)(a % 256);
+                        for (int i = 1; i < 4; i++)
+                        {
+                            a /= 256;
+                            Data.BSatStats[i] = Data.BSatStats[i + 4] = (byte)(a % 256);
+                        }
+
+                    }
+                    vars.SatsUpdated = true;
+                    break;
+                case "$GLGSV":
+                    var tempsat1 = new Satellite[32];
+                    if (vars.GLONASSlist.Count < 1)
+                    {
+                        for (int j = 0; j < 32; j++)
+                        {
+                            tempsat1[j] = new Satellite();
+                        }
+                        vars.GLONASSlist.Add(tempsat1);
+                    }
+
+
+                    if (fields[2] == "1")
+                    {
+                        Data.BGLONASSstat = new List<byte[]>();
+                        Data.BGLONASSstat.Add(new byte[12]);
+                        //Data.BGLONASSstat.Add(new byte[12]);
+                        Data.ChannelCounter = 1;
+                        for (int i = 8; i < 16; i++)
+                            Data.BSatStats[i] = (byte)0;
+                        Data.BSatStats[16] = (byte)1;
+                        vars.GLONASSlist[0] = new Satellite[32];
+                    }
+
+
+                    for (int i = 0; i < fields.Count - 9; i+=4)
+                    {
+                        var idx = (int)StringToFloatNMEA(fields[4+i]) - 65;
+                        if (idx > 0 && idx < 32)
+                        {
+                            vars.GLONASSlist[0][idx] = new Satellite();
+                            vars.GLONASSlist[0][idx].Signal_Status = 2;
+                            vars.GLONASSlist[0][idx].Elevation = StringToFloatNMEA(fields[5 + i]);
+                            vars.GLONASSlist[0][idx].Azimuth = StringToFloatNMEA(fields[6 + i]);
+                            vars.GLONASSlist[0][idx].SNR = StringToFloatNMEA(fields[7 + i]);
+                        }
+                    }
+
+                    if (fields[1] == fields[2]) //messages done
+                    {
+                        int a = 0, counter = 0;
+                        byte[] temp = new byte[12];
+                        for (int i = 31; i >= 0 ; i--)
+                        {
+                            a <<= 1;
+                            if (vars.GLONASSlist[0][i] == null)
+                                continue;
+                            if (vars.GLONASSlist[0][i].Signal_Status != 0 && vars.GLONASSlist[0][i].SNR != 0)
+                            {
+                                temp[counter++] = (byte)vars.GLONASSlist[0][i].SNR;
+                                //Data.BGLONASSstat[0][0] = (byte)vars.GLONASSlist[0][i].SNR;
+                                a |= 1;
+                            }
+                        }
+
+                        for (int i = 0; i < counter; i++)
+                            Data.BGLONASSstat[0][i] = temp[counter - i - 1];
+
+                        Data.BSatStats[8] = Data.BSatStats[12] = (byte)(a % 256);
+                        for (int i = 1; i < 4; i++)
+                        {
+                            a /= 256;
+                            Data.BSatStats[i + 8] = Data.BSatStats[i + 12] = (byte)(a % 256);
+                        }
+
+                    }
+                    vars.SatsUpdated = true;
+                    break;
+
             }
             
         }
@@ -3668,7 +3811,14 @@ namespace GPSNavigator.Source
             if (negative)
                 temp *= -1;*/
             if (input != "")
-                return (float)double.Parse(input);
+                try
+                {
+                    return (float)double.Parse(input);
+                }
+                catch
+                {
+                    return 0;
+                }
             else
                 return 0;
             //return temp;

@@ -261,7 +261,7 @@ namespace GPSNavigator.Classes
         public enum graphtype { X,X_p, Y,Y_p, Z,Z_p, Vx,Vx_p, Vy,Vy_p, Vz,Vz_p,A,V,V_p, Ax, Ay, Az, Latitude,Latitude_p, Longitude,Longitude_p, Altitude,Altitude_p, PDOP, State, Temperature, UsedStats, VisibleStats,Azimuth,Elevation,Distance,Null };
         public enum PlaybackSpeed { NormalSpeed, Double, Quadrople, Half, Quarter };
         public enum optionfor { chart1, chart2, graph };
-        public enum Logtype { GPS, Northfinder };
+        public enum Logtype { GPS, Northfinder, RTK};
         public enum DelayRange { ms, s, m, h };
 
 
@@ -870,7 +870,7 @@ namespace GPSNavigator.Classes
                             {
                                 tempdata.GPS[j][i].SNR = t[index];
                                 index++;
-                                if (index > 12)
+                                if (index > 11)
                                     break;
                             }
                         }
@@ -885,7 +885,7 @@ namespace GPSNavigator.Classes
                             {
                                 tempdata.Glonass[j][i].SNR = t[index];
                                 index++;
-                                if (index > 12)
+                                if (index > 11)
                                     break;
                             }
                         }

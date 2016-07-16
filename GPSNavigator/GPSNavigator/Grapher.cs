@@ -31,6 +31,7 @@ namespace GPSNavigator
         private GraphData temp;
         public MomentDetail DetailForm;
         public NorthDetail NorthDetailForm;
+        public RTKDetail RTKDetailForm;
         public Form1 parentForm;
 
         private graphtype selectedtype = graphtype.X;
@@ -110,6 +111,7 @@ namespace GPSNavigator
             DocumentWindow NewDockWindow;
             switch (Logtype)
             {
+                case AppModes.RTK:
                 case AppModes.GPS:
                     DetailForm = new MomentDetail(filemanager);
                     DetailForm.Dock = DockStyle.None;
@@ -257,6 +259,8 @@ namespace GPSNavigator
                     DetailForm.UpdateData(xpos, tlist[ps.PointIndex]);
                 else if (Logtype == AppModes.NorthFinder)
                     NorthDetailForm.UpdateData(xpos, tlist[ps.PointIndex]);
+                else if (Logtype == AppModes.RTK)
+                    DetailForm.UpdateData(xpos, tlist[ps.PointIndex]);
                 UserchangedRanges = false;
                 textBox2.Text = fmin.ToString();
                 UserchangedRanges = false;

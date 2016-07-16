@@ -114,7 +114,7 @@ namespace GPSNavigator
         private void timer_Tick(object sender, EventArgs e)
         {
             //chart2.Series[0].Points.AddXY(r.Next(0,100), r.Next(0,100));
-            chart1.updateViewPort(true, false);
+            //chart1.updateViewPort(true, false);
 
             if (!paused)
             {
@@ -154,7 +154,6 @@ namespace GPSNavigator
             }
         }
 
-
         public void UpdateData(Globals vars,SingleDataBuffer data,int Serialnumber)
         {
             if (!(data.Latitude == data.Longitude && data.Latitude == data.Altitude && data.Latitude == 0))
@@ -188,7 +187,94 @@ namespace GPSNavigator
                 AddPosition(latavg - firstlat, longavg - firstlong, altavg - firstalt);
             }
             datareceived = true;
+            chart1.updateViewPort(true, false);
 
+        }
+
+        public void UpdateGraph(Globals vars, SingleDataBuffer data, int Serialnumber)
+        {
+            if (vars.SatsUpdated)
+            {
+                int counter = 0;
+                int status;
+                double SNR;
+                if (vars.GPSlist.Count < 1)
+                {
+                    var tempsat = new Satellite[32];
+                    for (int j = 0; j < 32; j++)
+                        tempsat[j] = new Satellite();
+                    vars.GPSlist.Add(tempsat);
+                }
+                if (vars.GLONASSlist.Count < 1)
+                {
+                    var tempsat1 = new Satellite[32];
+                    for (int j = 0; j < 32; j++)
+                        tempsat1[j] = new Satellite();
+                    vars.GLONASSlist.Add(tempsat1);
+                }
+
+                for (int i = 0; i < 64; i++)
+                {
+                    if (i < 32 && vars.GPSlist[0][i] == null)
+                        continue;
+                    else if (i >= 32 && vars.GLONASSlist[0][i - 32] == null)
+                        continue;
+                    status = (i < 32) ? vars.GPSlist[0][i].Signal_Status : vars.GLONASSlist[0][i - 32].Signal_Status;
+                    if (status != 2)
+                        continue;
+                    SNR = (i < 32) ? vars.GPSlist[0][i].SNR : vars.GLONASSlist[0][i - 32].SNR;
+
+                    if (SNR > 0)
+                    {
+                        try
+                        {
+                            chart2.Series[0].Points[counter].SetValueXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), SNR);
+                            if (i >= 32)
+                            {
+                                chart2.Series[0].Points[counter].CustomProperties = "DrawingStyle = Wedge";
+                                chart2.Series[0].Points[counter].Color = Color.LawnGreen;
+                            }
+                            else
+                            {
+                                chart2.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
+                                chart2.Series[0].Points[counter].Color = Color.Green;
+                            }
+                        }
+                        catch
+                        {
+                            chart2.Series[0].Points.AddXY(((i < 32) ? "P" + (i + 1).ToString() : "L" + (i - 31).ToString()), SNR);
+                            chart2.Series[0].Points[chart2.Series[0].Points.Count - 1].Color = Color.Green;
+                            if (i >= 32)
+                            {
+                                chart2.Series[0].Points[chart2.Series[0].Points.Count - 1].CustomProperties = "DrawingStyle = Wedge";
+                                chart2.Series[0].Points[counter].Color = Color.LawnGreen;
+                            }
+                            else
+                            {
+                                chart2.Series[0].Points[counter].CustomProperties = "DrawingStyle = Default";
+                                chart2.Series[0].Points[counter].Color = Color.Green;
+                            }
+                        }
+                        counter++;
+                    }
+
+                }
+                if (counter < chart2.Series[0].Points.Count)
+                {
+                    for (int k = chart2.Series[0].Points.Count - 1; k >= counter; k--)
+                        chart2.Series[0].Points.RemoveAt(k);
+                }
+
+                if (counter > 14)
+                {
+                    chart2.ChartAreas[0].AxisX.LabelStyle.Angle = 90;
+                }
+                else if (chart2.ChartAreas[0].AxisX.LabelStyle.Angle != 0)
+                {
+                    chart2.ChartAreas[0].AxisX.LabelStyle.Angle = 0;
+                }
+                vars.SatsUpdated = false;
+            }
         }
 
         private void AddPosition(double lat, double longi, double alt)
@@ -282,6 +368,8 @@ namespace GPSNavigator
 
         private void GetBtn_Click(object sender, EventArgs e)
         {
+            char[] cmd = ("$JASC,GPGSV,1\r\n").ToCharArray();
+            SendCommand(cmd);
             // Get Command
         }
 

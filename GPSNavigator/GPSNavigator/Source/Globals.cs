@@ -24,6 +24,8 @@ namespace GPSNavigator
         public DateTime PacketTime = new DateTime();
         public static byte[] GPSNAN = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+        public bool SatsUpdated = false;
+
 
         public const int Databuffercount = 3000;
 

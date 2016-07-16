@@ -35,6 +35,8 @@ namespace GPSNavigator
         public List<Grapher> grapherlist = new List<Grapher>();
         public List<MomentDetail> detaillist = new List<MomentDetail>();
         public List<NorthDetail> northDetailList = new List<NorthDetail>();
+        public List<RTKDetail> rtkDetailList = new List<RTKDetail>();
+
         Logger log;
         DateTime RecordStarttime;
         int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0
@@ -89,8 +91,8 @@ namespace GPSNavigator
                 case AppModes.RTK:
                     BaseText = "RTK";
                     RTKDetailForm = new RTKDetail(this);
-                    numericUpDown2.Value = 1;
-                    GraphRefreshrate.Value = 1;
+                    numericUpDown2.Value = 10;
+                    GraphRefreshrate.Value = 10;
                     break;
             }
             this.Text = BaseText;
@@ -172,14 +174,17 @@ namespace GPSNavigator
                                 break;
                             }
                             string s = Encoding.ASCII.GetString(byt);
-                            List<string> fields = Functions.Calculate_NMEA_fields(s);
-                            Functions.handle_NMEA(fields, ref vars, ref dbuf);
-                            if (DetailRefreshCounter++ > RefreshRate - 1)
+                            if (s.Substring(0, 4) != "$BIN")
+                            {
+                                List<string> fields = Functions.Calculate_NMEA_fields(s);
+                                Functions.handle_NMEA(fields, ref vars, ref dbuf);
+                            }
+                            if (DetailRefreshCounter++ > numericUpDown2.Value - 1)
                             {
                                 if (showdetail)
                                 {
-                                        UpdateRealtimeData(dbuf, 1);
-                                        DetailRefreshCounter = 0;
+                                    UpdateRealtimeData(dbuf, 1);
+                                    DetailRefreshCounter = 0;                                    
                                 }
                             }
                             if (GraphRefreshCounter++ > GraphRefreshrate.Value - 1)
@@ -620,7 +625,7 @@ namespace GPSNavigator
                 if (Appmode == AppModes.GPS)
                     DetailForm.Show();
                 else if (Appmode == AppModes.NorthFinder)
-                    NorthDetailForm.Show();
+                    NorthDetailForm.Show();                
             }
             else
             {
@@ -948,12 +953,19 @@ namespace GPSNavigator
                 ShowRealtime d = new ShowRealtime(UpdateRealtimeGraph);
                 this.Invoke(d, new object[] { databuffer , SerialNumber });
             }
+            else if (Appmode == AppModes.RTK && RTKDetailForm.InvokeRequired)
+            {
+                ShowRealtime d = new ShowRealtime(UpdateRealtimeGraph);
+                this.Invoke(d, new object[] { databuffer, SerialNumber });
+            }
             else
             {
                 if (Appmode == AppModes.GPS)
                     DetailForm.UpdateRealtimeGraph(vars, databuffer, SerialNumber);
                 else if (Appmode == AppModes.NorthFinder)
                     NorthDetailForm.UpdateRealtimeGraph(vars, databuffer, SerialNumber);
+                else if (Appmode == AppModes.RTK)
+                    RTKDetailForm.UpdateGraph(vars, databuffer, SerialNumber);
             }
 
         }
@@ -1039,6 +1051,9 @@ namespace GPSNavigator
                     break;
                 case AppModes.NorthFinder:
                     opendialog.Filter = "Northfinder LogPackage File (*.NLP)|*.NLP|All Files|*.*";
+                    break;
+                case AppModes.RTK:
+                    opendialog.Filter = "RTK LogPackage File (*.RLP)|*.RLP|All Files|*.*";
                     break;
             }
             opendialog.ShowDialog();
@@ -1133,9 +1148,12 @@ namespace GPSNavigator
                 else if (Appmode == AppModes.NorthFinder)
                     NorthDetailForm.Show();
             var path = folderManager.findrecordfolder();
+
             Logtype type = Logtype.GPS;
             if (Appmode == AppModes.NorthFinder)
                 type = Logtype.Northfinder;
+            else if (Appmode == AppModes.RTK)
+                type = Logtype.RTK;
             log = new Logger(path,type);
             isRecording = true;
             //status = Form1Status.Recording;
@@ -1331,6 +1349,9 @@ namespace GPSNavigator
                     case AppModes.NorthFinder:
                         savedialog.Filter = "Northfinder LogPackage File (*.NLP)|*.NLP";
                         break;
+                    case AppModes.RTK:
+                        savedialog.Filter = "RTK LogPackage File (*.RLP)|*.RLP";
+                        break;
                 }
                 savedialog.ShowDialog();
             }
@@ -1373,6 +1394,12 @@ namespace GPSNavigator
         private void EndRecording()
         {
             //status = Form1Status.Saving;
+
+            //if (Appmode == AppModes.RTK)
+            //{
+            //    checkBox2.Checked = false;
+            //}
+
             StatusLabel.Text = "Saving";
             log.CloseFiles();
             try { File.Delete(savedialog.FileName); }
