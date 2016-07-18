@@ -90,6 +90,8 @@ namespace GPSNavigator.Classes
             public byte[] BLatitude = new byte[4], BLatitudeMax = new byte[4], BLatitudeMin = new byte[4];
             public double Longitude;
             public byte[] BLongitude = new byte[4], BLongitudeMax = new byte[4], BLongitudeMin = new byte[4];
+            public double LatRef, LongRef, AltRef;
+            public bool RefSet = false;
             public double X;
             public byte[] BX = new byte[4], BXMax = new byte[4], BXMin = new byte[4];
             public double Y;

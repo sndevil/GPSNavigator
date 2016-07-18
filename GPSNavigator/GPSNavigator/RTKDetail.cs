@@ -23,7 +23,7 @@ namespace GPSNavigator
         double altavg = 0, longavg = 0, latavg = 0;
         double firstalt = -1, firstlong = -1, firstlat = -1;
         double rotation = 45;
-
+        double latref=0, longref=0, altref=0;
         bool mousedown=false;
         int refx=0;
 
@@ -133,6 +133,16 @@ namespace GPSNavigator
 
             starttime+=1;
             AverateTimerLabel.Text = string.Format("{0,2:00}:{1,2:00}:{2,2:00}", (int)starttime / 3600, (int)((starttime / 60) % 60), (int)(starttime % 60));
+            try
+            {
+                char[] cmd = ("$JASC,GPGSV,1\r\n").ToCharArray();
+                SendCommand(cmd);
+                cmd = ("$JASC,GLGSV,1\r\n").ToCharArray();
+                SendCommand(cmd);
+            }
+            catch
+            {
+            }
 
         }
 
@@ -182,10 +192,24 @@ namespace GPSNavigator
                     firstlong = data.Longitude;
                     firstalt = data.Altitude;
                 }
-
-                //AddPosition(data.Latitude - firstlat, data.Longitude - firstlong, data.Altitude - firstalt);
-                AddPosition(latavg - firstlat, longavg - firstlong, altavg - firstalt);
+                if (data.Altitude - firstalt < 1000 && data.Altitude - firstalt > -1000)
+                    AddPosition(data.Latitude - firstlat, data.Longitude - firstlong, data.Altitude - firstalt);
+                //AddPosition(latavg - firstlat, longavg - firstlong, altavg - firstalt);
             }
+
+            if (data.RefSet)
+            {
+                data.RefSet = false;
+                latitudevaltext.Text = data.LatRef.ToString();
+                longitudevalText.Text = data.LongRef.ToString();
+                altitudevalText.Text = data.AltRef.ToString();
+                latref = data.LatRef;
+                longref = data.LongRef;
+                altref = data.AltRef;
+                //altitudevalText.Text = data.
+
+            }
+
             datareceived = true;
             chart1.updateViewPort(true, false);
 
@@ -314,6 +338,9 @@ namespace GPSNavigator
                 latitudevaltext.Text = reflat.ToString();
                 longitudevalText.Text = reflong.ToString();
                 altitudevalText.Text = refalt.ToString();
+
+                char[] cmd = ("$JRTK,1," + (reflat/100).ToString() + "," + (reflong/100).ToString() + "," + refalt.ToString() + "\r\n").ToCharArray();
+                SendCommand(cmd);
             }
             catch
             {
@@ -328,7 +355,7 @@ namespace GPSNavigator
                 reflat = double.Parse(latitudevaltext.Text);
                 reflong = double.Parse(longitudevalText.Text);
                 refalt = double.Parse(altitudevalText.Text);
-                char[] cmd = ("$JRTK,1," + reflat.ToString() + "," + reflong.ToString() + "," + refalt.ToString()+"\r\n").ToCharArray();
+                char[] cmd = ("$JRTK,1," + (reflat/100).ToString() + "," + (reflong/100).ToString() + "," + refalt.ToString()+"\r\n").ToCharArray();
                 SendCommand(cmd);
             }
             catch
@@ -368,7 +395,7 @@ namespace GPSNavigator
 
         private void GetBtn_Click(object sender, EventArgs e)
         {
-            char[] cmd = ("$JASC,GPGSV,1\r\n").ToCharArray();
+            char[] cmd = ("$JRTK,1\r\n").ToCharArray();
             SendCommand(cmd);
             // Get Command
         }

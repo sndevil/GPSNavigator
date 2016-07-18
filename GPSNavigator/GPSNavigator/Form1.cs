@@ -50,7 +50,7 @@ namespace GPSNavigator
         Skyview SkyView;
 #endregion
         ExtremumHandler exthandler = new ExtremumHandler();
-        byte[] byt = new byte[150];
+        byte[] byt = new byte[201];
         BinaryProtocolState Serial1State = BinaryProtocolState.waitForPacket;
         BinaryProtocolState Serial2State = BinaryProtocolState.waitForPacket;
         AttitudeInformation attitudebuffer = new AttitudeInformation();
@@ -163,12 +163,23 @@ namespace GPSNavigator
                             int counter = 6;
                             while (true)
                             {
+                                if (counter > 149)
+                                    break;
                                 serialPort1.Read(byt, counter, 1);
-                                if (byt[counter] == '\x0a' || counter > 200)
+                                //char[] ch = byt.to
+                                //if ()
+                                //    break;
+                                if (byt[counter] == '$')
+                                {
+                                    Serial1State = BinaryProtocolState.NMEAHeader;
+                                    byt = new byte[150];
+                                    byt[0] = (byte)'$';
+                                }
+                                if (byt[counter] == '\x0a')// || counter > 200)
                                     break;
                                 counter++;
                             }
-                            if (counter > 200)
+                            if (counter > 150)
                             {
                                 Serial1State = BinaryProtocolState.waitForPacket;
                                 break;

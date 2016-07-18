@@ -480,23 +480,64 @@ namespace GPSNavigator.Source
         public static List<string> Calculate_NMEA_fields(string Data)
         {
             List<string> field = new List<string>();
-            var count = Data.Count(f => f == ',');
-            if (count > 0)
-            {
-                int field_Num = Data.Count(f => f == ',') + 2;       //Number of fields from begining to checksum
 
-                int pos = 0;
-                for (int i = 0; i < field_Num - 2; i++)
+            if (Data.Substring(0, 2) == "$>")
+            {
+                int finishindex = Data.IndexOf('\r');
+                if (finishindex == 0)
+                    finishindex = Data.Length;
+                var count = Data.Count(f => f == ',');
+                if (count > 0)
                 {
-                    field.Add(Data.Substring(pos, Data.IndexOf(',', pos) - pos));
-                    pos = Data.IndexOf(',', pos) + 1;
+                    int field_Num = Data.Count(f => f == ',') + 1;       //Number of fields from begining to checksum
+
+                    int pos = 0;
+                    for (int i = 0; i < field_Num - 1; i++)
+                    {
+                        field.Add(Data.Substring(pos, Data.IndexOf(',', pos) - pos));
+                        pos = Data.IndexOf(',', pos) + 1;
+                    }
+                    int len = finishindex - Data.LastIndexOf(',') - 1;
+
+                    if (len < 5)
+                        return field;
+                    field.Add(Data.Substring(Data.LastIndexOf(',') + 1, len));
+                    //field.Add(Data.Substring(finishindex - 3, 2));              //Checksum
                 }
-                field.Add(Data.Substring(Data.LastIndexOf(',') + 1, Data.IndexOf('*') - Data.LastIndexOf(',') - 1));
-                field.Add(Data.Substring(Data.Length - 3, 2));              //Checksum
+                else
+                {
+                    field.Add(Data);
+                }
             }
             else
             {
-                field.Add(Data);
+                int finishindex = Data.IndexOf('\0');
+                if (finishindex == 0)
+                    finishindex = Data.Length;
+                var count = Data.Count(f => f == ',');
+                if (count > 0)
+                {
+                    int field_Num = Data.Count(f => f == ',') + 2;       //Number of fields from begining to checksum
+
+                    int pos = 0;
+                    for (int i = 0; i < field_Num - 2; i++)
+                    {
+                        field.Add(Data.Substring(pos, Data.IndexOf(',', pos) - pos));
+                        pos = Data.IndexOf(',', pos) + 1;
+                    }
+                    var len = Data.IndexOf('*') - Data.LastIndexOf(',') - 1;
+                    if (len < 0)
+                        len = finishindex - Data.LastIndexOf(',') - 1;
+
+                    if (len < 5)
+                        return field;
+                    field.Add(Data.Substring(Data.LastIndexOf(',') + 1, len));
+                    field.Add(Data.Substring(finishindex - 3, 2));              //Checksum
+                }
+                else
+                {
+                    field.Add(Data);
+                }
             }
             return field;
         }
@@ -3218,6 +3259,8 @@ namespace GPSNavigator.Source
             {
                 case "$GLGGA":
                 case "$GPGGA":  //positioning system fix data
+                    if (fields.Count < 10)
+                        break;
                     Data.Latitude = StringToFloatNMEA(fields[2]);
                     Data.BLatitude = doubletoByte(Data.Latitude, 4);
                     Data.Longitude = StringToFloatNMEA(fields[4]);
@@ -3229,12 +3272,16 @@ namespace GPSNavigator.Source
                     break;
                 case "$GLVTG":
                 case "$GPVTG":  //SPEED
+                    if (fields.Count < 8)
+                        break;
                     Data.V = StringToFloatNMEA(fields[7]);
                     Data.BV = doubletoByte(Data.V, 4);
                     break;
                 case "$GLGSA":
                 case "$GPGSA":  //PDOP
                     #region GSA
+                    if (fields.Count < 18)
+                        break;
                     /*if (vars.GPSlist.Count < 1)
                     {
                         List<Satellite[]> tempsat = new List<Satellite[]>();
@@ -3269,6 +3316,8 @@ namespace GPSNavigator.Source
                     break;
                 case "$GLZDA":
                 case "$GPZDA":  //Time
+                    if (fields.Count < 5)
+                        break;
                     DateTime t = TimeFromStrings(fields[1],fields[2],fields[3],fields[4]);
                     Data.datetime = t;
                     dt = Data.datetime - new DateTime(1980, 1, 6, 0, 0, 0);
@@ -3286,6 +3335,8 @@ namespace GPSNavigator.Source
                     break;
                 case "$GLGLL":
                 case "$GPGLL":  //Latitude and longitude, with time of position fix and status
+                    if (fields.Count < 6)
+                        break;
                     Data.Latitude = StringToFloatNMEA(fields[1]);
                     Data.BLatitude = doubletoByte(Data.Latitude,4);
                     Data.Longitude = StringToFloatNMEA(fields[3]);
@@ -3314,8 +3365,8 @@ namespace GPSNavigator.Source
 
                     break;
 
-                case "$GPGSV":       
-            
+                case "$GPGSV":
+                    #region GPGSV
                     var tempsat = new Satellite[32];
                     if (vars.GPSlist.Count < 1)
                     {
@@ -3367,20 +3418,27 @@ namespace GPSNavigator.Source
                             }
                         }
 
-                        for (int i = 0; i < counter; i++)
-                            Data.BGPSstat[0][i] = temp[counter - i - 1];
-
-                        Data.BSatStats[0] = Data.BSatStats[4] = (byte)(a % 256);
-                        for (int i = 1; i < 4; i++)
+                        try
                         {
-                            a /= 256;
-                            Data.BSatStats[i] = Data.BSatStats[i + 4] = (byte)(a % 256);
+                            for (int i = 0; i < counter; i++)
+                                Data.BGPSstat[0][i] = temp[counter - i - 1];
+
+                            Data.BSatStats[0] = Data.BSatStats[4] = (byte)(a % 256);
+                            for (int i = 1; i < 4; i++)
+                            {
+                                a /= 256;
+                                Data.BSatStats[i] = Data.BSatStats[i + 4] = (byte)(a % 256);
+                            }
                         }
+                        catch
+                        { }
 
                     }
                     vars.SatsUpdated = true;
+#endregion
                     break;
                 case "$GLGSV":
+                    #region GLGSV
                     var tempsat1 = new Satellite[32];
                     if (vars.GLONASSlist.Count < 1)
                     {
@@ -3434,19 +3492,33 @@ namespace GPSNavigator.Source
                                 a |= 1;
                             }
                         }
-
-                        for (int i = 0; i < counter; i++)
-                            Data.BGLONASSstat[0][i] = temp[counter - i - 1];
-
-                        Data.BSatStats[8] = Data.BSatStats[12] = (byte)(a % 256);
-                        for (int i = 1; i < 4; i++)
+                        try
                         {
-                            a /= 256;
-                            Data.BSatStats[i + 8] = Data.BSatStats[i + 12] = (byte)(a % 256);
+                            for (int i = 0; i < counter; i++)
+                                Data.BGLONASSstat[0][i] = temp[counter - i - 1];
+
+                            Data.BSatStats[8] = Data.BSatStats[12] = (byte)(a % 256);
+                            for (int i = 1; i < 4; i++)
+                            {
+                                a /= 256;
+                                Data.BSatStats[i + 8] = Data.BSatStats[i + 12] = (byte)(a % 256);
+                            }
                         }
+                        catch
+                        { }
 
                     }
                     vars.SatsUpdated = true;
+#endregion
+                    break;
+
+                case "$>JRTK":
+                    if (fields.Count < 5)
+                        break;
+                    Data.RefSet = true;
+                    Data.LatRef = StringToFloatNMEA(fields[2])*100;
+                    Data.LongRef = StringToFloatNMEA(fields[3])*100;
+                    Data.AltRef = StringToFloatNMEA(fields[4]);
                     break;
 
             }
