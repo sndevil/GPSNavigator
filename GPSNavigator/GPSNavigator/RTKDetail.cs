@@ -30,7 +30,7 @@ namespace GPSNavigator
         double refalt=0, reflong=0, reflat= 0;
         Form1 parent;
 
-        bool datareceived = false;
+        bool datareceived = false,Rovermode = false;
         public bool paused = false;
 
         long starttime;
@@ -139,6 +139,8 @@ namespace GPSNavigator
                 SendCommand(cmd);
                 cmd = ("$JASC,GLGSV,1\r\n").ToCharArray();
                 SendCommand(cmd);
+                cmd = ("$JMODE,BASE\r\n").ToCharArray();
+                SendCommand(cmd);
             }
             catch
             {
@@ -148,7 +150,7 @@ namespace GPSNavigator
 
         private void manualRadio_CheckedChanged(object sender, EventArgs e)
         {
-            if (manualRadio.Checked)
+            if (manualRadio.Checked && !Rovermode)
             {
                 SetBtn.Enabled = true;
                 latitudevaltext.Enabled = true;
@@ -209,6 +211,40 @@ namespace GPSNavigator
                 //altitudevalText.Text = data.
 
             }
+
+            if (data.RoverMode)
+            {
+                Rovermode = true;
+                SetReferenceBtn.Enabled = false;
+                GetBtn.Enabled = false;
+                SetBtn.Enabled = false;
+                ReAverageBtn.Enabled = false;
+                latitudevaltext.Enabled = false;
+                longitudevalText.Enabled = false;
+                altitudevalText.Enabled = false;
+            }
+            else
+            {
+                Rovermode = false;
+                SetReferenceBtn.Enabled = true;
+                GetBtn.Enabled = true;
+                ReAverageBtn.Enabled = true;
+                if (manualRadio.Checked)
+                {
+                    SetBtn.Enabled = true;
+                    latitudevaltext.Enabled = true;
+                    longitudevalText.Enabled = true;
+                    altitudevalText.Enabled = true;
+                }
+                else
+                {
+                    SetBtn.Enabled = false;
+                    latitudevaltext.Enabled = false;
+                    longitudevalText.Enabled = false;
+                    altitudevalText.Enabled = false;
+                }
+            }
+
 
             datareceived = true;
             chart1.updateViewPort(true, false);

@@ -499,8 +499,8 @@ namespace GPSNavigator.Source
                     }
                     int len = finishindex - Data.LastIndexOf(',') - 1;
 
-                    if (len < 5)
-                        return field;
+                    //if (len < 5)
+                    //    return field;
                     field.Add(Data.Substring(Data.LastIndexOf(',') + 1, len));
                     //field.Add(Data.Substring(finishindex - 3, 2));              //Checksum
                 }
@@ -3519,6 +3519,16 @@ namespace GPSNavigator.Source
                     Data.LatRef = StringToFloatNMEA(fields[2])*100;
                     Data.LongRef = StringToFloatNMEA(fields[3])*100;
                     Data.AltRef = StringToFloatNMEA(fields[4]);
+                    break;
+
+
+                case "$>JMODE":
+                    if (fields.Count < 3)
+                        break;
+                    if (fields[2] == "NO")
+                        Data.RoverMode = true;
+                    else if (fields[2] == "YES")
+                        Data.RoverMode = false;
                     break;
 
             }

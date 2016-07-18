@@ -92,6 +92,7 @@ namespace GPSNavigator.Classes
             public byte[] BLongitude = new byte[4], BLongitudeMax = new byte[4], BLongitudeMin = new byte[4];
             public double LatRef, LongRef, AltRef;
             public bool RefSet = false;
+            public bool RoverMode = false;
             public double X;
             public byte[] BX = new byte[4], BXMax = new byte[4], BXMin = new byte[4];
             public double Y;
