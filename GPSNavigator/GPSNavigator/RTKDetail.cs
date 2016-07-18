@@ -441,5 +441,12 @@ namespace GPSNavigator
             // Re-average Command
         }
 
+        private void chart1_MouseClick(object sender, MouseEventArgs e)
+        {
+            var t = System.Windows.Forms.Cursor.Position;
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+                chartMenuStrip.Show(t);
+        }
+
     }
 }

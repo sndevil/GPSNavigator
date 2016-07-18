@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.Title title2 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.ResetAvgBtn = new System.Windows.Forms.Button();
             this.SetReferenceBtn = new System.Windows.Forms.Button();
@@ -64,12 +64,15 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.DataStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.AverateTimerLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.chartMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ChartSaveBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.chartMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -299,6 +302,7 @@
             this.chart1.Size = new System.Drawing.Size(648, 366);
             this.chart1.TabIndex = 11;
             this.chart1.TabStop = false;
+            this.chart1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseClick);
             // 
             // timer
             // 
@@ -315,52 +319,52 @@
             this.chart2.BackSecondaryColor = System.Drawing.Color.White;
             this.chart2.BorderSkin.PageColor = System.Drawing.Color.Gainsboro;
             this.chart2.BorderSkin.SkinStyle = System.Windows.Forms.DataVisualization.Charting.BorderSkinStyle.Raised;
-            chartArea2.Area3DStyle.PointDepth = 50;
-            chartArea2.Area3DStyle.Rotation = 15;
-            chartArea2.Area3DStyle.WallWidth = 10;
-            chartArea2.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
-            chartArea2.AxisX.IsLabelAutoFit = false;
-            chartArea2.AxisX.LabelAutoFitMinFontSize = 5;
-            chartArea2.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea3.Area3DStyle.PointDepth = 50;
+            chartArea3.Area3DStyle.Rotation = 15;
+            chartArea3.Area3DStyle.WallWidth = 10;
+            chartArea3.AxisX.IntervalAutoMode = System.Windows.Forms.DataVisualization.Charting.IntervalAutoMode.VariableCount;
+            chartArea3.AxisX.IsLabelAutoFit = false;
+            chartArea3.AxisX.LabelAutoFitMinFontSize = 5;
+            chartArea3.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea2.AxisX.LabelStyle.TruncatedLabels = true;
-            chartArea2.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisX2.LabelAutoFitMinFontSize = 5;
-            chartArea2.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
+            chartArea3.AxisX.LabelStyle.TruncatedLabels = true;
+            chartArea3.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea3.AxisX2.LabelAutoFitMinFontSize = 5;
+            chartArea3.AxisX2.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)(((((((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.StaggeredLabels)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep30)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep45)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.LabelsAngleStep90)
                         | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.WordWrap)));
-            chartArea2.AxisX2.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.AxisY.Maximum = 100D;
-            chartArea2.AxisY2.LineColor = System.Drawing.Color.LightGray;
-            chartArea2.BorderColor = System.Drawing.Color.DarkGray;
-            chartArea2.InnerPlotPosition.Auto = false;
-            chartArea2.InnerPlotPosition.Height = 75F;
-            chartArea2.InnerPlotPosition.Width = 95F;
-            chartArea2.InnerPlotPosition.X = 5F;
-            chartArea2.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea2);
+            chartArea3.AxisX2.LineColor = System.Drawing.Color.LightGray;
+            chartArea3.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea3.AxisY.Maximum = 100D;
+            chartArea3.AxisY2.LineColor = System.Drawing.Color.LightGray;
+            chartArea3.BorderColor = System.Drawing.Color.DarkGray;
+            chartArea3.InnerPlotPosition.Auto = false;
+            chartArea3.InnerPlotPosition.Height = 75F;
+            chartArea3.InnerPlotPosition.Width = 95F;
+            chartArea3.InnerPlotPosition.X = 5F;
+            chartArea3.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea3);
             this.chart2.Location = new System.Drawing.Point(12, 131);
             this.chart2.Name = "chart2";
             this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.None;
-            series2.ChartArea = "ChartArea1";
-            series2.IsValueShownAsLabel = true;
-            series2.Legend = "Legend1";
-            series2.Name = "Series0";
-            series2.SmartLabelStyle.Enabled = false;
-            this.chart2.Series.Add(series2);
+            series3.ChartArea = "ChartArea1";
+            series3.IsValueShownAsLabel = true;
+            series3.Legend = "Legend1";
+            series3.Name = "Series0";
+            series3.SmartLabelStyle.Enabled = false;
+            this.chart2.Series.Add(series3);
             this.chart2.Size = new System.Drawing.Size(648, 148);
             this.chart2.TabIndex = 12;
             this.chart2.Text = "GPS";
-            title2.Name = "Title1";
-            this.chart2.Titles.Add(title2);
+            title3.Name = "Title1";
+            this.chart2.Titles.Add(title3);
             // 
             // SNRLabel
             // 
@@ -430,6 +434,20 @@
             this.AverateTimerLabel.Size = new System.Drawing.Size(51, 17);
             this.AverateTimerLabel.Text = "00:00:00";
             // 
+            // chartMenuStrip
+            // 
+            this.chartMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ChartSaveBtn});
+            this.chartMenuStrip.Name = "chartMenuStrip";
+            this.chartMenuStrip.ShowImageMargin = false;
+            this.chartMenuStrip.Size = new System.Drawing.Size(128, 48);
+            // 
+            // ChartSaveBtn
+            // 
+            this.ChartSaveBtn.Name = "ChartSaveBtn";
+            this.ChartSaveBtn.Size = new System.Drawing.Size(98, 22);
+            this.ChartSaveBtn.Text = "Save";
+            // 
             // RTKDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,6 +476,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.chartMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -497,6 +516,8 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel DataStatusLabel;
         private System.Windows.Forms.ToolStripStatusLabel AverateTimerLabel;
+        private System.Windows.Forms.ContextMenuStrip chartMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem ChartSaveBtn;
 
     }
 }

@@ -1740,6 +1740,7 @@
             this.DelayText.Name = "DelayText";
             this.DelayText.Size = new System.Drawing.Size(144, 20);
             this.DelayText.TabIndex = 94;
+            this.DelayText.Text = "250";
             // 
             // label5
             // 

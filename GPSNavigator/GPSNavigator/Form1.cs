@@ -592,7 +592,7 @@ namespace GPSNavigator
                             }
                             catch
                             {
-                                ErrorCount.Text = (int.Parse(ErrorCount.Text) + 1).ToString();
+                                IncreaseError();
                             }
 
                             if (DateTime.Now.Second != serialcounter)
@@ -616,8 +616,26 @@ namespace GPSNavigator
            }
            catch
            {
-                ErrorCount.Text = (int.Parse(ErrorCount.Text) + 1).ToString();
+               IncreaseError();
            }
+        }
+
+        delegate void ErrorIncreaser();
+        public void IncreaseError()
+        {
+            if (this.InvokeRequired)
+            {
+                ErrorIncreaser d = new ErrorIncreaser(IncreaseError);
+                try
+                {
+                    this.Invoke(d);
+                }
+                catch { }
+            }
+            else
+            {
+                ErrorCount.Text = (int.Parse(ErrorCount.Text) + 1).ToString();
+            }
         }
         
         public void Serial1_Write(byte[] data,int offset, int count)
@@ -1044,7 +1062,9 @@ namespace GPSNavigator
             appclosing = true;
             if (Appmode == AppModes.BaseStation)
                 BTSDetailForm.CancelSearches();
-            ClosePort();
+            //ClosePort();
+            Thread closer = new Thread(new ThreadStart(ClosePort));
+            closer.Start();
             button2.Text = "Play";
             this.Text = "GPS Navigator";
             //serialPort1.Close();
@@ -1293,8 +1313,18 @@ namespace GPSNavigator
         private void serialPorts_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen)
-                ClosePort();
-            serialPort1.PortName = (string)serialPorts.SelectedItem;
+            {
+                Thread closer = new Thread(new ThreadStart(ClosePort));
+                closer.Start();
+                while (closer.ThreadState == System.Threading.ThreadState.Running)
+                { }
+                serialPort1.PortName = (string)serialPorts.SelectedItem;
+            }
+            else
+            {
+                //ClosePort();
+                serialPort1.PortName = (string)serialPorts.SelectedItem;
+            }
         }
 
         private void openPort_Click(object sender, EventArgs e)
@@ -1310,7 +1340,8 @@ namespace GPSNavigator
             }
             else
             {
-                ClosePort();
+                Thread closer = new Thread(new ThreadStart(ClosePort));
+                closer.Start();
             }
         }
 
@@ -1327,6 +1358,9 @@ namespace GPSNavigator
                 return false;
             }
         }
+
+        delegate void PortCloser();
+
         private void ClosePort()
         {
             try
@@ -1336,9 +1370,23 @@ namespace GPSNavigator
             catch
             {
             }
-            openPort.Text = "Open Port";
-            //status = Form1Status.Disconnected;
-            StatusLabel.Text = "Disconnected";
+            changeLabelsOnClose();
+
+        }
+
+        private void changeLabelsOnClose()
+        {
+            if (this.InvokeRequired)
+            {
+                PortCloser d = new PortCloser(changeLabelsOnClose);
+                this.BeginInvoke(d);
+            }
+            else
+            {
+                openPort.Text = "Open Port";
+                //status = Form1Status.Disconnected;
+                StatusLabel.Text = "Disconnected";
+            }
         }
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
@@ -1610,7 +1658,9 @@ namespace GPSNavigator
                 {
                     EndRecording();
                     appclosing = true;
-                    ClosePort();
+                    Thread closer = new Thread(new ThreadStart(ClosePort));
+                    closer.Start();
+                    //ClosePort();
                     foreach (Grapher g in grapherlist)
                         g.CloseFiles();
                     if (Appmode == AppModes.BaseStation)
@@ -1623,7 +1673,9 @@ namespace GPSNavigator
                 if (MessageBox.Show("Are You Sure?", "GPS Navigator", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
                 {
                     appclosing = true;
-                    ClosePort();
+                    Thread closer = new Thread(new ThreadStart(ClosePort));
+                    closer.Start();
+                    //ClosePort();
                     foreach (Grapher g in grapherlist)
                         g.CloseFiles();
                     if (Appmode == AppModes.BaseStation)
