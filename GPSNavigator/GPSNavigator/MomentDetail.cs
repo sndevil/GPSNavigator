@@ -112,14 +112,14 @@ namespace GPSNavigator
             var tempgpsdata = new GPSData();
             tempgpsdata.Time = vars.PacketTime;
             tempgpsdata.Dbuf = data;
-            try
-            {
+            //try
+            //{
                 if (ShowingGraph)
                     UpdateGraph(tempgpsdata, false,ChannelNum);
                 else
                     UpdateGraph(tempgpsdata, true,ChannelNum);
-            }
-            catch { }
+            //}
+            //catch { }
         }
 
         public void UpdateData(double xpos, DateTime time)
@@ -527,17 +527,24 @@ namespace GPSNavigator
         {
             if (juststarted)
             {
-                updater = UpdateGraphAsync(data, NAN,SerialNumber);
                 juststarted = false;
+                updater = UpdateGraphAsync(data, NAN, SerialNumber);
+                //updater.Start();
             }
             else if (updater.IsCompleted)
-                updater = UpdateGraphAsync(data, NAN,SerialNumber);
+            {
+                updater = UpdateGraphAsync(data, NAN, SerialNumber);
+                //updater.Start();
+            }
+            //else if (updater.Status == TaskStatus.WaitingToRun)
+                //updater.RunSynchronously();
               
         }
 
         public Task<bool> UpdateGraphAsync(GPSData data, bool NAN, int SerialNumber)
         {
-
+            int a = 421;
+            a += 10;
             return Task.Factory.StartNew(() =>
             {
                 double toAdd = 0;

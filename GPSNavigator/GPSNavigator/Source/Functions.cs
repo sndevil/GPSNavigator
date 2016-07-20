@@ -78,12 +78,12 @@ namespace GPSNavigator.Source
         public const int BIN_BASESTATION_INFO_MSG_SIZE = 60; //49
         public const int BIN_KEEP_ALIVE_MSG_SIZE = 12;
         public const int BIN_ACK_SIGNAL_MSG_SIZE = 13;
-        public const int BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE = 88;
+        public const int BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE = 112;
 
 
         public const int BIN_FULL = 0;
         public const int BIN_FULL_PLUS = 1;
-        public const int BIN_COMPACT = 0x14;
+        //public const int BIN_COMPACT = 0x14;
         public const int BIN_GPS_SUPPLEMENT = 2;
         public const int BIN_DEBUG = 3;
         public const int BIN_GLONASS_SUPPLEMENT = 4;
@@ -95,7 +95,7 @@ namespace GPSNavigator.Source
         public const int BIN_BASESTATION_INFO = 8;
         public const int BIN_KEEP_ALIVE = 9;
         public const int BIN_ACK_SIGNAL = 10;
-        //public const int BIN_COMPACT_DUALCHANNEL = 20
+        public const int BIN_COMPACT_DUALCHANNEL = 20;
 
         public const double Elevation_OutOfRange = 91;
         public const double Azimuth_OutOfRange = 361;
@@ -551,8 +551,10 @@ namespace GPSNavigator.Source
                 msgSize = BIN_FULL_MSG_SIZE;
             else if (msgType == BIN_FULL_PLUS)
                 msgSize = BIN_FULL_PLUS_MSG_SIZE;
-            else if (msgType == BIN_COMPACT)
-                msgSize = BIN_COMPACT_MSG_SIZE;
+            //else if (msgType == BIN_COMPACT)
+            //    msgSize = BIN_COMPACT_MSG_SIZE;
+            else if (msgType == BIN_COMPACT_DUALCHANNEL)
+                msgSize = BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE;
             else if (msgType == BIN_GPS_SUPPLEMENT)
                 msgSize = BIN_GPS_SUPPLEMENT_MSG_SIZE;
             else if (msgType == BIN_DEBUG)
@@ -1183,8 +1185,8 @@ namespace GPSNavigator.Source
             }
             int msgSize = 0;
 
-            if (data[1] == BIN_COMPACT)
-                msgSize = BIN_COMPACT_MSG_SIZE;
+            //if (data[1] == BIN_COMPACT)
+            //    msgSize = BIN_COMPACT_MSG_SIZE;
 
             int checksum = calcrc(data, msgSize - 4);
             byte checksum0 = (byte)(checksum & 0xFF);
@@ -2350,7 +2352,7 @@ namespace GPSNavigator.Source
 
             if (checksum0 != data[BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE - 3] || checksum1 != data[BIN_COMPACT_DUAL_CHANNEL_MSG_SIZE - 2])
             {
-                throw new Exception("Checksum Error");
+                //throw new Exception("Checksum Error");
                 //Error
             }
             //if (serialNum == 0)
@@ -2377,6 +2379,7 @@ namespace GPSNavigator.Source
             double TOW = a;     //millisecond
             index += 4;
 
+
             dbuf.NumOfVisibleSats = 0;
 
             dbuf.BSatStats[3] = data[index + 3];
@@ -2386,18 +2389,12 @@ namespace GPSNavigator.Source
                 if (a % 2 == 1)
                 {
                     for (int j = 0; j < GPS.Count; j++)
-                    {
                         GPS[j][i].Signal_Status = 1;       //visible
-                        GLONASS[j][i].Signal_Status = 0;
-                    }
                     dbuf.NumOfVisibleSats++;
                 }
                 else
                     for (int j = 0; j < GPS.Count; j++)
-                    {
                         GPS[j][i].Signal_Status = 0;       //not visible
-                        GLONASS[j][i].Signal_Status = 0;
-                    }
 
                 a >>= 1;
             }
@@ -2417,10 +2414,7 @@ namespace GPSNavigator.Source
                 if (a % 2 == 1)
                 {
                     for (int j = 0; j < GPS.Count; j++)
-                    {
-                        GLONASS[j][i].Signal_Status = 0;
                         GPS[j][i].Signal_Status = 2;       //Used
-                    }
                     dbuf.NumOfUsedSats++;
                 }
                 a >>= 1;
@@ -2431,6 +2425,36 @@ namespace GPSNavigator.Source
             {
                 dbuf.BNumOfUsedStats[i] = (byte)(temp2 % 256);
                 temp2 /= 256;
+            }
+            index += 4;
+            dbuf.BSatStats[11] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BSatStats[8 + i] = data[index + i]; }
+            for (int i = 0; i < 28; ++i)
+            {
+                if (a % 2 == 1)
+                {
+                    for (int j = 0; j < GLONASS.Count; j++)
+                        GLONASS[j][i].Signal_Status = 1;       //visible
+                    dbuf.NumOfVisibleSats++;
+                }
+                else
+                    for (int j = 0; j < GLONASS.Count; j++)
+                        GLONASS[j][i].Signal_Status = 0;       //not visible
+                a >>= 1;
+            }
+            index += 4;
+
+            dbuf.BSatStats[15] = data[index + 3];
+            a = data[index + 3]; for (int i = 2; i >= 0; --i) { a = a * 256 + data[index + i]; dbuf.BSatStats[12 + i] = data[index + i]; }
+            for (int i = 0; i < 28; ++i)
+            {
+                if (a % 2 == 1)
+                {
+                    for (int j = 0; j < GLONASS.Count; j++)
+                        GLONASS[j][i].Signal_Status = 2;       //Used
+                    dbuf.NumOfUsedSats++;
+                }
+                a >>= 1;
             }
             index += 4;
             
@@ -2648,7 +2672,7 @@ namespace GPSNavigator.Source
                     }
                 }
             }
-            index += 8 - readSNR;
+            index += 8-readSNR;
 
             readSNR = 0;
             GPSCount = 0;
@@ -2680,15 +2704,82 @@ namespace GPSNavigator.Source
                     }
                 }
             }
-            index += 8 - readSNR;
+            index += 8-readSNR;
+
+            readSNR = 0;
+            snr = -1;
+            int GLONASScount = 0;
+            highBits = false;
+            for (int i = 0; i < 32; ++i)
+            {
+                GLONASS[0][i].SNR = 0;
+
+                if (GLONASS[0][i].Signal_Status != 0)      //visible
+                {
+                    if (highBits)
+                    {
+                        highBits = false;
+                        snr = (data[index] & 0xF) + 40;
+                        GLONASS[0][i].SNR = (double)snr;
+                        dbuf.BGLONASSstat[0][GLONASScount++] = (byte)snr;
+                        //dbuf.BGPSstat[0][GPSCount++] = (byte)snr;
+                        index++;
+                        readSNR++;
+                        if (readSNR > 8)
+                            break;
+                    }
+                    else
+                    {
+                        highBits = true;
+                        snr = ((data[index] & 0xF0) >> 4) + 40;
+                        GLONASS[0][i].SNR = (double)snr;
+                        dbuf.BGLONASSstat[0][GLONASScount++] = (byte)snr;
+                        //GPS[0][i].SNR = (double)snr;
+                        //dbuf.BGPSstat[0][GPSCount++] = (byte)snr;
+                    }
+                }
+            }
+            index += 8-readSNR;
+
+            readSNR = 0;
+            GLONASScount = 0;
+            snr = -1;
+            highBits = false;
+            for (int i = 0; i < 32; ++i)
+            {
+                GLONASS[1][i].SNR = 0;
+
+                if (GLONASS[1][i].Signal_Status != 0)      //visible
+                {
+                    if (highBits)
+                    {
+                        highBits = false;
+                        snr = (data[index] & 0xF) + 40;
+                        GLONASS[1][i].SNR = (double)snr;
+                        dbuf.BGLONASSstat[1][GLONASScount++] = (byte)snr;
+                        index++;
+                        readSNR++;
+                        if (readSNR > 8)
+                            break;
+                    }
+                    else
+                    {
+                        highBits = true;
+                        snr = ((data[index] & 0xF0) >> 4) + 40;
+                        GLONASS[1][i].SNR = (double)snr;
+                        dbuf.BGLONASSstat[1][GLONASScount++] = (byte)snr;
+                    }
+                }
+            }
+            index += 8-readSNR;
 
 
 
 
-            a = data[index] + data[index + 1] * 256;
+            a = data[index] + data[index+1] * 256; //reversed
             dbuf.Bdatetime[0] = data[index];
             dbuf.Bdatetime[1] = data[index + 1];
-            var weekNumber = (int)a;
+            var weekNumber = (int)a - 1024;
             index += 2;
 
             //UTC Offset
@@ -3213,8 +3304,10 @@ namespace GPSNavigator.Source
                 dbuffer = Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
             else if (key == Functions.BIN_FULL_PLUS)
                 dbuffer = Process_Binary_Message_Full(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
-            else if (key == Functions.BIN_COMPACT)
-                dbuffer = Process_Binary_Message_Compact(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+            //else if (key == Functions.BIN_COMPACT)
+            //   dbuffer = Process_Binary_Message_Compact(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
+            else if (key == Functions.BIN_COMPACT_DUALCHANNEL)
+                dbuffer = Process_Binary_Message_Compact_Dual_Channel(packet, number, ref vars.GPSlist, ref vars.GLONASSlist, ref vars.PacketTime);
             else if (key == Functions.BIN_SETTING)
                 dbuffer = Process_Binary_Message_Setting(packet, number);
             else if (key == Functions.BIN_DUAL_CHANNEL)
@@ -3228,7 +3321,7 @@ namespace GPSNavigator.Source
             else if (key == Functions.BIN_ATTITUDE_INFO)
                 dbuffer = Process_Binary_Message_Attitude_Info(packet, number);
             else if (key == BIN_BASESTATION_INFO)
-                dbuffer =  Process_Binary_Message_BaseStation_Info(packet, number);
+                dbuffer = Process_Binary_Message_BaseStation_Info(packet, number);
             else if (key == BIN_KEEP_ALIVE)
             {
                 dbuffer = new SingleDataBuffer();

@@ -166,9 +166,6 @@ namespace GPSNavigator
                                 if (counter > 149)
                                     break;
                                 serialPort1.Read(byt, counter, 1);
-                                //char[] ch = byt.to
-                                //if ()
-                                //    break;
                                 if (byt[counter] == '$')
                                 {
                                     Serial1State = BinaryProtocolState.NMEAHeader;
