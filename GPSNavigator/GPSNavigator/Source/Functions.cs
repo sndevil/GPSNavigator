@@ -95,6 +95,7 @@ namespace GPSNavigator.Source
         public const int BIN_BASESTATION_INFO = 8;
         public const int BIN_KEEP_ALIVE = 9;
         public const int BIN_ACK_SIGNAL = 10;
+        //public const int BIN_COMPACT_DUALCHANNEL = 20
 
         public const double Elevation_OutOfRange = 91;
         public const double Azimuth_OutOfRange = 361;
