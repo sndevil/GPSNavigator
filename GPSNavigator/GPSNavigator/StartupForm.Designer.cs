@@ -58,6 +58,7 @@
             this.NorthFinderButton.BackColor = System.Drawing.Color.WhiteSmoke;
             this.NorthFinderButton.BackgroundImage = global::GPSNavigator.Properties.Resources.Compass;
             this.NorthFinderButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.NorthFinderButton.Enabled = false;
             this.NorthFinderButton.Location = new System.Drawing.Point(189, 24);
             this.NorthFinderButton.Name = "NorthFinderButton";
             this.NorthFinderButton.Size = new System.Drawing.Size(143, 143);
@@ -104,6 +105,7 @@
             this.BTSButton.BackColor = System.Drawing.Color.WhiteSmoke;
             this.BTSButton.BackgroundImage = global::GPSNavigator.Properties.Resources.Basestation;
             this.BTSButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.BTSButton.Enabled = false;
             this.BTSButton.Location = new System.Drawing.Point(356, 24);
             this.BTSButton.Name = "BTSButton";
             this.BTSButton.Size = new System.Drawing.Size(143, 143);
@@ -135,6 +137,7 @@
             // RTKButton
             // 
             this.RTKButton.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.RTKButton.Enabled = false;
             this.RTKButton.Image = global::GPSNavigator.Properties.Resources.resizedimage120120_CORRECT_RTK_Icon;
             this.RTKButton.Location = new System.Drawing.Point(21, 239);
             this.RTKButton.Name = "RTKButton";

@@ -1492,14 +1492,14 @@ namespace GPSNavigator
 
         private void controlPanelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            controlPanel = new ControlPanel(this);
+            /*controlPanel = new ControlPanel(this);
             controlPanel.Dock = DockStyle.None;
             controlPanel.TopLevel = false;
             controlPanel.Show();
             Telerik.WinControls.UI.Docking.DocumentWindow NewDockWindow = new Telerik.WinControls.UI.Docking.DocumentWindow("Control Panel");
             NewDockWindow.AutoScroll = true;
             NewDockWindow.Controls.Add(controlPanel);
-            radDock1.AddDocument(NewDockWindow);
+            radDock1.AddDocument(NewDockWindow);*/
         }
 
         private void serialControllerToolStripMenuItem_Click(object sender, EventArgs e)
