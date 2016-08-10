@@ -43,11 +43,6 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
-      <assemblyIdentity name="Telerik.WinControls.GridView" version="2012.2.608.40" publicKeyToken="5BB2A467CBEC794E" language="neutral" processorArchitecture="msil" />
-    </dependentAssembly>
-  </dependency>
-  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="C1.Win.C1Chart.4.dll" size="1894768">
       <assemblyIdentity name="C1.Win.C1Chart.4" version="4.0.20141.24071" publicKeyToken="A22E16972C085838" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -607,7 +602,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>4RQg2jVWfTM+cn23QNG8GMIYgGk=</dsig:DigestValue>
+        <dsig:DigestValue>Pvj/MJTv2bPvJ97m0+PGbLghm5o=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -692,6 +687,18 @@
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
         <dsig:DigestValue>yTn6IvwIAslTwZN9I9QzZ3xaodQ=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Telerik.WinControls.GridView.dll" size="1102848">
+      <assemblyIdentity name="Telerik.WinControls.GridView" version="2012.2.608.40" publicKeyToken="5BB2A467CBEC794E" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <dsig:DigestValue>OWdiRc+O8m8PhG+2xUIUd5XCL04=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

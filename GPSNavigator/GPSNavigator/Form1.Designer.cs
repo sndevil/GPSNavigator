@@ -64,22 +64,22 @@
             this.StatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.timeLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.ErrorCount = new System.Windows.Forms.ToolStripStatusLabel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.AutoCancel = new System.Windows.Forms.CheckBox();
             this.radDock1 = new Telerik.WinControls.UI.Docking.RadDock();
             this.SerialController = new Telerik.WinControls.UI.Docking.ToolWindow();
             this.timeCheck = new System.Windows.Forms.CheckBox();
             this.GraphRefreshrate = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.refreshButton = new System.Windows.Forms.Button();
             this.hex = new System.Windows.Forms.RadioButton();
             this.ascii = new System.Windows.Forms.RadioButton();
             this.FormatLabel = new System.Windows.Forms.Label();
             this.toolTabStrip1 = new Telerik.WinControls.UI.Docking.ToolTabStrip();
             this.documentContainer1 = new Telerik.WinControls.UI.Docking.DocumentContainer();
             this.radThemeManager1 = new Telerik.WinControls.RadThemeManager();
+            this.refreshButton = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
+            this.ErrorCount = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
@@ -186,9 +186,11 @@
             // 
             // controlPanelToolStripMenuItem
             // 
+            this.controlPanelToolStripMenuItem.Enabled = false;
             this.controlPanelToolStripMenuItem.Name = "controlPanelToolStripMenuItem";
-            this.controlPanelToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
+            this.controlPanelToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.controlPanelToolStripMenuItem.Text = "&Control Panel";
+            this.controlPanelToolStripMenuItem.Visible = false;
             this.controlPanelToolStripMenuItem.Click += new System.EventHandler(this.controlPanelToolStripMenuItem_Click);
             // 
             // viewToolStripMenuItem
@@ -203,14 +205,14 @@
             // serialControllerToolStripMenuItem
             // 
             this.serialControllerToolStripMenuItem.Name = "serialControllerToolStripMenuItem";
-            this.serialControllerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.serialControllerToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.serialControllerToolStripMenuItem.Text = "&Serial Controller";
             this.serialControllerToolStripMenuItem.Click += new System.EventHandler(this.serialControllerToolStripMenuItem_Click);
             // 
             // skyViewToolStripMenuItem
             // 
             this.skyViewToolStripMenuItem.Name = "skyViewToolStripMenuItem";
-            this.skyViewToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.skyViewToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.skyViewToolStripMenuItem.Text = "Sky View";
             this.skyViewToolStripMenuItem.Click += new System.EventHandler(this.skyViewToolStripMenuItem_Click);
             // 
@@ -224,9 +226,11 @@
             // 
             // aboutProgramToolStripMenuItem
             // 
+            this.aboutProgramToolStripMenuItem.Enabled = false;
             this.aboutProgramToolStripMenuItem.Name = "aboutProgramToolStripMenuItem";
-            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.aboutProgramToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutProgramToolStripMenuItem.Text = "About Program";
+            this.aboutProgramToolStripMenuItem.Visible = false;
             this.aboutProgramToolStripMenuItem.Click += new System.EventHandler(this.aboutProgramToolStripMenuItem_Click);
             // 
             // timer1
@@ -250,7 +254,7 @@
             0,
             0});
             this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(75, 20);
+            this.numericUpDown1.Size = new System.Drawing.Size(75, 22);
             this.numericUpDown1.TabIndex = 10;
             this.numericUpDown1.Value = new decimal(new int[] {
             5,
@@ -334,7 +338,7 @@
             0,
             0});
             this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(152, 20);
+            this.numericUpDown2.Size = new System.Drawing.Size(152, 22);
             this.numericUpDown2.TabIndex = 11;
             this.numericUpDown2.Value = new decimal(new int[] {
             50,
@@ -426,38 +430,6 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            // 
-            // ErrorCount
-            // 
-            this.ErrorCount.Image = global::GPSNavigator.Properties.Resources.Errors;
-            this.ErrorCount.Name = "ErrorCount";
-            this.ErrorCount.Size = new System.Drawing.Size(29, 17);
-            this.ErrorCount.Text = "0";
-            this.ErrorCount.Click += new System.EventHandler(this.ErrorCount_Click);
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.Gainsboro;
-            this.button1.BackgroundImage = global::GPSNavigator.Properties.Resources.record;
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button1.Location = new System.Drawing.Point(155, 312);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(29, 29);
-            this.button1.TabIndex = 8;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // button2
-            // 
-            this.button2.BackColor = System.Drawing.Color.Gainsboro;
-            this.button2.BackgroundImage = global::GPSNavigator.Properties.Resources.pause;
-            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button2.Location = new System.Drawing.Point(120, 312);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(29, 29);
-            this.button2.TabIndex = 7;
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // AutoCancel
             // 
@@ -553,7 +525,7 @@
             0,
             0});
             this.GraphRefreshrate.Name = "GraphRefreshrate";
-            this.GraphRefreshrate.Size = new System.Drawing.Size(152, 20);
+            this.GraphRefreshrate.Size = new System.Drawing.Size(152, 22);
             this.GraphRefreshrate.TabIndex = 12;
             this.GraphRefreshrate.Value = new decimal(new int[] {
             50,
@@ -571,20 +543,10 @@
             this.label4.TabIndex = 21;
             this.label4.Text = "Graph Refresh Rate Counter:";
             // 
-            // refreshButton
-            // 
-            this.refreshButton.BackgroundImage = global::GPSNavigator.Properties.Resources.refresh_256;
-            this.refreshButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.refreshButton.Location = new System.Drawing.Point(157, 9);
-            this.refreshButton.Name = "refreshButton";
-            this.refreshButton.Size = new System.Drawing.Size(25, 25);
-            this.refreshButton.TabIndex = 1;
-            this.refreshButton.UseVisualStyleBackColor = true;
-            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
-            // 
             // hex
             // 
             this.hex.AutoSize = true;
+            this.hex.Checked = true;
             this.hex.Location = new System.Drawing.Point(141, 95);
             this.hex.Name = "hex";
             this.hex.Size = new System.Drawing.Size(43, 17);
@@ -645,6 +607,49 @@
             this.documentContainer1.TabIndex = 0;
             this.documentContainer1.TabStop = false;
             this.documentContainer1.ThemeName = "ControlDefault";
+            // 
+            // refreshButton
+            // 
+            this.refreshButton.BackgroundImage = global::GPSNavigator.Properties.Resources.refresh_256;
+            this.refreshButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.refreshButton.Location = new System.Drawing.Point(157, 9);
+            this.refreshButton.Name = "refreshButton";
+            this.refreshButton.Size = new System.Drawing.Size(25, 25);
+            this.refreshButton.TabIndex = 1;
+            this.refreshButton.UseVisualStyleBackColor = true;
+            this.refreshButton.Click += new System.EventHandler(this.refreshButton_Click);
+            // 
+            // button2
+            // 
+            this.button2.BackColor = System.Drawing.Color.Gainsboro;
+            this.button2.BackgroundImage = global::GPSNavigator.Properties.Resources.pause;
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button2.Location = new System.Drawing.Point(120, 312);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(29, 29);
+            this.button2.TabIndex = 7;
+            this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Gainsboro;
+            this.button1.BackgroundImage = global::GPSNavigator.Properties.Resources.record;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.button1.Location = new System.Drawing.Point(155, 312);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(29, 29);
+            this.button1.TabIndex = 8;
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // ErrorCount
+            // 
+            this.ErrorCount.Image = global::GPSNavigator.Properties.Resources.Errors;
+            this.ErrorCount.Name = "ErrorCount";
+            this.ErrorCount.Size = new System.Drawing.Size(29, 17);
+            this.ErrorCount.Text = "0";
+            this.ErrorCount.Click += new System.EventHandler(this.ErrorCount_Click);
             // 
             // Form1
             // 
