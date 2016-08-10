@@ -804,13 +804,13 @@ namespace GPSNavigator
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
                                 }
                                 break;
-                            case 2:
+                            /*case 2:
                                 if (Serial2Check.Checked)
                                 {
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(data.Time);
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(toAdd);
                                 }
-                                break;
+                                break;*/
                         }
                         previousTime = data.Time;
                     }
@@ -825,13 +825,13 @@ namespace GPSNavigator
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
                                 }
                                 break;
-                            case 2:
+                            /*case 2:
                                 if (Serial2Check.Checked)
                                 {
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(previousTime);
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(double.NaN);
                                 }
-                                break;
+                                break;*/
                         }
                     }
                 }
@@ -854,8 +854,6 @@ namespace GPSNavigator
                 graphDataCombo.Visible = true;
                 ClearButton.Visible = true;
                 ResetZoom.Visible = true;
-                Serial1check.Visible = true;
-                Serial2Check.Visible = true;
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
@@ -879,7 +877,6 @@ namespace GPSNavigator
                 ClearButton.Visible = false;
                 ResetZoom.Visible = false;
                 Serial1check.Visible = false;
-                Serial2Check.Visible = false;
                 this.Height = 615;
             }
             ShowingGraph = !ShowingGraph;
@@ -2334,7 +2331,45 @@ namespace GPSNavigator
 
         private void Serial2Check_CheckedChanged(object sender, EventArgs e)
         {
-            c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = Serial2Check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+            //c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = Serial2Check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+        }
+
+        private void LevelOperationCheck_CheckedChanged(object sender, EventArgs e)
+        {
+            if (LevelOperationCheck.Checked)
+            {
+                checkEditElevation.Enabled = false;
+                checkEditElevation.Checked = true;
+                textEditElevation.Text = "0";
+                textEditElevation.Enabled = false;
+                textEditElevationTH.Text = "3";
+                textEditElevationTH.Enabled = false;
+            }
+            else
+            {
+                checkEditElevation.Enabled = true;
+                checkEditElevation.Checked = false;
+                textEditElevation.Text = "0";
+                textEditElevation.Enabled = true;
+                textEditElevationTH.Text = "5";
+                textEditElevationTH.Enabled = true;
+            }
+        }
+
+        private void textEditElevationTH_EditValueChanged(object sender, EventArgs e)
+        {
+            double value = 0;
+            try
+            {
+                value = double.Parse(textEditElevationTH.Text);
+                if (value >= 0 && value < 5 && !checkEditElevation.Checked)
+                    textEditElevationTH.Text = "5";
+            }
+            catch
+            {
+                MessageBox.Show("Input Error");
+                textEditElevationTH.Text = "5";
+            }
         }
 
     }

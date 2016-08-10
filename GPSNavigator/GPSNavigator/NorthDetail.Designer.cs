@@ -224,7 +224,6 @@
             this.arcScaleBackgroundLayerComponent4 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
             this.arcScaleBackgroundLayerComponent3 = new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent();
             this.gaugeControl1 = new DevExpress.XtraGauges.Win.GaugeControl();
-            this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.velLabel = new System.Windows.Forms.Label();
             this.HDOPLabel = new System.Windows.Forms.Label();
             this.VDOPLabel = new System.Windows.Forms.Label();
@@ -268,10 +267,11 @@
             this.saveToFlashButton = new System.Windows.Forms.Button();
             this.distanceLabel = new System.Windows.Forms.Label();
             this.DetailPanel = new System.Windows.Forms.Panel();
-            this.Serial2Check = new System.Windows.Forms.CheckBox();
             this.Serial1check = new System.Windows.Forms.CheckBox();
+            this.SpeedGauge = new DevExpress.XtraGauges.Win.Gauges.Circular.CircularGauge();
             this.headingIndicator1 = new GPS.HeadingIndicatorInstrumentControl();
             this.attitudeIndicator1 = new GPS.AttitudeIndicatorInstrumentControl();
+            this.LevelOperationCheck = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.ControlPanel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -322,7 +322,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.GraphOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).BeginInit();
@@ -337,6 +336,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistanceTH.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).BeginInit();
             this.DetailPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -897,7 +897,7 @@
             this.toolStripSplitButton1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 593);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(895, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1237, 22);
             this.statusStrip1.TabIndex = 48;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -2183,19 +2183,6 @@
             this.gaugeControl1.Size = new System.Drawing.Size(135, 139);
             this.gaugeControl1.TabIndex = 56;
             // 
-            // SpeedGauge
-            // 
-            this.SpeedGauge.BackgroundLayers.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent[] {
-            this.arcScaleBackgroundLayerComponent3,
-            this.arcScaleBackgroundLayerComponent4});
-            this.SpeedGauge.Bounds = new System.Drawing.Rectangle(3, 3, 132, 136);
-            this.SpeedGauge.Name = "SpeedGauge";
-            this.SpeedGauge.Needles.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent[] {
-            this.arcScaleNeedleComponent2});
-            this.SpeedGauge.Scales.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent[] {
-            this.arcScaleComponent3,
-            this.arcScaleComponent4});
-            // 
             // velLabel
             // 
             this.velLabel.Location = new System.Drawing.Point(608, 127);
@@ -2556,6 +2543,7 @@
             this.textEditElevationTH.Name = "textEditElevationTH";
             this.textEditElevationTH.Size = new System.Drawing.Size(35, 20);
             this.textEditElevationTH.TabIndex = 118;
+            this.textEditElevationTH.EditValueChanged += new System.EventHandler(this.textEditElevationTH_EditValueChanged);
             // 
             // textEditElevation
             // 
@@ -2606,9 +2594,9 @@
             // applyButton
             // 
             this.applyButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.applyButton.Location = new System.Drawing.Point(1116, 517);
+            this.applyButton.Location = new System.Drawing.Point(1116, 514);
             this.applyButton.Name = "applyButton";
-            this.applyButton.Size = new System.Drawing.Size(85, 30);
+            this.applyButton.Size = new System.Drawing.Size(93, 23);
             this.applyButton.TabIndex = 0;
             this.applyButton.Text = "Apply";
             this.applyButton.UseVisualStyleBackColor = false;
@@ -2617,9 +2605,9 @@
             // saveToFlashButton
             // 
             this.saveToFlashButton.BackColor = System.Drawing.Color.Gainsboro;
-            this.saveToFlashButton.Location = new System.Drawing.Point(1116, 553);
+            this.saveToFlashButton.Location = new System.Drawing.Point(1116, 538);
             this.saveToFlashButton.Name = "saveToFlashButton";
-            this.saveToFlashButton.Size = new System.Drawing.Size(85, 30);
+            this.saveToFlashButton.Size = new System.Drawing.Size(93, 23);
             this.saveToFlashButton.TabIndex = 1;
             this.saveToFlashButton.Text = "Save To Flash";
             this.saveToFlashButton.UseVisualStyleBackColor = false;
@@ -2656,18 +2644,6 @@
             this.DetailPanel.Size = new System.Drawing.Size(293, 95);
             this.DetailPanel.TabIndex = 129;
             // 
-            // Serial2Check
-            // 
-            this.Serial2Check.AutoSize = true;
-            this.Serial2Check.Location = new System.Drawing.Point(15, 620);
-            this.Serial2Check.Name = "Serial2Check";
-            this.Serial2Check.Size = new System.Drawing.Size(58, 17);
-            this.Serial2Check.TabIndex = 131;
-            this.Serial2Check.Text = "Serial2";
-            this.Serial2Check.UseVisualStyleBackColor = true;
-            this.Serial2Check.Visible = false;
-            this.Serial2Check.CheckedChanged += new System.EventHandler(this.Serial2Check_CheckedChanged);
-            // 
             // Serial1check
             // 
             this.Serial1check.AutoSize = true;
@@ -2681,6 +2657,19 @@
             this.Serial1check.UseVisualStyleBackColor = true;
             this.Serial1check.Visible = false;
             this.Serial1check.CheckedChanged += new System.EventHandler(this.Serial1check_CheckedChanged);
+            // 
+            // SpeedGauge
+            // 
+            this.SpeedGauge.BackgroundLayers.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleBackgroundLayerComponent[] {
+            this.arcScaleBackgroundLayerComponent3,
+            this.arcScaleBackgroundLayerComponent4});
+            this.SpeedGauge.Bounds = new System.Drawing.Rectangle(3, 3, 132, 136);
+            this.SpeedGauge.Name = "SpeedGauge";
+            this.SpeedGauge.Needles.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleNeedleComponent[] {
+            this.arcScaleNeedleComponent2});
+            this.SpeedGauge.Scales.AddRange(new DevExpress.XtraGauges.Win.Gauges.Circular.ArcScaleComponent[] {
+            this.arcScaleComponent3,
+            this.arcScaleComponent4});
             // 
             // headingIndicator1
             // 
@@ -2698,13 +2687,27 @@
             this.attitudeIndicator1.TabIndex = 94;
             this.attitudeIndicator1.Text = "attitudeIndicatorInstrumentControl1";
             // 
+            // LevelOperationCheck
+            // 
+            this.LevelOperationCheck.Appearance = System.Windows.Forms.Appearance.Button;
+            this.LevelOperationCheck.BackColor = System.Drawing.Color.Gainsboro;
+            this.LevelOperationCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LevelOperationCheck.Location = new System.Drawing.Point(1116, 562);
+            this.LevelOperationCheck.Name = "LevelOperationCheck";
+            this.LevelOperationCheck.Size = new System.Drawing.Size(93, 23);
+            this.LevelOperationCheck.TabIndex = 131;
+            this.LevelOperationCheck.Text = "Level Operation";
+            this.LevelOperationCheck.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LevelOperationCheck.UseVisualStyleBackColor = false;
+            this.LevelOperationCheck.CheckedChanged += new System.EventHandler(this.LevelOperationCheck_CheckedChanged);
+            // 
             // NorthDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
-            this.ClientSize = new System.Drawing.Size(895, 615);
-            this.Controls.Add(this.Serial2Check);
+            this.ClientSize = new System.Drawing.Size(1237, 615);
+            this.Controls.Add(this.LevelOperationCheck);
             this.Controls.Add(this.Serial1check);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.ChartVisibleCheck);
@@ -2712,8 +2715,8 @@
             this.Controls.Add(this.ControlPanel);
             this.Controls.Add(this.applyButton);
             this.Controls.Add(this.ultraGaugeDistance);
-            this.Controls.Add(this.saveToFlashButton);
             this.Controls.Add(this.radLabel11);
+            this.Controls.Add(this.saveToFlashButton);
             this.Controls.Add(this.radLabel10);
             this.Controls.Add(this.radLabel1);
             this.Controls.Add(this.checkEditAzimuth);
@@ -2827,7 +2830,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleComponent3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.GraphOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.radLabel11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.radLabel10)).EndInit();
@@ -2843,6 +2845,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.textEditDistance.Properties)).EndInit();
             this.DetailPanel.ResumeLayout(false);
             this.DetailPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3036,7 +3039,7 @@
         private System.Windows.Forms.Button saveToFlashButton;
         private System.Windows.Forms.Label distanceLabel;
         private System.Windows.Forms.Panel DetailPanel;
-        private System.Windows.Forms.CheckBox Serial2Check;
         private System.Windows.Forms.CheckBox Serial1check;
+        private System.Windows.Forms.CheckBox LevelOperationCheck;
     }
 }
