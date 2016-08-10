@@ -600,14 +600,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GPSNavigator.exe" size="6933504">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="GPSNavigator.exe" size="9291776">
       <assemblyIdentity name="GPSNavigator" version="1.1.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>VTyEN04xd9q3C97AmLqFopWFUfE=</dsig:DigestValue>
+        <dsig:DigestValue>Sn98ItbscpnHAvYckXOgn5+7/Eg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

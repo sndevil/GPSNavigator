@@ -128,6 +128,7 @@ namespace GPSNavigator
                 {
                     DataStatusLabel.Text = "No Data";
                     DataStatusLabel.BackColor = Color.Salmon;
+                    parent.WriteText("");
                 }
             }
 

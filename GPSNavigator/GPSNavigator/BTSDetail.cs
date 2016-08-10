@@ -529,6 +529,7 @@ namespace GPSNavigator
                     alive = false;
                     toolStripStatusLabel1.BackColor = Color.Salmon;
                     toolStripStatusLabel1.Text = "No Data";
+                    Parentform.WriteText("");
                 }
             }
 
@@ -1262,7 +1263,18 @@ namespace GPSNavigator
 
         private void AutoSearchBtn_Click(object sender, EventArgs e)
         {
-            int delay = Convert.ToInt32(DelayText.Text);
+            if (DelayText.Text == "")
+                DelayText.Text = "250";
+            int delay;
+            try
+            {
+                delay = Convert.ToInt32(DelayText.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Input Error");
+                return;
+            }
             DelayRange r = DelayRange.ms;
             if (sRadio.Checked)
                 r = DelayRange.s;
@@ -1277,7 +1289,18 @@ namespace GPSNavigator
         private void ManSearchBtn_Click(object sender, EventArgs e)
         {
             //SendAppendingAutomaticSearchCommand(1, 1, 2, 1000);
-            int delay = Convert.ToInt32(DelayText.Text);
+            if (DelayText.Text == "")
+                DelayText.Text = "250";
+            int delay;
+            try
+            {
+                delay = Convert.ToInt32(DelayText.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Input Error");
+                return;
+            }
             DelayRange r = DelayRange.ms;
             if (sRadio.Checked)
                 r = DelayRange.s;

@@ -357,6 +357,7 @@ namespace GPSNavigator
                     toolStripStatusLabel1.BackColor = Color.Salmon;
                     Receiving = false;
                     PlotGraph(new GPSData());
+                    Parentform.WriteText("");
                 }
             }
             if (playing)
@@ -652,13 +653,13 @@ namespace GPSNavigator
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
                                 }
                                 break;
-                            case 2:
+                            /*case 2:
                                 if (Serial2Check.Checked)
                                 {
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(data.Time);
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(toAdd);
                                 }
-                                break;
+                                break;*/
                         }
                         previousTime = data.Time;
                     }
@@ -673,13 +674,13 @@ namespace GPSNavigator
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
                                 }
                                 break;
-                            case 2:
+                            /*case 2:
                                 if (Serial2Check.Checked)
                                 {
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(previousTime);
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(double.NaN);
                                 }
-                                break;
+                                break;*/
                         }
                     }
                 }
@@ -703,7 +704,7 @@ namespace GPSNavigator
                 ClearButton.Visible = true;
                 ResetZoom.Visible = true;
                 Serial1check.Visible = true;
-                Serial2Check.Visible = true;
+                //Serial2Check.Visible = true;
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
@@ -727,7 +728,7 @@ namespace GPSNavigator
                 ClearButton.Visible = false;
                 ResetZoom.Visible = false;
                 Serial1check.Visible = false;
-                Serial2Check.Visible = false;
+                //Serial2Check.Visible = false;
                 this.Height = 615;
             }
             ShowingGraph = !ShowingGraph;
@@ -1897,7 +1898,17 @@ namespace GPSNavigator
 
         private void Serial2Check_CheckedChanged(object sender, EventArgs e)
         {
-            c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = Serial2Check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+           // c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = Serial2Check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+        }
+
+        private void SendCommandBtn_Click(object sender, EventArgs e)
+        {
+            var tosend = NMEAcommandText.Text.ToCharArray();
+            byte[] btosend = new byte[tosend.Length];
+            for (int i = 0; i < tosend.Length;i++)
+                btosend[i] = (byte)tosend[i];
+            //Encoding.ASCII.
+            Parentform.Serial1_Write(btosend, 0, btosend.Length);
         }
     }
 }

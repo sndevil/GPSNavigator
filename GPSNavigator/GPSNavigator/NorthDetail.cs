@@ -104,17 +104,17 @@ namespace GPSNavigator
             {
                 case 0:
                     StatLabel.Text = "State: Waiting for Minimum Required Satellites";
-                    StatLabel.ForeColor = Color.Yellow;
+                    StatLabel.ForeColor = Color.Black;
                     AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
                     break;
                 case 1:
                     StatLabel.Text = "State: Waiting for More Satellites";
-                    StatLabel.ForeColor = Color.Yellow;
+                    StatLabel.ForeColor = Color.Black;
                     AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
                     break;
                 case 2:
                     StatLabel.Text = "State: Ambiguity Resolution";
-                    StatLabel.ForeColor = Color.Yellow;
+                    StatLabel.ForeColor = Color.Black;
                     AmbiguityLabel.Text = "Remaining ambiguity: " + data.AttitudeBuffer.Ambiguity.ToString();
                     break;
                 case 3:
@@ -502,6 +502,7 @@ namespace GPSNavigator
                     toolStripStatusLabel1.BackColor = Color.Salmon;
                     Receiving = false;
                     PlotGraph(new GPSData());
+                    Parentform.WriteText("");
                 }
             }
             if (playing)
@@ -804,13 +805,13 @@ namespace GPSNavigator
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(toAdd);
                                 }
                                 break;
-                            case 2:
+                            /*case 2:
                                 if (Serial2Check.Checked)
                                 {
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(data.Time);
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(toAdd);
                                 }
-                                break;
+                                break;*/
                         }
                         previousTime = data.Time;
                     }
@@ -825,13 +826,13 @@ namespace GPSNavigator
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[0].Y.Add(double.NaN);
                                 }
                                 break;
-                            case 2:
+                            /*case 2:
                                 if (Serial2Check.Checked)
                                 {
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].X.Add(previousTime);
                                     c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Y.Add(double.NaN);
                                 }
-                                break;
+                                break;*/
                         }
                     }
                 }
@@ -855,7 +856,7 @@ namespace GPSNavigator
                 ClearButton.Visible = true;
                 ResetZoom.Visible = true;
                 Serial1check.Visible = true;
-                Serial2Check.Visible = true;
+                //Serial2Check.Visible = true;
                 //c1Chart1.BringToFront();
                 if (!ChartVisibleCheck.Checked)
                 {
@@ -879,7 +880,7 @@ namespace GPSNavigator
                 ClearButton.Visible = false;
                 ResetZoom.Visible = false;
                 Serial1check.Visible = false;
-                Serial2Check.Visible = false;
+                //Serial2Check.Visible = false;
                 this.Height = 615;
             }
             ShowingGraph = !ShowingGraph;
@@ -2334,7 +2335,59 @@ namespace GPSNavigator
 
         private void Serial2Check_CheckedChanged(object sender, EventArgs e)
         {
-            c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = Serial2Check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+           // c1Chart1.ChartGroups[0].ChartData.SeriesList[1].Display = Serial2Check.Checked ? C1.Win.C1Chart.SeriesDisplayEnum.Show : C1.Win.C1Chart.SeriesDisplayEnum.Hide;
+        }
+
+        private void NorthDetail_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            checkEditElevation.Checked = true;
+            checkEditAzimuth.Checked = false;
+            checkEditDistance.Checked = false;
+            textEditElevation.Text = "0";
+            textEditElevationTH.Text = "5";
+        }
+
+        private void textEditElevationTH_EditValueChanged(object sender, EventArgs e)
+        {
+            double val;
+            try
+            {
+                val = double.Parse(textEditElevationTH.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Input Error");
+                return;
+            }
+            if (val < 5 && val >= 0 && !checkBox1.Checked)
+            {
+                textEditElevationTH.Text = "5";
+            }
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                checkEditElevation.Enabled = false;
+                textEditElevation.Enabled = false;
+                textEditElevationTH.Enabled = false;
+                textEditElevation.Text = "0";
+                textEditElevationTH.Text = "3";
+            }
+            else
+            {
+                checkEditElevation.Enabled = true;
+                textEditElevation.Enabled = true;
+                textEditElevationTH.Enabled = true;
+                textEditElevationTH.Text = "5";
+            }
         }
 
     }

@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPSNavigator", "GPSNavigator\GPSNavigator.csproj", "{39E00CA1-D465-4743-98EE-A808543018CD}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "GPSNavigatorInstall", "GPSNavigatorInstall\GPSNavigatorInstall.vdproj", "{02AE1E81-E5E1-4503-BDC4-9C89AB7D986B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +15,8 @@ Global
 		{39E00CA1-D465-4743-98EE-A808543018CD}.Debug|x86.Build.0 = Debug|x86
 		{39E00CA1-D465-4743-98EE-A808543018CD}.Release|x86.ActiveCfg = Release|x86
 		{39E00CA1-D465-4743-98EE-A808543018CD}.Release|x86.Build.0 = Release|x86
+		{02AE1E81-E5E1-4503-BDC4-9C89AB7D986B}.Debug|x86.ActiveCfg = Debug
+		{02AE1E81-E5E1-4503-BDC4-9C89AB7D986B}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

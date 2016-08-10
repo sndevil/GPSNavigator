@@ -230,7 +230,9 @@
             this.DataImporter = new System.Windows.Forms.OpenFileDialog();
             this.GraphTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.Serial1check = new System.Windows.Forms.CheckBox();
-            this.Serial2Check = new System.Windows.Forms.CheckBox();
+            this.groupControl3 = new DevExpress.XtraEditors.GroupControl();
+            this.SendCommandBtn = new System.Windows.Forms.Button();
+            this.NMEAcommandText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.ControlPanel.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -288,6 +290,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).BeginInit();
             this.GraphOptions.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).BeginInit();
+            this.groupControl3.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -1651,7 +1655,7 @@
             this.groupControl6.Controls.Add(this.labelControl21);
             this.groupControl6.Location = new System.Drawing.Point(976, 2);
             this.groupControl6.Name = "groupControl6";
-            this.groupControl6.Size = new System.Drawing.Size(156, 210);
+            this.groupControl6.Size = new System.Drawing.Size(156, 200);
             this.groupControl6.TabIndex = 75;
             // 
             // AutoMaxCombo
@@ -1660,7 +1664,7 @@
             this.AutoMaxCombo.Items.AddRange(new object[] {
             "On",
             "Off"});
-            this.AutoMaxCombo.Location = new System.Drawing.Point(94, 184);
+            this.AutoMaxCombo.Location = new System.Drawing.Point(94, 172);
             this.AutoMaxCombo.Name = "AutoMaxCombo";
             this.AutoMaxCombo.Size = new System.Drawing.Size(58, 21);
             this.AutoMaxCombo.TabIndex = 75;
@@ -1673,7 +1677,7 @@
             this.IonoCombo.Items.AddRange(new object[] {
             "On",
             "Off"});
-            this.IonoCombo.Location = new System.Drawing.Point(94, 154);
+            this.IonoCombo.Location = new System.Drawing.Point(94, 145);
             this.IonoCombo.Name = "IonoCombo";
             this.IonoCombo.Size = new System.Drawing.Size(58, 21);
             this.IonoCombo.TabIndex = 74;
@@ -1685,7 +1689,7 @@
             this.TropoCombo.Items.AddRange(new object[] {
             "On",
             "Off"});
-            this.TropoCombo.Location = new System.Drawing.Point(94, 124);
+            this.TropoCombo.Location = new System.Drawing.Point(94, 118);
             this.TropoCombo.Name = "TropoCombo";
             this.TropoCombo.Size = new System.Drawing.Size(58, 21);
             this.TropoCombo.TabIndex = 73;
@@ -1697,7 +1701,7 @@
             this.GreenSatCombo.Items.AddRange(new object[] {
             "Used",
             "Ready"});
-            this.GreenSatCombo.Location = new System.Drawing.Point(93, 92);
+            this.GreenSatCombo.Location = new System.Drawing.Point(93, 89);
             this.GreenSatCombo.Name = "GreenSatCombo";
             this.GreenSatCombo.Size = new System.Drawing.Size(58, 21);
             this.GreenSatCombo.TabIndex = 72;
@@ -1718,7 +1722,7 @@
             // labelControl18
             // 
             this.labelControl18.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelControl18.Location = new System.Drawing.Point(9, 149);
+            this.labelControl18.Location = new System.Drawing.Point(9, 140);
             this.labelControl18.Name = "labelControl18";
             this.labelControl18.Size = new System.Drawing.Size(56, 26);
             this.labelControl18.TabIndex = 71;
@@ -1727,7 +1731,7 @@
             // labelControl17
             // 
             this.labelControl17.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelControl17.Location = new System.Drawing.Point(8, 119);
+            this.labelControl17.Location = new System.Drawing.Point(8, 113);
             this.labelControl17.Name = "labelControl17";
             this.labelControl17.Size = new System.Drawing.Size(62, 26);
             this.labelControl17.TabIndex = 68;
@@ -1736,7 +1740,7 @@
             // labelControl19
             // 
             this.labelControl19.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelControl19.Location = new System.Drawing.Point(8, 89);
+            this.labelControl19.Location = new System.Drawing.Point(8, 86);
             this.labelControl19.Name = "labelControl19";
             this.labelControl19.Size = new System.Drawing.Size(70, 26);
             this.labelControl19.TabIndex = 66;
@@ -1796,7 +1800,7 @@
             // labelControl21
             // 
             this.labelControl21.Appearance.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelControl21.Location = new System.Drawing.Point(10, 181);
+            this.labelControl21.Location = new System.Drawing.Point(10, 169);
             this.labelControl21.Name = "labelControl21";
             this.labelControl21.Size = new System.Drawing.Size(73, 26);
             this.labelControl21.TabIndex = 45;
@@ -1817,9 +1821,9 @@
             this.groupControl2.Controls.Add(this.listBoxGLONASS);
             this.groupControl2.Controls.Add(this.listBoxGPS);
             this.groupControl2.Controls.Add(this.labelControl3);
-            this.groupControl2.Location = new System.Drawing.Point(976, 215);
+            this.groupControl2.Location = new System.Drawing.Point(976, 204);
             this.groupControl2.Name = "groupControl2";
-            this.groupControl2.Size = new System.Drawing.Size(156, 375);
+            this.groupControl2.Size = new System.Drawing.Size(156, 309);
             this.groupControl2.TabIndex = 76;
             this.groupControl2.Text = "Deassign Satellites";
             // 
@@ -1827,9 +1831,9 @@
             // 
             this.SaveFlash.BackColor = System.Drawing.Color.Gainsboro;
             this.SaveFlash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveFlash.Location = new System.Drawing.Point(6, 343);
+            this.SaveFlash.Location = new System.Drawing.Point(6, 280);
             this.SaveFlash.Name = "SaveFlash";
-            this.SaveFlash.Size = new System.Drawing.Size(144, 28);
+            this.SaveFlash.Size = new System.Drawing.Size(144, 23);
             this.SaveFlash.TabIndex = 55;
             this.SaveFlash.Text = "Save To Flash";
             this.SaveFlash.UseVisualStyleBackColor = false;
@@ -1839,9 +1843,9 @@
             // 
             this.ReadFlash.BackColor = System.Drawing.Color.Gainsboro;
             this.ReadFlash.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReadFlash.Location = new System.Drawing.Point(6, 314);
+            this.ReadFlash.Location = new System.Drawing.Point(6, 256);
             this.ReadFlash.Name = "ReadFlash";
-            this.ReadFlash.Size = new System.Drawing.Size(144, 28);
+            this.ReadFlash.Size = new System.Drawing.Size(144, 23);
             this.ReadFlash.TabIndex = 54;
             this.ReadFlash.Text = "Read From Flash";
             this.ReadFlash.UseVisualStyleBackColor = false;
@@ -1851,9 +1855,9 @@
             // 
             this.ClearAll.BackColor = System.Drawing.Color.Gainsboro;
             this.ClearAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ClearAll.Location = new System.Drawing.Point(6, 285);
+            this.ClearAll.Location = new System.Drawing.Point(6, 233);
             this.ClearAll.Name = "ClearAll";
-            this.ClearAll.Size = new System.Drawing.Size(144, 28);
+            this.ClearAll.Size = new System.Drawing.Size(144, 23);
             this.ClearAll.TabIndex = 53;
             this.ClearAll.Text = "Clear All";
             this.ClearAll.UseVisualStyleBackColor = false;
@@ -1863,9 +1867,9 @@
             // 
             this.DeassignAll.BackColor = System.Drawing.Color.Gainsboro;
             this.DeassignAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DeassignAll.Location = new System.Drawing.Point(73, 256);
+            this.DeassignAll.Location = new System.Drawing.Point(73, 209);
             this.DeassignAll.Name = "DeassignAll";
-            this.DeassignAll.Size = new System.Drawing.Size(77, 28);
+            this.DeassignAll.Size = new System.Drawing.Size(77, 23);
             this.DeassignAll.TabIndex = 52;
             this.DeassignAll.Text = "Deassign All";
             this.DeassignAll.UseVisualStyleBackColor = false;
@@ -1875,9 +1879,9 @@
             // 
             this.Deassign.BackColor = System.Drawing.Color.Gainsboro;
             this.Deassign.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Deassign.Location = new System.Drawing.Point(6, 256);
+            this.Deassign.Location = new System.Drawing.Point(6, 209);
             this.Deassign.Name = "Deassign";
-            this.Deassign.Size = new System.Drawing.Size(64, 28);
+            this.Deassign.Size = new System.Drawing.Size(64, 23);
             this.Deassign.TabIndex = 51;
             this.Deassign.Text = "Deassign";
             this.Deassign.UseVisualStyleBackColor = false;
@@ -1885,7 +1889,7 @@
             // 
             // labelControl4
             // 
-            this.labelControl4.Location = new System.Drawing.Point(7, 140);
+            this.labelControl4.Location = new System.Drawing.Point(6, 116);
             this.labelControl4.Name = "labelControl4";
             this.labelControl4.Size = new System.Drawing.Size(96, 13);
             this.labelControl4.TabIndex = 50;
@@ -1926,10 +1930,10 @@
             "GLONASS Sat 30",
             "GLONASS Sat 31",
             "GLONASS Sat 32"});
-            this.listBoxGLONASS.Location = new System.Drawing.Point(7, 159);
+            this.listBoxGLONASS.Location = new System.Drawing.Point(6, 131);
             this.listBoxGLONASS.Name = "listBoxGLONASS";
             this.listBoxGLONASS.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxGLONASS.Size = new System.Drawing.Size(144, 94);
+            this.listBoxGLONASS.Size = new System.Drawing.Size(144, 73);
             this.listBoxGLONASS.TabIndex = 49;
             // 
             // listBoxGPS
@@ -1967,10 +1971,10 @@
             "GPS Sat 30",
             "GPS Sat 31",
             "GPS Sat 32"});
-            this.listBoxGPS.Location = new System.Drawing.Point(6, 43);
+            this.listBoxGPS.Location = new System.Drawing.Point(6, 40);
             this.listBoxGPS.Name = "listBoxGPS";
             this.listBoxGPS.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.listBoxGPS.Size = new System.Drawing.Size(144, 94);
+            this.listBoxGPS.Size = new System.Drawing.Size(144, 73);
             this.listBoxGPS.TabIndex = 48;
             // 
             // labelControl3
@@ -2355,25 +2359,46 @@
             this.Serial1check.Visible = false;
             this.Serial1check.CheckedChanged += new System.EventHandler(this.Serial1check_CheckedChanged);
             // 
-            // Serial2Check
+            // groupControl3
             // 
-            this.Serial2Check.AutoSize = true;
-            this.Serial2Check.Location = new System.Drawing.Point(7, 620);
-            this.Serial2Check.Name = "Serial2Check";
-            this.Serial2Check.Size = new System.Drawing.Size(58, 17);
-            this.Serial2Check.TabIndex = 10;
-            this.Serial2Check.Text = "Serial2";
-            this.Serial2Check.UseVisualStyleBackColor = true;
-            this.Serial2Check.Visible = false;
-            this.Serial2Check.CheckedChanged += new System.EventHandler(this.Serial2Check_CheckedChanged);
+            this.groupControl3.Appearance.BackColor = System.Drawing.Color.LightGray;
+            this.groupControl3.Appearance.Options.UseBackColor = true;
+            this.groupControl3.AppearanceCaption.Options.UseTextOptions = true;
+            this.groupControl3.AppearanceCaption.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.groupControl3.Controls.Add(this.NMEAcommandText);
+            this.groupControl3.Controls.Add(this.SendCommandBtn);
+            this.groupControl3.Location = new System.Drawing.Point(976, 515);
+            this.groupControl3.Name = "groupControl3";
+            this.groupControl3.Size = new System.Drawing.Size(156, 75);
+            this.groupControl3.TabIndex = 75;
+            // 
+            // SendCommandBtn
+            // 
+            this.SendCommandBtn.BackColor = System.Drawing.Color.Gainsboro;
+            this.SendCommandBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SendCommandBtn.Location = new System.Drawing.Point(33, -1);
+            this.SendCommandBtn.Name = "SendCommandBtn";
+            this.SendCommandBtn.Size = new System.Drawing.Size(90, 20);
+            this.SendCommandBtn.TabIndex = 60;
+            this.SendCommandBtn.Text = "Send Command";
+            this.SendCommandBtn.UseVisualStyleBackColor = false;
+            this.SendCommandBtn.Click += new System.EventHandler(this.SendCommandBtn_Click);
+            // 
+            // NMEAcommandText
+            // 
+            this.NMEAcommandText.Location = new System.Drawing.Point(6, 34);
+            this.NMEAcommandText.Name = "NMEAcommandText";
+            this.NMEAcommandText.Size = new System.Drawing.Size(144, 20);
+            this.NMEAcommandText.TabIndex = 61;
             // 
             // MomentDetail
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gainsboro;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.ClientSize = new System.Drawing.Size(815, 615);
-            this.Controls.Add(this.Serial2Check);
+            this.Controls.Add(this.groupControl3);
             this.Controls.Add(this.Serial1check);
             this.Controls.Add(this.ResetZoom);
             this.Controls.Add(this.ControlPanel);
@@ -2387,8 +2412,8 @@
             this.Controls.Add(this.label12);
             this.Controls.Add(this.gaugeControl1);
             this.Controls.Add(this.groupControl6);
-            this.Controls.Add(this.groupControl2);
             this.Controls.Add(this.groupControl5);
+            this.Controls.Add(this.groupControl2);
             this.Controls.Add(this.groupControl1);
             this.Controls.Add(this.groupControl4);
             this.Controls.Add(this.ControlPanelButton);
@@ -2491,6 +2516,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.arcScaleBackgroundLayerComponent3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SpeedGauge)).EndInit();
             this.GraphOptions.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.groupControl3)).EndInit();
+            this.groupControl3.ResumeLayout(false);
+            this.groupControl3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2656,6 +2684,8 @@
         private System.Windows.Forms.ToolTip GraphTooltip;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.CheckBox Serial1check;
-        private System.Windows.Forms.CheckBox Serial2Check;
+        private DevExpress.XtraEditors.GroupControl groupControl3;
+        private System.Windows.Forms.TextBox NMEAcommandText;
+        private System.Windows.Forms.Button SendCommandBtn;
     }
 }
