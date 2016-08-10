@@ -144,13 +144,6 @@ namespace GPSNavigator.Properties {
             }
         }
         
-        internal static System.Drawing.Icon GPSNavigator {
-            get {
-                object obj = ResourceManager.GetObject("GPSNavigator", resourceCulture);
-                return ((System.Drawing.Icon)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap HeadingIndicator_Aircraft1 {
             get {
                 object obj = ResourceManager.GetObject("HeadingIndicator_Aircraft1", resourceCulture);

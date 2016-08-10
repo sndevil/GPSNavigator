@@ -70,6 +70,7 @@
             this.AutoCancel = new System.Windows.Forms.CheckBox();
             this.radDock1 = new Telerik.WinControls.UI.Docking.RadDock();
             this.SerialController = new Telerik.WinControls.UI.Docking.ToolWindow();
+            this.timeCheck = new System.Windows.Forms.CheckBox();
             this.GraphRefreshrate = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.refreshButton = new System.Windows.Forms.Button();
@@ -98,7 +99,7 @@
             this.serialPort1.PortName = "COM5";
             this.serialPort1.ReadBufferSize = 256000;
             this.serialPort1.ReceivedBytesThreshold = 20;
-            this.serialPort1.WriteBufferSize = 200000;
+            this.serialPort1.WriteBufferSize = 8000;
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
             // logger
@@ -326,7 +327,7 @@
             0,
             0,
             0});
-            this.numericUpDown2.Location = new System.Drawing.Point(16, 425);
+            this.numericUpDown2.Location = new System.Drawing.Point(16, 445);
             this.numericUpDown2.Minimum = new decimal(new int[] {
             1,
             0,
@@ -346,7 +347,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
-            this.label3.Location = new System.Drawing.Point(13, 409);
+            this.label3.Location = new System.Drawing.Point(13, 429);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(144, 13);
             this.label3.TabIndex = 12;
@@ -502,6 +503,7 @@
             // 
             this.SerialController.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SerialController.Caption = null;
+            this.SerialController.Controls.Add(this.timeCheck);
             this.SerialController.Controls.Add(this.GraphRefreshrate);
             this.SerialController.Controls.Add(this.label4);
             this.SerialController.Controls.Add(this.refreshButton);
@@ -527,6 +529,16 @@
             this.SerialController.Size = new System.Drawing.Size(198, 526);
             this.SerialController.Text = "Serial Controller";
             // 
+            // timeCheck
+            // 
+            this.timeCheck.AutoSize = true;
+            this.timeCheck.Location = new System.Drawing.Point(16, 405);
+            this.timeCheck.Name = "timeCheck";
+            this.timeCheck.Size = new System.Drawing.Size(130, 17);
+            this.timeCheck.TabIndex = 22;
+            this.timeCheck.Text = "Get Time From Serial";
+            this.timeCheck.UseVisualStyleBackColor = true;
+            // 
             // GraphRefreshrate
             // 
             this.GraphRefreshrate.Increment = new decimal(new int[] {
@@ -534,7 +546,7 @@
             0,
             0,
             0});
-            this.GraphRefreshrate.Location = new System.Drawing.Point(16, 474);
+            this.GraphRefreshrate.Location = new System.Drawing.Point(16, 494);
             this.GraphRefreshrate.Minimum = new decimal(new int[] {
             1,
             0,
@@ -553,7 +565,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(233)))), ((int)(((byte)(240)))), ((int)(((byte)(249)))));
-            this.label4.Location = new System.Drawing.Point(13, 458);
+            this.label4.Location = new System.Drawing.Point(13, 478);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(155, 13);
             this.label4.TabIndex = 21;
@@ -707,7 +719,7 @@
         private Telerik.WinControls.UI.Docking.DocumentContainer documentContainer1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem serialControllerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripStatusLabel ErrorCount;
+        public System.Windows.Forms.ToolStripStatusLabel ErrorCount;
         private System.Windows.Forms.Label FormatLabel;
         private System.Windows.Forms.RadioButton ascii;
         private System.Windows.Forms.RadioButton hex;
@@ -721,6 +733,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripMenuItem programSelectionToolStripMenuItem;
         public System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.CheckBox timeCheck;
     }
 }
 

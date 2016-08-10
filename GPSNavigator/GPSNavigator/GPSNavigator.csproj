@@ -52,7 +52,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\GPSNavigator.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\GPS Navigator.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>98D592B73EE86424B7D973DB998F0E0C35AA7281</ManifestCertificateThumbprint>
@@ -65,6 +65,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="C1.Win.C1Chart.4, Version=4.0.20141.24071, Culture=neutral, PublicKeyToken=a22e16972c085838, processorArchitecture=MSIL" />
@@ -330,7 +334,6 @@
     </PublishFile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GPS Navigator.ico" />
     <None Include="Resources\brand.gif" />
     <None Include="Resources\compass-logo-hi.png" />
     <None Include="Resources\AirSpeedIndicator_Background1.bmp" />
@@ -360,7 +363,7 @@
     <None Include="Resources\resizedimage120120-CORRECT-RTK-Icon.png" />
     <None Include="Resources\Logo markaz.jpg" />
     <None Include="Resources\Logo_Markaz.png" />
-    <None Include="Resources\GPSNavigator.ico" />
+    <None Include="Resources\GPS Navigator.ico" />
     <Content Include="Resources\Warm Start.png" />
     <None Include="Resources\videoplay512.gif" />
     <None Include="Resources\pause.png" />

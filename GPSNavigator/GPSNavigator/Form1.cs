@@ -39,7 +39,7 @@ namespace GPSNavigator
 
         Logger log;
         DateTime RecordStarttime;
-        int serialcounter = 0, packetcounter = 1, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0
+        int serialcounter = 0, packetcounter = 0, timeoutCounter = 0, MaxTimeout = 5, DetailRefreshCounter = 0, GraphRefreshCounter = 0
             , serial1_MsgSize = -1, serial2_MsgSize = -1, RefreshRate = 50;
         
 #region Forms
@@ -602,7 +602,7 @@ namespace GPSNavigator
                                     WriteText(packetcounter.ToString() + " Packet Per Second\r\n" + Encoding.UTF8.GetString(byt));
                                 else if (hex.Checked)
                                     WriteText(packetcounter.ToString() + " Packet Per Second\r\n0x" + Functions.ByteArrayToString(byt));
-                                packetcounter = 1;
+                                packetcounter = 0;
                             }
                             else
                                 packetcounter++;
@@ -1599,13 +1599,15 @@ namespace GPSNavigator
                 if (MessageBox.Show("Are You Sure?", "GPS Navigator", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == System.Windows.Forms.DialogResult.Yes)
                 {
                     appclosing = true;
-                    if (Appmode == AppModes.BaseStation && serialPort1.IsOpen)
-                        BTSDetailForm.CancelSearches();
                     Thread closer = new Thread(new ThreadStart(ClosePort));
                     closer.Start();
+                    //ClosePort();
                     foreach (Grapher g in grapherlist)
                         g.CloseFiles();
+                    if (Appmode == AppModes.BaseStation)
+                        BTSDetailForm.CancelSearches();
                     Parentform.ShowStartup();
+
                 }
                 else
                 {
@@ -1617,6 +1619,7 @@ namespace GPSNavigator
                 appclosing = true;
                 Thread closer = new Thread(new ThreadStart(ClosePort));
                 closer.Start();
+                //ClosePort();
                 foreach (Grapher g in grapherlist)
                     g.CloseFiles();
                 if (Appmode == AppModes.BaseStation)
